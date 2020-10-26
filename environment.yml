@@ -1,0 +1,15 @@
+name: quantecon-sandpit
+channels:
+  - default
+dependencies:
+  - python=3.8
+  - anaconda=2020.07
+  - pip
+  - pip:
+    - jupytext
+    - jupyter-book
+    - git+https://github.com/executablebooks/sphinx-multitoc-numbering
+    - git+https://github.com/quantecon/quantecon-book-theme
+    - joblib
+    - interpolation
+
