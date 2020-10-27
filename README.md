@@ -25,7 +25,7 @@ via `pip`:
 1. Jupyter Book: `pip install jupyter-book`
 2. Jupytext: `pip install jupytext`
 3. Github Pages Import Tool: `pip install ghp-import`
-4. QuantEcon Theme: `pip install https://github.com/quantecon/quantecon-book-theme`
+4. QuantEcon Theme: `pip install git+https://github.com/quantecon/quantecon-book-theme`
 
 ## Building Projects
 
