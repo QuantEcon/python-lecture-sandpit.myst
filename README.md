@@ -29,11 +29,6 @@ via `pip`:
 
 ## Building Projects
 
-There are two environments setup that we can use to develop lectures:
-
-1. `lectures` -> using `jupyter` notebooks
-2. `lectures-myst` -> using `myst markdown` files
-
 To build the sandpit using `jupyter-book`:
 
 1. To build the `lectures` collection you can use
@@ -44,12 +39,16 @@ To build the sandpit using `jupyter-book`:
    ```bash
    jupyter-book build lectures
    ```
-2. To build the `lectures-myst` collection you can use:
+   This will by default save the outputs in `<lecture>/_build/html` within the project folder
+2. If you are already in the `lectures` folder you can use:
    ```bash
-   jb build lectures-myst
+   jb build ./
    ```
-
-This will by default save the outputs in `<lecture>/_build/html` within each project folder.
+   or
+   ```bash
+   jupyter-book build ./
+   ```
+   This will by default save the outputs in `_build/html` within the project folder
 
 There is currently no way to auto-launch the results after a build is complete.
 
