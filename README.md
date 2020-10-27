@@ -69,3 +69,5 @@ chrome lectures/_build/html/index.html
 
 or browse to the folder via the finder.
 
+A [QuantEcon suggested workflow](https://quantecon.github.io/QuantEcon.manual/writing/notebooks.html) is also available
+for writing content via Notebooks.
