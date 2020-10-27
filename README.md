@@ -19,7 +19,15 @@ Getting this repository setup:
    conda activate quantecon-sandpit
    ```
 
-## Building
+If you would prefer to use a different environment but want to add the `tools` this can be done
+via `pip`:
+
+1. Jupyter Book: `pip install jupyter-book`
+2. Jupytext: `pip install jupytext`
+3. Github Pages Import Tool: `pip install ghp-import`
+4. QuantEcon Theme: `pip install https://github.com/quantecon/quantecon-book-theme`
+
+## Building Projects
 
 There are two environments setup that we can use to develop lectures:
 
@@ -41,14 +49,18 @@ To build the sandpit using `jupyter-book`:
    jb build lectures-myst
    ```
 
-This will by default save the outputs in `_build/html` within each folder.
+This will by default save the outputs in `<lecture>/_build/html` within each project folder.
 
-There is current no way to auto-launch the results after a build is complete.
+There is currently no way to auto-launch the results after a build is complete.
 
 To open the `html` you can use:
 
 ```bash
-open lectures/_build/html/index.html    #OS X
-chrome lectures/_build/html/index.html  #Linux (you could also use firefox etc.)
+#OS X
+open lectures/_build/html/index.html
+#Linux (you could also use firefox etc.)
+chrome lectures/_build/html/index.html
 ```
+
+or browse to the folder via the finder.
 

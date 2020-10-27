@@ -12,4 +12,5 @@ dependencies:
     - git+https://github.com/quantecon/quantecon-book-theme
     - joblib
     - interpolation
+    - ghp-import
 
