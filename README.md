@@ -15,7 +15,7 @@ Getting this repository setup:
    ```
 3. Install the pre-configured `conda` environment
    ```bash
-   conda create -f environment.yml
+   conda env create -f environment.yml
    conda activate quantecon-sandpit
    ```
 
