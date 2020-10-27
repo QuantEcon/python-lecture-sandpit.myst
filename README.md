@@ -22,10 +22,16 @@ Getting this repository setup:
 If you would prefer to use a different environment but want to add the `tools` this can be done
 via `pip`:
 
+For building `jupyter-book`:
+
 1. Jupyter Book: `pip install jupyter-book`
-2. Jupytext: `pip install jupytext`
-3. Github Pages Import Tool: `pip install ghp-import`
-4. QuantEcon Theme: `pip install git+https://github.com/quantecon/quantecon-book-theme`
+2. QuantEcon Theme: `pip install git+https://github.com/quantecon/quantecon-book-theme`
+
+For conversion and publishing:
+
+1. Jupytext: `pip install jupytext`
+2. Github Pages Import Tool: `pip install ghp-import`
+
 
 ## Building Projects
 
