@@ -71,3 +71,14 @@ or browse to the folder via the finder.
 
 A [QuantEcon suggested workflow](https://quantecon.github.io/QuantEcon.manual/writing/notebooks.html) is also available
 for writing content via Notebooks.
+
+
+for the phd-macro-theory-book do the following:
+
+  To activate this environment, use
+#
+#     $ conda activate phd-macro-theory-book
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
