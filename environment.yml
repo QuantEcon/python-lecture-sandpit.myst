@@ -8,8 +8,10 @@ dependencies:
   - pip:
     - jupytext
     - jupyter-book
+    - jupinx
     - git+https://github.com/executablebooks/sphinx-multitoc-numbering
     - git+https://github.com/quantecon/quantecon-book-theme
     - joblib
     - interpolation
     - ghp-import
+
