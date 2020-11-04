@@ -1,10 +1,10 @@
-name: python-lecture-sandpit.myst
+name: quantecon
 channels:
   - default
 dependencies:
+  - pip
   - python=3.8
   - anaconda=2020.07
-  - pip
   - pip:
     - jupytext
     - jupyter-book
@@ -13,4 +13,3 @@ dependencies:
     - joblib
     - interpolation
     - ghp-import
-
