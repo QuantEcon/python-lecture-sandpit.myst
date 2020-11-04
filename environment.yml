@@ -1,4 +1,4 @@
-name: quantecon-sandpit
+name: python-lecture-sandpit.myst
 channels:
   - default
 dependencies:
