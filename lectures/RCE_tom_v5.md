@@ -18,7 +18,7 @@ kernelspec:
 
 ### Summary
 
-Following descriptions in section 9.3.3 of RMT5 chapter 9, we briefly recall the set up of an competitive equilibrium of a pure exchange economy with complete markets in one-period Arrow securities.
+Following descriptions in section 9.3.3 of RMT5 chapter 9, we briefly recall the set up of a competitive equilibrium of a pure exchange economy with complete markets in one-period Arrow securities.
 
 When  endowments $y^i(s)$ are all functions of a common Markov state $s$,
 the pricing kernel takes the form $Q(s'|s)$.
