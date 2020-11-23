@@ -971,3 +971,6 @@ for i in range(1, 4):
 ```{code-cell} ipython3
 
 ```
+# Finite horizon economies
+
+Zejin and Tom will add things here
