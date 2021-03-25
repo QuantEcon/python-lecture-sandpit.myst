@@ -16,7 +16,7 @@ Getting this repository setup:
 3. Install the pre-configured `conda` environment
    ```bash
    conda env create -f environment.yml
-   conda activate quantecon-sandpit
+   conda activate quantecon
    ```
 
 If you would prefer to use a different environment but want to add the `tools` this can be done
@@ -72,13 +72,3 @@ or browse to the folder via the finder.
 A [QuantEcon suggested workflow](https://quantecon.github.io/QuantEcon.manual/writing/notebooks.html) is also available
 for writing content via Notebooks.
 
-
-for the phd-macro-theory-book do the following:
-
-  To activate this environment, use
-#
-#     $ conda activate phd-macro-theory-book
-#
-# To deactivate an active environment, use
-#
-#     $ conda deactivate

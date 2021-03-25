@@ -2,16 +2,17 @@ name: quantecon
 channels:
   - default
 dependencies:
-  - pip
   - python=3.8
-  - anaconda=2020.07
+  - anaconda=2020.11
+  - pip
   - pip:
-    - jupytext
     - jupyter-book
-    - jupinx
-    - git+https://github.com/executablebooks/sphinx-multitoc-numbering
-    - git+https://github.com/quantecon/quantecon-book-theme
-    - joblib
-    - interpolation
+    - sphinx-multitoc-numbering
+    - quantecon-book-theme
+    - sphinx-tojupyter
+    - sphinxext-rediraffe
+    - sphinx-exercise
+    - jupytext
     - ghp-import
+    - jupinx
 
