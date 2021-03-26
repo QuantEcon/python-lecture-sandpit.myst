@@ -1,8 +1,5 @@
 - file: index
   numbered: true
-- file: BCG_complete_mkts
-- file: BCG_incomplete_mkts
-- file: multivariate_normal
-- file: time_series_with_matrices
-- file: RCE_tom_v12
-- file: knowing_the_forecasts
+- file: lagrangian_lqdp
+- file: cross_product_trick
+- file: markov_switching_lss
