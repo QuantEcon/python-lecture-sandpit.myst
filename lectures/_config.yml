@@ -10,7 +10,7 @@ bibtex_bibfiles:
    - _static/quant-econ.bib
 
 sphinx:
-  extra_extensions: [sphinx_exercise]
+  # extra_extensions: [sphinx_exercise]
   config:
     html_logo: _static/qe-logo.png
     html_favicon: _static/qe-logo.png
