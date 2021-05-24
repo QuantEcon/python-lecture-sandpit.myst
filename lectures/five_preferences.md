@@ -44,7 +44,10 @@ $ \hat E x = \sum_{i=1}^I x_i \hat \pi_i = \sum_{i=1}^I m_i x_i  \pi_i = E m x ,
 
  Figure 1 XXXX depicts  entropy as a function of $\hat \pi_1$ when $I=2$ and $\pi_1 = .5$. 
  
- When $\pi_1 \in (0,1)$, entropy is finite for both $\hat \pi_1 = 0$  and $\hat \pi_1 = 1$ because $\lim_{x\rightarrow 0} x \log x = 0$  However, when $\pi_1=0$ or $\pi_1=1$, entropy  is infinite. 
+ When $\pi_1 \in (0,1)$, entropy is finite for both $\hat \pi_1 = 0$  and $\hat \pi_1 = 1$ because $\lim_{x\rightarrow 0} x \log x = 0$  
+ 
+ 
+ However, when $\pi_1=0$ or $\pi_1=1$, entropy  is infinite. 
 
 
 
@@ -166,7 +169,7 @@ for i in range(π_hat_0_vals.size):  # Loop over all possible values for `π_hat
 ```
 
 ```{code-cell} ipython3
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(5, 3))
 plt.plot(π_hat_0_vals, ent_vals, color='blue');
 plt.ylabel(r'entropy ($\pi_{1}=%.2f$)' % π[0] );
 plt.xlabel(r'$\hat{\pi}_1$');
@@ -1029,7 +1032,7 @@ plt.plot(η_vals, lower_bound, color='green')
 plt.ylabel(r'$E\left[mu\left(c\right)\right]$');
 plt.xlabel(r'$\eta$');
 ```
-
+<!-- 
 ## Figure 2.12
 
 Density is originally scaled by a number `intconstant`
@@ -1085,4 +1088,4 @@ rc('text',usetex=True)
 
 ```{code-cell} ipython3
 
-```
+``` -->
