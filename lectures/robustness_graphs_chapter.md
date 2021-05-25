@@ -1,132 +1,60 @@
-Preferences over static plans[\[sec:decisiontheory\]]{#sec:decisiontheory label="sec:decisiontheory"}
-=====================================================================================================
-
-This chapter describes static representations of five classes of
-preferences over risky prospects. All incorporate *risk aversion*,
-meaning displeasure from risks governed by well known probability
-distributions. Two of them also incorporate *uncertainty aversion*,
-meaning dislike of not knowing a probability distribution.
-
-Basic objects[\[sec:decisiontheory2\]]{#sec:decisiontheory2 label="sec:decisiontheory2"}
-----------------------------------------------------------------------------------------
-
-Basic ingredients are (a) a set of states of the world, (b) plans
-describing outcomes as functions of the state of the world, (c) a
-utility function mapping outcomes into utilities, (d) either a
-probability distribution or a *set* of probability distributions over
-states of the world; and (e) a way of measuring the discrepancy between
-two probability distributions. In this section, we'll use the following.
-
--   There is a finite set of [states]{.ul}
-    ${\cal I} = \{i= 1, \ldots, I\}$.
-
--   A (consumption) [plan]{.ul} is a function
-    $c: {\cal I} \rightarrow {\mathbb R}$.
-
--   $u: {\mathbb R} \rightarrow {\mathbb R}$ is a [utility
-    function]{.ul}.
-
--   $\pi$ is an $I \times 1$ vector of nonnegative [probabilities]{.ul}
-    over states, with $\pi_ i \geq 0, \sum_{i=1}^I \pi_i = 1$.
-
--   The [relative entropy]{.ul} of a probability vector $\hat \pi$ with
-    respect to a probability vector $\pi$ is the expected value of the
-    logarithm of the likelihood ratio
-    $m_i \doteq \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)$ under
-    distribution $\hat \pi$:
-    $$\textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \hat \pi_i  \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)   = \sum_{i=1}^I \pi_i \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr) \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)$$
-    or $$\label{eqn:def_ent}
-        \textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \pi_i m_i \log m_i  .$$
-
-[\[remark1\]]{#remark1 label="remark1"} The likelihood ratio $m_i$ is a
-discrete random variable. For any discrete random variable
-$\{x_i\}_{i=1}^I$, the expected value under the $\hat \pi_i$
-distribution can be represented as the expected value of $x_i$ times the
-'shock' $m_i$ under the $\pi$ distribution:
-$$\hat E x = \sum_{i=1}^I x_i \hat \pi_i = \sum_{i=1}^I m_i x_i  \pi_i = E m x ,$$
-where $\hat E$ is the mathematical expectation under the $\hat \pi$
-distribution and $E$ is the expectation under the $\pi$ distribution.
-
-Evidently, $$\hat E 1 = E m = 1$$ and relative entropy is
-$$E m \log m  = \hat E \log m .$$
-
-Figure [1.13](#fig_entropy_I2){reference-type="ref"
-reference="fig_entropy_I2"} depicts entropy as a function of
-$\hat \pi_1$ when $I=2$ and $\pi_1 = .5$.[^1]
-
-![Entropy as a function of $\hat \pi_1$ when
-$\pi_1 = .5$.](new_figure4.eps){#fig_entropy_I2 height="2in"}
-
 Five preference specifications
 ------------------------------
 
-We describe five types of preferences over plans. Types 1, 4, and 5,
-each of which is cast in terms of a unique probability distribution,
-express risk-aversion, but not model ambiguity aversion. Our main focus
-will eventually be on types 2 and 3, each of which expresses aversion to
-model ambiguity and each of which is cast in terms of a set of
-probability distributions. The set of distributions expresses the
-decision maker's ambiguity about the probability model. Minimization
-over probability distributions expresses his aversion to ambiguity.
+We describe five types of preferences over plans. Types 1, 4, and 5, each of which is cast in terms of a unique probability distribution, express risk-aversion, but not model ambiguity aversion. 
 
-1.  **Expected utility.** A decision maker is said to have *expected
-    utility preferences* when he ranks plans $c$ by their expected
-    utilities $$\sum_{i=1}^I u(c_i) \pi_i,$$ where $u$ is a unique
-    utility function and $\pi$ is a unique probability measure over
-    states. A known $\pi$ expresses risk. Curvature of $u$ expresses
+
+Our main focus will eventually be on types 2 and 3, each of which expresses aversion to
+model ambiguity and each of which is cast in terms of a set of probability distributions. 
+
+* The  set of distributions expresses the decision maker's ambiguity about the probability model.
+*  Minimization over probability distributions expresses his aversion to ambiguity.
+
+1.  **Expected utility.** A decision maker is said to have *expected     utility preferences* when he ranks plans $c$ by their expected
+    utilities $$\sum_{i=1}^I u(c_i) \pi_i,$$ where $u$ is a unique     utility function and $\pi$ is a unique probability measure over     states.
+    * A known $\pi$ expresses risk.
+    *  Curvature of $u$ expresses
     risk aversion.
 
-2.  **Constraint preferences.** A decision maker is said to have
-    *constraint preferences* when he ranks plans $c$ according to
-    $$\label{Pconstraint}  \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I m_i\pi_i  u(c_i)$$
+2.  **Constraint preferences.** A decision maker is said to have *constraint preferences* when he ranks plans $c$ according to
+    $$ \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I m_i\pi_i  u(c_i)$$
     subject to $$\sum_{i=1}^I \pi_i m_i \log m_i \leq \eta$$ and
-    $$\sum_{i=1}^I \pi_i m_i = 1 .$$ Here $\eta \geq 0$ defines an
-    entropy ball of probability distributions $\hat \pi = m \pi$
-    surrounding a baseline distribution $\pi$. From remark
-    [\[remark1\]](#remark1){reference-type="ref" reference="remark1"},
-    $\sum_{i=1}^I m_i\pi_i  u(c_i)$ is the expected value of $u(c)$
-    under a twisted probability distribution
-    $\{\hat \pi_i\}_{i=1}^I = \{m_i \pi_i\}_{i=1}^I$. Larger values of
-    the entropy constraint $\eta$ indicate more apprehension about the
-    probability distribution $\{\pi_i\}_{i=1}^I$.
+    $$\sum_{i=1}^I \pi_i m_i = 1 .$$ 
+    
+    Here $\eta \geq 0$ defines an  entropy ball of probability distributions $\hat \pi = m \pi$  surrounding a baseline distribution $\pi$. 
+    
+    As noted earlier,     $\sum_{i=1}^I m_i\pi_i  u(c_i)$ is the expected value of $u(c)$ under a twisted probability distribution $\{\hat \pi_i\}_{i=1}^I = \{m_i \pi_i\}_{i=1}^I$. 
+    
+    Larger values of the entropy constraint $\eta$ indicate more apprehension about the probability distribution $\{\pi_i\}_{i=1}^I$.
 
-    We call minimization problem
-    [\[Pconstraint\]](#Pconstraint){reference-type="eqref"
-    reference="Pconstraint"} a *constraint problem*. To find the
-    minimizing probabilities, we form the Lagrangian
-    $$\label{eqn:constraint_Lagrangian}
+    We call minimization problem  XXXX a *constraint problem*. 
+    
+    To find  minimizing probabilities, we form a Lagrangian
+    $$
     L = \sum_{i=1}^I m_i \pi_i u(c_i) +  \tilde \theta\bigl[\sum_{i=1}^I \pi_i m_i \log m_i - \eta \bigr]$$
-    where $\tilde \theta \geq 0$ is a Lagrange multiplier associated
-    with the entropy constraint. Subject to the additional constraint
-    that $\sum_{i=1}^I m_i  \pi_i =1$, we want to minimize
-    [\[eqn:constraint_Lagrangian\]](#eqn:constraint_Lagrangian){reference-type="eqref"
-    reference="eqn:constraint_Lagrangian"} with respect to
-    $\{m_i\}_{i=1}^I$ and to maximize it with respect to
-    $\tilde \theta$. The minimizing probability distortions (likelihood
-    ratios) are $$\label{eqn:Murphys_law_2} \tilde m_i(c;\tilde \theta) 
-     = \frac{ \exp \bigl(- u(c_i)/\tilde \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\tilde \theta\bigr) } .$$
+    where $\tilde \theta \geq 0$ is a Lagrange multiplier associated     with the entropy constraint. Subject to the additional constraint
+    that $\sum_{i=1}^I m_i  \pi_i =1$, we want to minimize XXXX with respect to     $\{m_i\}_{i=1}^I$ and to maximize it with respect to   $\tilde \theta$. 
+    
+    The minimizing probability distortions (likelihood ratios) are 
+    $$\tilde m_i(c;\tilde \theta) 
+     = \frac{ \exp \bigl(- u(c_i)/\tilde \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\tilde \theta\bigr) } .$$ (mylabel)
 
     To compute the Lagrange multiplier $\tilde \theta(c, \eta)$, we must
     solve
     $$\sum_i \pi_i \tilde m_i (c;\tilde \theta ) \log (\tilde m_i (c;\tilde \theta ))  = \eta$$
-    or $$\label{eqn:entropy_grand}
+    or $$
     \sum_i \pi_i \frac{ \exp \bigl(- u(c_i)/\tilde \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\tilde \theta\bigr) }
     \log \biggl[\frac{ \exp \bigl(- u(c_i)/\tilde \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\tilde \theta\bigr) }
-    \biggr] = \eta$$ for $\tilde \theta = \tilde \theta(c; \eta)$. For a
-    fixed $\eta$, the $\tilde \theta$ that solves this equation is
-    evidently a function of the consumption plan $c$. With
-    $\tilde \theta(c;\eta)$ in hand we can obtain worst-case
-    probabilities as functions $\pi_i\tilde m_i(c;\eta)$ of $\eta$.
+    \biggr] = \eta$$ for $\tilde \theta = \tilde \theta(c; \eta)$.
+    
+    For a fixed $\eta$, the $\tilde \theta$ that solves this equation is    evidently a function of the consumption plan $c$. With  $\tilde \theta(c;\eta)$ in hand we can obtain worst-case  probabilities as functions $\pi_i\tilde m_i(c;\eta)$ of $\eta$.
 
-    The indirect (expected) utility function under constraint
-    preferences is $$\label{eq:indirect_constraint}
+    The indirect (expected) utility function under constraint preferences is $$
     \sum_{i=1}^I   \pi_i \tilde m_i(c_i;\eta) u(c_i) = \sum_{i=1}^I  \pi_i \left[\frac{\exp(-\tilde \theta^{-1} u(c_i))}
       {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]    u(c_i) .$$
     Entropy evaluated at the minimizing probability distortion
-    [\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
-    reference="eqn:Murphys_law_2"} equals $E \tilde m \log \tilde m$ or
+    XXXXX equals $E \tilde m \log \tilde m$ or
     $$\begin{aligned}
-    \label{eqn:entropy_constraint}
     & & \sum_{i=1}^I   \left[\frac{\exp(-\tilde \theta^{-1} u(c_i))}
       {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]  \times \cr
        & & \left\{ -\tilde \theta^{-1} u(c_i) + \log \left(\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j \right)
@@ -134,101 +62,55 @@ over probability distributions expresses his aversion to ambiguity.
       & = & -\tilde \theta^{-1} \sum_{i=1}^I  \pi_i \left[\frac{\exp(-\tilde \theta^{-1} u(c_i))}
       {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]    u(c_i)  \cr
       & & + \log \left(\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j \right) .
-         \end{aligned}$$ Expression
-    [\[eqn:entropy_constraint\]](#eqn:entropy_constraint){reference-type="eqref"
-    reference="eqn:entropy_constraint"} implies that $$\begin{aligned}
-     - \tilde \theta \log \left(\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j \right)  & = &
+         \end{aligned}$$ 
+    
+    Expression XXXX implies that 
+    $$\begin{aligned}
+      & & - \tilde \theta \log \left(\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j \right) & = &
       \sum_{i=1}^I  \pi_i \left[\frac{\exp(-\tilde \theta^{-1} u(c_i))}
       {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]    u(c_i) \cr
-      & + &  \tilde \theta (c;\eta) \sum_{i=1}^I \log \tilde m_i(c;\eta) \tilde m_i(c;\eta) \pi_i ,\end{aligned}$$
-    where the last term is $\tilde \theta$ times the entropy of the
-    worst-case probability distribution. We shall encounter a closely
-    related expression soon.
+      &  &  \quad \quad \quad \quad \quad \quad  + \quad   \tilde \theta (c;\eta) \sum_{i=1}^I \log \tilde m_i(c;\eta) \tilde m_i(c;   \eta) \pi_i ,\end{aligned}$$
+    
 
-3.  **Multiplier preferences.** A decision maker is said to have
-    *multiplier preferences* when he ranks consumption plans $c$
-    according to $$\label{Pmultiplier}
+    where the last term is $\tilde \theta$ times the entropy of the worst-case probability distribution. 
+    
+    We shall encounter a closely     related expression soon.
+
+3.  **Multiplier preferences.** A decision maker is said to have *multiplier preferences* when he ranks consumption plans $c$    according to $$
     {\sf T}u(c) \doteq \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$$
     subject to $$\sum_{i=1}^I \pi_i m_i = 1 .$$ Here
-    $\theta \in (\underline \theta, +\infty )$ is a 'penalty parameter'
-    that governs a 'cost' to an 'evil agent' who distorts probabilities
-    by choosing $\{m_i\}_{i=1}^I$. Lower values of the penalty parameter
-    $\theta$ express more apprehension about the baseline probability
-    distribution $\pi$.[^2] We call the minimization problem on the
-    right side of [\[Pmultiplier\]](#Pmultiplier){reference-type="eqref"
-    reference="Pmultiplier"} a *multiplier problem*. The minimizing
-    probability that solves the multiplier problem is
-    $$\label{eqn:Murphys_law} \hat m_i(c; \theta) = \frac{ \exp \bigl(- u(c_i)/\theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\theta\bigr) } .$$
-    We can solve $$\label{eqn:entropy_grand_2}
+    $\theta \in (\underline \theta, +\infty )$ is a 'penalty parameter'  that governs a 'cost' to an 'evil agent' who distorts probabilities  by choosing $\{m_i\}_{i=1}^I$. Lower values of the penalty parameter $\theta$ express more apprehension about the baseline probability  distribution $\pi$.[^2]
+    
+    We call the minimization problem on theright side of XXXXX a *multiplier problem*. The minimizing probability that solves the multiplier problem is
+    $$ \hat m_i(c; \theta) = \frac{ \exp \bigl(- u(c_i)/\theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\theta\bigr) } .$$
+    We can solve $$
     \sum_i \pi_i \frac{ \exp \bigl(- u(c_i)/ \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/ \theta\bigr) }
     \log \biggl[\frac{ \exp \bigl(- u(c_i)/\theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\theta\bigr) }
-    \biggr] = \tilde \eta$$ to find an entropy level
-    $\tilde \eta (c; \theta)$ associated with multiplier preferences
-    with penalty parameter $\theta$ and allocation $c$. For a fixed
-    $\theta$, the $\tilde \eta$ that solves this equation is a function
+    \biggr] = \tilde \eta$$ to find an entropy level  $\tilde \eta (c; \theta)$ associated with multiplier preferences with penalty parameter $\theta$ and allocation $c$. 
+    
+    For a fixed$\theta$, the $\tilde \eta$ that solves this equation is a function
     of the consumption plan $c$
 
-    The forms of
-    [\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
-    reference="eqn:Murphys_law_2"} and
-    [\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
-    reference="eqn:Murphys_law"} are identical, but the Lagrange
-    multiplier $\tilde \theta$ appears in
-    [\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
-    reference="eqn:Murphys_law_2"} while the penalty parameter or
-    multiplier $\theta$ appears in
-    [\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
-    reference="eqn:Murphys_law"} .
+    The forms ofXXXXX and XXXXX are identical, but the Lagrange multiplier $\tilde \theta$ appears in XXXXX while the penalty parameter or multiplier $\theta$ appears inXXXXXX.
 
-    Formulas
-    [\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
-    reference="eqn:Murphys_law_2"} and
-    [\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
-    reference="eqn:Murphys_law"} show that worst-case probabilities are
-    *context specific* in the sense that they depend both on the utility
-    function $u$ and the consumption plan $c$.
+    Formulas XXXX and XXXXX show that worst-case probabilities are *context specific* in the sense that they depend both on the utilityfunction $u$ and the consumption plan $c$.
 
     If we add $\theta$ times entropy under the worst-case model to
     expected utility under the worst-case model, we find that the
     indirect utility function function under multiplier preferences is
     $$-  \theta \log \left(\sum_{j=1}^I \exp(- \theta^{-1} u(c_j) ) \pi_j \right) .$$
 
-4.  **Risk-sensitive preferences.** Substituting $\hat m_i$ into
-    $\sum_{i=1}^I \pi_i \hat m_i [  u(c_i) + \theta \log \hat m_i ]$
-    gives the indirect utility function
-    $$\label{eqn:risksensitive} {\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).$$
-    Here ${\sf T} u$ in
-    [\[eqn:risksensitive\]](#eqn:risksensitive){reference-type="eqref"
-    reference="eqn:risksensitive"} is the *risk-sensitivity* operator of
-    @jacobson and @whittle. It defines a *risk-sensitive* preference
-    ordering over plans $c$. Because it is not linear in utilities
-    $u(c_i)$ and probabilities $\pi_i$, it is said not to be separable
-    across states. Because risk-sensitive preferences use a unique
-    probability distribution, they apparently express no model distrust
-    or ambiguity. Instead, they make an additional adjustment for
-    risk-aversion beyond that embedded in the curvature of $u$. For
-    $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure
-    [1.2](#fig_new_figure3){reference-type="ref"
-    reference="fig_new_figure3"} plots the risk-sensitive criterion
-    ${\sf T} u(c)$ defined in
-    [\[eqn:risksensitive\]](#eqn:risksensitive){reference-type="eqref"
-    reference="eqn:risksensitive"} as a function of $\pi_1$ for values
-    of $\theta$ of 100 and .6. For large values of $\theta$,
-    ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$,
-    but for lower values of $\theta$, ${\sf T} u(c)$ has considerable
-    curvature as a function of $\pi_1$. (Under expected utility, i.e.,
-    $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is
-    convex as a function of $\pi_1$ when $\theta< + \infty$.)
+4.  **Risk-sensitive preferences.** Substituting $\hat m_i$ into $\sum_{i=1}^I \pi_i \hat m_i [  u(c_i) + \theta \log \hat m_i ]$    gives the indirect utility function
+    $${\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).$$
+    Here ${\sf T} u$ in     XXXX is the *risk-sensitivity* operator of Jacobson and Whittle. @jacobson and @whittle. It defines a *risk-sensitive* preference    ordering over plans $c$. Because it is not linear in utilities $u(c_i)$ and probabilities $\pi_i$, it is said not to be separable across states. Because risk-sensitive preferences use a unique probability distribution, they apparently express no model distrust or ambiguity. Instead, they make an additional adjustment for risk-aversion beyond that embedded in the curvature of $u$. For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure [1.2] plots the risk-sensitive criterion
+    ${\sf T} u(c)$ defined in    XXXXX as a function of $\pi_1$ for values
+    of $\theta$ of 100 and .6. For large values of $\theta$, ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$, but for lower values of $\theta$, ${\sf T} u(c)$ has considerable    curvature as a function of $\pi_1$. (Under expected utility, i.e., $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is convex as a function of $\pi_1$ when $\theta< + \infty$.)
 
-    ![${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly
-    linear line) and $\theta=.6$ (convex curved line). Here
-    $I=2, c_1=2, c_2=1$,
+    ${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) and $\theta=.6$ (convex curved line). Here  $I=2, c_1=2, c_2=1$,
     $u(c) = \ln c$.](new_figure3.eps){#fig_new_figure3 height="2in"}
 
-5.  **Ex post Bayesian preferences.** A decision maker is said to have
-    *ex post Bayesian preferences* when he ranks consumption plans
-    according to the expected utility function
-    $$\sum_i \hat \pi_i (c^*) u(c_i)$$ where $\hat \pi(c^*)$ is the
+5.  **Ex post Bayesian preferences.** A decision maker is said to have *ex post Bayesian preferences* when he ranks consumption plans according to the expected utility function    $$\sum_i \hat \pi_i (c^*) u(c_i)$$ 
+where $\hat \pi(c^*)$ is the
     worst-case probability distribution associated with multiplier or
     constraint preferences evaluated at a particular consumption plan
     $c^* = \{c_i^*\}_{i=1}^I$. At $c^*$, an ex post Bayesian's
