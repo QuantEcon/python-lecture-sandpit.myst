@@ -21,7 +21,7 @@ This lecture describes   static representations of five classes of preferences o
 
 Basic ingredients are 
 
-* a set of states of the world
+*  a set of states of the world
 *  plans describing outcomes as functions of the state of the world,
 *  a  utility  function mapping outcomes into utilities
 *  either a probability distribution or a **set** of probability distributions over states of the world; and 
@@ -32,8 +32,8 @@ In more detail, we'll work with the following setting.
 
  *  A  finite set of possible **states** ${\cal I} = \{i= 1, \ldots, I\}$.
  *  A (consumption) **plan** is a function $c: {\cal I} \rightarrow {\mathbb R}$.  
- * $u: {\mathbb R} \rightarrow {\mathbb R}$ is a **utility function**.
- * $\pi$ is an $I \times 1$ vector of nonnegative **probabilities** over  states, with $\pi_ i \geq 0, \sum_{i=1}^I \pi_i = 1$.
+ * $u: {\mathbb R} \rightarrow {\mathbb R}$  is a **utility function**.
+ * $\pi$ is an $I \times 1$ vector of nonnegative probabilities over  states, with $\pi_ i \geq 0, \sum_{i=1}^I \pi_i = 1$.
  * **Relative entropy** of a probability vector  $\hat \pi$ with respect to a probability vector $\pi$ is the expected value of the logarithm of the  likelihood ratio $m_i \doteq \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr) $  under   distribution $\hat \pi$:  $
  \textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \hat \pi_i  \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)   = \sum_{i=1}^I \pi_i \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr) \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)  $ or $
     \textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \pi_i m_i \log m_i  . $
@@ -63,16 +63,38 @@ model ambiguity and each of which is cast in terms of a set of probability distr
 * The  set of distributions expresses the decision maker's ambiguity about the probability model.
 *  Minimization over probability distributions expresses his aversion to ambiguity.
 
-1.  **Expected utility.** A decision maker is said to have *expected     utility preferences* when he ranks plans $c$ by their expected
-    utilities $$\sum_{i=1}^I u(c_i) \pi_i,$$ where $u$ is a unique     utility function and $\pi$ is a unique probability measure over     states.
+1.  **Expected utility.** A decision maker is said to have *expected     utility preferences* when he ranks plans $c$ by their expected utilities 
+  
+    $$
+            \sum_{i=1}^I u(c_i) \pi_i, 
+    $$ (tom1)
+
+    GGHH  Equation {eq}`tom1`
+    where $u$ is a unique utility function and $\pi$ is a unique probability measure over     states.
+
     * A known $\pi$ expresses risk.
     *  Curvature of $u$ expresses
     risk aversion.
 
-2.  **Constraint preferences.** A decision maker is said to have *constraint preferences* when he ranks plans $c$ according to
-    $$ \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I m_i\pi_i  u(c_i)$$
-    subject to $$\sum_{i=1}^I \pi_i m_i \log m_i \leq \eta$$ and
-    $$\sum_{i=1}^I \pi_i m_i = 1 .$$ 
+3.  **Constraint preferences.** A decision maker is said to have *constraint preferences* when he ranks plans $c$ according to  
+    
+    $$
+     \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I m_i\pi_i  u(c_i)
+    $$ 
+    subject to 
+    
+    $$
+    \sum_{i=1}^I \pi_i m_i \log m_i \leq \eta
+    
+    $$
+    
+     and
+    
+    $$
+    
+    \sum_{i=1}^I \pi_i m_i = 1 .
+    
+    $$ 
     
     Here $\eta \geq 0$ defines an  entropy ball of probability distributions $\hat \pi = m \pi$  surrounding a baseline distribution $\pi$. 
     
@@ -126,18 +148,22 @@ model ambiguity and each of which is cast in terms of a set of probability distr
          \end{aligned}$$ 
     
     Expression XXXX implies that 
-    $$\begin{aligned}
-      & & - \tilde \theta \log \left(\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j \right) & = &
+    
+    $$
+    \begin{aligned} 
+      - \tilde \theta \log \left(\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j \right) & = &
       \sum_{i=1}^I  \pi_i \left[\frac{\exp(-\tilde \theta^{-1} u(c_i))}
       {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]    u(c_i) \cr
-      &  &  \quad \quad \quad \quad \quad \quad  + \quad   \tilde \theta (c;\eta) \sum_{i=1}^I \log \tilde m_i(c;\eta) \tilde m_i(c;   \eta) \pi_i ,\end{aligned}$$
-    
+      &  + &    \tilde \theta (c;\eta) \sum_{i=1}^I \log \tilde m_i(c;\eta) \tilde m_i(c;   \eta) \pi_i ,
+      \end{aligned} 
+    $$ (tom2)
+    Equation {eq}`tom2`
 
     where the last term is $\tilde \theta$ times the entropy of the worst-case probability distribution. 
     
     We shall encounter a closely     related expression soon.
 
-3.  **Multiplier preferences.** A decision maker is said to have *multiplier preferences* when he ranks consumption plans $c$    according to $$
+5.  **Multiplier preferences.** A decision maker is said to have *multiplier preferences* when he ranks consumption plans $c$    according to $$
     {\sf T}u(c) \doteq \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$$
     subject to $$\sum_{i=1}^I \pi_i m_i = 1 .$$ Here
     $\theta \in (\underline \theta, +\infty )$ is a 'penalty parameter'  that governs a 'cost' to an 'evil agent' who distorts probabilities  by choosing $\{m_i\}_{i=1}^I$. Lower values of the penalty parameter $\theta$ express more apprehension about the baseline probability  distribution $\pi$.[^2]
@@ -161,7 +187,7 @@ model ambiguity and each of which is cast in terms of a set of probability distr
     indirect utility function function under multiplier preferences is
     $$-  \theta \log \left(\sum_{j=1}^I \exp(- \theta^{-1} u(c_j) ) \pi_j \right) .$$
 
-4.  **Risk-sensitive preferences.** Substituting $\hat m_i$ into $\sum_{i=1}^I \pi_i \hat m_i [  u(c_i) + \theta \log \hat m_i ]$    gives the indirect utility function
+6.  **Risk-sensitive preferences.** Substituting $\hat m_i$ into $\sum_{i=1}^I \pi_i \hat m_i [  u(c_i) + \theta \log \hat m_i ]$    gives the indirect utility function
     $${\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).$$
     Here ${\sf T} u$ in     XXXX is the *risk-sensitivity* operator of Jacobson and Whittle. @jacobson and @whittle. It defines a *risk-sensitive* preference    ordering over plans $c$. Because it is not linear in utilities $u(c_i)$ and probabilities $\pi_i$, it is said not to be separable across states. Because risk-sensitive preferences use a unique probability distribution, they apparently express no model distrust or ambiguity. Instead, they make an additional adjustment for risk-aversion beyond that embedded in the curvature of $u$. For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure [1.2] plots the risk-sensitive criterion
     ${\sf T} u(c)$ defined in    XXXXX as a function of $\pi_1$ for values
@@ -170,7 +196,7 @@ model ambiguity and each of which is cast in terms of a set of probability distr
     ${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) and $\theta=.6$ (convex curved line). Here  $I=2, c_1=2, c_2=1$,
     $u(c) = \ln c$.](new_figure3.eps){#fig_new_figure3 height="2in"}
 
-5.  **Ex post Bayesian preferences.** A decision maker is said to have *ex post Bayesian preferences* when he ranks consumption plans according to the expected utility function    $$\sum_i \hat \pi_i (c^*) u(c_i)$$ 
+7.  **Ex post Bayesian preferences.** A decision maker is said to have *ex post Bayesian preferences* when he ranks consumption plans according to the expected utility function    $$\sum_i \hat \pi_i (c^*) u(c_i)$$ 
 where $\hat \pi(c^*)$ is the
     worst-case probability distribution associated with multiplier or
     constraint preferences evaluated at a particular consumption plan
@@ -209,6 +235,7 @@ GGHH
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (11, 5)
 from matplotlib import rc, cm
 from mpl_toolkits.mplot3d import Axes3D
 from scipy import optimize, stats
