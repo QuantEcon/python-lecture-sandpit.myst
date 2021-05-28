@@ -224,30 +224,27 @@ $$
     -  \theta \log \left(\sum_{j=1}^I \exp(- \theta^{-1} u(c_j) ) \pi_j \right) .
 $$
 
-1.  **Risk-sensitive preferences.** Substituting $\hat m_i$ into $\sum_{i=1}^I \pi_i \hat m_i [  u(c_i) + \theta \log \hat m_i ]$ gives the indirect utility function
+**Risk-sensitive preferences.** Substituting $\hat m_i$ into $\sum_{i=1}^I \pi_i \hat m_i [  u(c_i) + \theta \log \hat m_i ]$ gives the indirect utility function
 
-    $$
-    {\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).
-    $$
+$$
+{\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).
+$$
     
-    Here ${\sf T} u$ in     XXXX is the *risk-sensitivity* operator of Jacobson and Whittle. @jacobson and @whittle. 
+Here ${\sf T} u$ in     XXXX is the *risk-sensitivity* operator of Jacobson and Whittle. @jacobson and @whittle. 
     
-    It defines a *risk-sensitive* preference    ordering over plans $c$. 
+It defines a *risk-sensitive* preference    ordering over plans $c$. 
     
-    Because it is not linear in utilities $u(c_i)$ and probabilities $\pi_i$, it is said not to be separable across states.
+Because it is not linear in utilities $u(c_i)$ and probabilities $\pi_i$, it is said not to be separable across states.
     
-    Because risk-sensitive preferences use a unique probability distribution, they apparently express no model distrust or ambiguity. Instead, they make an additional adjustment for risk-aversion beyond that embedded in the curvature of $u$. 
+Because risk-sensitive preferences use a unique probability distribution, they apparently express no model distrust or ambiguity. Instead, they make an additional adjustment for risk-aversion beyond that embedded in the curvature of $u$. 
     
-    For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure [1.2] plots the risk-sensitive criterion
-    ${\sf T} u(c)$ defined in    XXXXX as a function of $\pi_1$ for values
-    of $\theta$ of 100 and .6.
+For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure [1.2] plots the risk-sensitive criterion ${\sf T} u(c)$ defined in    XXXXX as a function of $\pi_1$ for values of $\theta$ of 100 and .6.
     
-    For large values of $\theta$, ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$, but for lower values of $\theta$, ${\sf T} u(c)$ has considerable    curvature as a function of $\pi_1$. (Under expected utility, i.e., $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is convex as a function of $\pi_1$ when $\theta< + \infty$.)
+For large values of $\theta$, ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$, but for lower values of $\theta$, ${\sf T} u(c)$ has considerable    curvature as a function of $\pi_1$. (Under expected utility, i.e., $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is convex as a function of $\pi_1$ when $\theta< + \infty$.)
 
-    ${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) and $\theta=.6$ (convex curved line). Here  $I=2, c_1=2, c_2=1$,
-    $u(c) = \ln c$.](new_figure3.eps){#fig_new_figure3 height="2in"}
+${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) and $\theta=.6$ (convex curved line). Here  $I=2, c_1=2, c_2=1$, $u(c) = \ln c$.](new_figure3.eps){#fig_new_figure3 height="2in"}
 
-2. **Ex post Bayesian preferences.** A decision maker is said to have *ex post Bayesian preferences* when he ranks consumption plans according to the expected utility function    
+**Ex post Bayesian preferences.** A decision maker is said to have *ex post Bayesian preferences* when he ranks consumption plans according to the expected utility function    
 
 $$
 \sum_i \hat \pi_i (c^*) u(c_i)
@@ -257,29 +254,15 @@ where $\hat \pi(c^*)$ is the worst-case probability distribution associated with
 
 At $c^*$, an ex post Bayesian's indifference curves are tangent to those for multiplier and constraint preferences with appropriately chosen $\theta$ and $\eta$, respectively.
 
-[\[rem:moment_generate\]]{#rem:moment_generate
-label="rem:moment_generate"} In
-[\[eqn:risksensitive\]](#eqn:risksensitive){reference-type="eqref"
-reference="eqn:risksensitive"},
-$E \exp\bigl(-u(c_i)/\theta\bigr) = \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$
-is evidently a *moment generating function* for the random variable
-$u(c_i)$, while
-$g(\theta^{-1}) \doteq  \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$
-is a *cumulant generating function*,
-$g(\theta^{-1}) = \sum_{j=1}^\infty \kappa_j \frac{{(-\theta^{-1})}^{j}}{j!}$,
-where $\kappa_j$ is the $j$th cumulant of the random variable $u(c)$.
-Then
-${\sf T}u(c) = -\theta g(\theta^{-1}) = -\theta \sum_{j=1}^\infty \kappa_j \frac{{(-\theta^{-1})}^{j}}{j!}$.
-In general, when $\theta < +\infty$, ${\sf T} u(c)$ depends on cumulants
-of all orders. These statements extend to cases with continuous
-probability distributions for $c$ and therefore for $u(c)$. For the
-particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$,
-$\kappa_1 = \mu_u, \kappa_2 = \sigma_u^2$ ,and
-$\kappa_j = 0 \ \forall j \geq 3$, so
-${\sf T} u(c) = \mu_u - \frac{1}{2 \theta} \sigma_u^2$, which becomes
-expected utility $\mu_u$ when $\theta^{-1} = 0$.
+**Digression on moment generating functions:**  The object $E \exp\bigl(-u(c_i)/\theta\bigr) = \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$ is evidently a *moment generating function* for the random variable $u(c_i)$, while $g(\theta^{-1}) \doteq  \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$ is a *cumulant generating function*, $g(\theta^{-1}) = \sum_{j=1}^\infty \kappa_j \frac{{(-\theta^{-1})}^{j}}{j!}$, where $\kappa_j$ is the $j$th cumulant of the random variable $u(c)$.
 
-GGHH
+Then ${\sf T}u(c) = -\theta g(\theta^{-1}) = -\theta \sum_{j=1}^\infty \kappa_j \frac{{(-\theta^{-1})}^{j}}{j!}$. 
+
+In general, when $\theta < +\infty$, ${\sf T} u(c)$ depends on cumulants of all orders.
+
+These statements extend to cases with continuous probability distributions for $c$ and therefore for $u(c)$. For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 = \mu_u, \kappa_2 = \sigma_u^2$ , and $\kappa_j = 0 \ \forall j \geq 3$, so ${\sf T} u(c) = \mu_u - \frac{1}{2 \theta} \sigma_u^2$, which becomes expected utility $\mu_u$ when $\theta^{-1} = 0$.
+
+
 
 
 ```{code-cell} ipython3
