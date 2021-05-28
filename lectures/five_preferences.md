@@ -381,12 +381,21 @@ for i in range(π_hat_0_vals.size):  # Loop over all possible values for `π_hat
 ```
 
 ```{code-cell} ipython3
+---
+render:
+  figure:
+    caption: |
+      A Cool Figure
+    name: figure2-1
+---
 plt.figure(figsize=(5, 3))
 plt.plot(π_hat_0_vals, ent_vals, color='blue');
 plt.ylabel(r'entropy ($\pi_{1}=%.2f$)' % π[0] );
 plt.xlabel(r'$\hat{\pi}_1$');
 plt.show()
 ```
+
+This is a reference to {ref}`figure2-1`
 
 ```{code-cell} ipython3
 # Use same grid for `π_0_vals` as for `π_hat_0_vals` 
