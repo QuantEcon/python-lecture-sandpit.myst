@@ -25,9 +25,11 @@ To do this, we use two ideas:
 
 We  begin with a **key asset pricing equation** formulated by Stephen Ross and by Michael Harrison and David Kreps:
 
+MATT'S LESSON ABOUT HOW TO TAG EQUATIONS
 
-
-$$ E m R^i = 1  \label{eq:EMR1} \tag{1}  $$
+$$
+ E m R^i = 1  
+$$ (eq:EMR1)
 
 for $i=1, \ldots, I$ and where
  
@@ -38,9 +40,10 @@ E &\sim \text { mathematical expectation }
 \end{aligned}$$
 
 
-We combine  key equation \eqref{eq:EMR1} with a  remark of Lars Peter Hansen that   "asset pricing theory is all about covariances".
 
-By that remark, Lars Hansen meant that interesting restrictions can be deduced by recognizing that $E m R^i$ is a component of the covariance between $m $ and $R^i$ and then using that fact to rearrange key equation  \eqref{eq:EMR1}.
+We combine  key equation {eq}`eq:EMR1` with a  remark of Lars Peter Hansen that   "asset pricing theory is all about covariances".
+
+By that remark, Lars Hansen meant that interesting restrictions can be deduced by recognizing that $E m R^i$ is a component of the covariance between $m $ and $R^i$ and then using that fact to rearrange key equation  {eq}`eq:EMR1`.
 
 
 Let's do this step by step.
@@ -92,13 +95,13 @@ We can obtain the celebrated **expected-return-Beta -representation** for gross 
  to become
 
 $$
-E R^{i}=R^{f}+\left(\underbrace{\frac{\operatorname{cov}\left(R^{i}, m\right)}{\operatorname{var}(m)}}_{\quad\quad\beta_{i,m} \\ \text{regression coefficient}}\right)\left(\underbrace{-\frac{\operatorname{var}(m)}{E(m)}}_{\quad\lambda_{m} \\ \text{price of risk}}\right) \label{eq:ERbetarep} \tag{4}
+E R^{i}=R^{f}+\left(\underbrace{\frac{\operatorname{cov}\left(R^{i}, m\right)}{\operatorname{var}(m)}}_{\quad\quad\beta_{i,m} \\ \text{regression coefficient}}\right)\left(\underbrace{-\frac{\operatorname{var}(m)}{E(m)}}_{\quad\lambda_{m} \\ \text{price of risk}}\right) 
 $$
  
 or
 
 $$
-E R^{i}=R^{f}+\beta_{i, m} \lambda_{m}
+E R^{i}=R^{f}+\beta_{i, m} \lambda_{m} \label{eq:ERbetarep} \tag{4}
 $$
 
 Here 
@@ -262,7 +265,7 @@ One is a  **time-series regression** of  gross return $R_t^i$ on multiple
 risk factors $f_t^j, j = a, b, \ldots $ that is designed to uncover exposures of return $R^i$ to each of a set of  **risk-factors** $f_t^j, j = a, b, \ldots, $:
 
 - $$R_{t}^{i}=a_{i}+\beta_{i, a} f_{t}^{a}+\beta_{i, b} f_{t}^{b}+\ldots+\epsilon_{t}^{i}, \quad t=1,2, \ldots, T\\
-\epsilon_{t}^{i} \perp f_{t}^{j}, i=1,2, \ldots, I; j = a, b, \ldots \label{eq:EMR7} \tag{7}
+\epsilon_{t}^{i} \perp f_{t}^{j}, i=1,2, \ldots, I; j = a, b, \ldots 
 $$
 
 For example:
@@ -285,11 +288,14 @@ $i =1, 2, \ldots, I$ on *prices of risk* $\lambda_j$ for $j =a, b, c, \ldots$
 Here is the regression specification:
 
 
+$$
 \begin{aligned}
-E R^{i}=\gamma+\beta_{i, a} \lambda_{a}+\beta_{i, b} \lambda_{b}+\cdots & \quad \text{for } i=1,2, \ldots, I \sim \text { returns } R^i \\
-& \lambda_{j}, j=a, b, \ldots \ldots = \text { price of  exposure } 
+E R^{i} &  =\gamma+\beta_{i, a} \lambda_{a}+\beta_{i, b} \lambda_{b}+\cdots \\
+ & \quad \text{for } i=1,2, \ldots, I \sim \text { returns } R^i \\
+ \lambda_{j}, & j=a, b, \ldots \ldots = \text { price of  exposure } 
  \text { to risk factor } a, b, \ldots 
 \end{aligned}
+$$
 
 
 +++
@@ -320,6 +326,6 @@ Note that presumably  the risk-free return $E R^{f}=\gamma$.
 
 For excess returns $R^{ei} = R^i - R^f$ we have
 
-
-\
-$$E R^{e i}=\beta_{i, a} \lambda_{a}+\beta_{i, b} \lambda_{b}+\cdots+\alpha_{i}, i=1, \ldots, I$$
+$$
+E R^{e i}=\beta_{i, a} \lambda_{a}+\beta_{i, b} \lambda_{b}+\cdots+\alpha_{i}, i=1, \ldots, I
+$$
