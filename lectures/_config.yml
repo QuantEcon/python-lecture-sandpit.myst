@@ -31,3 +31,6 @@ sphinx:
       header_organisation_url: https://quantecon.org
       header_organisation: QuantEcon
     mathjax_path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  
+bibtex_bibfiles:
+    - _static/quant-econ.bib
