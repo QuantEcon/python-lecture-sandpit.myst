@@ -1,5 +1,8 @@
-- file: index
+format: jb-article
+root: index
+options:
   numbered: true
+sections:
 - file: lagrangian_lqdp
 - file: cross_product_trick
 - file: markov_switching_lss
