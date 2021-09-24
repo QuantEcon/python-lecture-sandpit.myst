@@ -13,7 +13,6 @@ kernelspec:
 
 ## Primer on asset pricing theory
 
-Test reference {cite}`definetti`
 
 In this notebook, we summarize the heart of modern asset-pricing theory 
 
@@ -25,7 +24,6 @@ To do this, we use two ideas:
 
 We  begin with a **key asset pricing equation** formulated by Stephen Ross and by Michael Harrison and David Kreps:
 
-MATT'S LESSON ABOUT HOW TO TAG EQUATIONS
 
 $$
  E m R^i = 1  
@@ -43,6 +41,11 @@ E &\sim \text { mathematical expectation }
 
 We combine  key equation {eq}`eq:EMR1` with a  remark of Lars Peter Hansen that   "asset pricing theory is all about covariances".
 
+```{note}
+Lars Hansen's remark is a concise summary of ideas in {cite}`HansenRichard1987` and
+{cite}`Hansen_Jagannathan_1991`.
+```
+
 By that remark, Lars Hansen meant that interesting restrictions can be deduced by recognizing that $E m R^i$ is a component of the covariance between $m $ and $R^i$ and then using that fact to rearrange key equation  {eq}`eq:EMR1`.
 
 
@@ -56,14 +59,14 @@ covariance implies that
 $$ E m R^i = E m E R^{i}+\operatorname{cov}\left(m, R^{i}\right)  $$
 
 Substituting this result into 
-key equation \eqref{eq:EMR1} gives
+key equation {eq}`eq:EMR1` gives
 
 $$
 1 = E m E R^{i}+\operatorname{cov}\left(m, R^{i}\right) 
- \label{eq:EMR2} \tag{2} $$
+$$ (eq:EMR2) 
  
 Next note that for a risk-free asset with non-random gross return $R^f$, equation
-\eqref{eq:EMR1} becomes $1 = E R^f m = R^f E m $.
+{eq}`eq:EMR1` becomes $1 = E R^f m = R^f E m $.
 
 This is true because we can pull the constant $R^f$ outside the mathematical expectation. 
 
@@ -72,7 +75,7 @@ $$
 R^{f}  \equiv 1 / E(m) 
 $$
 
-Using this formula for $R^f$ in equation \eqref{eq:EMR2} and rearranging, it follows that
+Using this formula for $R^f$ in equation {eq}`eq:EMR2` and rearranging, it follows that
 
 $$
 R^{f} = E R^{i}+\operatorname{cov}\left(m, R^{i} \right) R^{f}$$
@@ -84,15 +87,15 @@ $$E R^i = R^{f}-\operatorname{cov}\left(m, R^{i}\right) R^{f} . $$
 It follows that we can express an **excess return** $E R^{i}-R^{f}$ on asset $i$ relative to the risk-free rate as
 
 $$ E R^{i}-R^{f} = -\operatorname{cov}\left(m, R^{i}\right) R^{f} 
-\label{eq:EMR3} \tag{3}$$
+$$ (eq:EMR3)
+ 
 
-Equation \eqref{eq:EMR3} can be rearranged to display some important aspects of asset pricing theory.
+Equation {eq}`eq:EMR3` can be rearranged to display some important aspects of asset pricing theory.
 
 
 **Expected return - Beta representation**
 
-We can obtain the celebrated **expected-return-Beta -representation** for gross return $R^i$ simply  by rearranging excess return equation \eqref{eq:EMR3}
- to become
+We can obtain the celebrated **expected-return-Beta -representation** for gross return $R^i$ simply  by rearranging excess return equation {eq}`eq:EMR3` to become
 
 $$
 E R^{i}=R^{f}+\left(\underbrace{\frac{\operatorname{cov}\left(R^{i}, m\right)}{\operatorname{var}(m)}}_{\quad\quad\beta_{i,m} \\ \text{regression coefficient}}\right)\left(\underbrace{-\frac{\operatorname{var}(m)}{E(m)}}_{\quad\lambda_{m} \\ \text{price of risk}}\right) 
@@ -101,8 +104,8 @@ $$
 or
 
 $$
-E R^{i}=R^{f}+\beta_{i, m} \lambda_{m} \label{eq:ERbetarep} \tag{4}
-$$
+E R^{i}=R^{f}+\beta_{i, m} \lambda_{m} 
+$$ (eq:ERbetarep)
 
 Here 
 
@@ -149,7 +152,7 @@ When $\gamma >0$, it is true that
  
  * when consumption growth is **low**, $m$ is **high**
  
-According the representation \eqref{eq:ERbetarep}, an asset with an $R^i$ that can be expected to be high when consumption growth is low  has $\beta_i$ positive and a low expected return.  
+According the representation {eq}`eq:ERbetarep`, an asset with an $R^i$ that can be expected to be high when consumption growth is low  has $\beta_i$ positive and a low expected return.  
 
    * because it has a high gross return when consumption growth is low, it is a good hedge against consumption risk, which justifies its low average return
 
@@ -165,9 +168,13 @@ An asset with an $R^i$ that is low when consumption growth is low has $\beta_i$ 
 Now we'll derive the celebrated **mean-variance frontier**.
 
 We do this using a classic method of Lars Peter Hansen and Scott
-Richard.
+Richard {cite}`HansenRichard1987`. 
 
-Their  idea was rearrange the the key equation \eqref{eq:EMR1}, namely,  $E m R^i = 1$, and then  to  apply the Cauchy-Schwarz inequality.
+```{note}
+Methods of Hansen and Richard are described and used extensively by {cite}`Cochrane_2005`.
+```
+
+Their  idea was rearrange the key equation  {eq}`eq:EMR1`, namely,  $E m R^i = 1$, and then  to  apply the Cauchy-Schwarz inequality.
 
 A convenient way to remember the Cauchy-Schwartz inequality in our context is that it says that an  $R^2$ in any regression has to be  less than or equal to $1$.
 
@@ -176,8 +183,7 @@ Let's apply that idea to deduce
 
 $$ 
 1= E\left(m R^{i}\right)=E(m) E\left(R^{i}\right)+\rho_{m, R^{i}}\frac{\sigma(m)}{E(m)} \sigma\left(R^{i}\right) 
-\label{eq:EMR5} \tag{5} 
-$$ 
+$$ (eq:EMR5) 
 
 where $\rho_{m, R^i}$ is the correlation coefficient  defined as
 
@@ -187,17 +193,17 @@ $$
 
 and where $\sigma$ denotes the standard deviation of the variable in parentheses
 
-Equation \eqref{eq:EMR5}  implies
+Equation {eq}`eq:EMR5`  implies
 
 $$E R^{i}=R^{f}-\rho_{m, R^i} \frac{\sigma(m)}{E(m)} \sigma\left(R^{i}\right)$$
 
 Because $\rho_{m, R^i} \in [-1,1]$, it follows that  $|\rho_{m, R^i}| \leq 1$ and that
 
 $$
-\left|E R^i-R^{f}\right| \leqslant \frac{\sigma(m)}{E(m)} \sigma\left(R^{i}\right) \label{eq:ERM6} \tag{6}
-$$
+\left|E R^i-R^{f}\right| \leqslant \frac{\sigma(m)}{E(m)} \sigma\left(R^{i}\right) 
+$$ (eq:ERM6)
 
-Inequality \eqref{eq:ERM6} delineates a **mean-variance frontier**
+Inequality {eq}`eq:ERM6` delineates a **mean-variance frontier**
 
 (Actually, it looks more like a **mean-standard-deviation frontier**)
 
@@ -216,7 +222,7 @@ The image below illustrates a mean-variance frontier.
 
 <img src = "./AssetPricing_v1.jpg" style="zoom:60%">
 
-The mathematical  structure of the mean-variance frontier described by inequality \eqref{eq:ERM6} implies 
+The mathematical  structure of the mean-variance frontier described by inequality {eq}`eq:ERM6` implies 
 that
 
 
@@ -242,9 +248,10 @@ that
 
 - for any mean-variance-efficient return $R^{m v}$ that is on the frontier but that is  **not** $R^{f}$, there exists  a **single-beta representation** for any return $R^i$ that takes the form:
 
-  $$ E R^{i}=R^{f}+\beta_{i, R^{m v}}\left[E\left(R^{m v}\right)-R^{f}\right] \label{eq:EMR7} \tag{7}$$
+$$ E R^{i}=R^{f}+\beta_{i, R^{m v}}\left[E\left(R^{m v}\right)-R^{f}\right] 
+$$ (eq:EMR7) 
    
-- The special case of a single-beta representation \eqref{eq:EMR7} with $ R^{i}=R^{m v}$   is 
+- The special case of a single-beta representation {eq}`eq:EMR7` with $ R^{i}=R^{m v}$   is 
   
   $E R^{m v}=R^{f}+1 \cdot\left[E\left(R^{m v}\right)-R^{f}\right] $
   
