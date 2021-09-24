@@ -11,10 +11,18 @@ kernelspec:
   name: python3
 ---
 
-## Primer on asset pricing theory
+## Elementary asset pricing theory
 
 
-In this notebook, we summarize the heart of modern asset-pricing theory 
+This lecture summarize the heart of applied asset-pricing theory.
+
+From a single equation, we'll derive 
+
+* a mean-variance frontier 
+
+* a single-factor model of excess returns on each member of a collection of assets
+
+
 
 To do this, we use two ideas:
 
@@ -22,7 +30,7 @@ To do this, we use two ideas:
   
   * a Cauchy-Schwartz inequality
 
-We  begin with a **key asset pricing equation** formulated by Stephen Ross and by Michael Harrison and David Kreps:
+We  begin with a **key asset pricing equation**:
 
 
 $$
@@ -33,17 +41,28 @@ for $i=1, \ldots, I$ and where
  
 $$\begin{aligned}
 m &=\text { stochastic discount factor } \\
-R^{i} &= \text { gross return  on asset }  i \\
+R^{i} &= \text {random gross return  on asset }  i \\
 E &\sim \text { mathematical expectation }
 \end{aligned}$$
 
+The random gross returns $R^i$ and the scalar stochastic discount factor $m$ live 
+live in a common probability space. 
+
+{cite}`HansenRichard1987` and {cite}`Hansen_Jagannathan_1991` explain how the existence of a scarlar stochastic discount factor that verifies  equation
+{eq}`eq:EMR1` is implied by a __law of one price__ that requires that all portfolios of assets 
+that end up having the same payouts must have the same price.
+
+They also explain how the __absence of an arbitrage__ implies that the stochastic discount
+factor $m \geq 0$.
 
 
 We combine  key equation {eq}`eq:EMR1` with a  remark of Lars Peter Hansen that   "asset pricing theory is all about covariances".
 
 ```{note}
 Lars Hansen's remark is a concise summary of ideas in {cite}`HansenRichard1987` and
-{cite}`Hansen_Jagannathan_1991`.
+{cite}`Hansen_Jagannathan_1991`. For other important foundations of these ideas, see
+{cite}`Ross_76`, {cite}`Ross_78`, {cite}`Harrison_Kreps_JET_79`, {cite}`Kreps_81`, and
+{cite}`Chamberlain_Rothschild`.
 ```
 
 By that remark, Lars Hansen meant that interesting restrictions can be deduced by recognizing that $E m R^i$ is a component of the covariance between $m $ and $R^i$ and then using that fact to rearrange key equation  {eq}`eq:EMR1`.
@@ -66,19 +85,25 @@ $$
 $$ (eq:EMR2) 
  
 Next note that for a risk-free asset with non-random gross return $R^f$, equation
-{eq}`eq:EMR1` becomes $1 = E R^f m = R^f E m $.
+{eq}`eq:EMR1` becomes 
+
+$$
+1 = E R^f m = R^f E m.
+$$
 
 This is true because we can pull the constant $R^f$ outside the mathematical expectation. 
 
 It follows that the  gross return on a risk-free asset is
+
 $$ 
-R^{f}  \equiv 1 / E(m) 
+R^{f}  = 1 / E(m) 
 $$
 
 Using this formula for $R^f$ in equation {eq}`eq:EMR2` and rearranging, it follows that
 
 $$
-R^{f} = E R^{i}+\operatorname{cov}\left(m, R^{i} \right) R^{f}$$
+R^{f} = E R^{i}+\operatorname{cov}\left(m, R^{i} \right) R^{f}
+$$
 
 which can be rearranged to become
 
@@ -90,7 +115,7 @@ $$ E R^{i}-R^{f} = -\operatorname{cov}\left(m, R^{i}\right) R^{f}
 $$ (eq:EMR3)
  
 
-Equation {eq}`eq:EMR3` can be rearranged to display some important aspects of asset pricing theory.
+Equation {eq}`eq:EMR3` can be rearranged to display important parts of asset pricing theory.
 
 
 **Expected return - Beta representation**
@@ -98,7 +123,7 @@ Equation {eq}`eq:EMR3` can be rearranged to display some important aspects of as
 We can obtain the celebrated **expected-return-Beta -representation** for gross return $R^i$ simply  by rearranging excess return equation {eq}`eq:EMR3` to become
 
 $$
-E R^{i}=R^{f}+\left(\underbrace{\frac{\operatorname{cov}\left(R^{i}, m\right)}{\operatorname{var}(m)}}_{\quad\quad\beta_{i,m} \\ \text{regression coefficient}}\right)\left(\underbrace{-\frac{\operatorname{var}(m)}{E(m)}}_{\quad\lambda_{m} \\ \text{price of risk}}\right) 
+E R^{i}=R^{f}+\left(\underbrace{\frac{\operatorname{cov}\left(R^{i}, m\right)}{\operatorname{var}(m)}}_{\quad\quad\beta_{i,m} = \\ \text{regression coefficient}}\right)\left(\underbrace{-\frac{\operatorname{var}(m)}{E(m)}}_{\quad\lambda_{m} = \\ \text{price of risk}}\right) 
 $$
  
 or
@@ -263,9 +288,9 @@ $$ (eq:EMR7)
 
 We briefly describe empirical implementations of multi-factor generalizations of the single-factor model described above.  
 
-The single-beta representation  \eqref{eq:EMR7} is a special case with there being just a single factor.
+The single-beta representation  {eq}`eq:EMR7` is a special case with there being just a single factor.
 
-Two representations are in play.  
+Two representations are often used in empirical work.  
 
 
 One is a  **time-series regression** of  gross return $R_t^i$ on multiple
