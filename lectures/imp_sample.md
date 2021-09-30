@@ -11,9 +11,18 @@ kernelspec:
   name: python3
 ---
 
-# LECTURE TITLE
+# Computing Mean of a Likelihood Ratio Process
 
-This lecture uses importance sampling to estimate the mean of a cumulative likelihood ratio $L\left(\omega^t\right) = \prod_{i=1}^t \ell \left(\omega_i\right)$.
+## Overview
+
+In this lecture XXXX we described a peculiar property of a likelihood ratio process, namely,
+that it's mean equals one for all $t \geq 0$ despite it's converging to zero almost surely.
+
+While it is easy to verify that peculiar properly analytically (i.e., in population), it is challenging to use a computer simulation to verify it via an application of a law of large numbers that entails studying sample averages of repeated simulations.  
+
+To confront this challenge, this lecture puts __importance sampling__ to work to accelerate convergence of sample averages to population means.
+
+We use  importance sampling to estimate the mean of a cumulative likelihood ratio $L\left(\omega^t\right) = \prod_{i=1}^t \ell \left(\omega_i\right)$.
 
 We start by importing some Python packages.
 
@@ -146,7 +155,7 @@ $$
 E^g\left[\ell\left(\omega\right)\right] = \int_\Omega \ell(\omega) g(\omega) d\omega = \int_\Omega \ell(\omega) \frac{g(\omega)}{h(\omega)} h(\omega) d\omega = E^h\left[\ell\left(\omega\right) \frac{g(\omega)}{h(\omega)}\right]
 $$
 
-### Selecting an $h$
+## Selecting a Sampling Distribution
 
 Since we must use an $h$ that has larger mass in parts of the distribution to which  $g$ puts low mass, we use $h=Beta(0.5, 0.5)$ as our importance distribution.
 
@@ -168,7 +177,7 @@ plt.ylim([0., 3.])
 plt.show()
 ```
 
-### Approximating a cumulative likelihood ratio
+## Approximating a cumulative likelihood ratio
 
 We now study how to use importance sampling to approximate
 ${E} \left[L(\omega^t)\right] = \left[\prod_{i=1}^T \ell \left(\omega_i\right)\right]$.
@@ -176,7 +185,7 @@ ${E} \left[L(\omega^t)\right] = \left[\prod_{i=1}^T \ell \left(\omega_i\right)\r
 As above, our plan is to draw  sequences $\omega^t$ from $q$ and then re-weight the likelihood ratio appropriately:
 
 $$
-\hat{E}^p \left[L\left(\omega^t\right)\right] = \hat{E}^p \left[\prod_{t=1}^T \ell \left(\omega_t\right)\right] = \hat{E}_0^q \left[\prod_{t=1}^T \ell \left(\omega_t\right) \frac{p\left(\omega_{t}\right)}{q\left(\omega_{t}\right)}\right] =
+\hat{E}^p \left[L\left(\omega^t\right)\right] = \hat{E}^p \left[\prod_{t=1}^T \ell \left(\omega_t\right)\right] = \hat{E}^q \left[\prod_{t=1}^T \ell \left(\omega_t\right) \frac{p\left(\omega_{t}\right)}{q\left(\omega_{t}\right)}\right] =
 \frac{1}{N} \sum_{i=1}^{N}\left( \prod_{t=1}^{T} \ell(\omega_{i,t}^h)\frac{p\left(\omega_{i,t}^h\right)}{q\left(\omega_{i,t}^h\right)}\right)
 $$
 
@@ -238,7 +247,7 @@ estimate(g_a, g_b, g_a, g_b, T=10, N=10000)
 estimate(g_a, g_b, h_a, h_b, T=10, N=10000)
 ```
 
-### Distribution of  sample mean estimates
+## Distribution of  Sample Mean
 
 We next study the bias and efficiency of the Monte Carlo and importance sampling approaches.
 
@@ -314,7 +323,7 @@ while the standard Monte Carlo estimates are biased downwards.
 
 Evidently, the bias increases with increases in $T$.
 
-### How to choose $h$
+## More Thoughts about Choice of Sampling Distribution
 
 +++
 
@@ -451,7 +460,7 @@ plt.show()
 However, $h_3$ is evidently a poor importance sampling distribution forpir problem,
 with a mean estimate far away from $1$ for $T = 20$.
 
-Notice that evan at $T = 1$, the mean estimate is more biased than using $g$ itself.
+Notice that evan at $T = 1$, the mean estimate with importance sampling is more biased than just sampling with  $g$ itself.
 
 Thus, our simulations suggest that we would be better off simply using Monte Carlo
 approximations under $g$ than using $h_3$ as an importance sampling distribution for our problem.
