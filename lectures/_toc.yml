@@ -11,4 +11,6 @@ sections:
 - file: robustness_graphs_chapter
 - file: lp_intro
 - file: opt_transport
+- file: qr_decomp
+- file: svd_intro
 - file: zreferences
