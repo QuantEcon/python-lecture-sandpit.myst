@@ -13,11 +13,9 @@ kernelspec:
 
 # Optimal Transport Problem
 
-+++
-
 ## Overview
 
-The **transportation**   or **optimal transport**  problem is interesting both because of its many applications and its important role in the history of economic theory.
+The **transportation** or **optimal transport** problem is interesting both because of its many applications and its important role in the history of economic theory.
 
 In this lecture, we describe the problem, tell how **linear programming** is a key tool for solving it,
 then provide  some examples.  
@@ -45,22 +43,21 @@ Suppose that $m$ factories produce goods that must be sent to $n$ locations.
 
 Let 
 
- * $x_{ij}$ denote the quantity  shipped from factory $i$ to location  $j$
- 
- * $c_{ij}$ denote the cost of shipping one unit  from factory $i$ to location $j$
- 
- * $p_i$ denote the capacity of factory $i$ and $q_j$ denote the amount required at location $j$. 
- 
- *  $i = 1, 2, \dots, m$ and $j = 1, 2, \dots, n$.
+* $x_{ij}$ denote the quantity  shipped from factory $i$ to location  $j$
+
+* $c_{ij}$ denote the cost of shipping one unit  from factory $i$ to location $j$
+
+* $p_i$ denote the capacity of factory $i$ and $q_j$ denote the amount required at location $j$. 
+
+*  $i = 1, 2, \dots, m$ and $j = 1, 2, \dots, n$.
 
 A planner wants to minimize  total transportation costs subject to the following constraints:
 
+* The amount shipped **from** each factory must equal  its capacity.
 
- * The amount shipped **from** each factory  must equal  its capacity.
+* The amount shipped **to** each location must equal the quantity required there.
 
- * The amount shipped **to** each location   must equal the quantity  required there.
-
-The planner's problem can be expressed  as the following constrained minimization problem:
+The planner's problem can be expressed as the following constrained minimization problem:
 
 $$
 \begin{align*}
@@ -68,26 +65,24 @@ $$
 \mbox{subject to } \ & \sum_{j=1}^n x_{ij} = p_i, & i = 1, 2, \dots, m \\
 & \sum_{i=1}^m x_{ij} = q_j, & j = 1, 2, \dots, n \\
 & x_{ij} \ge 0 \\
-\end{align*} \tag{1}
-$$
+\end{align*}
+$$ (plannerproblem)
 
-This is an  **optimal transport problem** with
+This is an **optimal transport problem** with
 
- * $mn$ decision variables, namely, the entries $x_{ij}$   and
- 
- * $m+n$ constraints.
+* $mn$ decision variables, namely, the entries $x_{ij}$   and
 
-Summing the $q_j$'s across all $j$'s and the $p_i$'s across all $i$'s indicates that  the total capacity of all the factories  equals  total requirements at all locations: 
+* $m+n$ constraints.
+
+Summing the $q_j$'s across all $j$'s and the $p_i$'s across all $i$'s indicates that the total capacity of all the factories  equals  total requirements at all locations: 
 
 $$
 \sum_{j=1}^n q_j = \sum_{j=1}^n \sum_{i=1}^m x_{ij} = \sum_{i=1}^m \sum_{j=1}^n x_{ij} = \sum_{i=1}^m p_i
 $$
 
-+++
-
 ### Forming a  vector of decision variables
 
-A **matrix** of decision variables $x_{ij}$ appears in problem (2). 
+A **matrix** of decision variables $x_{ij}$ appears in problem {eq}`kroneckerprop`. 
 
 The Scipy function *linprog* expects to see a **vector** of decision variables. 
 
@@ -95,11 +90,11 @@ This situation impels us to want to  rewrite our problem in terms of a **vector*
 
 Let 
 
- * $X, C$ be $m \times n$ matrices with entries $x_{ij}, c_{ij}$,
- 
- * $p$ be $m$-dimensional vector with entries $p_i$,
- 
- * $q$ be $\color{Red}n$-dimensional vector with entries $q_j$. 
+* $X, C$ be $m \times n$ matrices with entries $x_{ij}, c_{ij}$,
+
+* $p$ be $m$-dimensional vector with entries $p_i$,
+
+* $q$ be $\color{Red}n$-dimensional vector with entries $q_j$. 
 
 Where $\mathbf{1}_n$ denotes $n$-dimensional column vector $(1, 1, \dots, 1)'$, our  problem can now be expressed compactly as:
 
@@ -112,8 +107,6 @@ $$
 \end{align*}
 $$
 
-
-
 We can convert the matrix $X$ into a vector by stacking all of its columns into a  column vector. 
 
 Doing this is called **vectorization**, an operation that we denote  $\operatorname{vec}(X)$. 
@@ -122,11 +115,13 @@ Similarly, we convert the matrix $C$ into an $mn$-dimensional vector $\operatorn
 
 The objective function can be expressed as the inner product between $\operatorname{vec}(C)$ and $\operatorname{vec}(X)$:
 
-$$\operatorname{vec}(C)' \cdot \operatorname{vec}(X).$$
+$$
+\operatorname{vec}(C)' \cdot \operatorname{vec}(X).
+$$
 
-To express the constraints in terms of $\operatorname{vec}(X)$, we use a  **Kronecker product**   denoted by $\otimes$ and defined as follows.
+To express the constraints in terms of $\operatorname{vec}(X)$, we use a **Kronecker product** denoted by $\otimes$ and defined as follows.
 
-Suppose $A$ is an $m \times s$ matrix with entries $(a_{ij})$ and that  $B$ is an $n \times t$ matrix.
+Suppose $A$ is an $m \times s$ matrix with entries $(a_{ij})$ and that $B$ is an $n \times t$ matrix.
 
 A **Kronecker product** of $A$ and $B$ is defined by
 
@@ -142,27 +137,35 @@ $$
 
 $A \otimes B$ is an $mn \times st$ matrix.
 
-It has the  property that for any $m \times n$ matrix $X$
+It has the property that for any $m \times n$ matrix $X$
 
-$$\operatorname{vec}(A'XB) = (B' \otimes A') \operatorname{vec}(X). \tag{2}$$
+$$
+\operatorname{vec}(A'XB) = (B' \otimes A') \operatorname{vec}(X).
+$$ (kroneckerprop)
 
 We can now express our constraints in terms of $\operatorname{vec}(X)$.
 
 Let $A = \mathbf{I}_m', B = \mathbf{1}_n$.
 
-By equation (2)
+By equation {eq}`kroneckerprop`
 
-$$X \ \mathbf{1}_n = \operatorname{vec}(X \ \mathbf{1}_n) = \operatorname{vec}(\mathbf{I}_m X \ \mathbf{1}_n) = (\mathbf{1}_n' \otimes \mathbf{I}_m) \operatorname{vec}(X).$$
+$$
+X \ \mathbf{1}_n = \operatorname{vec}(X \ \mathbf{1}_n) = \operatorname{vec}(\mathbf{I}_m X \ \mathbf{1}_n) = (\mathbf{1}_n' \otimes \mathbf{I}_m) \operatorname{vec}(X).
+$$
 
 where  $\mathbf{I}_m$ denotes the $m \times m$ identity matrix.
 
 Constraint $X \ \mathbf{1}_n = p$ can now be written as:
 
-$$(\mathbf{1}_n' \otimes \mathbf{I}_m) \operatorname{vec}(X) = p.$$
+$$
+(\mathbf{1}_n' \otimes \mathbf{I}_m) \operatorname{vec}(X) = p.
+$$
 
 Similarly, the constraint $X' \ \mathbf{1}_m = q$ can be rewriten as:
 
-$$(\mathbf{I}_n \otimes \mathbf{1}_m') \operatorname{vec}(X) = q.$$
+$$
+(\mathbf{I}_n \otimes \mathbf{1}_m') \operatorname{vec}(X) = q.
+$$
 
 Our problem can now be expressed in terms of an $mn$-dimensional vector of decision variables:
 
@@ -171,8 +174,8 @@ $$
 \min_{z} \ & \operatorname{vec}(C)' z \\
 \mbox{subject to } \ & A z = b \\
 & z \ge 0 \\
-\end{align*} \tag{3}
-$$
+\end{align*}
+$$ (decisionvars)
 
 where
 
@@ -189,12 +192,13 @@ where $z = \operatorname{vec}(X)$.
 
 **Example:**
 
-We now provide an example that takes the form (3) that we'll solve by deploying the function *linprog*.
+We now provide an example that takes the form {eq}`decisionvars` that we'll solve by deploying the function *linprog*.
 
-The table below provides numbers for the requirements vector $q$, the capacity vector $p$, and   entries $c_{ij}$  of the cost-of-shipping matrix
-$C$.
+The table below provides numbers for the requirements vector $q$, the capacity vector $p$,
+and entries $c_{ij}$  of the cost-of-shipping matrix $C$.
 
 
+```{raw} html
 <table>
     <tr>
 	    <th> </th>
@@ -223,6 +227,7 @@ $C$.
 	    <td>Capacity</td> <td>50</td> <td>100</td> <td>150</td> <td>300</td>
 	</tr>
 </table>
+```
 
 The numbers in the above table tell us to construct the following objects:
 
@@ -301,8 +306,6 @@ The singularity of $A$ reflects that the  first three constraints and the last f
 
 One  equality constraint is redundant.
 
-+++
-
 Below we drop one of the equality constraints, and use only  7 of them.
 
 After doing this, we attain the same minimized cost. 
@@ -325,15 +328,13 @@ linprog(C_vec, A_eq=A[:-1], b_eq=b[:-1], method='Revised simplex')
 
 Evidently, it is slightly quicker to work with the system that removed a redundant constraint.
 
-+++
-
 Let's drill down and do some more calculations to help us understand whether or not our finding **two** different optimal transport plans reflects our having dropped a redundant equality constraint.
 
-(Hint -- it will turn out that dropping a redundant equality isn't really what mattered.)
+```{admonition} Hint
+It will turn out that dropping a redundant equality isn't really what mattered.
+```
 
-+++
-
-To verify our hint, we shall simply use **all** of  the original equality constraints (including a redundant one),  but we'll just shuffle the order of the constraints.
+To verify our hint, we shall simply use **all** of  the original equality constraints (including a redundant one), but we'll just shuffle the order of the constraints.
 
 ```{code-cell} ipython3
 arr = np.arange(m+n)
@@ -362,13 +363,11 @@ for i in range(len(sol_found)):
     print(f"     minimized cost {i}: ", cost[i])
 ```
 
-**Ah hah!** As you can see, putting constraints in different orders in this case uncovers  two optimal transportation plans that achieve the same minimized cost.
+**Ah hah!** As you can see, putting constraints in different orders in this case uncovers two optimal transportation plans that achieve the same minimized cost.
 
 These are the same two plans computed early.
 
-+++
-
-Next, we show that leaving out the first constraint  "accidentally" leads to the initial plan that we computed.
+Next, we show that leaving out the first constraint "accidentally" leads to the initial plan that we computed.
 
 ```{code-cell} ipython3
 linprog(C_vec, A_eq=A[1:], b_eq=b[1:], method='Revised simplex')
@@ -386,9 +385,6 @@ Here the matrix $X$ contains entries $x_{ij}$ that tell amounts shipped **from**
 The vector $z$ evidently equals $\operatorname{vec}(X)$.
 
 The minimized cost from the optimal transport plan is given by the $fun$ variable.
-
-
-+++
 
 We can also solve an optimal transportation problem using a powerful tool from `quantecon`, namely,`quantecon.optimize.linprog_simplex`. 
 
@@ -440,40 +436,34 @@ Let's do a speed comparison between `scipy.optimize.linprog` and `quantecon.opti
 
 As you can see, the `quantecon.optimize.linprog_simplex` is almost 200 times faster.
 
-+++
-
 ### The Dual Problem
 
 Let $u, v$ denotes vectors of dual decision variables with entries $(u_i), (v_j)$.
 
-The **dual** to  **minimization** problem (1) is the **maximization** problem:
+The **dual** to  **minimization** problem {eq}`plannerproblem` is the **maximization** problem:
 
 $$
 \begin{align*}
 \max_{u_i, v_j} \ & \sum_{i=1}^m p_i u_i + \sum_{j=1}^n q_j v_j \\
 \mbox{subject to } \ & u_i + v_j \le c_{ij}, \ i = 1, 2, \dots, m;\ j = 1, 2, \dots, n \\
-\end{align*} \tag{4}
-$$
-
-
+\end{align*}
+$$ (dualproblem)
 
 The dual problem is also a linear programming problem.
 
 It has $m+n$ dual variables and $mn$ constraints. 
 
-Vectors $u$ and $v$ of **values**  are attached to the first and the second sets of primal constraits, respectively.
+Vectors $u$ and $v$ of **values** are attached to the first and the second sets of primal constraits, respectively.
 
+Thus, $u$ is attached to the constraints 
 
-Thus,  $u$ is attached to the constraints 
-
- * $(\mathbf{1}_n' \otimes \mathbf{I}_m) \operatorname{vec}(X) = p$ 
+* $(\mathbf{1}_n' \otimes \mathbf{I}_m) \operatorname{vec}(X) = p$ 
  
 and  $v$ is attached to constraints 
  
- * $(\mathbf{I}_n \otimes \mathbf{1}_m') \operatorname{vec}(X) = q.$
+* $(\mathbf{I}_n \otimes \mathbf{1}_m') \operatorname{vec}(X) = q.$
 
 Components of the vectors $u$ and $v$ of **values**  are **shadow prices** of the quantities appearing on the right sides of those constraints.
-
 
 We can write the dual problem as 
 
@@ -481,9 +471,8 @@ $$
 \begin{align*}
 \max_{u_i, v_j} \ & p u + q v \\
 \mbox{subject to } \ & A' \begin{bmatrix} u \\ v \\ \end{bmatrix} = \operatorname{vec}(C) \\
-\end{align*} \tag{5}
-$$
-
+\end{align*}
+$$ (dualproblem2)
 
 For the same numerical example described above, let's solve the dual problem.
 
@@ -500,7 +489,7 @@ print("u:", res_dual.x[:m])
 print("v:", res_dual.x[-n:])
 ```
 
-We can also solve the dual problem using `quantecon.optimize.linprog_simplex`.
+We can also solve the dual problem using [quantecon.optimize.linprog_simplex](https://quanteconpy.readthedocs.io/en/latest/optimize/linprog_simplex.html).
 
 ```{code-cell} ipython3
 res_dual_qe = linprog_simplex(b_eq, A_ub=A_eq.T, b_ub=c)
@@ -528,11 +517,7 @@ We can compare computational times from using our two tools.
 
 `quantecon.optimize.linprog_simplex` solves the dual problem 10 times faster.
 
-+++
-
 Just for completeness, let's  solve the dual problems with nonsingular $A$ matrices that we create by dropping a redundant equality constraint.
-
-+++
 
 Try first leaving out the first constraint:
 
@@ -552,7 +537,9 @@ linprog(-b[:-1], A_ub=A[:-1].T, b_ub=C_vec,
 
 By **strong duality**, we know that:
 
-$$\sum_{i=1}^m \sum_{j=1}^n c_{ij} x_{ij}  = \sum_{i=1}^m p_i u_i + \sum_{j=1}^n q_j v_j$$
+$$
+\sum_{i=1}^m \sum_{j=1}^n c_{ij} x_{ij}  = \sum_{i=1}^m p_i u_i + \sum_{j=1}^n q_j v_j
+$$
 
 One unit more  capacity in factory $i$, i.e. $p_i$,   results in $u_i$ more transportation costs.
 
