@@ -13,8 +13,6 @@ kernelspec:
 
 # Linear Programming
 
-+++
-
 ## Overview
 
 **Linear programming** problems either maximize or minimize 
@@ -22,14 +20,13 @@ a linear objective function subject to a set of  linear equality and/or inequali
 
 Linear programs come in pairs:
 
- * an original  **primal** problem, and
- 
- * an associated **dual** problem.
+* an original  **primal** problem, and
+
+* an associated **dual** problem.
  
 If a primal problem involves **maximization**, the dual problem involves **minimization**.
 
 If a primal problem involves  **minimization**, the dual problem involves **maximization**.
-
 
 We provide a standard form of a  linear program and methods to transform other forms of linear programming problems  into a standard form.
 
@@ -49,7 +46,6 @@ from matplotlib.patches import Polygon
 
 ## Details
 
-
 We want to minimize a **cost function** $c'x = \sum_{i=1}^n c_i x_i$ over  feasible values of $x = (x_1,x_2,\dots,x_n)'$.
 
 Here 
@@ -62,20 +58,16 @@ Decision variables are  restricted to satisfy a set of linear equality and/or in
 
 We describe the constraints with the following  collections of  $n$-dimensional vectors $a_i$ and scalars $b_i$  and associated sets indexing the equality and inequality constraints:
 
-
-
-
- * $a_i$ for $i \in M_i$, where $M_1,M_2,M_3$ are each  sets of indexes 
+* $a_i$ for $i \in M_i$, where $M_1,M_2,M_3$ are each  sets of indexes 
  
 and a collection of  scalers 
 
- * $b_i$ for $i \in N_i$, where $N_1,N_2,N_3$  are each sets of indexes.
+* $b_i$ for $i \in N_i$, where $N_1,N_2,N_3$  are each sets of indexes.
 
-
-A linear programming can be stated as (Bertsimas & Tsitsiklis, 1997) :
+A linear programming can be stated as {cite}`bertsimas_tsitsiklis1997`:
 
 $$
-\begin{align*}
+\begin{aligned}
 \min_{x} \ & c' x \\
 \mbox{subject to } \ & a_i' x \ge b_i, & i \in M_1 \\
 & a_i' x \le b_i, & i \in M_2  \\
@@ -83,8 +75,8 @@ $$
 & x_j \ge 0, & j \in N_1 \\
 & x_j \le 0, & j \in N_2 \\
 & x_j\ \text{unrestricted}, & j \in N_3 \\
-\end{align*} \tag{1}
-$$
+\end{aligned}
+$$ (linprog)
 
 A vector $x$ that satisfies all of the constraints is called a **feasible solution**.
 
@@ -98,15 +90,13 @@ If the feasible set is empty, we say that solving  the  linear programming probl
 
 If, for any $K \in \mathbb R$, there exists a feasible solution $x$ such that $c'x < K$, we say that the problem is **unbounded** or equivalently that the optimal value is $-\infty$.
 
-+++
-
-### Example 1: Production Problem (Bertsimas & Tsitsiklis, 1997)
+### Example 1: Production Problem {cite}`bertsimas_tsitsiklis1997`
 
 Suppose that a factory can produce two goods called Product $1$ and Product $2$. 
 
-To produce each  product requires  both material and labor.
+To produce each product requires both material and labor.
 
-Selling each product  generates revenue.
+Selling each product generates revenue.
 
 Required per unit material and labor  inputs and  revenues  are shown in table below:
 
@@ -118,10 +108,10 @@ Required per unit material and labor  inputs and  revenues  are shown in table b
 
 30 units of material and 20 units of labor available.
 
-A firm's problem   is to construct a  production plan that uses its  30 units of materials and 20 unites of labor
-to maximize its  revenue.
+A firm's problem is to construct a  production plan that uses its  30 units of materials and 20 unites of labor
+to maximize its revenue.
 
-Let $x_i$ denote the  quantity of Product $i$ that the firm  produces. 
+Let $x_i$ denote the quantity of Product $i$ that the firm produces. 
 
 This problem can be formulated as:
 
@@ -172,7 +162,7 @@ ax.text(2.7, 5.2, "Optimal Solution", size=12)
 plt.show()
 ```
 
-The blue region is the feasible set within which  all  constraints are satisfied. 
+The blue region is the feasible set within which all constraints are satisfied. 
 
 Parallel orange lines are iso-revenue lines.
 
@@ -182,9 +172,7 @@ The intersection of the feasible set and the highest orange line delineates the 
 
 In this example, the optimal set is the point $(2.5, 5)$.
 
-+++
-
-### Example 2: Investment Problem (Hu & Guo, 2018)
+### Example 2: Investment Problem {cite}`hu_guo2018`
 
 A mutual fund has $ \$ 100,000$ to be invested over a three year horizon.
 
@@ -216,20 +204,28 @@ The table below shows the mutual fund's decision variables together with the tim
 
 The  mutual fund's decision making proceeds according to the following timing protocol:
 
-1. At the beginning of the first year, the mutual fund decides how much to invest in the annuity and how much to deposit in the bank.
-This decision is subject to the constraint:  
+1. At the beginning of the first year, the mutual fund decides how much to invest in the annuity and
+   how much to deposit in the bank. This decision is subject to the constraint:  
 
-$$ x_1 + x_2 = 100,000$$ 
+   $$
+   x_1 + x_2 = 100,000
+   $$ 
 
-2. At the beginning of the second year, the mutual fund has a bank balance  of $1.06 x_2$. It must keep $x_1$ in the annuity.
-It can choose to put $x_5$ into the corporate bond, and put    $x_3$ in the bank. These decisions are restricted by 
+2. At the beginning of the second year, the mutual fund has a bank balance  of $1.06 x_2$.
+   It must keep $x_1$ in the annuity. It can choose to put $x_5$ into the corporate bond,
+   and put $x_3$ in the bank. These decisions are restricted by 
 
-$$ x_1 + x_5 = 1.06 x_2 - x_3$$
+   $$
+   x_1 + x_5 = 1.06 x_2 - x_3
+   $$
 
-3. At the beginning of the third year, the mutual fund has a bank account balance  equal to $1.06 x_3$. It must again invest  $x_1$ in the annuity, leaving it with  a bank account balance  equal to $x_4$. This situation is summarized by the restriction:
+3. At the beginning of the third year, the mutual fund has a bank account balance equal
+   to $1.06 x_3$. It must again invest  $x_1$ in the annuity,
+   leaving it with  a bank account balance equal to $x_4$. This situation is summarized by the restriction:
 
-$$ x_1 = 1.06 x_3 - x_4$$
-
+   $$
+   x_1 = 1.06 x_3 - x_4
+   $$
 
 The mutual fund's objective function, i.e., its wealth at the end of the third year is:
 
@@ -254,19 +250,17 @@ $$
 \end{align*}
 $$
 
-+++
-
 ## Standard Form
 
 For purposes of 
 
- * unifying linear programs that are initially stated in superficially different forms, and
- 
- * having a form that is convenient to put into black-box software packages,
+* unifying linear programs that are initially stated in superficially different forms, and
+
+* having a form that is convenient to put into black-box software packages,
  
 it is useful to devote some effort to describe a **standard form**.
 
-Our  standard form  is:
+Our standard form  is:
 
 $$
 \begin{align*}
@@ -281,7 +275,8 @@ $$
 
 Let 
 
-$$ A = \begin{bmatrix}
+$$ 
+A = \begin{bmatrix}
 a_{11} & a_{12} & \dots & a_{1n} \\ 
 a_{21} & a_{22} & \dots & a_{2n} \\ 
   &   & \vdots &   \\ 
@@ -299,14 +294,12 @@ $$
 \min_{x} \ & c'x \\
 \mbox{subject to } \ & Ax = b\\
  & x >= 0\\
-\end{align*} \tag{2}
-$$
+\end{align*}
+$$ (lpproblem)
 
-Here, $Ax = b$ means that  the $i$-th entry of $Ax$  equals  the $i$-th entry of $b$ for every $i$. 
+Here, $Ax = b$ means that  the $i$-th entry of $Ax$  equals the $i$-th entry of $b$ for every $i$. 
 
 Similarly, $x >= 0$ means that  $x_j$ is greater than $0$ for every $j$.
-
-+++
 
 #### Useful Transformations
 
@@ -320,11 +313,7 @@ By deploying the following steps, any linear programming problem can be transfor
 
 3. **Inequality constraints:** Given an inequality constraint $\sum_{j=1}^n a_{ij}x_j \le 0$, we can introduce a new variable $s_i$, called a **slack variable** that satisfies $s_i \ge 0$ and replace the original constraint by $\sum_{j=1}^n a_{ij}x_j + s_i = 0$.
 
-
-+++
-
 Let's apply the above steps to the two examples described above.
-
 
 #### Example 1: Production Problem
 
@@ -349,8 +338,6 @@ $$
 & x_1, x_2, s_1, s_2 \ge 0 \\
 \end{align*}
 $$
-
-+++
 
 #### Example 2: Investment Problem
 
@@ -389,10 +376,7 @@ $$
 \end{align*}
 $$
 
-+++
-
 ## Computations
-
 
 The package *scipy.optimize* provides a function ***linprog*** to solve linear programming problems with a form below:
 
@@ -405,11 +389,11 @@ $$
 \end{align*}
 $$
 
-> Note: By default $l = 0$ and $u = \text{None}$ unless explicitly specified with the argument 'bounds'.
+```{note}
+By default $l = 0$ and $u = \text{None}$ unless explicitly specified with the argument 'bounds'.
+```
 
 Let's apply this great Python tool to solve our examples.
-
-+++
 
 ### Example 1: Production Problem
 
@@ -450,13 +434,11 @@ To do that, for each inequality constraint it generates one slack variable.
 
 Here the vector of slack variables is a two-dimensional numpy array that  equals $b_{ub} - A_{ub}x$. 
 
+See [official documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html#scipy.optimize.linprog) for more details.
 
-
-See  [official documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html#scipy.optimize.linprog) for more details.
-
-> Note: This problem is to maximize the objective, so that we need to put a minus sign in front of parameter vector c.
-
-+++
+```{note}
+This problem is to maximize the objective, so that we need to put a minus sign in front of parameter vector c.
+```
 
 ### Example 2: Investment Problem
 
@@ -508,20 +490,18 @@ res_ex2
 
 Python tells us that  the best investment strategy is:
 
-1. At the beginning of the first year, the mutual fund should buy   $\$24,927.75$ of the annuity. Its bank account balance should be   $ \$75,072.25$.
+1. At the beginning of the first year, the mutual fund should buy $ \$24,927.75$ of the annuity. Its bank account balance should be $ \$75,072.25$.
 
-2. At the beginning of the second year, the mutual fund should buy $ \$ 50,000 $ of the corporate bond and keep invest in the annuity. Its bank account balance should be $ \$ 4,648.83$.
+2. At the beginning of the second year, the mutual fund should buy $ \$50,000 $ of the corporate bond and keep invest in the annuity. Its bank account balance should be $ \$ 4,648.83$.
 
-3. At the beginning of the third year, the mutual fund should borrow $ \$ 20,000$ from the bank and invest in the annuity.
+3. At the beginning of the third year, the mutual fund should borrow $ \$20,000$ from the bank and invest in the annuity.
 
 4. At the end of the third year, the mutual fund will get payouts from the annuity and corporate bond and repay its loan from the bank. At the end  it will own $ \$ $141018.24, so that it's total net  rate of return over the three periods is 41.02\%.
 
-+++
-
 ## Duality
 
-Associated with a  linear programming of form (1) with $m$ constraints and $n$ decision variables,
-there is an  **dual** linear programming problem that takes the form(Bertsimas & Tsitsiklis, 1997) :
+Associated with a  linear programming of form {eq}`linprog` with $m$ constraints and $n$ decision variables,
+there is an **dual** linear programming problem that takes the form(Bertsimas & Tsitsiklis, 1997):
 
 $$
 \begin{align*}
@@ -537,7 +517,9 @@ $$
 
 Where $A_j$ is $j$-th column of the $m$ by $n$ matrix $A$.
 
->Note: In what  follows, we shall  use $a_i'$ to denote the $i$-th row of $A$ and $A_j$ to denote the $j$-th column of $A$.
+```{note}
+In what  follows, we shall  use $a_i'$ to denote the $i$-th row of $A$ and $A_j$ to denote the $j$-th column of $A$.
+```
 
 $$
 A = \begin{bmatrix}
@@ -548,7 +530,7 @@ a_m' \\
 \end{bmatrix}.
 $$
 
-To construct the  dual of  linear programming problem (1), we proceed as follows:
+To construct the  dual of linear programming problem {eq}`linprog`, we proceed as follows:
 
 1. For every constraint $a_i' x \ge(\le or =) b_i$, $j = 1,2,...,m$, in the primal problem, we construct a corresponding dual variable $p_i$. $p_i$ is restricted to be positive if $a_i' x \ge b_i$ or negative if $a_i' x \le b_i$ or unrestricted if $a_i' x = b_i$. We construct the $m$-dimensional vector   $p$ with entries $p_i$.
 
@@ -556,7 +538,7 @@ To construct the  dual of  linear programming problem (1), we proceed as follows
 
 3. The dual problem is to **maximize**  objective function $b'p$.
 
-For a **maximization**  problem,  we can first  transform it to an equivalent minimization problem  and then follow the above steps above to construct the  dual **minimization** problem. 
+For a **maximization**  problem, we can first transform it to an equivalent minimization problem and then follow the above steps above to construct the  dual **minimization** problem. 
 
 We can easily verify that  **the dual of a dual problem is the  primal problem**.
 
@@ -573,8 +555,7 @@ The following table summarizes relationships between objects in primal and dual 
 | variable $\le$ 0 | constraint $\ge$ |
 |  variable free   |  constraint $=$  |
 
-
-As an example, the dual problem of the standard form (2) is:
+As an example, the dual problem of the standard form {eq}`lpproblem` is:
 
 $$
 \begin{align*}
@@ -583,15 +564,15 @@ $$
 \end{align*}
 $$
 
-As another example, consider a linear programming problem with  form:
+As another example, consider a linear programming problem with form:
 
 $$
 \begin{align*}
 \max_{x} \ & c'x \\
 \mbox{subject to } \ & A x \le b\\
 & x \ge 0\\
-\end{align*} \tag{3}
-$$
+\end{align*}
+$$ (linprog2)
 
 Its dual problem is:
 
@@ -603,37 +584,38 @@ $$
 \end{align*}
 $$
 
-+++
-
 ### Duality Theorems
-
 
 Primal and dual problems are linked by powerful **duality theorems** that have  **weak** and **strong** forms.
 
-The duality theorems provide the foundations of enlightening economic interpretations  of linear programming problems. 
+The duality theorems provide the foundations of enlightening economic interpretations of linear programming problems. 
 
-**Weak duality:** For linear programming problem (1), if $x$ and $p$ are feasible solutions to the primal  and the dual problems, respectively, then
+**Weak duality:** For linear programming problem {eq}`linprog`, if $x$ and $p$ are feasible solutions to the primal and the dual problems, respectively, then
 
-$$ b'p \le c'x $$.
+$$ 
+b'p \le c'x 
+$$
 
-**Strong duality:** For linear programming problem (1), if the primal problem has an optimal solution $x$, then the dual problem also has an optimal solution. Denote an optimal solution of the dual problem as $p$. Then
+**Strong duality:** For linear programming problem {eq}`linprog`, if the primal problem has an optimal solution $x$, then the dual problem also has an optimal solution. Denote an optimal solution of the dual problem as $p$. Then
 
-$$ b'p = c'x $$.
+$$ 
+b'p = c'x 
+$$
 
 According to strong duality, we can find the optimal value for the primal problem by solving the dual problem.
 
 But the dual problem tells us even more as we shall see next. 
 
-+++
-
 ### Complementary Slackness
 
-Let $x$ and $p$ be feasible solutions to the primal problem (1) and its dual problem, respectively. 
+Let $x$ and $p$ be feasible solutions to the primal problem {eq}`linprog` and its dual problem, respectively. 
 
 Then $x$ and $p$ are also  optimal solutions of the primal and dual problems if and only if:
 
-$$ p_i (a_i' x - b_i) = 0, \quad \forall i, \\
-x_j (A_j' p - c_j) = 0, \quad \forall j.$$
+$$ 
+p_i (a_i' x - b_i) = 0, \quad \forall i, \\
+x_j (A_j' p - c_j) = 0, \quad \forall j.
+$$
 
 This means that $p_i = 0$ if $a_i' x - b_i \neq 0$ and $x_j = 0$ if $A_j' p - c_j \neq 0$.
 
@@ -641,30 +623,30 @@ These are the celebrated **complementary slackness** conditions.
 
 Let's interpret them.
 
-+++
-
 ### Interpretations 
 
-Let's take  a version  of  problem (3)  as a production problem and consider its  associated dual problem.   
+Let's take a version of problem {eq}`linprog2` as a production problem and consider its associated dual problem.   
 
-A factory produce $n$ products with  $m$ types  of resources.
+A factory produce $n$ products with $m$ types of resources.
 
 Where  $i=1,2,\dots,m$ and $j=1,2,\dots,n$, let 
 
- * $x_j$ denote quantities of product $j$ to be produced
- 
- * $a_{ij}$ denote required amount of resource $i$ to make one unit of product $j$,
- 
- * $b_i$ denotes the  avaliable amount of resource $i$
- 
- * $c_j$ denotes the revenue generated by producing one unit of product $j$. 
+* $x_j$ denote quantities of product $j$ to be produced
+
+* $a_{ij}$ denote required amount of resource $i$ to make one unit of product $j$,
+
+* $b_i$ denotes the  avaliable amount of resource $i$
+
+* $c_j$ denotes the revenue generated by producing one unit of product $j$. 
 
 
 **Dual variables:** By  strong duality, we have
 
-$$c_1 x_1 + c_2 x_2 + \dots + c_n x_n = b_1 p_1 + b_2 p_2 + \dots + b_m p_m.$$
+$$
+c_1 x_1 + c_2 x_2 + \dots + c_n x_n = b_1 p_1 + b_2 p_2 + \dots + b_m p_m.
+$$
 
-Evidently, a one unit change of $b_i$ results in  $p_i$ units  change of revenue. 
+Evidently, a one unit change of $b_i$ results in $p_i$ units  change of revenue. 
 
 Thus, a dual variable can be interpreted as the **value** of one unit of resource $i$.
 
@@ -672,17 +654,21 @@ This is why it is often called the  **shadow price** of resource $i$.
 
 For feasible but not optimal primal and dual solutions $x$ and $p$, by weak duality, we have
 
-$$c_1 x_1 + c_2 x_2 + \dots + c_n x_n < b_1 p_1 + b_2 p_2 + \dots + b_m p_m.$$
+$$
+c_1 x_1 + c_2 x_2 + \dots + c_n x_n < b_1 p_1 + b_2 p_2 + \dots + b_m p_m.
+$$
 
->Note: Here, the expression is opposite to the statement above since primal problem is a minimization problem.
+```{note}
+Here, the expression is opposite to the statement above since primal problem is a minimization problem.
+```
 
 When a strict inequality holds, the solution is not optimal because  it doesn't fully utilize all valuable resources.
 
 Evidently, 
 
-  * if a shadow price $p_i$ is larger than the market price for Resource $i$, the factory should buy more Resource $i$ and expand its scale to generate more revenue; 
-  
-  * if a shadow price $p_i$ is less than the market price for Resource $i$, the factory should sell its  Resource $i$.
+* if a shadow price $p_i$ is larger than the market price for Resource $i$, the factory should buy more Resource $i$ and expand its scale to generate more revenue; 
+
+* if a shadow price $p_i$ is less than the market price for Resource $i$, the factory should sell its  Resource $i$.
 
 **Complementary slackness:** If there exists $i$ such that $a_i' x - b_i < 0$ for some $i$, then $p_i = 0$ by complementary slackness. $a_i' x - b_i < 0$ means that  to achieve its optimal production, the factory doesn't require as much  Resource $i$ as it has.
 It is reasonable that the shadow price of Resource $i$ is  0:  some of its resource $i$ is redundant.
@@ -692,9 +678,6 @@ If there exists $j$ such that $A_j' p - c_j > 0$, then $x_j = 0$ by complementar
 This means that  producing another product that  can more efficiently utilize these resources is a better choice than producing product $j$
 
 Since producing product $j$ is not optimal, $x_j$ should equal $0$.
-
-
-+++
 
 ### Example 1: Production Problem
 
@@ -721,8 +704,6 @@ res_ex1_dual
 ```
 
 The optimal of the dual problem is 27.5, which is the same as the primal problem's. This matches the strong duality. The shadow prices for materials and labor are 0.625 and 0.4375, respectively.
-
-+++
 
 ### Example 2: Investment Problem
 
@@ -782,7 +763,9 @@ Now, let's interpret the dual variables.
 
 By strong duality and also our  numerical results, we have that  optimal value is:
 
-$$100,000 p_1 - 20,000 p_4 - 20,000 p_5 - 20,000 p_6 + 50,000 p_7.$$
+$$
+100,000 p_1 - 20,000 p_4 - 20,000 p_5 - 20,000 p_6 + 50,000 p_7.
+$$
 
 We know if $b_i$ changes one dollor, then the optimal payoff in the end of the third year will change $p_i$ dollars. 
 
@@ -815,14 +798,3 @@ As for numerical results,
 3. $p_6 = -0.16$, which means one dollar of the loan amount at the beginning of the third year is worth $\$ 0.16$. Since $|p_6|$ is higher than the interest rate 6\%, the mutual fund should borrow as much as possible at the beginning of the third year. Recall that  the optimal solution to the primal problem is  $x_4 = -20,000$ which means the mutual fund borrows money from the bank as much as it can.
 
 4. $p_7 = 0.0015$, which means one dollar of the amount of the corporate bond that the mutual fund can buy is worth $\$ 0.0015$.
-
-+++
-
-### Reference
-[1] Bertsimas, D., & Tsitsiklis, J. N. (1997). *Introduction to linear optimization*. Athena Scientific.
-
-[2] Hu, Y., & Guo, Y. (2018). *Operations research* (5th ed.). Tsinghua University Press.
-
-```{code-cell} ipython3
-
-```
