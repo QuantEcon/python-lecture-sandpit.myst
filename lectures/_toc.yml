@@ -9,5 +9,6 @@ sections:
 - file: five_preferences
 - file: Lucas_Sims_notes
 - file: robustness_graphs_chapter
-- file: imp_sample
+- file: lp_intro
+- file: opt_transport
 - file: zreferences
