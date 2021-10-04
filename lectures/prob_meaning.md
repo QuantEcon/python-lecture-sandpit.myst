@@ -11,9 +11,14 @@ kernelspec:
   name: python3
 ---
 
-## Two Meanings of Probability
+# Two Meanings of Probability
 
-+++
+In addition to what’s in Anaconda, this lecture will need the following libraries:
+
+```{code-cell} ipython3
+:tags: [hide-output]
+pip install prettytable
+```
 
 This lecture  illustrates two distinct interpretations of a  **probability distribution**
 
@@ -23,11 +28,13 @@ This lecture  illustrates two distinct interpretations of a  **probability distr
 
 We recommend watching this video about **hypothesis testing** according to the frequentist approach
 
-   <https://www.youtube.com/watch?v=8JIe_cz6qGA&t=633s>
+```{youtube} 8JIe_cz6qGA
+```
 
 After you watch that video, please watch the following video on the Bayesian approach to constructing **coverage intervals**
 
-  <https://www.youtube.com/watch?v=Pahyv9i_X2k&t=1886s>
+```{youtube} Pahyv9i_X2k
+```
 
 After you are familiar with the above material, this lecture uses the Socratic method to  to help consolidate your understanding of the different questions that are answered by
 
@@ -42,9 +49,7 @@ proceeding to read the rest of the lecture.
 
 We provide our own answers as the lecture unfolds, but you'll learn more if you try writing your own code before reading and running ours.
 
-+++
-
-## Code for answering questions
+**Code for answering questions:**
 
 To answer our coding questions, we'll start with some imports
 
@@ -68,14 +73,16 @@ config = {
 rcParams.update(config)
 ```
 
-**Part 1: Frequentist Intrepretation**
+## Frequentist Intrepretation
 
 Consider the following classic example.
 
 The random variable  $X $ takes on possible values $k = 0, 1, 2, \ldots, n$  with probabilties 
 
-$$ \textrm{Prob}(X =  k | \theta) = 
-\left(\frac{n!}{k! (n-k)!} \right) \theta^k (1-\theta)^{n-k} $$ 
+$$ 
+\textrm{Prob}(X =  k | \theta) = 
+\left(\frac{n!}{k! (n-k)!} \right) \theta^k (1-\theta)^{n-k} =
+$$ 
 
 where the fixed parameter $\theta \in (0,1)$.
 
@@ -83,11 +90,11 @@ This is called the  the __binomial distribution__.
 
 Here 
 
-  * $\theta$ is the probability that one toss of a coin will be a head, an outcome that we encode as  $Y = 1$.
+* $\theta$ is the probability that one toss of a coin will be a head, an outcome that we encode as  $Y = 1$.
 
-  * $1 -\theta$ is the probability that one toss of the coin will be a tail, an outcome that we denote $Y = 0$. 
+* $1 -\theta$ is the probability that one toss of the coin will be a tail, an outcome that we denote $Y = 0$. 
 
-  * $X$ is the total number of heads that come up after flipping the coin $n$ times.
+* $X$ is the total number of heads that come up after flipping the coin $n$ times.
 
 Consider the following experiment:
 
@@ -95,10 +102,10 @@ Take **$I$ independent sequences of $n$  independent flips of the coin**
 
 Notice the repeated use of the adjective **independent**:
 
-  * we use it once to describe that we are drawing $n$ independent times from a **Bernoulli** distribution with parameter $\theta$ to arrive at one draw from a **Binomial** distribution with parameters
+* we use it once to describe that we are drawing $n$ independent times from a **Bernoulli** distribution with parameter $\theta$ to arrive at one draw from a **Binomial** distribution with parameters
 $\theta,n$.  
-  
-  * we use it again to describe that we are then drawing $I$ such sequences of $n$ coin draws.
+
+* we use it again to describe that we are then drawing $I$ such sequences of $n$ coin draws.
 
 Let $y_h^i \in \{0, 1\}$ be the realized value of $Y$ on the $h$th flip during the $i$th sequence of flips.
 
@@ -106,16 +113,16 @@ Let $\sum_{h=1}^n y_h^i$ denote the total number of times  heads come up during 
 
 Let $f_k$ record the fraction of samples of length $n$ for which $\sum_{h=1}^n y_h^i = k$:
 
-$$ f_k^I = \frac{\textrm{number of samples of length n for which } \sum_{h=1}^n y_h^i = k}{
-    I}$$
+$$ 
+f_k^I = \frac{\textrm{number of samples of length n for which } \sum_{h=1}^n y_h^i = k}{
+    I}
+$$
 
 The probability  $\textrm{Prob}(X =  k | \theta)$ answers the following question:
 
-  * As $I$ becomes large, in what   fraction of  $I$ independent  draws of  $n$ coin flips should we anticipate  $k$ heads to occur?
+* As $I$ becomes large, in what   fraction of  $I$ independent  draws of  $n$ coin flips should we anticipate  $k$ heads to occur?
   
 As usual, a law of large numbers justifies this answer.
-
-+++
 
 **Exercise 1:** 
 
@@ -201,14 +208,14 @@ From the table above, can you see the law of large numbers at work?
 
 Let's do some more calculations.
 
-+++
-
 **Comparison with different $\theta$**
 
-+++
-
 Now we fix 
-$$n=20, k=10, I=1,000,000$$
+
+$$
+n=20, k=10, I=1,000,000
+$$
+
 and vary $\theta$ from $0.01$ to $0.99$.
 
 ```{code-cell} ipython3
@@ -240,8 +247,6 @@ plt.show()
 
 **Comparison with different $n$**
 
-+++
-
 Now we fix $\theta=0.7, k=10, I=1,000,000$ and vary $n$ from $1$ to $100$.
 
 ```{code-cell} ipython3
@@ -272,8 +277,6 @@ plt.show()
 ```
 
 **Comparison with different $I$**
-
-+++
 
 Now we fix $\theta=0.7, n=20, k=10$ and vary $\log(I)$ from $2$ to $7$.
 
@@ -311,18 +314,24 @@ When $I$ becomes larger, the difference between theoretical probability and freq
 
 Also, as long as $I$ is large enough, changing $\theta$ or $n$ does not significantly change the accuracy of frequentist estimation. 
 
-The  Law of Large Numbers is at work here.
+The Law of Large Numbers is at work here.
 
-+++
+For each draw of an independent sequence, $\textrm{Prob}(X_i =  k | \theta)$  is the same, so aggregating all draws forms an i.i.d sequence of a binary random variable $\rho_{k,i},i=1,2,...I$, with a mean of $\textrm{Prob}(X =  k | \theta)$ and a variance of
 
-For each draw of an independent sequence, $\textrm{Prob}(X_i =  k | \theta)$  is the same, so aggregating all draws forms an i.i.d sequence of a binary random variable $\rho_{k,i},i=1,2,...I$, with a mean of $\textrm{Prob}(X =  k | \theta)$ and a variance of $$n \cdot \textrm{Prob}(X =  k | \theta) \cdot (1-\textrm{Prob}(X =  k | \theta)).$$ 
+$$
+n \cdot \textrm{Prob}(X =  k | \theta) \cdot (1-\textrm{Prob}(X =  k | \theta)).
+$$ 
 
 So, by the LLN, the average of $P_{k,i}$ converges to:
-$$E[\rho_{k,i}] = \textrm{Prob}(X =  k | \theta) = \left(\frac{n!}{k! (n-k)!} \right) \theta^k (1-\theta)^{n-k}$$ as $I$ goes to infinity.
 
-+++
+$$
+E[\rho_{k,i}] = \textrm{Prob}(X =  k | \theta) = \left(\frac{n!}{k! (n-k)!} \right) \theta^k (1-\theta)^{n-k}
+$$
 
-**Part 2: Bayesian Interpretation**
+as $I$ goes to infinity.
+
+
+## Bayesian Interpretation
 
 Consider again a binomial distribution above, but now assume that the parameter $\theta$ is a fixed number.
 
@@ -335,12 +344,12 @@ Instead, the probability distribution for the parameter $\theta$ is now a summar
 
 Thus, suppose that, before seeing any data, you have a personal prior probability distribution saying that 
 
-$$ P(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta -1}}{B(\alpha, \beta)} $$
+$$
+P(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta -1}}{B(\alpha, \beta)}
+$$
 
 where $B(\alpha, \beta)$ the **beta function** so that $P(\theta)$ is
 a beta distribution with parameters $\alpha, \beta$.
-
-+++
 
 **Exercise 2:**
 
@@ -360,28 +369,26 @@ a beta distribution with parameters $\alpha, \beta$.
 
 * (h) Please use your Python class to study what happens to the posterior distribution as $n \rightarrow + \infty$, again assuming that the true value of $\theta = .4$, though it is unknown to the person doing the updating via Bayes' Law.
 
-+++
-
 **Answer:**
 
-+++
-
 * (a) Please write down the **likelihood function** and the **posterior** distribution for $\theta$ after observing  one flip of our coin.
-
-+++
 
 Suppose the outcome is __Y__.
 
 The likelihood function is:
 
-$$ L(Y|\theta)= \textrm{Prob}(X =  Y | \theta) = 
- \theta^Y (1-\theta)^{1-Y} $$ 
+$$
+L(Y|\theta)= \textrm{Prob}(X =  Y | \theta) = 
+\theta^Y (1-\theta)^{1-Y}
+$$ 
 
-* (b)  Please write the **posterior** distribution for $\theta$ after observing  one flip of our coin.
+* (b) Please write the **posterior** distribution for $\theta$ after observing  one flip of our coin.
 
 The prior distribution is
 
-$$\textrm{Prob}(\theta) = \frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)}$$
+$$
+\textrm{Prob}(\theta) = \frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)}
+$$
 
 We can derive the posterior distribution for $\theta$ by
 
@@ -392,17 +399,13 @@ We can derive the posterior distribution for $\theta$ by
   &= \frac{ \theta^{Y+\alpha - 1} (1 - \theta)^{1-Y+\beta - 1}}{\int_{0}^{1}\theta^{Y+\alpha - 1} (1 - \theta)^{1-Y+\beta - 1} d \theta}
 \end{align*}
 
-
-
 which means that
 
-$$\textrm{Prob}(\theta | Y) \sim \textrm{Beta}(\alpha + Y, \beta + (1-Y))$$
-
-+++
+$$
+\textrm{Prob}(\theta | Y) \sim \textrm{Beta}(\alpha + Y, \beta + (1-Y))
+$$
 
 * (c) Please pretend  that the true value of $\theta = .4$ and that someone who doesn't know this has a beta prior with $\beta = \alpha = .5$.
-
-+++
 
 * (d) Please write a Python class to simulate this person's personal  posterior distribution for $\theta$  for a _single_ sequence of $n$ draws.
 
@@ -511,11 +514,7 @@ interval_df
 
 As n increases, we can see that Bayesian coverage intervals narrow and move toward $0.4$.
 
-+++
-
 * (g) Please tell what question a Bayesian coverage interval answers.
-
-+++
 
 The Bayesian coverage interval tells the range of $\theta$ that corresponds to the [$p_1$, $p_2$] quantiles of the cumulative probability distribution (CDF)  of the posterior distribution.
 
@@ -526,16 +525,6 @@ If the CDF is $F(\theta)$, then the Bayesian coverage interval $[a,b]$ for the i
 $$
 F(a)=p_1,F(b)=p_2
 $$
-
-+++
-
-## Posterior probability of an interval 
-
-  Please compute the Posterior probabililty that $\theta \in [.45, .55]$ for various values of sample size $n$.
-  
- 
-
-+++
 
 * (h) Please compute the Posterior probabililty that $\theta \in [.45, .55]$ for various values of sample size $n$. 
 
@@ -571,11 +560,7 @@ When the number of observations becomes large enough, our Bayesian becomes so co
 
 That is why we see a nearly horizontal line when the number of observations exceeds 500.
 
-+++
-
 * (i) Please use your Python class to study what happens to the posterior distribution as $n \rightarrow + \infty$, again assuming that the true value of $\theta = .4$, though it is unknown to the person doing the updating via Bayes' Law.
-
-+++
 
 Using the Python class we made above, we can see the evolution of posterior distributions as n approaches infinity.
 
@@ -629,17 +614,21 @@ The answer is encoded in the  Bayesian updating formulas
 It is natural to extend the one-step Bayesian update to n-step Bayesian update.
 
 
-+++
+$$
+\textrm{Prob}(\theta|k) = \frac{\textrm{Prob}(\theta,k)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\int_0^1 \textrm{Prob}(k|\theta)*\textrm{Prob}(\theta) d\theta}
+$$
 
-$$\textrm{Prob}(\theta|k) = \frac{\textrm{Prob}(\theta,k)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\int_0^1 \textrm{Prob}(k|\theta)*\textrm{Prob}(\theta) d\theta}$$
+$$
+=\frac{{N \choose k} (1 - \theta)^{N-k} \theta^k*\frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)}}{\int_0^1 {N \choose k} (1 - \theta)^{N-k} \theta^k*\frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)} d\theta}
+$$
 
-$$=\frac{{N \choose k} (1 - \theta)^{N-k} \theta^k*\frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)}}{\int_0^1 {N \choose k} (1 - \theta)^{N-k} \theta^k*\frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)} d\theta}$$
+$$
+=\frac{(1 -\theta)^{\beta+N-k-1}* \theta^{\alpha+k-1}}{\int_0^1 (1 - \theta)^{\beta+N-k-1}* \theta^{\alpha+k-1} d\theta}
+$$
 
-$$=\frac{(1 -\theta)^{\beta+N-k-1}* \theta^{\alpha+k-1}}{\int_0^1 (1 - \theta)^{\beta+N-k-1}* \theta^{\alpha+k-1} d\theta}$$
-
-$$={Beta}(\alpha + k, \beta+N-k)$$
-
-+++
+$$
+={Beta}(\alpha + k, \beta+N-k)
+$$
 
 A Beta Distribution with $\alpha$ and $\beta$ has the following mean and variance.
 
@@ -647,11 +636,9 @@ The mean is $\frac{\alpha}{\alpha + \beta}$
 
 The variance is $\frac{\alpha \beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}$
 
- * $\alpha$ can be viewed as the number of successes 
+* $\alpha$ can be viewed as the number of successes 
  
- * $\beta$ can be viewed as the number of failures
-
-+++
+* $\beta$ can be viewed as the number of failures
 
 The random variables $k$ and $N-k$ are governed by Binomial Distribution with $\theta=0.4$ (that we call true data generation process).
 
