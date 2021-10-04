@@ -13,4 +13,5 @@ sections:
 - file: opt_transport
 - file: qr_decomp
 - file: svd_intro
+- file: prob_meaning
 - file: zreferences
