@@ -44,7 +44,7 @@ from matplotlib.patches import Polygon
 %matplotlib inline
 ```
 
-## Details
+## Objective Function and Constraints
 
 We want to minimize a **cost function** $c'x = \sum_{i=1}^n c_i x_i$ over  feasible values of $x = (x_1,x_2,\dots,x_n)'$.
 
@@ -90,7 +90,9 @@ If the feasible set is empty, we say that solving  the  linear programming probl
 
 If, for any $K \in \mathbb R$, there exists a feasible solution $x$ such that $c'x < K$, we say that the problem is **unbounded** or equivalently that the optimal value is $-\infty$.
 
-### Example 1: Production Problem {cite}`bertsimas_tsitsiklis1997`
+## Example 1: Production Problem 
+
+This example was created by {cite}`bertsimas_tsitsiklis1997`
 
 Suppose that a factory can produce two goods called Product $1$ and Product $2$. 
 
@@ -100,11 +102,11 @@ Selling each product generates revenue.
 
 Required per unit material and labor  inputs and  revenues  are shown in table below:
 
-|          |Product 1|Product 2|
-|:--------:|:-------:|:-------:|
-| Material |    2    |    5    |
-|   Labor  |    4    |    2    |
-|  Revenue |    3    |    4    |
+|          | Product 1 | Product 2 |
+| :------: | :-------: | :-------: |
+| Material |     2     |     5     |
+|  Labor   |     4     |     2     |
+| Revenue  |     3     |     4     |
 
 30 units of material and 20 units of labor available.
 
@@ -172,7 +174,9 @@ The intersection of the feasible set and the highest orange line delineates the 
 
 In this example, the optimal set is the point $(2.5, 5)$.
 
-### Example 2: Investment Problem {cite}`hu_guo2018`
+## Example 2: Investment Problem 
+
+We now consider a problem posed and solved by  {cite}`hu_guo2018`.
 
 A mutual fund has $ \$ 100,000$ to be invested over a three year horizon.
 
@@ -196,11 +200,11 @@ When $x_2, x_3, x_4$ are negative, it means that  the mutual fund has borrowed f
 
 The table below shows the mutual fund's decision variables together with the timing protocol described above:
 
-|                  | Year 1 | Year 2 | Year 3 |
-|:----------------:|:------:|:------:|:------:|
-|     Annuity      |  $x_1$ |  $x_1$ |  $x_1$ |
-|   Bank account   |  $x_2$ |  $x_3$ |  $x_4$ |
-|  Corporate bond  |      0 |  $x_5$ |    0   |
+|                | Year 1 | Year 2 | Year 3 |
+| :------------: | :----: | :----: | :----: |
+|    Annuity     | $x_1$  | $x_1$  | $x_1$  |
+|  Bank account  | $x_2$  | $x_3$  | $x_4$  |
+| Corporate bond |   0    | $x_5$  |   0    |
 
 The  mutual fund's decision making proceeds according to the following timing protocol:
 
@@ -393,7 +397,7 @@ $$
 By default $l = 0$ and $u = \text{None}$ unless explicitly specified with the argument 'bounds'.
 ```
 
-Let's apply this great Python tool to solve our examples.
+Let's apply this great Python tool to solve our two example problems.
 
 ### Example 1: Production Problem
 
@@ -501,7 +505,7 @@ Python tells us that  the best investment strategy is:
 ## Duality
 
 Associated with a  linear programming of form {eq}`linprog` with $m$ constraints and $n$ decision variables,
-there is an **dual** linear programming problem that takes the form(Bertsimas & Tsitsiklis, 1997):
+there is an **dual** linear programming problem that takes the form (please see {cite}`bertsimas_tsitsiklis1997`)
 
 $$
 \begin{align*}
@@ -545,12 +549,12 @@ We can easily verify that  **the dual of a dual problem is the  primal problem**
 The following table summarizes relationships between objects in primal and dual problems. 
 
 |  Objective: Min  |  Objective: Max  |
-|:----------------:|:----------------:|
-|   m constraints  |    m variables   |
+| :--------------: | :--------------: |
+|  m constraints   |   m variables    |
 | constraint $\ge$ | variable $\ge$ 0 |
 | constraint $\le$ | variable $\le$ 0 |
 |  constraint $=$  |  variable free   |
-|    n variables   |   n constraints  |
+|   n variables    |  n constraints   |
 | variable $\ge$ 0 | constraint $\le$ |
 | variable $\le$ 0 | constraint $\ge$ |
 |  variable free   |  constraint $=$  |
@@ -584,7 +588,7 @@ $$
 \end{align*}
 $$
 
-### Duality Theorems
+## Duality Theorems
 
 Primal and dual problems are linked by powerful **duality theorems** that have  **weak** and **strong** forms.
 
@@ -681,7 +685,7 @@ Since producing product $j$ is not optimal, $x_j$ should equal $0$.
 
 ### Example 1: Production Problem
 
-This problem is one specific instance of the problem (3), whose economic meaning is interpreted above.
+This problem is one specific instance of the problem {eq}`linprog2`, whose economic meaning is interpreted above.
 
 Its dual problem is:
 

@@ -78,11 +78,15 @@ Summing the $q_j$'s across all $j$'s and the $p_i$'s across all $i$'s indicates 
 
 $$
 \sum_{j=1}^n q_j = \sum_{j=1}^n \sum_{i=1}^m x_{ij} = \sum_{i=1}^m \sum_{j=1}^n x_{ij} = \sum_{i=1}^m p_i
-$$
+$$ (sumconstraints)
 
-### Forming a  vector of decision variables
+The presence of the restrictions in {eq}`sumconstraints` will be the source of one redundancy in the complete set of restrictions that we describe below.  
 
-A **matrix** of decision variables $x_{ij}$ appears in problem {eq}`kroneckerprop`. 
+More about this later.
+
+### Vectorizing a Matrix of Decision Variables
+
+A **matrix** of decision variables $x_{ij}$ appears in problem {eq}`plannerproblem`. 
 
 The Scipy function *linprog* expects to see a **vector** of decision variables. 
 
@@ -94,7 +98,7 @@ Let
 
 * $p$ be $m$-dimensional vector with entries $p_i$,
 
-* $q$ be $\color{Red}n$-dimensional vector with entries $q_j$. 
+* $q$ be $n$-dimensional vector with entries $q_j$. 
 
 Where $\mathbf{1}_n$ denotes $n$-dimensional column vector $(1, 1, \dots, 1)'$, our  problem can now be expressed compactly as:
 
@@ -294,7 +298,9 @@ C.reshape((m*n, 1), order='A')
 
 The above warning message from scipy pointing out that A is not full rank.
 
-This indicates that the way the problem has been set up means that there is a redundant constraint.
+This indicates that the problem has been set up to include one or more  redundant constraints.
+
+Here, the source of the redundancy is that the set of restrictions {eq}`sumconstraints`.
 
 Let's explore this further by printing out $A$ and staring at it.
 
@@ -302,9 +308,9 @@ Let's explore this further by printing out $A$ and staring at it.
 A
 ```
 
-The singularity of $A$ reflects that the  first three constraints and the last five constraints  both require  that "total requirements equal total capacity".
+The singularity of $A$ reflects that the  first three constraints and the last five constraints  both require  that "total requirements equal total capacities" expressed in {eq}`sumconstraints`.
 
-One  equality constraint is redundant.
+One  equality constraint here is redundant.
 
 Below we drop one of the equality constraints, and use only  7 of them.
 
@@ -436,7 +442,7 @@ Let's do a speed comparison between `scipy.optimize.linprog` and `quantecon.opti
 
 As you can see, the `quantecon.optimize.linprog_simplex` is almost 200 times faster.
 
-### The Dual Problem
+## The Dual Problem
 
 Let $u, v$ denotes vectors of dual decision variables with entries $(u_i), (v_j)$.
 
