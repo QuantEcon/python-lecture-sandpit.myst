@@ -21,7 +21,7 @@ execute:
   run_in_temp: true
 
 sphinx:
-  extra_extensions: [sphinxcontrib.youtube]
+  extra_extensions: [sphinxcontrib.youtube, sphinx.ext.todo]
   config:
     html_logo: _static/qe-logo.png
     html_favicon: _static/qe-logo.png
