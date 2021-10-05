@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# Two Meanings of Probability
+# Overview
 
 In addition to what’s in Anaconda, this lecture will need the following libraries:
 
@@ -73,7 +73,9 @@ config = {
 rcParams.update(config)
 ```
 
-## Frequentist Intrepretation
+# Two Meanings of Probability
+
+## Frequentist Interpretation
 
 Consider the following classic example.
 
