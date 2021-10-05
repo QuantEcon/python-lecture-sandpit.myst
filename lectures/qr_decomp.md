@@ -13,6 +13,21 @@ kernelspec:
 
 # QR Decomposition
 
+## Overview
+
+This lecture describes the QR decomposition and how it relates to
+
+ * Orthogonal projection and least squares
+
+ * A Gram-Schmidt process
+
+ * Eigenvalues and eigenvectors
+
+
+We'll write some Python code to help consolidate our understandings.
+
+## Matrix Factorization
+
 The QR decomposition (also called the QR factorization) of a matrix is a decomposition of a matrix into the product of  an orthogonal matrix and a triangular matrix.
 
 A QR decomposition of a real  matrix $A$ 
@@ -26,12 +41,12 @@ where
 
 * $Q$ is an orthogonal matrix (so that  $Q^TQ = I$)
 
-* $R$ is an upper triangular matrix. 
+* $R$ is an upper triangular matrix 
 
 
 We'll use a **Gram-Schmidt process** to compute a  QR decomposition 
 
-Because doing so is so educational, we'll  write our own Python code to do the job.
+Because doing so is so educational, we'll  write our own Python code to do the job
 
 ## Gram-Schmidt process
 
@@ -146,6 +161,8 @@ a_{n+1} & = (a_{n+1}\cdot e_1) e_1 + (a_{n+1}\cdot e_2) e_2 + \cdots + (a_{n+1}\
 \vdots & \quad \vdots \cr
 a_m & = (a_m\cdot e_1) e_1 + (a_m\cdot e_2) e_2 + \cdots + (a_m \cdot e_n) e_n  \cr
 \end{align*}
+
+## Some Code
 
 Now let's write some homemade Python code to implement a QR decomposition by deploying the  Gram-Schmidt process described above.
 
@@ -279,7 +296,7 @@ Q_scipy, R_scipy = adjust_sign(*qr(A))
 Q_scipy, R_scipy
 ```
 
-### Using QR decomposition to compute eigenvalues
+## Using QR Decomposition to Compute Eigenvalues
 
 Now for a useful  fact about the QR algorithm.  
 
@@ -350,9 +367,9 @@ Compare with the `scipy` package.
 sorted(np.linalg.eigvals(A))
 ```
 
-## $QR$ decomposition and Principal components analysis (PCA)
+## $QR$ and PCA
 
-There are interesting connections between the $QR$ decomposition and PCA.
+There are interesting connections between the $QR$ decomposition and principal components analysis (PCA).
 
 Here are  some.
 

@@ -11,14 +11,11 @@ kernelspec:
   name: python3
 ---
 
-# Overview
+# Two Meanings of Probability
 
-In addition to what’s in Anaconda, this lecture will need the following libraries:
 
-```{code-cell} ipython3
-:tags: [hide-output]
-pip install prettytable
-```
+## Overview
+
 
 This lecture  illustrates two distinct interpretations of a  **probability distribution**
 
@@ -51,6 +48,14 @@ We provide our own answers as the lecture unfolds, but you'll learn more if you 
 
 **Code for answering questions:**
 
+
+In addition to what’s in Anaconda, this lecture will need the following libraries:
+
+```{code-cell} ipython3
+:tags: [hide-output]
+pip install prettytable
+```
+
 To answer our coding questions, we'll start with some imports
 
 ```{code-cell} ipython3
@@ -73,7 +78,7 @@ config = {
 rcParams.update(config)
 ```
 
-# Two Meanings of Probability
+Empowered with these Python tools, we'll now  explore the two meanings described above.
 
 ## Frequentist Interpretation
 

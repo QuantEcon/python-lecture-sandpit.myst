@@ -29,6 +29,19 @@ import quandl as ql
 import pandas as pd
 ```
 
+## Overview
+
+The **singular value decomposition** is a work-horse in applications of least squares projection that
+form the backbone of important parts of modern machine learning methods.
+
+This lecture describes the singular value decomposition and two of its uses:
+
+ * principal components analysis (PCA)
+
+ * dynamic mode decomposition (DMD)
+
+ Each of these can be thought of as data-reduction methods that are designed to capture principal patterns in data by projecting data onto a limited set of factors.
+
 ##  The Setup
 
 Let $X$ be an $m \times n$ matrix of rank $r$.
@@ -47,14 +60,14 @@ We'll be interested in  two distinct cases
   * The  **tall and skinny** case in which $m >> n$, so that there are many more rows than columns. 
     
    
-We'll put a **singular value decomposition** of $X$ to work in both situations.
+We'll apply a **singular value decomposition** of $X$ in both situations.
 
 In the first case in which there are many more observations $n$ than there are random variables $m$, we learn about the joint distribution of the  random variables by taking averages  across observations of functions of the observations. Here we'll look for **patterns** by using a **singular value decomosition** to do a **principal components analysis** (PCA).
 
 In the second case in which there are many more random variables $m$ than observations $n$, we'll proceed in a different way. 
 We'll again use a **singular value decomposition**,  but now to do a **dynamic mode decomposition** (DMD)
 
-## Introduction
+## Singular Value Decomposition
 
 The **singular value decomposition** of an $m \times n$ matrix $X$ of rank $r \leq \min(m,n)$ is
 
@@ -99,7 +112,9 @@ At other times, we'll use the latter convention in which $\Sigma$ is an $r \time
 Also, when we discuss the **dynamic mode decomposition** below, we'll use a special case of the latter  convention in which it is understood that
 $r$ is just a pre-specified small number of leading singular values that we think capture the  most interesting  dynamics.
 
-**Digression:** Through  the following identities, the singular value decomposition (SVD) is related to the **polar decomposition** of $X$
+## Digression: the polar decomposition
+
+ Through  the following identities, the singular value decomposition (SVD) is related to the **polar decomposition** of $X$
 
 \begin{align*}
 X & = SQ  \cr  
@@ -135,7 +150,7 @@ Arrange   the positive singular values on the main diagonal of the matrix $\Sigm
 
 Set all other entries of $\Sigma$ to zero.
 
-### PCA and SVD
+## Relationship of PCA to SVD
 
 To relate a SVD to a PCA (principal component analysis) of data set $X$, first construct  the  SVD of the data matrix $X$:
 
@@ -200,7 +215,7 @@ rr
 Add some words about the "economy SVD" and add an example here
 ```
 
-### PCA with eigenvalues and eigenvectors
+## PCA with eigenvalues and eigenvectors
 
 We now  turn to using the eigen decomposition of a sample covariance matrix to do PCA.
 
@@ -293,7 +308,7 @@ In the following, we accomplish this by
 1. sorting eigenvalues and singular values in descending order
 2. imposing positive diagonals on $P$ and $U$ and adjusting signs in $V^T$ accordingly
 
-### Connections
+## Summary of  Connections
 
 To pull things together, it is useful to assemble and compare some formulas presented above.
 
@@ -501,7 +516,7 @@ def compare_pca_svd(da):
     plt.show()
 ```
 
-**Dynamic Mode Decomposition (DMD)**
+## Dynamic Mode Decomposition (DMD)
 
 We now turn to the case in which $m >>n $ so that there are many more random variables $m$ than observations $n$.
 
