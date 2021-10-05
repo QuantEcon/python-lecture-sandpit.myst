@@ -11,10 +11,13 @@ kernelspec:
   name: python3
 ---
 
+# Singular Value Decomposition (SVD)
+
 In addition to regular packages contained in Anaconda by default, this notebook also requires:
 
 ```{code-cell} ipython3
-#!pip install quandl
+:tags: [hide-output]
+!pip install quandl
 ```
 
 ```{code-cell} ipython3
@@ -26,7 +29,7 @@ import quandl as ql
 import pandas as pd
 ```
 
-# The Setup
+##  The Setup
 
 Let $X$ be an $m \times n$ matrix of rank $r$.
 
@@ -44,7 +47,6 @@ We'll be interested in  two distinct cases
   * The  **tall and skinny** case in which $m >> n$, so that there are many more rows than columns. 
     
    
-  
 We'll put a **singular value decomposition** of $X$ to work in both situations.
 
 In the first case in which there are many more observations $n$ than there are random variables $m$, we learn about the joint distribution of the  random variables by taking averages  across observations of functions of the observations. Here we'll look for **patterns** by using a **singular value decomosition** to do a **principal components analysis** (PCA).
@@ -52,36 +54,33 @@ In the first case in which there are many more observations $n$ than there are r
 In the second case in which there are many more random variables $m$ than observations $n$, we'll proceed in a different way. 
 We'll again use a **singular value decomposition**,  but now to do a **dynamic mode decomposition** (DMD)
 
-# Singular Value Decomposition (SVD)
+## Introduction
 
 The **singular value decomposition** of an $m \times n$ matrix $X$ of rank $r \leq \min(m,n)$ is
 
-+++
-
-
-$$ X  = U \Sigma V^T $$
+$$
+X  = U \Sigma V^T
+$$
 
 where 
 
 \begin{align*}
 UU^T &  = I  &  \quad U^T U = I \cr    
-VV^T & = I & \quad V^T V = I  \end{align*}
+VV^T & = I & \quad V^T V = I
+\end{align*}
  
 where 
  
- * $U$ is an $m \times m$ matrix whose columns are eigenvectors of $X^T X$
- 
- * $V$ is an $n \times n$ matrix whose columns are eigenvectors of $X X^T$
- 
- * $\Sigma$ is an $m \times r$ matrix in which the first $r$ places on its main diagonal are positive numbers $\sigma_1, \sigma_2, \ldots, \sigma_r$ called **singular values**; remaining entries of $\Sigma$ are all zero
- 
- * The $r$ singular values are square roots of the eigenvalues of the $m \times m$ matrix  $X X^T$ and the $n \times n$ matrix $X^T X$
- 
- * When $U$ is a complex valued matrix, $U^T$ denotes the **conjugate-transpose** or **Hermitian-transpose** of $U$, meaning that 
-$U_{ij}^T$ is the complex conjugate of $U_{ji}$. Similarly, when $V$ is a complex valued matrix, $V^T$ denotes the **conjugate-transpose** or **Hermitian-transpose** of $V$
- 
+* $U$ is an $m \times m$ matrix whose columns are eigenvectors of $X^T X$
 
-+++
+* $V$ is an $n \times n$ matrix whose columns are eigenvectors of $X X^T$
+
+* $\Sigma$ is an $m \times r$ matrix in which the first $r$ places on its main diagonal are positive numbers $\sigma_1, \sigma_2, \ldots, \sigma_r$ called **singular values**; remaining entries of $\Sigma$ are all zero
+
+* The $r$ singular values are square roots of the eigenvalues of the $m \times m$ matrix  $X X^T$ and the $n \times n$ matrix $X^T X$
+
+* When $U$ is a complex valued matrix, $U^T$ denotes the **conjugate-transpose** or **Hermitian-transpose** of $U$, meaning that 
+$U_{ij}^T$ is the complex conjugate of $U_{ji}$. Similarly, when $V$ is a complex valued matrix, $V^T$ denotes the **conjugate-transpose** or **Hermitian-transpose** of $V$
 
 The shapes of $U$, $\Sigma$, and $V$ are $\left(m, m\right)$, $\left(m, n\right)$, $\left(n, n\right)$, respectively. 
 
@@ -100,73 +99,70 @@ At other times, we'll use the latter convention in which $\Sigma$ is an $r \time
 Also, when we discuss the **dynamic mode decomposition** below, we'll use a special case of the latter  convention in which it is understood that
 $r$ is just a pre-specified small number of leading singular values that we think capture the  most interesting  dynamics.
 
-+++
-
 **Digression:** Through  the following identities, the singular value decomposition (SVD) is related to the **polar decomposition** of $X$
 
-+++
-
-\begin{align*} X & = SQ  \cr  
-    S & = U\Sigma U^T \cr
-    Q & = U V^T 
+\begin{align*}
+X & = SQ  \cr  
+S & = U\Sigma U^T \cr
+Q & = U V^T 
 \end{align*}
 
-where  $S$ is evidently a symmetric matrix and $Q$ is an orthogonal matrix.
+where $S$ is evidently a symmetric matrix and $Q$ is an orthogonal matrix.
 
-+++
-
-## PCA 
+## Principle Componenents Analysis (PCA)
 
 Let's begin with the case in which $n >> m$, so that we have many  more observations $n$ than random variables $m$.
 
-
 The data matrix $X$ is **short and fat**  in the  $n >> m$ case as opposed to a **tall and skinny** case with $m > > n $ to be discussed later in this notebook.
-
 
 We regard  $X$ as an  $m \times n$ matrix of **data**:
 
-$$ X =  \begin{bmatrix} X_1 \mid X_2 \mid \cdots \mid X_n\end{bmatrix} $$
+$$
+X =  \begin{bmatrix} X_1 \mid X_2 \mid \cdots \mid X_n\end{bmatrix}
+$$
 
-where for $j = 1, \ldots, n$ the column vector $ X_j = \begin{bmatrix}X_{1j}\\X_{2j}\\\vdots\\X_{mj}\end{bmatrix}$ is a  vector of observations on variables $  \begin{bmatrix}x_1\\x_2\\\vdots\\x_m\end{bmatrix}$.
+where for $j = 1, \ldots, n$ the column vector $X_j = \begin{bmatrix}X_{1j}\\X_{2j}\\\vdots\\X_{mj}\end{bmatrix}$ is a  vector of observations on variables $\begin{bmatrix}x_1\\x_2\\\vdots\\x_m\end{bmatrix}$.
 
-In a **time series** setting, we would think of columns $j $ as indexing different __times__ at which random variables are observed, while rows index different random variables.
+In a **time series** setting, we would think of columns $j$ as indexing different __times__ at which random variables are observed, while rows index different random variables.
 
-
-In a **cross section** setting, we would think of columns $j $ as indexing different __individuals__ for  which random variables are observed, while rows index different random variables.
+In a **cross section** setting, we would think of columns $j$ as indexing different __individuals__ for  which random variables are observed, while rows index different random variables.
 
 The number of singular values equals the rank of  matrix $X$.
 
 Arrange the singular values  in decreasing order.
 
-Arrange   the positive singular values on the main diagonal of the matrix $\Sigma$ of   into a  vector $\sigma_R$.
+Arrange   the positive singular values on the main diagonal of the matrix $\Sigma$ of into a vector $\sigma_R$.
 
 Set all other entries of $\Sigma$ to zero.
 
-
-#### PCA and SVD
+### PCA and SVD
 
 To relate a SVD to a PCA (principal component analysis) of data set $X$, first construct  the  SVD of the data matrix $X$:
 
-$$X = U \Sigma V^T = \sigma_1 U_1 V_1^T + \sigma_2 U_2 V_2^T + \cdots + \sigma_r U_r V_r^T 
-\label{eq:PCA1} \tag{1} $$
+$$
+X = U \Sigma V^T = \sigma_1 U_1 V_1^T + \sigma_2 U_2 V_2^T + \cdots + \sigma_r U_r V_r^T
+$$ (eq:PCA1)
 
 where
 
-$$U=\begin{bmatrix}U_1|U_2|\ldots|U_m\end{bmatrix}$$
+$$
+U=\begin{bmatrix}U_1|U_2|\ldots|U_m\end{bmatrix}
+$$
 
-$$V^T = \begin{bmatrix}V_1^T\\V_2^T\\\ldots\\V_n^T\end{bmatrix}$$
+$$
+V^T = \begin{bmatrix}V_1^T\\V_2^T\\\ldots\\V_n^T\end{bmatrix}
+$$
 
-In equation \eqref{eq:PCA1}, each of the $m \times n$ matrices $U_{j}V_{j}^T$ is evidently
+In equation {eq}`eq:PCA1`, each of the $m \times n$ matrices $U_{j}V_{j}^T$ is evidently
 of rank $1$. 
-
 
 Thus, we have 
 
-$$ X = \sigma_1 \begin{pmatrix}U_{11}V_{1}^T\\U_{21}V_{1}^T\\\cdots\\U_{m1}V_{1}^T\\\end{pmatrix} + \sigma_2\begin{pmatrix}U_{12}V_{2}^T\\U_{22}V_{2}^T\\\cdots\\U_{m2}V_{2}^T\\\end{pmatrix}+\ldots + \sigma_r\begin{pmatrix}U_{1r}V_{r}^T\\U_{2r}V_{r}^T\\\cdots\\U_{mr}V_{r}^T\\\end{pmatrix}
-\label{eq:PCA2} \tag{2} $$
- 
+$$
+X = \sigma_1 \begin{pmatrix}U_{11}V_{1}^T\\U_{21}V_{1}^T\\\cdots\\U_{m1}V_{1}^T\\\end{pmatrix} + \sigma_2\begin{pmatrix}U_{12}V_{2}^T\\U_{22}V_{2}^T\\\cdots\\U_{m2}V_{2}^T\\\end{pmatrix}+\ldots + \sigma_r\begin{pmatrix}U_{1r}V_{r}^T\\U_{2r}V_{r}^T\\\cdots\\U_{mr}V_{r}^T\\\end{pmatrix}
+$$ (eq:PCA2)
 
-Here is how we would interpret the objects in the  matrix equation \eqref{eq:PCA2} in 
+Here is how we would interpret the objects in the  matrix equation {eq}`eq:PCA2` in 
 a time series context:
 
 * $ V_{k}^T= \begin{bmatrix}V_{k1} &  V_{k2} & \ldots & V_{kn}\end{bmatrix}  \quad \textrm{for each} \   k=1, \ldots, n $ is a time series  $\lbrace V_{kj} \rbrace_{j=1}^n$ for the $k$th principal component
@@ -176,12 +172,10 @@ is a vector of loadings of variables $X_i$ on the $k$th principle component,  $i
 
 * $\sigma_k $ for each $k=1, \ldots, r$ is the strength of $k$th **principal component**
 
-+++
-
 ## Digression: reduced (or economy) versus full SVD
 
 You can read about reduced and full SVD here
- <https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html>
+<https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html>
  
 Let's do a small experiment to see the difference
 
@@ -191,7 +185,6 @@ X = np.random.rand(5,2)
 U, S, V = np.linalg.svd(X,full_matrices=True)  # full SVD
 Uhat, Shat, Vhat = np.linalg.svd(X,full_matrices=False) # economy SVD
 print('U, S, V ='), U, S, V
-
 ```
 
 ```{code-cell} ipython3
@@ -203,15 +196,13 @@ rr = np.linalg.matrix_rank(X)
 rr
 ```
 
-## To Do
-
+```{todo}
 Add some words about the "economy SVD" and add an example here
-
-+++
+```
 
 ### PCA with eigenvalues and eigenvectors
 
-We now  turn to using the eigen decomposition of a sample  covariance matrix to do PCA.
+We now  turn to using the eigen decomposition of a sample covariance matrix to do PCA.
 
 Let $X_{m \times n}$ be our $m \times n$ data matrix.
 
@@ -221,11 +212,15 @@ We can make sure that this is true by **pre-processing** the data by substractin
 
 Define the sample covariance matrix $\Omega$ as 
 
-$$\Omega = XX^T $$
+$$
+\Omega = XX^T
+$$
 
 Then use an eigen decomposition to represent $\Omega$ as follows:
 
-$$ \Omega =P\Lambda P^T$$
+$$
+\Omega =P\Lambda P^T
+$$
 
 Here 
 
@@ -235,29 +230,35 @@ Here
 
 We can then represent $X$ as
 
-$$X=P\epsilon $$          
+$$
+X=P\epsilon
+$$          
 
 where 
 
-$$\epsilon\epsilon^T=\Lambda $$ 
+$$
+\epsilon\epsilon^T=\Lambda
+$$ 
 
 We can verify that
 
-$$XX^T=P\Lambda P^T$$
-
-
-+++
+$$
+XX^T=P\Lambda P^T
+$$
 
 It follows that we can represent the data matrix as 
 
-
-\begin{equation*} X=\begin{bmatrix}X_1|X_2|\ldots|X_m\end{bmatrix} =\begin{bmatrix}P_1|P_2|\ldots|P_m\end{bmatrix}
+\begin{equation*}
+X=\begin{bmatrix}X_1|X_2|\ldots|X_m\end{bmatrix} =\begin{bmatrix}P_1|P_2|\ldots|P_m\end{bmatrix}
 \begin{bmatrix}\epsilon_1\\\epsilon_2\\\ldots\\\epsilon_m\end{bmatrix} 
-= P_1\epsilon_1+P_2\epsilon_2+\ldots+P_m\epsilon_m \end{equation*}
+= P_1\epsilon_1+P_2\epsilon_2+\ldots+P_m\epsilon_m
+\end{equation*}
 
 where 
 
-$$  \epsilon\epsilon^T=\Lambda $$
+$$
+\epsilon\epsilon^T=\Lambda
+$$
 
 To reconcile the preceding representation with the PCA that we obtained through the SVD above, we first note that $\epsilon_j^2=\lambda_j\equiv\sigma^2_j$.
 
@@ -266,15 +267,16 @@ which evidently implies that $\tilde{\epsilon}_j\tilde{\epsilon}_j^T=1$.
 
 Therefore 
 
-
-$\begin{aligned}
+\begin{aligned}
 X&=\sqrt{\lambda_1}P_1\tilde{\epsilon_1}+\sqrt{\lambda_2}P_2\tilde{\epsilon_2}+\ldots+\sqrt{\lambda_m}P_m\tilde{\epsilon_m}\\
 &=\sigma_1P_1\tilde{\epsilon_2}+\sigma_2P_2\tilde{\epsilon_2}+\ldots+\sigma_mP_m\tilde{\epsilon_m}
-\end{aligned}$
+\end{aligned}
 
 which evidently agrees with 
 
-$X=\sigma_1U_1{V_1}^{T}+\sigma_2 U_2{V_2}^{T}+\ldots+\sigma_{r} U_{r}{V_{r}}^{T}$
+$$
+X=\sigma_1U_1{V_1}^{T}+\sigma_2 U_2{V_2}^{T}+\ldots+\sigma_{r} U_{r}{V_{r}}^{T}
+$$
 
 provided that  we set 
 
@@ -288,70 +290,75 @@ We want a way that leads to the same $U$ and $P$.
 
 In the following, we accomplish this by
 
-1. sorting   eigenvalues and singular values in descending order
+1. sorting eigenvalues and singular values in descending order
 2. imposing positive diagonals on $P$ and $U$ and adjusting signs in $V^T$ accordingly
-
-+++
 
 ### Connections
 
 To pull things together, it is useful to assemble and compare some formulas presented above.
 
 First, consider the following SVD of an $m \times n$ matrix:
-$$ X = U\Sigma V^T $$
 
+$$
+X = U\Sigma V^T
+$$
 
-Compute
+Compute:
 
 \begin{align*}
-   XX^T&=U\Sigma V^TV\Sigma^T U^T\cr
-  &\equiv U\Sigma\Sigma^TU^T\cr
-  &\equiv U\Lambda U^T
-   \end{align*}
-         
-         
+XX^T&=U\Sigma V^TV\Sigma^T U^T\cr
+&\equiv U\Sigma\Sigma^TU^T\cr
+&\equiv U\Lambda U^T
+\end{align*}
+  
 Thus, $U$ in the SVD is the matrix $P$  of
 eigenvectors of $XX^T$ and $\Sigma \Sigma^T$ is the matrix $\Lambda$ of eigenvalues.
 
 Second, let's compute
 
 \begin{align*}
-         X^TX &=V\Sigma^T U^TU\Sigma V^T\\
-            &=V\Sigma^T{\Sigma}V^T
-         \end{align*} 
+X^TX &=V\Sigma^T U^TU\Sigma V^T\\
+&=V\Sigma^T{\Sigma}V^T
+\end{align*} 
 
-Thus, the matrix  $V$ in the SVD is the matrix of  eigenvectors of  $X^TX$
-
+Thus, the matrix $V$ in the SVD is the matrix of eigenvectors of $X^TX$
 
 Summarizing and fitting things together, we have the eigen decomposition of the sample
 covariance matrix
 
-$$ X X^T = P \Lambda P^T $$
+$$
+X X^T = P \Lambda P^T
+$$
 
 where $P$ is an orthogonal matrix.
 
 Further, from the SVD of $X$, we know that
 
-$$ X X^T = U \Sigma \Sigma^T U^T $$
+$$
+X X^T = U \Sigma \Sigma^T U^T
+$$
 
 where $U$ is an orthonal matrix.  
 
 Thus, $P = U$ and we have the representation of $X$
 
-$$ X = P \epsilon = U \Sigma V^T  $$
+$$
+X = P \epsilon = U \Sigma V^T
+$$
 
 It follows that 
 
-$$ U^T X = \Sigma V^T = \epsilon . $$
-
+$$
+U^T X = \Sigma V^T = \epsilon
+$$
 
 Note that the preceding implies that
 
-$$ \epsilon \epsilon^T = \Sigma V^T V \Sigma^T = \Sigma \Sigma^T = \Lambda ,$$
+$$
+\epsilon \epsilon^T = \Sigma V^T V \Sigma^T = \Sigma \Sigma^T = \Lambda ,
+$$
 
 so that everything fits together.
-
-+++
 
 Below we define a class `DecomAnalysis` that wraps  PCA and SVD for a given a data matrix `X`.
 
@@ -498,112 +505,134 @@ def compare_pca_svd(da):
 
 We now turn to the case in which $m >>n $ so that there are many more random variables $m$ than observations $n$.
 
-This is the **tall  and skinny** case associated with **Dynamic Mode Decomposition**.
+This is the **tall and skinny** case associated with **Dynamic Mode Decomposition**.
 
 Starting with an $m \times n $ matrix of data $X$, we form two matrices 
 
-$$ \tilde X =  \begin{bmatrix} X_1 \mid X_2 \mid \cdots \mid X_{n-1}\end{bmatrix} $$ 
+$$
+\tilde X =  \begin{bmatrix} X_1 \mid X_2 \mid \cdots \mid X_{n-1}\end{bmatrix}
+$$ 
 
 and
 
-$$ \tilde X' =  \begin{bmatrix} X_2 \mid X_3 \mid \cdots \mid X_n\end{bmatrix} $$
-
+$$
+\tilde X' =  \begin{bmatrix} X_2 \mid X_3 \mid \cdots \mid X_n\end{bmatrix}
+$$
 
 In forming $\tilde X$ and $\tilde X'$, we have in each case  dropped a column from $X$.
 
 Evidently, $\tilde X$ and $\tilde X'$ are both $m \times \tilde n$ matrices where $\tilde n = n - 1$.
 
+We start with a system consisting of $m$ least squares regressions of *everything on everything*:
 
-We start with a system consisting of $m$  least squares regressions of *everything on everything*:
-
-$$ \tilde X' = A \tilde X + \epsilon  $$
+$$
+\tilde X' = A \tilde X + \epsilon
+$$
 
 where 
 
-$$ A = \tilde X' \tilde X^{+} $$
+$$
+A = \tilde X' \tilde X^{+}
+$$
 
 and where the (huge) $m \times m $ matrix $X^{+}$ is the Moore-Penrose generalize inverse of $X$ that we could compute
 as 
 
-$$ X^{+} = V \Sigma^{-1} U^T $$
+$$
+X^{+} = V \Sigma^{-1} U^T
+$$
 
 where the matrix $\Sigma^{-1}$ is constructed by replacing each non-zero element of $\Sigma$ with $\sigma_j^{-1}$.
 
-
 The idea behind **dynamic mode decomposition** is to construct an approximation that  
 
- * sidesteps computing  $X^{+}$
- 
- * retains only the largest  $\tilde r< < r$ eigenvalues and associated eigenvectors of $U$ and $V^T$ 
- 
- * constructs an $m \times \tilde r$ matrix $\Phi$ that captures effects of $r$ dynamic modes on all $m$ variables
- 
- * uses $\Phi$ and the $\tilde r$ leading singular values to forecast *future* $X_t$'s
+* sidesteps computing $X^{+}$
 
+* retains only the largest  $\tilde r< < r$ eigenvalues and associated eigenvectors of $U$ and $V^T$ 
 
+* constructs an $m \times \tilde r$ matrix $\Phi$ that captures effects of $r$ dynamic modes on all $m$ variables
+
+* uses $\Phi$ and the $\tilde r$ leading singular values to forecast *future* $X_t$'s
 
 The magic of **dynamic mode decomposition** is that we accomplish this without ever computing the regression coefficients $A = X' X^{+}$.
 
 To accomplish a DMD, we deploy the following steps:
 
- * Compute the singular value decomposition 
- 
-     $$ X = U \Sigma V^T  $$
-    
-    where $U$ is $m \times r$, $\Sigma$ is an $r \times r$ diagonal  matrix, and $V^T$ is an $r \times \tilde n$ matrix. 
-    
-    
-  * Notice that (though it would be costly), we could compute $A$ by solving 
+* Compute the singular value decomposition 
+
+  $$ 
+  X = U \Sigma V^T
+  $$
   
-    $$ A = X' V \Sigma^{-1} U^T $$
-    
-    But we won't do that.  
-    
-    Instead we'll proceed as follows.
-    
-    Note that since,  $X' = A U \Sigma V^T$, we know that 
-    
-    $$ A U  =  X' V \Sigma^{-1} $$
-     
-    so that 
-    
-     $$ U^T X' V \Sigma^{-1} = U^T A U \equiv \tilde A $$
-     
-  * At this point,  in constructing $\tilde A$ according to the above formula,
-    we take only the  columns of $U$ corresponding to the $\tilde r$ largest singular values.  
-    
-        
-    Tu et al. verify that eigenvalues and eigenvectors of $\tilde A$ equal the leading eigenvalues and associated eigenvectors of $A$.
+  where $U$ is $m \times r$, $\Sigma$ is an $r \times r$ diagonal  matrix, and $V^T$ is an $r \times \tilde n$ matrix. 
   
-  * Construct an eigencomposition of $\tilde A$ that satisfies
   
-    $$ \tilde A W =  W \Lambda $$
-    
-    where $\Lambda$ is a $\tilde r \times \tilde r$ diagonal matrix of eigenvalues and the columns of $W$ are corresponding eigenvectors
-    of $\tilde A$.
-    Both $\Lambda$ and $W$ are $\tilde r \times \tilde r$ matrices.
-    
-  * Construct the $m \times \tilde r$ matrix
+* Notice that (though it would be costly), we could compute $A$ by solving 
+
+  $$
+  A = X' V \Sigma^{-1} U^T
+  $$
   
-    $$ \Phi = X' V \Sigma^{-1} W $$
-    
-    Let $\Phi^{+}$ be a generalized inverse of $\Phi$; $\Phi^{+}$ is an $\tilde r \times m$ matrix. 
-    
-  * Define  an  initial  vector $b$ of dominant modes by
+  But we won't do that.  
   
-    $$ b= \Phi^{+} X_1 $$
+  Instead we'll proceed as follows.
+  
+  Note that since,  $X' = A U \Sigma V^T$, we know that 
+  
+  $$
+  A U  =  X' V \Sigma^{-1}
+  $$
     
-    where evidently $b$ is an $\tilde r \times 1$ vector.
+  so that 
+  
+  $$
+  U^T X' V \Sigma^{-1} = U^T A U \equiv \tilde A
+  $$
+    
+* At this point, in constructing $\tilde A$ according to the above formula,
+  we take only the  columns of $U$ corresponding to the $\tilde r$ largest singular values.  
+  
+  Tu et al. verify that eigenvalues and eigenvectors of $\tilde A$ equal the leading eigenvalues and associated eigenvectors of $A$.
+
+* Construct an eigencomposition of $\tilde A$ that satisfies
+
+  $$ 
+  \tilde A W =  W \Lambda
+  $$
+  
+  where $\Lambda$ is a $\tilde r \times \tilde r$ diagonal matrix of eigenvalues and the columns of $W$ are corresponding eigenvectors
+  of $\tilde A$.
+  Both $\Lambda$ and $W$ are $\tilde r \times \tilde r$ matrices.
+  
+* Construct the $m \times \tilde r$ matrix
+
+  $$
+  \Phi = X' V \Sigma^{-1} W
+  $$
+  
+  Let $\Phi^{+}$ be a generalized inverse of $\Phi$; $\Phi^{+}$ is an $\tilde r \times m$ matrix. 
+  
+* Define an initial vector $b$ of dominant modes by
+
+  $$
+  b= \Phi^{+} X_1
+  $$
+  
+  where evidently $b$ is an $\tilde r \times 1$ vector.
     
 With $\Lambda, \Phi$ in hand, our least-squares fitted dynamics fitted to the $r$ dominant modes
 are governed by
 
-$$ X_{t+1} = \Phi \Lambda \Phi^{+} X_t $$
+$$
+X_{t+1} = \Phi \Lambda \Phi^{+} X_t
+$$
 
  
 Conditional on $X_t$, forecasts $\check X_{t+j} $ of $X_{t+j}, j = 1, 2, \ldots, $  are evidently given by 
 
- $$\check X_{t+j} = \Phi \Lambda^j \Phi^{+} X_t  $$
+$$
+\check X_{t+j} = \Phi \Lambda^j \Phi^{+} X_t
+$$
 
 +++
 
