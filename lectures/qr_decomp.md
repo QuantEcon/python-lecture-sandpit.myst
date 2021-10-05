@@ -11,41 +11,37 @@ kernelspec:
   name: python3
 ---
 
-## QR Decomposition
+# QR Decomposition
 
 The QR decomposition (also called the QR factorization) of a matrix is a decomposition of a matrix into the product of  an orthogonal matrix and a triangular matrix.
-
 
 A QR decomposition of a real  matrix $A$ 
 takes the form 
 
-$$A=QR$$
+$$
+A=QR
+$$
 
 where 
-   * $Q$ is an orthogonal matrix (so that  $Q^TQ = I$)
 
-   * $R$ is an upper triangular matrix. 
+* $Q$ is an orthogonal matrix (so that  $Q^TQ = I$)
+
+* $R$ is an upper triangular matrix. 
 
 
 We'll use a **Gram-Schmidt process** to compute a  QR decomposition 
 
-
 Because doing so is so educational, we'll  write our own Python code to do the job.
 
-
-+++
-
-### Gram-Schmidt process
+## Gram-Schmidt process
 
 We'll start with a **square** matrix $A$.
 
 If a square matrix $A$ is nonsingular, then a $QR$ factorization is unique.
 
-
 We'll deal with a rectangular matrix $A$ later.
 
 Actually, our algorithm will work with a rectangular $A$ that is not square.
-
 
 ### Gram-Schmidt process for square $A$
 
@@ -91,10 +87,10 @@ $$
 
 Here $(a_j \cdot e_i)$ can be interpreted as the linear least squares **regression coefficient** of $a_j$ on $e_i$ 
 
-   * it is the inner product of $a_j$ and $e_i$ divided by the inner product of $e_i$ where 
-     $e_i \cdot e_i = 1$, as *normalization* has assured us.
-     
-   * this regression coefficient has an interpretation as being  a **covariance** divided by a **variance**
+* it is the inner product of $a_j$ and $e_i$ divided by the inner product of $e_i$ where 
+    $e_i \cdot e_i = 1$, as *normalization* has assured us.
+    
+* this regression coefficient has an interpretation as being  a **covariance** divided by a **variance**
    
 
 It can  be verified that
@@ -108,28 +104,29 @@ $$
 
 Thus, we have constructed the decomposision
 
-$$ A = Q R $$
+$$ 
+A = Q R
+$$
 
 where 
 
-$$ Q = \left[ \begin{array}{c|c|c|c} a_1 & a_2 & \cdots & a_n \end{array} \right]=
-\left[ \begin{array}{c|c|c|c} e_1 & e_2 & \cdots & e_n \end{array} \right] $$
+$$ 
+Q = \left[ \begin{array}{c|c|c|c} a_1 & a_2 & \cdots & a_n \end{array} \right]=
+\left[ \begin{array}{c|c|c|c} e_1 & e_2 & \cdots & e_n \end{array} \right]
+$$
 
 and 
 
-$$ R = \left[ \begin{matrix} a_1·e_1 & a_2·e_1 & \cdots & a_n·e_1\\ 0 & a_2·e_2 & \cdots & a_n·e_2 
-\\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & a_n·e_n \end{matrix} \right] $$
+$$
+R = \left[ \begin{matrix} a_1·e_1 & a_2·e_1 & \cdots & a_n·e_1\\ 0 & a_2·e_2 & \cdots & a_n·e_2 
+\\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & a_n·e_n \end{matrix} \right]
+$$
 
-
-
-
-## $A$ not square 
-
+### $A$ not square 
 
 Now suppose that $A$ is an $n \times m$ matrix where $m > n$.  
 
 Then a $QR$ decomposition is
-
 
 $$
 A= \left[ \begin{array}{c|c|c|c} a_1 & a_2 & \cdots & a_m \end{array} \right]=\left[ \begin{array}{c|c|c|c} e_1 & e_2 & \cdots & e_n \end{array} \right]
@@ -284,8 +281,7 @@ Q_scipy, R_scipy
 
 ### Using QR decomposition to compute eigenvalues
 
-Now   for a useful  fact about the QR algorithm.  
-
+Now for a useful  fact about the QR algorithm.  
 
 The following iterations on the QR decomposition can be used to compute **eigenvalues**
 of a **square** matrix $A$.
@@ -304,6 +300,9 @@ Here is the algorithm:
 
 6. Compute eigenvalues of $A$ and compare them to the diagonal values of the limiting $A_n$ found from this process.
 
+```{todo}
+@mmcky to migrate this to use [sphinx-proof](https://sphinx-proof.readthedocs.io/en/latest/syntax.html#algorithms)
+```
 
 **Remark:** this algorithm is close to one of the most efficient ways of computing eigenvalues!
 
@@ -351,13 +350,11 @@ Compare with the `scipy` package.
 sorted(np.linalg.eigvals(A))
 ```
 
-
 ## $QR$ decomposition and Principal components analysis (PCA)
 
-There are interesting connections between the $QR$ decomposition and  PCA.
+There are interesting connections between the $QR$ decomposition and PCA.
 
 Here are  some.
-
 
 1.  Let $X'$ be a $k \times n$ random matrix where the $j$th column is a random draw
 from ${\mathcal N}(\mu, \Sigma)$ where $\mu$ is $k \times 1$ vector of means and $\Sigma$ is a $k \times k$
@@ -374,9 +371,6 @@ $ X'X = P \hat \Lambda P'$.
 
 
 Let's verify conjecture 5 with some Python code.
-
-
-+++
 
 Start by simulating a random $\left(n, k\right)$ matrix $X$.
 
