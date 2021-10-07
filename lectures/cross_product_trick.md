@@ -13,9 +13,9 @@ kernelspec:
 
 # Cross product trick
 
-This notebooks describes formulas for eliminating 
+This lecture describes formulas for eliminating 
 
-  * cross products between states and control in linear quadratic dynamic programming  problems
+  * cross products between states and control in linear-quadratic dynamic programming  problems
   
   * covariances between state and measurement noises in  Kalman filtering  problems
 
@@ -34,9 +34,11 @@ $A \sim m \times m, B \sim m \times k,  Q \sim k \times k, R \sim m \times m$ an
 
 
 The problem is to choose $\{x_{t+1}, u_t\}_{t=0}^\infty$ to maximize 
+
 $$
  - \sum_{t=0}^\infty (x_t' R x_t + u_t' Q u_t + 2 u_t H x_t) 
- $$
+$$
+
 subject to the linear constraints 
 
 $$ x_{t+1} = A x_t + B u_t,  \quad t \geq 0 $$
@@ -53,23 +55,20 @@ $$ F = -(Q + B'PB)^{-1} B'PA $$
 
 and  $P \sim m \times m $ is a positive definite solution of the algebraic matrix Riccati equation
 
-$$ P = R + A'PA - (A'PB + H')(Q + B'PB)^{-1}(B'PA + H).
+$$
+P = R + A'PA - (A'PB + H')(Q + B'PB)^{-1}(B'PA + H).
 $$
 
-where .
-
-where $A \sim m \times m, B \sim m \times k, P \sim m \times m, Q \sim k \times k, R \sim m \times m$ and $H \sim k \times m$.
 
 +++
 
 It can be verified that an **equivalent** problem without cross-products between states and controls
-is  defined by  the following 4-tuple
-of matrices : $(A^*, B, R^*, Q) $. 
+is  defined by  a 4-tuple of matrices : $(A^*, B, R^*, Q) $. 
 
 That the omitted matrix $H=0$ indicates that there are no cross products between states and controls
 in the equivalent problem. 
 
-The matrices $(A^*, B, R^*, Q) $ defining the  equivalent problem and the matrices $P, F^*$ solving it are  related to the matrices $(A, B, R, Q, H)$ defining the original problem  and the matrices $P, F$ solving it by 
+The matrices $(A^*, B, R^*, Q) $ defining the  equivalent problem and the value function, policy function matrices $P, F^*$ that solve it are  related to the matrices $(A, B, R, Q, H)$ defining the original problem  and the  value function, policy function matrices $P, F$ that solve the original problem by 
 
 \begin{align*}
 A^* & = A - B Q^{-1} H, \\
@@ -83,12 +82,11 @@ F & = F^* + Q^{-1} H.
 
 ## Kalman filter
 
-Duality between linear-quadratic optimal control and Kalman filtering suggests that there
+Duality between a linear-quadratic optimal control and a Kalman filtering problem suggests that there
 is an analogous transformation that allows us to transform a Kalman filtering problem
-with covariance between between shocks to states and measurements to an equivalent
-Kalman filtering problem with zero covariance between shocks to states and measurments.
+with non-zero covariance matrix  between between shocks to states and shocks to measurements to an equivalent Kalman filtering problem with zero covariance between shocks to states and measurments.
 
-There is.
+Yes, there is.
 
 
 
@@ -101,7 +99,9 @@ x_{t+1} & = A x_t + B w_{t+1},  \\
 z_{t+1} & = D x_t + F w_{t+1},  
 \end{align*}
 
-where $A \sim m \times m, B \sim m \times p $ and $D \sim k \times m, F \sim k \times p $.
+where $A \sim m \times m, B \sim m \times p $ and $D \sim k \times m, F \sim k \times p $,
+and $w_{t+1}$ is the time $t+1$ component of a sequence of i.i.d. $p \times 1$ normally distibuted
+random vectors with mean vector zero and covariance matrix equal to a $p \times p$ identity matrix. 
 
 Thus, $x_t$ is $m \times 1$ and $z_t$ is $k \times 1$. 
 
@@ -125,7 +125,7 @@ B^* {B^*}' & = BB' - BF' (FF')^{-1} FB'.
 
 
 Compute $\Sigma, K^*$ using the ordinary Kalman filtering  formula with $BF' = 0$, i.e.,
-with no covariance between noises to  states and  measurements. 
+with zero covariance matrix between random shocks to  states and  random shocks to measurements. 
 
 That is, compute  $K^*$ and $\Sigma$ that  satisfy
 
@@ -134,13 +134,13 @@ K^* & = (A^* \Sigma D')(D \Sigma D' + FF')^{-1} \\
 \Sigma & = A^* \Sigma {A^*}' + B^* {B^*}' - (A^* \Sigma D')(D \Sigma D' + FF')^{-1} (D \Sigma {A^*}').
 \end{align*}
 
-The Kalman gain for the original problem **with covariance** between noises to states and measurements is then
+The Kalman gain for the original problem **with non-zero covariance** between shocks to states and measurements is then
 
 $$
 K = K^* + BF' (FF')^{-1},
 $$
 
-The state reconstruction covariance matrix $\Sigma$ for the orignal and transformed problems are equal.
+The state reconstruction covariance matrix $\Sigma$ for the original problem equals the state reconstrution covariance matrix for the transformed problem.
 
 +++
 
@@ -149,15 +149,15 @@ The state reconstruction covariance matrix $\Sigma$ for the orignal and transfor
 Here is a handy table to remember how the Kalman filter and dynamic program are related.
 
 
-|Dynamic Program|  Kalman Filter |
-|:-------------:|:--------:|
-|      $A$      |   $A'$   |
-|      $B$      |   $D'$   |
-|      $H$      |   $FB'$  |
-|      $Q$      |   $FF'$  |
-|      $R$      |   $BB'$  |
-|      $F$      |   $K'$   |
-|      $P$      | $\Sigma$ |
+| Dynamic Program | Kalman Filter |
+| :-------------: | :-----------: |
+|       $A$       |     $A'$      |
+|       $B$       |     $D'$      |
+|       $H$       |     $FB'$     |
+|       $Q$       |     $FF'$     |
+|       $R$       |     $BB'$     |
+|       $F$       |     $K'$      |
+|       $P$       |   $\Sigma$    |
 
 +++
 
@@ -200,6 +200,7 @@ Here is a table that states the transformations for the dual problems
         <td><center>$K' = {K^*}' + (FF')^{-1} FB'$ <br/> or <br/> $K = K^* + BF' (FF')^{-1}$</center></td>
 	</tr>
 </table>
+
 
 
 ```{code-cell} ipython3
