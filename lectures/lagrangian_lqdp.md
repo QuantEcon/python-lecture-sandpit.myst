@@ -17,42 +17,49 @@ from quantecon import LQ
 from scipy.linalg import schur
 ```
 
-## Lagrangian formulation of LQ control problem
+# Lagrangian for an LQ control problem
 
 +++
 
-This section describes a Lagrangian formulation of the optimal linear regulator.
+## Overview
 
-Besides being useful computationally, this formulation carries insights about connections between
-stability and optimality and also opens the way to constructing solutions of dynamic systems
-not coming directly from an  intertemporal optimization problem.
+This lecture describes a Lagrangian formulation of an infinite horizon undiscounted dynamic programming problem (i.e., an  optimal linear regulator).
 
-The formulation is also the basis for constructing fast algorithms for solving Riccati equations.
+The formulation 
+
+ * carries insights about connections between stability and optimality
+ 
+ * is the basis for fast algorithms for solving Riccati equations
+  
+ * opens the way to constructing solutions of dynamic systems that don't come directly from an  intertemporal optimization problem
+  
+ 
 
 +++
+
+## The Lagrangian
 
 For the undiscounted optimal linear regulator problem, form the Lagrangian
 
-\begin{equation*}
+$$
 \cal L = - \sum^\infty_{t=0} \biggl\{ x^\prime_t R x_t + u_t^\prime Q u_t +
                                  2 \mu^\prime_{t+1} [A x_t + B u_t - x_{t+1}]\biggr\}.
-                                 \label{eq1} \tag{1} 
-\end{equation*}
+$$ (eq1)
 
 First-order conditions for maximization with respect to $\{u_t,x_{t+1}\}_{t=0}^\infty$ are
 
 $$
-\eqalign{2 Q u_t &+ 2B^\prime \mu_{t+1} = 0 \ ,\ t \geq 0 \cr \mu_t &= R x_t + A^\prime \mu_{t+1}\ ,\ t\geq 1.\cr} \label{eq2} \tag{2}
-$$
+\eqalign{2 Q u_t &+ 2B^\prime \mu_{t+1} = 0 \ ,\ t \geq 0 \cr \mu_t &= R x_t + A^\prime \mu_{t+1}\ ,\ t\geq 1.\cr} 
+$$ (eq2)
 
-Define $\mu_0$ to be  a vector of shadow prices of $x_0$ and apply an envelope condition to
-\eqref{eq1} (6.5.1) to deduce that
+Define $\mu_0$ to be  a vector of shadow prices of $x_0$ and apply an envelope condition to {eq}`eq1`
+ to deduce that
 
 $$
 \mu_0 = R x_0 + A' \mu_1,
 $$
 
-which is a time $t=0 $ counterpart to the second equation of system \eqref{eq2} (6.5.2).
+which is a time $t=0 $ counterpart to the second equation of system {eq}`eq2`.
 
 Recall that  $\mu_{t+1} = P x_{t+1}$, where
 $P$ is the matrix that solves the algebraic Riccati equation. 
@@ -63,13 +70,13 @@ the gradient of the value function.
 The Lagrange multiplier vector $\mu_{t}$ is often called the *costate* vector
 corresponding to the state vector $x_t$.
 
-Solve the first equation of \eqref{eq2} (6.5.2) for $u_t$ in terms of $\mu_{t+1}$.
+Solve the first equation of {eq}`eq2`  for $u_t$ in terms of $\mu_{t+1}$.
 
 Substitute
 into the law of motion $x_{t+1} = A x_t + B u_t$.
 
 Then arrange the resulting
-equation and the second equation of \eqref{eq2} (6.5.2) into the form
+equation and the second equation of {eq}`eq2`  into the form
 
 $$
 L\ \pmatrix{x_{t+1}\cr \mu_{t+1}\cr}\ = \ N\ \pmatrix{x_t\cr \mu_t\cr}\
@@ -88,7 +95,7 @@ this system as
 
 $$
 \pmatrix{x_{t+1}\cr \mu_{t+1}\cr}\ = M\ \pmatrix{x_t\cr\mu_t\cr}
-$$
+$$ (eq4orig)
 
 where
 
@@ -99,7 +106,7 @@ $$
 
 +++
 
-We seek to solve the difference equation system (6.5.4) for a sequence $\{x_t\}_{t=0}^\infty$
+We seek to solve the difference equation system  {eq}`eq4orig` for a sequence $\{x_t\}_{t=0}^\infty$
 that satisfies the initial condition for $x_0$ and a terminal condition
 $\lim_{t \rightarrow +\infty} x_t =0$ that expresses our wish for a *stable* solution.
 
@@ -122,20 +129,18 @@ The rank of $J$ is $2n$.
 
 $$
 MJM^\prime = J.
-\label{eq3} \tag{3}
-$$
+$$ (eq3)
 
 It can be verified directly that $M$ in equation is symplectic.
 
-It follows from equation \eqref{eq3} (6.5.6) and from the fact $J^{-1} = J^\prime = -J$ that for any symplectic
+It follows from equation {eq}`eq3` and from the fact $J^{-1} = J^\prime = -J$ that for any symplectic
 matrix $M$,
 
 $$
 M^\prime = J^{-1} M^{-1} J.
-\label{eq4} \tag{4}
-$$
+$$ (eq4)
 
-Equation \eqref{eq4} (6.5.7) states that $M^\prime$ is related to the inverse of $M$
+Equation {eq}`eq4` states that $M^\prime$ is related to the inverse of $M$
 by a similarity transformation.
 
 For square matrices, recall that  
@@ -146,11 +151,11 @@ For square matrices, recall that
   
   * a matrix and its transpose have the same eigenvalues
 
-It then follows from equation \eqref{eq4}  (6.5.7) that
+It then follows from equation {eq}`eq4`  that
 the eigenvalues of $M$ occur in reciprocal pairs: if $\lambda$ is an
 eigenvalue of $M$, so is $\lambda^{-1}$.
 
-Write equation (6.5.4) as 
+Write equation {eq}`eq4orig` as 
 
 $$
 y_{t+1} = M y_t
