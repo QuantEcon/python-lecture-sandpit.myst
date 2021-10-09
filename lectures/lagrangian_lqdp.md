@@ -17,7 +17,7 @@ from quantecon import LQ
 from scipy.linalg import schur
 ```
 
-# Lagrangian for an LQ control problem
+# Lagrangian for LQ control
 
 +++
 
@@ -33,7 +33,78 @@ The formulation
   
  * opens the way to constructing solutions of dynamic systems that don't come directly from an  intertemporal optimization problem
   
- 
+## The Undiscounted Problem
+
+
+The undiscounted optimal linear regulator problem
+is to maximize over choice of $\{u_t\}_{t=0}^\infty$ the criterion
+
+$$ 
+- \sum_{t=0}^\infty \{x'_t Rx_t+u'_tQu_t\} 
+$$
+
+subject to $x_{t+1}=Ax_t+Bu_t$, $x_0$ given. 
+
+ Here $x_t$ is an
+$(n\times 1)$ vector of state variables, $u_t$ is a $(k\times 1)$
+vector of controls, $R$ is a positive semidefinite symmetric matrix,
+$Q$ is a positive definite symmetric matrix, $A$ is an $(n\times n)$
+matrix, and $B$ is an $(n\times k)$ matrix.
+
+The optimal 
+value function  turns out to be  quadratic, $V(x)= - x'Px$, where $P$ is a positive
+semidefinite symmetric matrix.
+
+Using the transition law to eliminate next period's state, the Bellman
+equation becomes
+
+$$ 
+- x'Px=\max_u \{- x' Rx-u'Qu-(Ax+Bu)' P(Ax+Bu)\}
+$$ (bellman0)
+
+The first-order necessary condition for the maximum problem on the
+right side of equation {eq}`bellman0` is
+
+(We use the following rules for differentiating quadratic and bilinear matrix forms: 
+${\partial x' A x \over \partial x} = (A + A') x; {\partial y' B z \over \partial y} = B z, {\partial
+y' B z \over \partial z} = B' y$.)
+
+$$
+(Q+B'PB)u=-B'PAx,
+$$
+
+which implies the feedback rule for $u$:
+
+$$
+u=-(Q+B'PB)^{-1} B'PAx
+$$ 
+
+or $u=-Fx,$
+where 
+
+$$ 
+F=(Q+B'PB)^{-1}B'PA.
+$$
+
+Substituting $u = - (Q+B'PB)^{-1}B'PAx$  into
+the right side of equation {eq}`bellman0` and rearranging gives
+
+$$
+P=R+A'PA-A'PB(Q+B'PB)^{-1} B'PA.
+$$ (riccati)
+
+Equation {eq}`riccati` is called the **algebraic matrix Riccati** equation.
+
+It expresses the matrix $P$ as an implicit function of the matrices
+$R,Q,A,B$. 
+
+Notice that the **gradient of the value function** is
+
+$$
+\frac{\partial V(x)}{\partial x} = - 2 P x 
+$$
+
+We shall use this fact later.
 
 +++
 
@@ -111,8 +182,11 @@ that satisfies the initial condition for $x_0$ and a terminal condition
 $\lim_{t \rightarrow +\infty} x_t =0$ that expresses our wish for a *stable* solution.
 
 We inherit our wish for stability of the $\{x_t\}$ sequence from a desire to maximize
-$-\sum_{t=0}^\infty \bigl[ x_t ' R x_t + u_t' Q u_t \bigr]$, which requires that $x_t' R x_t$ converge to
-zero.
+
+$$ -\sum_{t=0}^\infty \bigl[ x_t ' R x_t + u_t' Q u_t \bigr],
+$$
+
+which requires that $x_t' R x_t$ converge to zero as $t \rightarrow + \infty$.
 
 +++
 
@@ -125,7 +199,7 @@ $$
 
 The rank of $J$ is $2n$.
 
-*Definition:*  A matrix $M$ is called *symplectic* if
+*Definition:*  A matrix $M$ is called **symplectic** if
 
 $$
 MJM^\prime = J.
@@ -159,7 +233,7 @@ Write equation {eq}`eq4orig` as
 
 $$
 y_{t+1} = M y_t
-$$
+$$ (eq658)
 
 where $y_t = \pmatrix{x_t\cr \mu_t\cr}$. 
 
@@ -173,30 +247,30 @@ where each block on the right side is $(n\times n)$, where $V$ is
 nonsingular, and where $W_{22}$ has all its eigenvalues exceeding $1$ in modulus
 and $W_{11}$ has all of its eigenvalues less than $1$ in modulus. 
 
-The *Schur decomposition* and the *eigenvalue decomposition*
-are two such decompositions. Write equation (6.5.8) as
+The **Schur decomposition** and the **eigenvalue decomposition**
+are two such decompositions. Write equation {eq}`eq658`  as
 
 $$
 y_{t+1} = V W V^{-1} y_t.
-$$
+$$ (eq659)
 
-The solution of equation (6.5.9) for arbitrary initial condition $y_0$ is
+The solution of equation {eq}`eq659`  for arbitrary initial condition $y_0$ is
 evidently
 
 $$
 y_{t} = V \left[\matrix{W^t_{11} & W_{12,t}\cr 0 & W^t_{22}\cr}\right]
 \ V^{-1} y_0
-$$
+$$ (eq6510)
 
 where $W_{12,t} = W_{12}$ for $t=1$ and  for $t \geq 2$ obeys the recursion
 
 $$
 W_{12, t} = W^{t-1}_{11} W_{12,t-1} + W_{12,t-1} W^{t-1}_{22}
-$$
+$$ 
 
 and where $W^t_{ii}$ is $W_{ii}$ raised to the $t$th  power.
 
-Write equation (6.5.10) as
+Write equation {eq}`eq6510` as
 
 $$
 \pmatrix{y^\ast_{1t}\cr y^\ast_{2t}\cr}\ =\ \left[\matrix{W^t_{11} &
@@ -208,7 +282,7 @@ where $y^\ast_t = V^{-1} y_t$, and in particular where
 
 $$
 y^\ast_{2t} = V^{21} x_t + V^{22} \mu_t,
-$$
+$$ (eq6511)
 
 and where $V^{ij}$ denotes the $(i,j)$ piece of
 the partitioned $V^{-1}$ matrix.
@@ -218,7 +292,7 @@ $y^\ast_t$ will diverge.
 
 Let $V^{ij}$ denote the $(i,j)$ piece of the partitioned $V^{-1}$ matrix.
 
-To attain stability, we must impose $y^\ast_{20} =0$, which from equation (6.5.11) implies
+To attain stability, we must impose $y^\ast_{20} =0$, which from equation {eq}`eq6511`  implies
 
 $$
 V^{21} x_0 + V^{22} \mu_0 = 0
@@ -268,7 +342,7 @@ $$
 \mu_t = V_{21} V^{-1}_{11} x_t.
 $$
 
-However, we know from equations (6.4.1) that $\mu_t = P x_t$,
+However, we know  that $\mu_t = P x_t$,
 where $P$ occurs in the matrix that solves the Riccati equation.
 
 
@@ -282,7 +356,7 @@ This formula provides us with an alternative, and typically computationally very
 efficient, way of computing the matrix $P$.
 
 This same method can be applied to compute the solution of
-any system of the form (6.5.4) if a solution exists, even
+any system of the form {eq}`eq4orig` if a solution exists, even
 if the eigenvalues of $M$ fail to occur in reciprocal pairs.
 
 The method
@@ -293,11 +367,7 @@ Systems in which  eigenvalues (properly adjusted for discounting) fail
 to occur in reciprocal pairs arise when the system being solved
 is an equilibrium of a model in which there are distortions that
 prevent there being any optimum problem that the equilibrium
-solves. 
-
-See Woodford (1999)  for an application of
-such methods to solve for linear approximations
-of equilibria of a monetary model with distortions.  
+solves. See {cite}`Ljungqvist2012`,  ch 12.  
 
 ### Application
 
@@ -372,7 +442,9 @@ eigvals
 ```
 
 When we apply Schur decomposition such that $M=V W V^{-1}$, we want the upper left block of $W$, $W_{11}$, has all of its
-eigenvalues less than 1 in modulus, and the lower right block $W_{22}$ has all its eigenvalues exceeding 1 in modulus. To do so, let's define a sorting function that tells `scipy.schur` to sort the corresponding eigenvalues with modulus smaller than 1 to the upper left.
+eigenvalues less than 1 in modulus, and the lower right block $W_{22}$ has all its eigenvalues exceeding 1 in modulus. 
+
+To do so, let's define a sorting function that tells `scipy.schur` to sort the corresponding eigenvalues with modulus smaller than 1 to the upper left.
 
 ```{code-cell} ipython3
 stable_eigvals = eigvals[:n]
@@ -489,13 +561,15 @@ def stationary_P(lq, verbose=True):
 stationary_P(lq)
 ```
 
-Note the matrix $P$ computed by this way is close to what we get from the regular routine in quantecon that solves Riccati equation by iteration. The small difference comes from computational error and shall disappear as we increase the maximum number of iterations or decrease the tolerance for convergence.
+Note that the matrix $P$ computed by this way is close to what we get from the routine in quantecon that solves Riccati equation by iteration. 
+
+The small difference comes from computational errors and will decrease as we increase the maximum number of iterations or decrease the tolerance for convergence.
 
 ```{code-cell} ipython3
 lq.stationary_values()
 ```
 
-The method of using Schur decomposition is much more efficient.
+Using a Schur decomposition is much more efficient.
 
 ```{code-cell} ipython3
 %%timeit
@@ -507,7 +581,11 @@ stationary_P(lq, verbose=False)
 lq.stationary_values()
 ```
 
-This way of finding the solution to a potentially unstable linear difference equations system is not necessarily restricted to the LQ problems. For example, this method is adopted in the [Stability in Linear Rational Expectations Models](https://python.quantecon.org/re_with_feedback.html#Another-perspective) lecture, and let's try to solve for the solution again using the `stable_solution` function defined above.
+This way of finding the solution to a potentially unstable linear difference equations system is not necessarily limited to the LQ optimization problems. 
+
+For example, this method is adopted in the [Stability in Linear Rational Expectations Models](https://python.quantecon.org/re_with_feedback.html#Another-perspective) lecture.
+
+Let's try to solve for the solution again using the `stable_solution` function defined above.
 
 ```{code-cell} ipython3
 def construct_H(ρ, λ, δ):
@@ -527,17 +605,61 @@ W, V, P = stable_solution(H)
 P
 ```
 
-## CH 6.6 More about the Lagrangian formulation
+## Discounted Problems 
 
 +++
 
-We can use the  subsection 6.3.2 transformations to solve a discounted optimal
-regulator problem using the Lagrangian and invariant subspace methods introduced
-in section 6.5.
+
+
+### Transforming states and controls to eliminate discounting
+
+A pair of useful transformations allows us to convert a discounted problem into an undiscounted one.
+
+Thus, suppose that we have a discounted problem with objective 
+
+
+$$
+ - \sum^\infty_{t=0} \beta^t \biggl\{ x^\prime_t R x_t + u_t^\prime Q u_t \biggr\}
+$$ 
+
+
+and that the state transition equation 
+is again $x_{t +1 }=Ax_t+Bu_t$.
+
+Define the transformed state and control variables
+$\hat x_t = \beta^{\frac{t}{2}} x_t, \hat u_t = \beta^{\frac{t}{2}} u_t$ and the transformed transition equation
+matrices $\hat A = \beta^{\frac{1}{2}} A , \hat B =  \beta^{\frac{1}{2}} B  $ so that the adjusted state and control variables
+obey the transition law $\hat x_{t+1} = \hat A \hat x_t + \hat B \hat u_t$. 
+
+Then a discounted optimal control problem
+defined by $A, B, R, Q, \beta$ having  optimal policy characterized by $P, F$ is associated with an equivalent
+undiscounted problem defined by $\hat A, \hat B, Q, R$ having  optimal policy characterized by $\hat F, \hat P$ that satisfy
+the following   equations:
+
+$$
+\hat F=(Q+B'\hat PB)^{-1}\hat B'P \hat A
+$$
+
+and
+
+$$
+\hat P=R+\hat A'P \hat A-\hat A'P \hat B(Q+B'\hat P \hat B)^{-1} \hat B'P \hat A
+$$
+
+It follows immediately from the definitions of $\hat A, \hat B$ that $\hat F = F$ and $\hat P = P$.
+
+By exploiting these transformations,  we can solve a discounted problem by solving an associated undiscounted problem.
+
+
+
+
+In particular, we can transform a discounted LQ problem to an undiscounted one and thereby  a discounted optimal regulator problem using the Lagrangian and invariant subspace methods described above.
 
 +++
 
-For example, when $\beta=\frac{1}{1+r}$, we can solve for $P$ with $\hat{A}=\beta^{1/2} A$ and $\hat{B}=\beta^{1/2} B$. This is adopted by default in the function `stationary_P` defined above.
+For example, when $\beta=\frac{1}{1+r}$, we can solve for $P$ with $\hat{A}=\beta^{1/2} A$ and $\hat{B}=\beta^{1/2} B$. 
+
+These settings are adopted by default in the function `stationary_P` defined above.
 
 ```{code-cell} ipython3
 β = 1 / (1 + r)
@@ -554,6 +676,9 @@ We can verify that the solution is the same with the regular routine `LQ.station
 lq.stationary_values()
 ```
 
+
+### Lagrangian for Discounted Problem
+
 For several purposes, it is useful  explicitly briefly to describe
 a Lagrangian for a discounted problem. 
 
@@ -563,7 +688,7 @@ form the Lagrangian
 $$
 \cal{L} = - \sum^\infty_{t=0} \beta^t \biggl\{ x^\prime_t R x_t + u_t^\prime Q u_t
 + 2 \beta \mu^\prime_{t+1} [A x_t + B u_t - x_{t+1}]\biggr\}
-$$
+$$ (eq661)
 
 where $2 \mu_{t+1}$ is a vector of Lagrange multipliers on the state vector $x_{t+1}$.
 
@@ -572,18 +697,18 @@ to $\{u_t,x_{t+1}\}_{t=0}^\infty$ are
 
 $$
 \eqalign{2 Q u_t &+ 2  \beta B^\prime \mu_{t+1} = 0 \ ,\ t \geq 0 \cr \mu_t &= R x_t + \beta A^\prime \mu_{t+1}\ ,\ t\geq 1.\cr}
-$$
+$$ (eq662)
 
 Define $2 \mu_0$ to be the vector of shadow prices of $x_0$ and apply an envelope condition to
-(6.6.1) to  deduce that
+{eq}`eq661` to  deduce that
 
 $$
 \mu_0 = R x_0 + \beta A' \mu_1 ,
 $$
 
-which is a time $t=0 $ counterpart to the second equation of system 6.6.2.
+which is a time $t=0 $ counterpart to the second equation of system {eq}`eq662`. 
 
-Proceeding as we did above with  the undiscounted system 6.5.3, we can rearrange the first-order conditions into the
+Proceeding as we did above with  the undiscounted system  {eq}`eq2`, we can rearrange the first-order conditions into the
 system
 
 $$
@@ -593,16 +718,16 @@ $$
 \left[\matrix{ A & 0 \cr
              - R & I }\right] 
 \left[\matrix{ x_t \cr \mu_t }\right]
-$$
+$$ (eq663)
 
-which in the special case that $\beta = 1$ agrees with equation (6.5.3), as expected.
+which in the special case that $\beta = 1$ agrees with equation {eq}`eq2`, as expected.
 
 +++
 
-By staring at system 6.6.3, we can infer  identities that shed light on the structure of optimal linear regulator problems,
-some of which will be useful THIS QUANTECON LECTURE when we apply and  extend the methods of this chapter to study Stackelberg and Ramsey problems.
+By staring at system {eq}`eq663`, we can infer  identities that shed light on the structure of optimal linear regulator problems,
+some of which will be useful in XXXXX THIS QUANTECON LECTURE when we apply and  extend the methods of this chapter to study Stackelberg and Ramsey problems.
 
-First, note that the first block of equation 6.6.3 asserts that if when  $\mu_{t+1} = P x_{t+1}$, then    $(I + \beta Q^{-1} B' P B P ) x_{t+1} = A x_t$, which  can be rearranged to
+First, note that the first block of equation system {eq}`eq663` asserts that if when  $\mu_{t+1} = P x_{t+1}$, then    $(I + \beta Q^{-1} B' P B P ) x_{t+1} = A x_t$, which  can be rearranged to
 be
 
 $$
@@ -623,25 +748,31 @@ Thus, our two expressions for the
 closed loop dynamics will agree if and only if
 
 $$ 
-(I + \beta B Q^{-1} B' P )^{-1} =    (I - \beta B (Q+\beta  B' P B)^{-1} B' P) ,
+(I + \beta B Q^{-1} B' P )^{-1} =    (I - \beta B (Q+\beta  B' P B)^{-1} B' P) .
 $$
 
-a matrix  equation that can be verified by applying a partitioned inverse formula.
+This  matrix  equation can be verified by applying a partitioned inverse formula. 
+
+```{note}
+Just use the formula $(a - b d^{-1} c)^{-1} = a^{-1} + a^{-1} b (d - c a^{-1} b)^{-1} c a^{-1}$ for appropriate choices of the matrices $a, b, c, d$.
+```
+
+
 
 Next, note that an optimal $P$ obeys the following version of an algebraic matrix Ricatti equation:
 
 $$
 P = (R + F' Q F) + \beta (A - B F)' P (A - BF) .
-$$
+$$ (eq666)
 
-In addition, the second equation of system 6.6.3 implies the "forward looking" equation for the Lagrange multiplier $\mu_t = R x_t + \beta A' \mu_{t+1}$ whose
+In addition, the second equation of system {eq}`eq663` implies the "forward looking" equation for the Lagrange multiplier $\mu_t = R x_t + \beta A' \mu_{t+1}$ whose
 solution is $\mu_t = P x_t$, where
 
 $$
 P = R + \beta A' P (A - BF) . 
-$$
+$$ (eq667)
 
-A comparison of equations 6.6.6 and 6.6.7 is useful for bringing out features of the optimal value function for a discounted optimal linear regulator problem.
+A comparison of equations {eq}`eq666` and {eq}`eq667` is useful for bringing out features of the optimal value function for a discounted optimal linear regulator problem.
 
 ```{code-cell} ipython3
 

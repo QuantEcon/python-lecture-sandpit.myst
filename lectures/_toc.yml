@@ -5,6 +5,8 @@ options:
 sections:
 - file: lagrangian_lqdp
 - file: cross_product_trick
+- file: eig_circulant
+- file: back_prop
 - file: markov_switching_lss
 - file: five_preferences
 - file: Lucas_Sims_notes
