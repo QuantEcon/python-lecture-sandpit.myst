@@ -11,6 +11,8 @@ kernelspec:
   name: python3
 ---
 
+# Circulant Matrices
+
 ```{code-cell} ipython3
 import numpy as np
 from numba import njit
@@ -29,8 +31,6 @@ C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
 $$
 
 which is closely connected to the [Discrete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
-
-+++
 
 To construct a circulant matrix, all you need to know is $N$ entries instead of $N \times N$. After filling the entries in the first row, the circulant matrix will be determined as
 
@@ -114,7 +114,9 @@ and solving $$\textrm{det}(P - \lambda I) = \lambda^{N}-1=0$$
 
 It can be verified that permutation matrices are orthogonal matrices, i.e., they satisfy
 
-$$ P P' = I $$
+$$
+P P' = I 
+$$
 
 Magnitudes $\mid \lambda_i \mid$  of eigenvalues $\lambda_i$ all equal  $1$;  $\lambda_i$ can be complex.
 
@@ -154,7 +156,9 @@ These eigenvalues are the $n$ roots of unity, i.e., they solve $z^n =1$ where $z
 
 They are
 
-$$ z = \exp\left(\frac{2 \pi j k }{N} \right) , \quad k = 1, \ldots, N-1$$
+$$
+z = \exp\left(\frac{2 \pi j k }{N} \right) , \quad k = 1, \ldots, N-1
+$$
 
 where $j$ denotes the purely imaginary unit number.
 
@@ -205,8 +209,6 @@ which is also a *Discete Fourier Transform matrix*.
 
 To convert it into an orthogonal eigenvector matrix, we can simply normalize it by dividing every entry  by $\sqrt{8}$ (stare at the 
 first column of $F_8$ above to convince yourself of this fact). 
-
-+++
 
 The eigenvalues corresponding to each eigenvector will be $\{w^{j}\}_{j=0}^{7}$ in order.
 
@@ -268,8 +270,6 @@ C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
 $$
 
 which is closely connected to the [Discrete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
-
-+++
 
 Next, we execute calculations to verify that the circulant matrix $C$ can be written as $c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}$ and that every eigenvector of $P$ is also a eigenvector of $C$.
 
@@ -343,11 +343,7 @@ for j in range(8):
 
 ## Discrete Fourier Transform
 
-+++
-
 The **discrete fourier transform** (DFT) allows us to  represent a  discrete time sequence as a weighted sum of complex sinusoids.
-
-+++
 
 Consider a sequence of $N$ real number $\{x_j\}_{j=0}^{N-1}$. 
 
@@ -467,8 +463,6 @@ Another example could be
 $$
 x_{n}=2\cos\left(2\pi\frac{11}{40}n\right),\ n=0,1,2,\cdots19
 $$
-
-+++
 
 Since $N=20$ and we cannot use an integer multiple of $\frac{1}{20}$ to represent a frequency $\frac{11}{40}$, we shall end up using
 all $N$ of the availble   frequencies in the DFT.
