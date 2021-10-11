@@ -11,7 +11,12 @@ kernelspec:
   name: python3
 ---
 
-## A Neural Network
+# A Neural Network
+
+```{code-cell} python3
+:tags: [hide-output]
+!pip install --upgrade jax jaxlib
+```
 
 We describe a simple "deep" neural network of "width" one.  
 
@@ -19,28 +24,29 @@ The "width" being one means that we are dealing with scalar functions at critica
 
 We let $x \in \mathbb{R}$ be a scalar and $y \in \mathbb{R}$ be another scalar that is a function of $x$:
 
-$$  y = f(x)   $$
+$$
+y = f(x)
+$$
 
 We want to approximate the function $f(x)$ with another function that we construct in the following iterative
 or recursive way.
 
 For a network of depth $N \geq 1$, each layer $i =1, \ldots N$ consists of 
 
-   * an input $x_i$
-   
-   * an affine function $w_i x_i + bI$, where $w_i$ is a scalar "weight" placed on the input and $b_i$ is a scalar "bias"
-   
-   * an activation function $h_i$ that takes $(w_i x_i + b_i)$ as an argument and produces an output $x_{i+1}$
+* an input $x_i$
+
+* an affine function $w_i x_i + bI$, where $w_i$ is a scalar "weight" placed on the input and $b_i$ is a scalar "bias"
+
+* an activation function $h_i$ that takes $(w_i x_i + b_i)$ as an argument and produces an output $x_{i+1}$
    
      
 An example of an activation function $h$ is the **sigmoid** function
 
-$$ h (z) = \frac{1}{1 + e^{-z}} $$
-
+$$
+h (z) = \frac{1}{1 + e^{-z}} 
+$$
 
 Below, we'll use the sigmoid function for layers $1$ to $N-1$ and the identity function for  layer $N$.
-
-
 
 To approximate the function $f(x)$ we create a new function $\hat f(x)$ by proceeding as follows.
 
@@ -48,7 +54,9 @@ Let $l_{i}\left(x\right)=w_{i}x+b_{i}$.
 
 We construct  $\hat f$ by iterating on compositions of functions $h_i \circ l_i$:
 
-$$f(x)\approx\hat{f}(x)=h_{N}\circ l_{N}\circ h_{N-1}\circ l_{1}\circ\cdots\circ h_{1}\circ l_{1}(x)$$
+$$
+f(x)\approx\hat{f}(x)=h_{N}\circ l_{N}\circ h_{N-1}\circ l_{1}\circ\cdots\circ h_{1}\circ l_{1}(x)
+$$
 
 If $N >1$, we call the right side a "deep" neural net.
 
@@ -57,15 +65,14 @@ The larger is the integer $N$, the "deeper" is the neural net.
 Evidently,  if we know the values of the parameters $\{w_i, b_i\}_{i=1}^N$, then we can compute
 $\hat f(x)$ for a given $x = \tilde x$ by iterating on the recursion
 
-$$ x_{i+1} = h_i \circ l_i(x_i) , \quad, i = 1, \ldots N \label{eq:recursion} \tag{1} $$
+$$
+x_{i+1} = h_i \circ l_i(x_i) , \quad, i = 1, \ldots N
+$$ (eq:recursion)
 
 starting from $x_1 = \tilde x$.  
 
 The value of $x_{N+1}$ that emerges from this iterative scheme
 equals $\hat f(\tilde x)$.
-
-
-
 
 ## Calibrating  parameters
 
@@ -85,13 +92,16 @@ and the point $x$.
 
 We're interested in solving the following problem:
 
-$$\min_{\left\{ \left(w_{i},b_{i}\right)\right\} _{i=1}^{N}} \int {\mathcal L}\left(x_{N+1},y\right)(x) d \mu(x) $$
+$$
+\min_{\left\{ \left(w_{i},b_{i}\right)\right\} _{i=1}^{N}} \int {\mathcal L}\left(x_{N+1},y\right)(x) d \mu(x)
+$$
 
 where $\mu(x)$ is some measure of  points $x \in R$ over which we want a good approximation $\hat f(x)$ to $f(x)$.
 
 Stack the weights into a vector of parameters $p$ as follows:
 
-$$ p = \begin{bmatrix}     
+$$ 
+p = \begin{bmatrix}     
   w_1 \cr 
   b_1 \cr
   w_2 \cr
@@ -99,16 +109,19 @@ $$ p = \begin{bmatrix}
   \vdots \cr
   w_N \cr
   b_N 
-\end{bmatrix} $$
+\end{bmatrix}
+$$
 
 
 Applying a "poor man's version" of a "stocastic "gradient descent" method for finding a zero of a function leads to the following update rule for parameters:
 
-$$p_{k+1}=p_k-\alpha\frac{d \mathcal{L}}{dx_{N+1}}\frac{dx_{N+1}}{dp_k}$$
+$$
+p_{k+1}=p_k-\alpha\frac{d \mathcal{L}}{dx_{N+1}}\frac{dx_{N+1}}{dp_k}
+$$
 
 where $\frac{d {\mathcal L}}{dx_{N+1}}=-\left(x_{N+1}-y\right)$ and $\alpha > 0 $ is a step size.
 
-(See  [this](https://en.wikipedia.org/wiki/Gradient_descent#Description) and [this](https://en.wikipedia.org/wiki/Newton%27s_method)) to gather insights about how stochastic gradient descent
+(See [this](https://en.wikipedia.org/wiki/Gradient_descent#Description) and [this](https://en.wikipedia.org/wiki/Newton%27s_method)) to gather insights about how stochastic gradient descent
 relates to Newton's method.)
 
 To implement one step of this parameter update rule, we want  the vector of derivatives $\frac{dx_{N+1}}{dp_k}$.
@@ -117,15 +130,16 @@ In the neural network literature, this step is accomplished by what is known as 
 
 Here we'll show that thanks to some properties of
 
-   * the chain and product rules for differentiation, and
-   
-   * lower triangular matrices
+* the chain and product rules for differentiation, and
+
+* lower triangular matrices
    
 what is called back propogation is accomplished in one step by inversion of a lower triangular matrix and matrix multiplication.
 
-(We got the idea to try this from the last 7 minutes of this great youtube video by MIT's Alan Edelman
-https://www.youtube.com/watch?v=rZS2LGiurKY )
+(We got the idea to try this from the last 7 minutes of this great youtube video by MIT's Alan Edelman)
 
+```{youtube} rZS2LGiurKY
+```
 
 
 Here goes.
@@ -136,17 +150,26 @@ Here goes.
 
 Define the derivative of $h(z)$ with respect to $z$ evaluated at $z = z_i$  as $\delta_i$:
 
-$$ \delta_i = \frac{d}{d z} h(z)|_{z=z_i} $$
+$$
+\delta_i = \frac{d}{d z} h(z)|_{z=z_i}
+$$
 
-or $$\delta_{i}=h'\left(w_{i}x_{i}+b_{i}\right). $$ 
+or 
 
-Repeated application of the chain rule and product rule to our recursion (\ref{eq:recursion}) allows us to obtain:
+$$
+\delta_{i}=h'\left(w_{i}x_{i}+b_{i}\right). 
+$$ 
 
-$$dx_{i+1}=\delta_{i}\left(dw_{i}x_{i}+w_{i}dx_{i}+b_{i}\right)$$
+Repeated application of the chain rule and product rule to our recursion {eq}`eq:recursion` allows us to obtain:
+
+$$
+dx_{i+1}=\delta_{i}\left(dw_{i}x_{i}+w_{i}dx_{i}+b_{i}\right)
+$$
 
 After imposing $dx_{1}=0$, we get the following system of equations:
 
-$$\left(\begin{array}{c}
+$$
+\left(\begin{array}{c}
 dx_{2}\\
 \vdots\\
 dx_{N+1}
@@ -169,23 +192,32 @@ w_{2} & 0 & 0 & 0\\
 dx_{2}\\
 \vdots\\
 dx_{N+1}
-\end{array}\right)$$ 
+\end{array}\right)
+$$ 
 
 or
 
-$$ d x = D dp + L dx   $$
+$$
+d x = D dp + L dx
+$$
 
 which implies that
 
-$$ dx = (I -L)^{-1} D dp $$
+$$
+dx = (I -L)^{-1} D dp
+$$
 
-which in turn  implies $$\left(\begin{array}{c}
+which in turn  implies
+
+$$
+\left(\begin{array}{c}
 dx_{N+1}/dw_{1}\\
 dx_{N+1}/db_{1}\\
 \vdots\\
 dx_{N+1}/dw_{N}\\
 dx_{N+1}/db_{N}
-\end{array}\right)=e_{N}\left(I-L\right)^{-1}D.$$
+\end{array}\right)=e_{N}\left(I-L\right)^{-1}D.
+$$
 
 We can then solve the above problem by applying our update for $p$ multiple times for a collection of input-output pairs $\left\{ \left(x_{1}^{i},y^{i}\right)\right\} _{i=1}^{M}$ that we'll call our "training set".
 
@@ -199,17 +231,15 @@ In this spirit, below  we  use a uniform grid of, say, 50 or 200 or $\ldots$,  p
 
 There are many possible routes for solving the minimization  problem posed above:
 
- * batch gradient descent in which you use an average gradient over the training set
- 
- * stochastic gradient descent in which you sample points randomly and use individual gradients
- 
- * or something in-between (so-called "mini-batch gradient descent")
+* batch gradient descent in which you use an average gradient over the training set
+
+* stochastic gradient descent in which you sample points randomly and use individual gradients
+
+* or something in-between (so-called "mini-batch gradient descent")
  
 The update rule described above  corresponds to a stochastic gradient descent algorithm
 
 ```{code-cell} ipython3
-## make sure that you install jax as follows
-## pip install --upgrade jax jaxlib
 import jax.numpy as jnp
 from jax import grad, jit, jacfwd, vmap
 from jax import random
@@ -358,7 +388,9 @@ update_ad(params, x, y)
 
 Consider the following function 
 
-$$f\left(x\right)=-3x+2$$
+$$
+f\left(x\right)=-3x+2
+$$
 
 on $\left[0.5,3\right]$. 
 
@@ -422,13 +454,13 @@ fig.show()
 <span style="color:red">There are several problems here. First, if the network is too deep, you'll run into the [vanishing gradient problem](http://neuralnetworksanddeeplearning.com/chap5.html). Besides, other parameters such as the step size and the number of epochs are probably more important than the number of layers in these examples. In fact, since $f$ is a linear function of $x$, a one-layer network with the identity map as an activation would probably work best. I've added a comparison for the example below. </span>
 
 
-+++
-
 ### Example 2
 
 We use the same setup as for the previous example with
 
-$$f\left(x\right)=\log\left(x\right)$$
+$$
+f\left(x\right)=\log\left(x\right)
+$$
 
 ```{code-cell} ipython3
 def f(x):
@@ -492,8 +524,4 @@ fig.show()
 
 from jax.lib import xla_bridge
 print(xla_bridge.get_backend().platform)
-```
-
-```{code-cell} ipython3
-
 ```
