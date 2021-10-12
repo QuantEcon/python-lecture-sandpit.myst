@@ -26,12 +26,6 @@ np.set_printoptions(precision=3, suppress=True)
 
 Circulant matrices are widely used  in machine learning, for example, in image processing
 
-$$
-C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
-$$
-
-which is closely connected to the [Discrete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
-
 To construct an $N \times N$ circulant matrix, we only need to know is $N$ entries.
 
 After setting entries in the first row, the remaining rows of a circulant matrix are determined as
@@ -48,6 +42,8 @@ c_{2} & c_{3} & c_{4} & c_{5} & c_{6} & \cdots & c_{1}\\
 c_{1} & c_{2} & c_{3} & c_{4} & c_{5} & \cdots & c_{0}
 \end{array}\right]
 $$
+
+Let's write some Python code to generate a circulant matrix in this way.
 
 ```{code-cell} ipython3
 @njit
@@ -70,9 +66,13 @@ def construct_cirlulant(row):
 construct_cirlulant(np.array([1., 2., 3.]))
 ```
 
+A good way to think about a circulant matrix is to use a permutation matrix.
+
+First, we'll define a permutation.
+
 A **permutation** of a set of the set of non-negative integers $\{0, 1, 2, \ldots, \}$ is a one-to-one mapping of the set into itself.
 
-A permutation of a set $\{1, 2, \ldots, n\}$ thus rearranges the $n$ integers in the set.  
+A permutation of a set $\{1, 2, \ldots, n\}$ rearranges the $n$ integers in the set.  
 
 
 A [permutation matrix](https://mathworld.wolfram.com/PermutationMatrix.html) is a matrix obtained by permuting the rows of an $n \times n$ identity matrix according to some permutation of the numbers $1$ to $n$. 
@@ -95,10 +95,9 @@ P=\left[\begin{array}{cccccc}
 \end{array}\right]
 $$
 
-is a *cyclic shift*  operator that when applied to an $N \times 1$ vectors $h$ shifts entries in rows $2$ through $N$ up one row
-and shifts the entry in row $1$ to row $N$. 
+is a **cyclic shift**  operator that, when applied to an $N \times 1$ vector $h$, shifts entries in rows $2$ through $N$ up one row and shifts the entry in row $1$ to row $N$. 
 
-The singular values of permutation matrices are all $1$s.
+The singular values of a permutation matrix are all $1$s.
 
 The eigenvalues of the permutation matrix $P$ can be computed  by first constructing
 
@@ -115,13 +114,15 @@ $$
 
 and solving $$\textrm{det}(P - \lambda I) = \lambda^{N}-1=0$$
 
-It can be verified that permutation matrices are orthogonal matrices, i.e., they satisfy
+It can be verified that permutation matrices are orthogonal matrices, i.e., that they satisfy
 
 $$
 P P' = I 
 $$
 
 Magnitudes $\mid \lambda_i \mid$  of eigenvalues $\lambda_i$ all equal  $1$;  $\lambda_i$ can be complex.
+
+Let's write some Python code to illustrate these ideas.
 
 ```{code-cell} ipython3
 @njit
@@ -153,11 +154,9 @@ for i in range(4):
 
 Below we display eigenvalues of the shift  permutation matrix   in the complex plane. 
 
-The eigenvalues are always uniformly distributed along the unit circle.
+These eigenvalues are always uniformly distributed along the unit circle and are the $n$ roots of unity, i.e., they solve $z^n =1$ where $z$ is a complex number.
 
-These eigenvalues are the $n$ roots of unity, i.e., they solve $z^n =1$ where $z$ is a complex number.
-
-They are
+In particular, they are
 
 $$
 z = \exp\left(\frac{2 \pi j k }{N} \right) , \quad k = 1, \ldots, N-1
@@ -188,12 +187,11 @@ for i, N in enumerate([3, 4, 6, 8]):
 
 plt.show()
 ```
-
-Eigenvectors of $P$ are also  eigenvectors of $C = c_{0} I + c_{1} P + c_{2} P^{2} +\cdots + c_{N-1} P^{N-1}$ for any coefficients $\{c_i\}_{i=0}^{n-1}$.
+For any coefficients $\{c_i\}_{i=0}^{n-1}$, eigenvectors of $P$ are also  eigenvectors of $C = c_{0} I + c_{1} P + c_{2} P^{2} +\cdots + c_{N-1} P^{N-1}$ .
 
 Consider an example in which  $N=8$ and let $w = e^{-2 \pi i / N}$.
 
-It can be verified that the eigenvector matrix $F_8$ of $P_{8}$  is
+It can be verified that the matrix $F_8$ of eigenvectors of $P_{8}$  is
 
 $$
 F_{8}=\left[\begin{array}{ccccc}
@@ -208,12 +206,12 @@ F_{8}=\left[\begin{array}{ccccc}
 \end{array}\right]
 $$
 
-which is also a *Discete Fourier Transform matrix*. 
+This is also a **Discete Fourier Transform matrix**. 
 
 To convert it into an orthogonal eigenvector matrix, we can simply normalize it by dividing every entry  by $\sqrt{8}$ (stare at the 
 first column of $F_8$ above to convince yourself of this fact). 
 
-The eigenvalues corresponding to each eigenvector will be $\{w^{j}\}_{j=0}^{7}$ in order.
+The eigenvalues corresponding to each eigenvector are $\{w^{j}\}_{j=0}^{7}$ in order.
 
 ```{code-cell} ipython3
 def construct_F(N):
@@ -249,7 +247,7 @@ Q8 = F8 / np.sqrt(8)
 Q8 @ np.conjugate(Q8)
 ```
 
-Verify that $j$th column of $Q_{8}$ is a eigenvector of $P_{8}$ with a eigenvalue $w^{j}$.
+Let's Verify that $j$th column of $Q_{8}$ is a eigenvector of $P_{8}$ with a eigenvalue $w^{j}$.
 
 ```{code-cell} ipython3
 P8 = construct_P(8)
@@ -266,7 +264,7 @@ for j in range(8):
 diff_arr
 ```
 
-Where $P$ is the shift permutation matrix, and $c_0, c_1, \ldots, c_{n-1}$ is a sequence, 
+Where $P$ is the shift permutation matrix, and $c_0, c_1, \ldots, c_{n-1}$ is a sequence,  we have
 
 $$
 C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
@@ -280,7 +278,7 @@ Next, we execute calculations to verify that the circulant matrix $C$ can be wri
 
 ```
 
-We demonstrate this with the $N=8$ case.
+We illustrate this for the $N=8$ case.
 
 ```{code-cell} ipython3
 c = np.random.random(8)
@@ -321,7 +319,7 @@ Compute the difference between two circulant matrices that we constructed in two
 np.abs(C - C8).max()
 ```
 
-It also implies that $j$th column of $P_{8}$ with eigenvalue $w^{j-1}$ if a eigenvector of $C_{8}$ associated with an eigenvalue $\sum_{k=0}^{7} c_{k} w^{j * k}$.
+XXXXX TOM EDIT: It also implies that $j$th column of $P_{8}$ with eigenvalue $w^{j-1}$ if a eigenvector of $C_{8}$ associated with an eigenvalue $\sum_{k=0}^{7} c_{k} w^{j * k}$.
 
 ```{code-cell} ipython3
 𝜆_C8 = np.zeros(8, dtype=np.complex)
@@ -373,7 +371,7 @@ def DFT(x):
     return X
 ```
 
-The first example is
+Consider the following example.
 
 $$
 x_{n}=\begin{cases}
@@ -391,7 +389,7 @@ x[0:2] = 1/2
 x
 ```
 
-Apply the discrete fourier transform.
+Apply a discrete fourier transform.
 
 ```{code-cell} ipython3
 X = DFT(x)
@@ -435,7 +433,7 @@ def plot_magnitude(x=None, X=None):
 plot_magnitude(x=x, X=X)
 ```
 
-The *inverse Fourier transform* transforms $X$ back to $x$.
+The **inverse Fourier transform**  transforms $X$ back to $x$.
 
 The inverse Fourier transform is defined by
 
@@ -461,7 +459,7 @@ def inverse_transform(X):
 inverse_transform(X)
 ```
 
-Another example could be
+Another example is
 
 $$
 x_{n}=2\cos\left(2\pi\frac{11}{40}n\right),\ n=0,1,2,\cdots19
@@ -488,7 +486,7 @@ X = DFT(x)
 plot_magnitude(x=x, X=X)
 ```
 
-What if we change the last example to $x_{n}=2\cos\left(2\pi\frac{10}{40}n\right)$ now? Note that $\frac{10}{40}$ is an integer multiple of $\frac{1}{20}$.
+What happens if we change the last example to $x_{n}=2\cos\left(2\pi\frac{10}{40}n\right)$ now? Note that $\frac{10}{40}$ is an integer multiple of $\frac{1}{20}$.
 
 ```{code-cell} ipython3
 N = 20
