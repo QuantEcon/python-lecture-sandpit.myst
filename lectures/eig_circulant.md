@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 np.set_printoptions(precision=3, suppress=True)
 ```
 
-Circulant matrices in machine learning (image processing)
+Circulant matrices are widely used  in machine learning, for example, in image processing
 
 $$
 C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
@@ -32,7 +32,10 @@ $$
 
 which is closely connected to the [Discrete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
 
-To construct a circulant matrix, all you need to know is $N$ entries instead of $N \times N$. After filling the entries in the first row, the circulant matrix will be determined as
+To construct an $N \times N$ circulant matrix, we only need to know is $N$ entries.
+
+After setting entries in the first row, the remaining rows of a circulant matrix are determined as
+follows:
 
 $$
 C=\left[\begin{array}{ccccccc}
