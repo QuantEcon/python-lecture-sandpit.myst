@@ -13,6 +13,8 @@ kernelspec:
 
 # Circulant Matrices
 
+We begin by importing some Python packages
+
 ```{code-cell} ipython3
 import numpy as np
 from numba import njit
@@ -23,6 +25,9 @@ import matplotlib.pyplot as plt
 ```{code-cell} ipython3
 np.set_printoptions(precision=3, suppress=True)
 ```
+
+## Overview
+
 
 Circulant matrices are widely used  in machine learning, for example, in image processing
 
@@ -41,7 +46,7 @@ c_{3} & c_{4} & c_{5} & c_{6} & c_{7} & \cdots & c_{2}\\
 c_{2} & c_{3} & c_{4} & c_{5} & c_{6} & \cdots & c_{1}\\
 c_{1} & c_{2} & c_{3} & c_{4} & c_{5} & \cdots & c_{0}
 \end{array}\right]
-$$
+$$ (eqn:circulant)
 
 Let's write some Python code to generate a circulant matrix in this way.
 
@@ -112,7 +117,11 @@ P-\lambda I=\left[\begin{array}{cccccc}
 \end{array}\right]
 $$
 
-and solving $$\textrm{det}(P - \lambda I) = \lambda^{N}-1=0$$
+and solving 
+
+$$
+\textrm{det}(P - \lambda I) = \lambda^{N}-1=0
+$$
 
 It can be verified that permutation matrices are orthogonal matrices, i.e., that they satisfy
 
@@ -120,7 +129,9 @@ $$
 P P' = I 
 $$
 
-Magnitudes $\mid \lambda_i \mid$  of eigenvalues $\lambda_i$ all equal  $1$;  $\lambda_i$ can be complex.
+ Eigenvalues $\lambda_i$ can be complex.
+
+Magnitudes $\mid \lambda_i \mid$  of eigenvalues $\lambda_i$ all equal  $1$.
 
 Let's write some Python code to illustrate these ideas.
 
@@ -154,7 +165,9 @@ for i in range(4):
 
 Below we display eigenvalues of the shift  permutation matrix   in the complex plane. 
 
-These eigenvalues are always uniformly distributed along the unit circle and are the $n$ roots of unity, i.e., they solve $z^n =1$ where $z$ is a complex number.
+These eigenvalues are uniformly distributed along the unit circle.
+
+They are the $n$ roots of unity, meaning they are the $n$ $z$'s that solve $z^n =1$, where $z$ is a complex number.
 
 In particular, they are
 
@@ -206,7 +219,7 @@ F_{8}=\left[\begin{array}{ccccc}
 \end{array}\right]
 $$
 
-This is also a **Discete Fourier Transform matrix**. 
+The matrix $F_8$ defines a  **Discete Fourier Transform** (https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
 
 To convert it into an orthogonal eigenvector matrix, we can simply normalize it by dividing every entry  by $\sqrt{8}$ (stare at the 
 first column of $F_8$ above to convince yourself of this fact). 
@@ -264,13 +277,16 @@ for j in range(8):
 diff_arr
 ```
 
-Where $P$ is the shift permutation matrix, and $c_0, c_1, \ldots, c_{n-1}$ is a sequence,  we have
+## Circulant Matrix and  Permutation Matrix 
+
+Where $P$ is the shift permutation matrix, and $c_0, c_1, \ldots, c_{n-1}$ is a sequence,  the
+circulant matrix $C$ defined  in equation {eq}`eqn:circulant` satisfies
 
 $$
 C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
 $$
 
-which is closely connected to the [Discrete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
+
 
 Next, we execute calculations to verify that the circulant matrix $C$ can be written as $c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}$ and that every eigenvector of $P$ is also a eigenvector of $C$.
 
@@ -319,7 +335,7 @@ Compute the difference between two circulant matrices that we constructed in two
 np.abs(C - C8).max()
 ```
 
-XXXXX TOM EDIT: It also implies that $j$th column of $P_{8}$ with eigenvalue $w^{j-1}$ if a eigenvector of $C_{8}$ associated with an eigenvalue $\sum_{k=0}^{7} c_{k} w^{j * k}$.
+The  $j$th column of $P_{8}$ associated with eigenvalue $w^{j-1}$ is an eigenvector of $C_{8}$ associated with an eigenvalue $\sum_{k=0}^{7} c_{k} w^{j * k}$.
 
 ```{code-cell} ipython3
 𝜆_C8 = np.zeros(8, dtype=np.complex)
