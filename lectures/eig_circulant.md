@@ -13,6 +13,20 @@ kernelspec:
 
 # Circulant Matrices
 
+## Overview
+
+This lecture is an introduction circulant matrices and some of their useful properties.
+
+Circulant matrices have a special structure that connects them to  important concepts
+such  as
+
+  * convolution
+  * Fourier transforms
+  * permutation matrices
+
+Because of these connections, circulant matrices are widely used  in machine learning, for example, in image processing.
+
+
 We begin by importing some Python packages
 
 ```{code-cell} ipython3
@@ -26,12 +40,9 @@ import matplotlib.pyplot as plt
 np.set_printoptions(precision=3, suppress=True)
 ```
 
-## Overview
+## Constructing a circulant matrix
 
-
-Circulant matrices are widely used  in machine learning, for example, in image processing
-
-To construct an $N \times N$ circulant matrix, we only need to know is $N$ entries.
+To construct an $N \times N$ circulant matrix, we only need to know  $N$ entries that occur in a single row.
 
 After setting entries in the first row, the remaining rows of a circulant matrix are determined as
 follows:
@@ -70,10 +81,11 @@ def construct_cirlulant(row):
 # a simple case when N = 3
 construct_cirlulant(np.array([1., 2., 3.]))
 ```
+## Connection to avpermutation matrix
 
-A good way to think about a circulant matrix is to use a permutation matrix.
+A good way to construct a circulant matrix is to use a **permutation matrix**.
 
-First, we'll define a permutation.
+Before defining a permutation matrix, we'll define a **permutation**.
 
 A **permutation** of a set of the set of non-negative integers $\{0, 1, 2, \ldots, \}$ is a one-to-one mapping of the set into itself.
 
@@ -104,7 +116,7 @@ is a **cyclic shift**  operator that, when applied to an $N \times 1$ vector $h$
 
 The singular values of a permutation matrix are all $1$s.
 
-The eigenvalues of the permutation matrix $P$ can be computed  by first constructing
+The eigenvalues of permutation matrix $P$ can be computed  by first constructing
 
 $$
 P-\lambda I=\left[\begin{array}{cccccc}
@@ -123,7 +135,7 @@ $$
 \textrm{det}(P - \lambda I) = \lambda^{N}-1=0
 $$
 
-It can be verified that permutation matrices are orthogonal matrices, i.e., that they satisfy
+It can be verified that permutation matrices are orthogonal matrices, which means that they satisfy
 
 $$
 P P' = I 
@@ -132,6 +144,8 @@ $$
  Eigenvalues $\lambda_i$ can be complex.
 
 Magnitudes $\mid \lambda_i \mid$  of eigenvalues $\lambda_i$ all equal  $1$.
+
+## Examples with Python
 
 Let's write some Python code to illustrate these ideas.
 
@@ -163,7 +177,7 @@ for i in range(4):
     print(f'𝜆{i} = {𝜆[i]:.1f} \nvec{i} = {Q[i, :]}\n')
 ```
 
-Below we display eigenvalues of the shift  permutation matrix   in the complex plane. 
+In graphs  below we shall portray eigenvalues of the shift  permutation matrix   in the complex plane. 
 
 These eigenvalues are uniformly distributed along the unit circle.
 
@@ -200,7 +214,11 @@ for i, N in enumerate([3, 4, 6, 8]):
 
 plt.show()
 ```
-For any coefficients $\{c_i\}_{i=0}^{n-1}$, eigenvectors of $P$ are also  eigenvectors of $C = c_{0} I + c_{1} P + c_{2} P^{2} +\cdots + c_{N-1} P^{N-1}$ .
+For any coefficients $\{c_i\}_{i=0}^{n-1}$, eigenvectors of $P$ are also  eigenvectors of 
+
+$$
+C = c_{0} I + c_{1} P + c_{2} P^{2} +\cdots + c_{N-1} P^{N-1}.
+$$
 
 Consider an example in which  $N=8$ and let $w = e^{-2 \pi i / N}$.
 
@@ -219,7 +237,7 @@ F_{8}=\left[\begin{array}{ccccc}
 \end{array}\right]
 $$
 
-The matrix $F_8$ defines a  **Discete Fourier Transform** (https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
+The matrix $F_8$ defines a  [Discete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
 
 To convert it into an orthogonal eigenvector matrix, we can simply normalize it by dividing every entry  by $\sqrt{8}$ (stare at the 
 first column of $F_8$ above to convince yourself of this fact). 
@@ -277,18 +295,17 @@ for j in range(8):
 diff_arr
 ```
 
-## Circulant Matrix and  Permutation Matrix 
+## Associated Permutation Matrix 
 
-Where $P$ is the shift permutation matrix, and $c_0, c_1, \ldots, c_{n-1}$ is a sequence,  the
-circulant matrix $C$ defined  in equation {eq}`eqn:circulant` satisfies
+
+Next, we execute calculations to verify that the circulant matrix $C$ defined  in equation {eq}`eqn:circulant` can be written as 
+
 
 $$
 C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
 $$
 
-
-
-Next, we execute calculations to verify that the circulant matrix $C$ can be written as $c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}$ and that every eigenvector of $P$ is also a eigenvector of $C$.
+and that every eigenvector of $P$ is also a eigenvector of $C$.
 
 ```{code-cell} ipython3
 

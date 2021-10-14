@@ -23,7 +23,7 @@ from scipy.linalg import schur
 
 ## Overview
 
-This lecture describes a Lagrangian formulation of an infinite horizon undiscounted dynamic programming problem (i.e., an  optimal linear regulator).
+This lecture describes a Lagrangian formulation of an infinite horizon undiscounted dynamic programming problem, also called an  optimal linear regulator problem.
 
 The formulation 
 
@@ -37,7 +37,7 @@ The formulation
 
 
 The undiscounted optimal linear regulator problem
-is to maximize over choice of $\{u_t\}_{t=0}^\infty$ the criterion
+is to choose a sequence of controls  $\{u_t\}_{t=0}^\infty$ to maximize the criterion
 
 $$ 
 - \sum_{t=0}^\infty \{x'_t Rx_t+u'_tQu_t\} 
@@ -65,15 +65,17 @@ $$ (bellman0)
 The first-order necessary condition for the maximum problem on the
 right side of equation {eq}`bellman0` is
 
-(We use the following rules for differentiating quadratic and bilinear matrix forms: 
+```{note} 
+We use the following rules for differentiating quadratic and bilinear matrix forms: 
 ${\partial x' A x \over \partial x} = (A + A') x; {\partial y' B z \over \partial y} = B z, {\partial
-y' B z \over \partial z} = B' y$.)
+y' B z \over \partial z} = B' y$.
+```
 
 $$
 (Q+B'PB)u=-B'PAx,
 $$
 
-which implies the feedback rule for $u$:
+which implies an optimal feedback rule for setting $u$
 
 $$
 u=-(Q+B'PB)^{-1} B'PAx
@@ -93,7 +95,7 @@ $$
 P=R+A'PA-A'PB(Q+B'PB)^{-1} B'PA.
 $$ (riccati)
 
-Equation {eq}`riccati` is called the **algebraic matrix Riccati** equation.
+Equation {eq}`riccati` is called an **algebraic matrix Riccati** equation.
 
 It expresses the matrix $P$ as an implicit function of the matrices
 $R,Q,A,B$. 
@@ -102,13 +104,13 @@ Notice that the **gradient of the value function** is
 
 $$
 \frac{\partial V(x)}{\partial x} = - 2 P x 
-$$
+$$ (eqn:valgrad)
 
-We shall use this fact later.
+We shall use fact {eq}`eqn:valgrad` later.
 
 +++
 
-## The Lagrangian
+## A Lagrangian
 
 For the undiscounted optimal linear regulator problem, form the Lagrangian
 
@@ -132,11 +134,16 @@ $$
 
 which is a time $t=0 $ counterpart to the second equation of system {eq}`eq2`.
 
-Recall that  $\mu_{t+1} = P x_{t+1}$, where
-$P$ is the matrix that solves the algebraic Riccati equation. 
+An important fact is  that  
 
-Thus, $\mu_{t}$ is
-the gradient of the value function.
+$$ 
+ \mu_{t+1} = P x_{t+1}
+$$ (eqn:muPx)
+
+where $P$ is the matrix that solves an  appropriate algebraic Riccati equation. 
+
+Thus, from equations {eq}`eqn:valgrad` and  {eq}`eqn:muPx`,  $- 2 \mu_{t}$ is
+the gradient of the value function. 
 
 The Lagrange multiplier vector $\mu_{t}$ is often called the *costate* vector
 corresponding to the state vector $x_t$.
@@ -177,6 +184,9 @@ $$
 
 +++
 
+## Stable State-Costate Dynamics
+
+
 We seek to solve the difference equation system  {eq}`eq4orig` for a sequence $\{x_t\}_{t=0}^\infty$
 that satisfies the initial condition for $x_0$ and a terminal condition
 $\lim_{t \rightarrow +\infty} x_t =0$ that expresses our wish for a *stable* solution.
@@ -190,7 +200,11 @@ which requires that $x_t' R x_t$ converge to zero as $t \rightarrow + \infty$.
 
 +++
 
-To proceed, we study properties of the $(2n \times 2n)$ matrix $M$. It is helpful to introduce
+### Reciprocal pairs property
+
+To proceed, we study properties of the $(2n \times 2n)$ matrix $M$. 
+
+It helps to introduce
 a $(2n \times 2n)$ matrix
 
 $$
@@ -199,7 +213,7 @@ $$
 
 The rank of $J$ is $2n$.
 
-*Definition:*  A matrix $M$ is called **symplectic** if
+**Definition:**  A matrix $M$ is called **symplectic** if
 
 $$
 MJM^\prime = J.
@@ -247,8 +261,12 @@ where each block on the right side is $(n\times n)$, where $V$ is
 nonsingular, and where $W_{22}$ has all its eigenvalues exceeding $1$ in modulus
 and $W_{11}$ has all of its eigenvalues less than $1$ in modulus. 
 
+### Schur decomposition
+
 The **Schur decomposition** and the **eigenvalue decomposition**
-are two such decompositions. Write equation {eq}`eq658`  as
+are two such decompositions. 
+
+Write equation {eq}`eq658`  as
 
 $$
 y_{t+1} = V W V^{-1} y_t.
@@ -583,7 +601,7 @@ lq.stationary_values()
 
 This way of finding the solution to a potentially unstable linear difference equations system is not necessarily limited to the LQ optimization problems. 
 
-For example, this method is adopted in the [Stability in Linear Rational Expectations Models](https://python.quantecon.org/re_with_feedback.html#Another-perspective) lecture.
+For example, this same method is used in our [Stability in Linear Rational Expectations Models](https://python.quantecon.org/re_with_feedback.html#Another-perspective) lecture.
 
 Let's try to solve for the solution again using the `stable_solution` function defined above.
 
