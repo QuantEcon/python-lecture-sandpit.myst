@@ -745,31 +745,35 @@ which in the special case that $\beta = 1$ agrees with equation {eq}`eq2`, as ex
 By staring at system {eq}`eq663`, we can infer  identities that shed light on the structure of optimal linear regulator problems,
 some of which will be useful in XXXXX THIS QUANTECON LECTURE when we apply and  extend the methods of this chapter to study Stackelberg and Ramsey problems.
 
-First, note that the first block of equation system {eq}`eq663` asserts that if when  $\mu_{t+1} = P x_{t+1}$, then    $(I + \beta Q^{-1} B' P B P ) x_{t+1} = A x_t$, which  can be rearranged to
+First, note that the first block of equation system {eq}`eq663` asserts that when  $\mu_{t+1} = P x_{t+1}$, then    $(I + \beta Q^{-1} B' P B P ) x_{t+1} = A x_t$, which  can be rearranged to
 be
 
 $$
-x_{t+1} = (I + \beta B Q^{-1} B' P)^{-1}  A x_t ,
+x_{t+1} = (I + \beta B Q^{-1} B' P)^{-1}  A x_t .
 $$
 
-an expression for the optimal closed loop dynamics of the state that must agree with the alternative expression that we derived with dynamic programming,
-namely,
+This expression for the optimal closed loop dynamics of the state  must agree with an alternative expression that we had derived with dynamic programming, namely,
 
 $$
 x_{t+1} = (A - BF) x_t .
 $$
 
-But using  $F=\beta (Q+\beta
-B'PB)^{-1} B'PA$,  it follows that $A - B F = (I - \beta B (Q+ \beta B' P B)^{-1} B' P) A $. 
+But using  
+
+$$
+F=\beta (Q+\beta B'PB)^{-1} B'PA 
+$$ (eqn:optimalFformula)
+
+it follows that $A - B F = (I - \beta B (Q+ \beta B' P B)^{-1} B' P) A $. 
 
 Thus, our two expressions for the
 closed loop dynamics will agree if and only if
 
 $$ 
 (I + \beta B Q^{-1} B' P )^{-1} =    (I - \beta B (Q+\beta  B' P B)^{-1} B' P) .
-$$
+$$ (eqn:twofeedbackloops)
 
-This  matrix  equation can be verified by applying a partitioned inverse formula. 
+Matrix  equation {eq}`eqn:twofeedbackloops` can be verified by applying a partitioned inverse formula. 
 
 ```{note}
 Just use the formula $(a - b d^{-1} c)^{-1} = a^{-1} + a^{-1} b (d - c a^{-1} b)^{-1} c a^{-1}$ for appropriate choices of the matrices $a, b, c, d$.
@@ -777,20 +781,24 @@ Just use the formula $(a - b d^{-1} c)^{-1} = a^{-1} + a^{-1} b (d - c a^{-1} b)
 
 
 
-Next, note that an optimal $P$ obeys the following version of an algebraic matrix Ricatti equation:
+Next, note that for *any*  fixed $F$ for which eigenvalues of $A- BF$ are less than $\frac{1}{\beta}$ in modulus the value function associated with using this rule forever is $- x_0 \tilde P x_0$ where  $\tilde P$ obeys the following  matrix  equation:
 
 $$
-P = (R + F' Q F) + \beta (A - B F)' P (A - BF) .
+\tilde P = (R + F' Q F) + \beta (A - B F)' P (A - BF) .
 $$ (eq666)
 
-In addition, the second equation of system {eq}`eq663` implies the "forward looking" equation for the Lagrange multiplier $\mu_t = R x_t + \beta A' \mu_{t+1}$ whose
+Evidently, $\tilde P = P $ only when $F $ obeys formula {eq}`eqn:optimalFformula`. 
+
+Next, note that  the second equation of system {eq}`eq663` implies the "forward looking" equation for the Lagrange multiplier $\mu_t = R x_t + \beta A' \mu_{t+1}$ whose
 solution is $\mu_t = P x_t$, where
 
 $$
-P = R + \beta A' P (A - BF) . 
+P = R + \beta A' P (A - BF)  
 $$ (eq667)
 
-A comparison of equations {eq}`eq666` and {eq}`eq667` is useful for bringing out features of the optimal value function for a discounted optimal linear regulator problem.
+where we must require that $F$ obeys equation {eq}`eqn:optimalFformula`
+
+Equations {eq}`eq666` and {eq}`eq667` provide views of the optimal value function from different perspectives. 
 
 ```{code-cell} ipython3
 
