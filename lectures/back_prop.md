@@ -20,16 +20,15 @@ kernelspec:
 
 We describe a simple "deep" neural network of "width" one.  
 
-The "width" being one means that we are dealing with scalar functions at critical places.
+Setting the "width" to one means that the network simply  **composes univariate functions**.
 
-We let $x \in \mathbb{R}$ be a scalar and $y \in \mathbb{R}$ be another scalar that is a function of $x$:
+We let $x \in \mathbb{R}$ be a scalar and $y \in \mathbb{R}$ be another scalar that is a nonlinear function of $x$:
 
 $$
 y = f(x)
 $$
 
-We want to approximate the function $f(x)$ with another function that we construct in the following iterative
-or recursive way.
+We want to approximate  $f(x)$ with another function that we define recursively.
 
 For a network of depth $N \geq 1$, each layer $i =1, \ldots N$ consists of 
 
@@ -223,7 +222,7 @@ We can then solve the above problem by applying our update for $p$ multiple time
 
 
 
-## Quentin: please check that what I say here makes sense.
+## Choice of training set
 
 The training set amounts to a choice of measure $\mu$ in the above  formulation of our  function approximation problem as a minimization problem.
 
@@ -447,8 +446,7 @@ fig.add_trace(go.Scatter(x=grid, y=predictions, name='Approximation'))
 fig.show()
 ```
 
-### Quentin: it would be fun to "deepen" the neural net for the above example and show how the approximation
-### improves. Can you please do this?
+**  Quentin: it would be fun to "deepen" the neural net for the above example and show how the approximation **
 
 
 <span style="color:red">There are several problems here. First, if the network is too deep, you'll run into the [vanishing gradient problem](http://neuralnetworksanddeeplearning.com/chap5.html). Besides, other parameters such as the step size and the number of epochs are probably more important than the number of layers in these examples. In fact, since $f$ is a linear function of $x$, a one-layer network with the identity map as an activation would probably work best. I've added a comparison for the example below. </span>
