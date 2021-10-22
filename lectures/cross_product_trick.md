@@ -161,47 +161,6 @@ Here is a handy table to remember how the Kalman filter and dynamic program are 
 
 +++
 
-## Duality table - cross-product elimination
-
-Here is a table that states the transformations for the dual problems
-
-
-<table>
-    <tr>
-	    <th width = 150><center>Dynamic Program</center></th> 
-        <th width = 300><center>Kalman Filter</center></th>
-	</tr>
-    <tr>
-        <td><center>$A^* = A - B Q^{-1} H$</center></td> 
-        <td><center>${A^*}' = A' - D' (FF')^{-1} F B'$</center></td>
-	</tr>
-    <tr>
-        <td><center>$B$</center></td> 
-        <td><center>$D'$</center></td>
-	</tr>
-    <tr>
-        <td><center>$Q$</center></td> 
-        <td><center>$FF'$</center></td>
-	</tr>
-    <tr>
-        <td><center>$R^* = R - H' Q^{-1} H$</center></td> 
-        <td><center>$BB' - BF'(FF')^{-1}FB' = B^*{B^*}'$</center></td>
-	</tr>
-    <tr>
-        <td><center>$F^*$</center></td> 
-        <td><center>${K^*}'$</center></td>
-	</tr>
-    <tr>
-        <td><center>$P$</center></td> 
-        <td><center>$\Sigma$</center></td>
-	</tr>
-    <tr>
-        <td><center>$F = F^* + Q^{-1} H$</center></td> 
-        <td><center>$K' = {K^*}' + (FF')^{-1} FB'$ <br/> or <br/> $K = K^* + BF' (FF')^{-1}$</center></td>
-	</tr>
-</table>
-
-
 
 ```{code-cell} ipython3
 

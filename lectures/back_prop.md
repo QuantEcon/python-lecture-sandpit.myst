@@ -18,9 +18,16 @@ kernelspec:
 !pip install --upgrade jax jaxlib
 ```
 
+
+## Overview
+
 We describe a simple "deep" neural network of "width" one.  
 
-Setting the "width" to one means that the network simply  **composes univariate functions**.
+By **deep** we mean that the network composes a large number of functions organized into nodes of a graph.
+
+**Width** refers to the number of right hand  side variables on the right hand side of the function being approximated.
+
+Setting the "width" to one means that the network   just composes univariate functions.
 
 We let $x \in \mathbb{R}$ be a scalar and $y \in \mathbb{R}$ be another scalar that is a nonlinear function of $x$:
 
@@ -49,7 +56,11 @@ Below, we'll use the sigmoid function for layers $1$ to $N-1$ and the identity f
 
 To approximate the function $f(x)$ we create a new function $\hat f(x)$ by proceeding as follows.
 
-Let $l_{i}\left(x\right)=w_{i}x+b_{i}$. 
+Let 
+
+$$
+ l_{i}\left(x\right)=w_{i}x+b_{i} . 
+$$ 
 
 We construct  $\hat f$ by iterating on compositions of functions $h_i \circ l_i$:
 
@@ -76,7 +87,7 @@ equals $\hat f(\tilde x)$.
 ## Calibrating  parameters
 
 
-We now consider a  neural network like the one describe above  with width 1, depth $N$ and activation functions $h_{i}$ for $1\leqslant i\leqslant N$ mapping $\mathbb{R}$ into itself.
+We now consider a  neural network like the one describe above  with width 1, depth $N$,  and activation functions $h_{i}$ for $1\leqslant i\leqslant N$ that map $\mathbb{R}$ into itself.
 
 
 Let $\left\{ \left(w_{i},b_{i}\right)\right\} _{i=1}^{N}$ denote a sequence of weights and biases.
@@ -84,7 +95,11 @@ Let $\left\{ \left(w_{i},b_{i}\right)\right\} _{i=1}^{N}$ denote a sequence of w
 As mentioned above, for a given input $x_{1}$, our approximating function $\hat f$ evaluated
 at $x_1$ equals the "output" $x_{N+1}$ from our network that  can be computed by iterating on $x_{i+1}=h_{i}\left(w_{i}x_{i}+b_{i}\right)$.
 
-For a given "prediction" $\hat{y} (x) $ and target $y= f(x)$, consider the loss function $\mathcal{L} \left(\hat{y},y\right)(x)=\frac{1}{2}\left(\hat{y}-y\right)^{2}(x)$.
+For a given "prediction" $\hat{y} (x) $ and target $y= f(x)$, consider the loss function
+
+$$
+\mathcal{L} \left(\hat{y},y\right)(x)=\frac{1}{2}\left(\hat{y}-y\right)^{2}(x) .
+$$
 
 This criterion is a function of the parameters $\left\{ \left(w_{i},b_{i}\right)\right\} _{i=1}^{N}$
 and the point $x$.
@@ -95,9 +110,9 @@ $$
 \min_{\left\{ \left(w_{i},b_{i}\right)\right\} _{i=1}^{N}} \int {\mathcal L}\left(x_{N+1},y\right)(x) d \mu(x)
 $$
 
-where $\mu(x)$ is some measure of  points $x \in R$ over which we want a good approximation $\hat f(x)$ to $f(x)$.
+where $\mu(x)$ is some measure of  points $x \in \mathbb{R}$ over which we want a good approximation $\hat f(x)$ to $f(x)$.
 
-Stack the weights into a vector of parameters $p$ as follows:
+Stack the weights into a vector of parameters $p$:
 
 $$ 
 p = \begin{bmatrix}     
@@ -112,7 +127,7 @@ p = \begin{bmatrix}
 $$
 
 
-Applying a "poor man's version" of a "stocastic "gradient descent" method for finding a zero of a function leads to the following update rule for parameters:
+Applying a "poor man's version" of a **stochastic gradient descent** algorithm for finding a zero of a function leads to the following update rule for parameters:
 
 $$
 p_{k+1}=p_k-\alpha\frac{d \mathcal{L}}{dx_{N+1}}\frac{dx_{N+1}}{dp_k}
@@ -127,15 +142,19 @@ To implement one step of this parameter update rule, we want  the vector of deri
 
 In the neural network literature, this step is accomplished by what is known as **back propogation**
 
-Here we'll show that thanks to some properties of
+Thanks to some properties of
 
 * the chain and product rules for differentiation, and
 
 * lower triangular matrices
    
-what is called back propogation is accomplished in one step by inversion of a lower triangular matrix and matrix multiplication.
+back propogation can actually be  accomplished in one step by
 
-(We got the idea to try this from the last 7 minutes of this great youtube video by MIT's Alan Edelman)
+ *  inverting a lower triangular matrix,  and 
+ 
+ * matrix multiplication
+
+(This idea  is from the last 7 minutes of this great youtube video by MIT's Alan Edelman)
 
 ```{youtube} rZS2LGiurKY
 ```
@@ -222,19 +241,19 @@ We can then solve the above problem by applying our update for $p$ multiple time
 
 
 
-## Choice of training set
+## Training set
 
-The training set amounts to a choice of measure $\mu$ in the above  formulation of our  function approximation problem as a minimization problem.
+Choosing a  training set amounts to a choice of measure $\mu$ in the above  formulation of our  function approximation problem as a minimization problem.
 
-In this spirit, below  we  use a uniform grid of, say, 50 or 200 or $\ldots$,  points. 
+In this spirit,  we shall use a uniform grid of, say, 50 or 200 or $\ldots$,  points. 
 
-There are many possible routes for solving the minimization  problem posed above:
+There are many possible approaches solving the minimization  problem posed above:
 
 * batch gradient descent in which you use an average gradient over the training set
 
 * stochastic gradient descent in which you sample points randomly and use individual gradients
 
-* or something in-between (so-called "mini-batch gradient descent")
+* something in-between (so-called "mini-batch gradient descent")
  
 The update rule described above  corresponds to a stochastic gradient descent algorithm
 
