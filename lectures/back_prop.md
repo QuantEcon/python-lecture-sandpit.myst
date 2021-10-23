@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# A Neural Network
+# Introduction to Neural Networks
 
 ```{code-cell} python3
 :tags: [hide-output]
@@ -20,6 +20,21 @@ kernelspec:
 
 
 ## Overview
+
+
+This lecture describes the structure of a plain vanilla **artificial neural network**  (ANN) of a type that is widely used to 
+approximate a function $f$ that maps an  $x$ in  a space $X$ into a $y$ in a space $Y$.  
+
+To introduce elementary concepts, we study a simple example in which $x$ and $y$ are scalars.
+
+We'll describe the following concepts:
+
+ * a neuron
+ * an activation function
+ * a network of neurons 
+ * back-propogation and its relationship  to the chain rule of differential calculus
+
+## A simple deep but wide artificial neural net
 
 We describe a simple "deep" neural network of "width" one.  
 
@@ -41,9 +56,9 @@ For a network of depth $N \geq 1$, each layer $i =1, \ldots N$ consists of
 
 * an input $x_i$
 
-* an affine function $w_i x_i + bI$, where $w_i$ is a scalar "weight" placed on the input and $b_i$ is a scalar "bias"
+* an **affine function** $w_i x_i + bI$, where $w_i$ is a scalar "weight" placed on the input and $b_i$ is a scalar "bias"
 
-* an activation function $h_i$ that takes $(w_i x_i + b_i)$ as an argument and produces an output $x_{i+1}$
+* an **activation function** $h_i$ that takes $(w_i x_i + b_i)$ as an argument and produces an output $x_{i+1}$
    
      
 An example of an activation function $h$ is the **sigmoid** function
@@ -465,10 +480,16 @@ fig.add_trace(go.Scatter(x=grid, y=predictions, name='Approximation'))
 fig.show()
 ```
 
-**  Quentin: it would be fun to "deepen" the neural net for the above example and show how the approximation **
+## Under construction: 
+
+It  is  fun to think about how deepening the neural net for the above example affects the quality of  approximation 
 
 
-<span style="color:red">There are several problems here. First, if the network is too deep, you'll run into the [vanishing gradient problem](http://neuralnetworksanddeeplearning.com/chap5.html). Besides, other parameters such as the step size and the number of epochs are probably more important than the number of layers in these examples. In fact, since $f$ is a linear function of $x$, a one-layer network with the identity map as an activation would probably work best. I've added a comparison for the example below. </span>
+ * if the network is too deep, you'll run into the [vanishing gradient problem](http://neuralnetworksanddeeplearning.com/chap5.html)
+* other parameters such as the step size and the number of epochs are probably more important than the number of layers in the situation considered in this lecture.
+* Indeed, since $f$ is a linear function of $x$, a one-layer network with the identity map as an activation would probably work best. 
+  
+We  added a comparison for the example below (TOM -- FIND AND EDIT)
 
 
 ### Example 2
