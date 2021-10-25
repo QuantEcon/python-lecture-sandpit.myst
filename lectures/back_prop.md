@@ -16,6 +16,7 @@ kernelspec:
 ```{code-cell} python3
 :tags: [hide-output]
 !pip install --upgrade jax jaxlib
+!conda install -c plotly plotly plotly-orca
 ```
 
 
@@ -273,6 +274,7 @@ There are many possible approaches solving the minimization  problem posed above
 The update rule described above  corresponds to a stochastic gradient descent algorithm
 
 ```{code-cell} ipython3
+from IPython.display import Image
 import jax.numpy as jnp
 from jax import grad, jit, jacfwd, vmap
 from jax import random
@@ -477,7 +479,10 @@ fig = go.Figure()
 fig.add_trace(go.Scatter(x=grid, y=f_val, name=r'$-3x+2$'))
 fig.add_trace(go.Scatter(x=grid, y=predictions, name='Approximation'))
 
-fig.show()
+# Export to PNG file
+Image(fig.to_image(format="png"))
+# fig.show() will provide interactive plot when running
+# notebook locally
 ```
 
 ## Under construction: 
@@ -554,7 +559,10 @@ fig.add_trace(go.Scatter(x=grid, y=predictions_1, name='One-layer neural network
 fig.add_trace(go.Scatter(x=grid, y=predictions_2, name='Two-layer neural network'))
 fig.add_trace(go.Scatter(x=grid, y=predictions_3, name='Three-layer neural network'))
 
-fig.show()
+# Export to PNG file
+Image(fig.to_image(format="png"))
+# fig.show() will provide interactive plot when running
+# notebook locally
 ```
 
 ```{code-cell} ipython3
