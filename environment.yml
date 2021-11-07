@@ -3,18 +3,15 @@ channels:
   - default
 dependencies:
   - python=3.8
-  - anaconda=2020.11
+  - anaconda=2021.05
   - pip
   - pip:
     - jupyter-book
-    - sphinx-multitoc-numbering
     - quantecon-book-theme
     - sphinx-tojupyter
     - sphinxext-rediraffe
     - sphinx-exercise
-    - jupytext
     - ghp-import
-    - jupinx
-    # Temporary Fixes
-    - tornado>=6.1
+    - sphinxcontrib-youtube
+
 
