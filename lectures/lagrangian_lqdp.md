@@ -23,6 +23,8 @@ from scipy.linalg import schur
 
 ## Overview
 
+TEST CHANGE NOV 6; DELETE LATER
+
 This lecture describes a Lagrangian formulation of an infinite horizon undiscounted dynamic programming problem, also called an  optimal linear regulator problem.
 
 The formulation 
