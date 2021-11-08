@@ -13,7 +13,7 @@ kernelspec:
 
 # Five Preference Orderings
 
-This lecture describes   static representations of five classes of preferences over risky prospects. All  incorporate **risk aversion**, meaning displeasure from  risks governed by  well known probability distributions.  Two of them also incorporate  **uncertainty aversion**, meaning  dislike of not knowing a  probability distribution.
+This lecture describes static representations of five classes of preferences over risky prospects. All  incorporate **risk aversion**, meaning displeasure from  risks governed by  well known probability distributions.  Two of them also incorporate  **uncertainty aversion**, meaning  dislike of not knowing a  probability distribution.
 
 ## Basic objects
 
@@ -31,14 +31,33 @@ In more detail, we'll work with the following setting.
 *  A  finite set of possible **states** ${\cal I} = \{i= 1, \ldots, I\}$.
 *  A (consumption) **plan** is a function $c: {\cal I} \rightarrow {\mathbb R}$.  
 * $u: {\mathbb R} \rightarrow {\mathbb R}$  is a **utility function**.
-* $\pi$ is an $I \times 1$ vector of nonnegative probabilities over  states, with $\pi_ i \geq 0, \sum_{i=1}^I \pi_i = 1$.
-* **Relative entropy** of a probability vector  $\hat \pi$ with respect to a probability vector $\pi$ is the expected value of the logarithm of the  likelihood ratio $m_i \doteq \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr) $  under   distribution $\hat \pi$:  $
-\textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \hat \pi_i  \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)   = \sum_{i=1}^I \pi_i \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr) \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)  $ or $
- \textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \pi_i m_i \log m_i  . $
+* $\pi$ is an $I \times 1$ vector of nonnegative **probabilities** over  states, with $\pi_ i \geq 0, \sum_{i=1}^I \pi_i = 1$.
+* **Relative entropy**  $ \textrm{ent}(\pi, \hat \pi)$ of a probability vector  $\hat \pi$ with respect to a probability vector $\pi$ is the expected value of the logarithm of the  likelihood ratio $m_i \doteq \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr) $  under   distribution $\hat \pi$ defined as:  
+   
+   
+$$
+\textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \hat \pi_i  \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)   = \sum_{i=1}^I \pi_i \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr) \log \Bigl( \frac{\hat \pi_i}{\pi_i} \Bigr)  
+$$ 
+
+or 
+
+$$
+  \textrm{ent}(\pi, \hat \pi) = \sum_{i=1}^I \pi_i m_i \log m_i  .
+$$
 
 
 **Remark** The likelihood ratio $m_i$ is a discrete random variable. For any discrete random variable $\{x_i\}_{i=1}^I$, the expected  value under the $\hat \pi_i$ distribution can be represented as the expected  value of  $x_i$ times the `shock'  $m_i$ under the $\pi$ distribution:
-$ \hat E x = \sum_{i=1}^I x_i \hat \pi_i = \sum_{i=1}^I m_i x_i  \pi_i = E m x ,$ where $\hat E$ is the mathematical  expectation under the $\hat \pi$ distribution and $E$ is the expectation under the $\pi$ distribution. Evidently, $ \hat E 1 = E m = 1$ and relative entropy is $ E m \log m  = \hat E \log m .$
+$ \hat E x = \sum_{i=1}^I x_i \hat \pi_i = \sum_{i=1}^I m_i x_i  \pi_i = E m x ,$ where $\hat E$ is the mathematical  expectation under the $\hat \pi$ distribution and $E$ is the expectation under the $\pi$ distribution. Evidently, 
+
+$$ 
+  \hat E 1 = E m = 1
+$$ 
+
+and relative entropy is 
+
+$$
+ E m \log m  = \hat E \log m .
+$$
 
 Figure 1 XXXX depicts  entropy as a function of $\hat \pi_1$ when $I=2$ and $\pi_1 = .5$. 
  
@@ -49,7 +68,8 @@ When $\pi_1 \in (0,1)$, entropy is finite for both $\hat \pi_1 = 0$  and $\hat \
 
 ## Five preference specifications
 
-We describe five types of preferences over plans. Types 1, 4, and 5, each of which is cast in terms of a unique probability distribution, express risk-aversion, but not model ambiguity aversion. 
+We describe five types of preferences over plans.
+ Types 1, 4, and 5, each of which is cast in terms of a unique probability distribution, express risk-aversion, but not model ambiguity aversion. 
 
 
 Our main focus will eventually be on types 2 and 3, each of which expresses aversion to
@@ -64,56 +84,55 @@ $$
         \sum_{i=1}^I u(c_i) \pi_i, 
 $$ (tom1)
 
-GGHH  Equation {eq}`tom1`
 where $u$ is a unique utility function and $\pi$ is a unique probability measure over     states.
 
 * A known $\pi$ expresses risk.
-*  Curvature of $u$ expresses
+* Curvature of $u$ expresses
 risk aversion.
 
 **Constraint preferences.** A decision maker is said to have *constraint preferences* when he ranks plans $c$ according to  
 
 $$
 \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I m_i\pi_i  u(c_i)
-$$
+$$ (tom2)
 
 subject to
 
 $$
 \sum_{i=1}^I \pi_i m_i \log m_i \leq \eta
-$$
+$$ (tom3)
 
 and
 
 $$
 \sum_{i=1}^I \pi_i m_i = 1 .
-$$ 
+$$ (tom4)
 
-Here $\eta \geq 0$ defines an  entropy ball of probability distributions $\hat \pi = m \pi$  surrounding a baseline distribution $\pi$.
+In {eq}`tom3`,  $\eta \geq 0$ defines an  entropy ball of probability distributions $\hat \pi = m \pi$  surrounding a baseline distribution $\pi$.
 
 As noted earlier,     $\sum_{i=1}^I m_i\pi_i  u(c_i)$ is the expected value of $u(c)$ under a twisted probability distribution $\{\hat \pi_i\}_{i=1}^I = \{m_i \pi_i\}_{i=1}^I$.
 
-Larger values of the entropy constraint $\eta$ indicate more apprehension about the probability distribution $\{\pi_i\}_{i=1}^I$.
+Larger values of the entropy constraint $\eta$ indicate more apprehension about the baseline probability distribution $\{\pi_i\}_{i=1}^I$.
 
-We call minimization problem  XXXX a *constraint problem*.
+We call minimization problem  {eq}`tom2` subject to {eq}`tom3` and{eq}`tom4` a *constraint problem*.
 
 To find  minimizing probabilities, we form a Lagrangian
 
 $$
 L = \sum_{i=1}^I m_i \pi_i u(c_i) +  \tilde \theta\bigl[\sum_{i=1}^I \pi_i m_i \log m_i - \eta \bigr]
-$$
+$$ (tom5)
 
 where $\tilde \theta \geq 0$ is a Lagrange multiplier associated     with the entropy constraint. Subject to the additional constraint
-that $\sum_{i=1}^I m_i  \pi_i =1$, we want to minimize XXXX with respect to     $\{m_i\}_{i=1}^I$ and to maximize it with respect to   $\tilde \theta$.
+that $\sum_{i=1}^I m_i  \pi_i =1$, we want to minimize {eq}`tom5` with respect to     $\{m_i\}_{i=1}^I$ and to maximize it with respect to   $\tilde \theta$.
 
 The minimizing probability distortions (likelihood ratios) are
 
 $$
 \tilde m_i(c;\tilde \theta)
 = \frac{ \exp \bigl(- u(c_i)/\tilde \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j) /\tilde \theta\bigr) } .
-$$  (mylabel)
+$$  (tom6)
 
-GGHH Equation {eq}`mylabel`
+
 
 To compute the Lagrange multiplier $\tilde \theta(c, \eta)$, we must
 solve
@@ -128,11 +147,11 @@ $$
 \sum_i \pi_i \frac{ \exp \bigl(- u(c_i)/\tilde \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\tilde \theta\bigr) }
 \log \biggl[\frac{ \exp \bigl(- u(c_i)/\tilde \theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\tilde \theta\bigr) }
 \biggr] = \eta
-$$
+$$ (tom7)
 
 for $\tilde \theta = \tilde \theta(c; \eta)$.
 
-For a fixed $\eta$, the $\tilde \theta$ that solves this equation is    evidently a function of the consumption plan $c$. 
+For a fixed $\eta$, the $\tilde \theta$ that solves equation {eq}`tom7` is    evidently a function of the consumption plan $c$. 
 
 With  $\tilde \theta(c;\eta)$ in hand we can obtain worst-case  probabilities as functions $\pi_i\tilde m_i(c;\eta)$ of $\eta$.
 
@@ -141,10 +160,10 @@ The indirect (expected) utility function under constraint preferences is
 $$
 \sum_{i=1}^I   \pi_i \tilde m_i(c_i;\eta) u(c_i) = \sum_{i=1}^I  \pi_i \left[\frac{\exp(-\tilde \theta^{-1} u(c_i))}
     {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]    u(c_i) .
-$$
+$$ (tom8)
 
 Entropy evaluated at the minimizing probability distortion
-XXXXX equals $E \tilde m \log \tilde m$ or
+{eq}`tom6` equals $E \tilde m \log \tilde m$ or
 
 $$
 \begin{aligned}
@@ -156,9 +175,9 @@ $$
     {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]    u(c_i)  \cr
     & & + \log \left(\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j \right) .
         \end{aligned}  
-$$ 
+$$ (tom9)
 
-Expression XXXX implies that 
+Expression {eq}`tom9` implies that 
 
 $$
 \begin{aligned} 
@@ -167,9 +186,8 @@ $$
     {\sum_{j=1}^I \exp(-\tilde \theta^{-1} u(c_j) ) \pi_j } \right]    u(c_i) \cr
     &  + &    \tilde \theta (c;\eta) \sum_{i=1}^I \log \tilde m_i(c;\eta) \tilde m_i(c;   \eta) \pi_i ,
     \end{aligned} 
-$$ (tom2)
+$$ (tom10)
 
-Equation {eq}`tom2`
 
 where the last term is $\tilde \theta$ times the entropy of the worst-case probability distribution. 
 
@@ -179,25 +197,25 @@ We shall encounter a closely related expression soon.
 
 $$
 {\sf T}u(c) \doteq \min_{\{m_i \geq 0\}_{i=1}^I}  \sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]
-$$
+$$ (tom11)
 
-subject to 
+where minimization is subject to 
 
 $$
 \sum_{i=1}^I \pi_i m_i = 1 .
 $$ 
 
-Here $\theta \in (\underline \theta, +\infty )$ is a 'penalty parameter'  that governs a 'cost' to an 'evil agent' who distorts probabilities  by choosing $\{m_i\}_{i=1}^I$. 
+Here $\theta \in (\underline \theta, +\infty )$ is a 'penalty parameter'  that governs a 'cost' to an 'evil alter ego' who distorts probabilities  by choosing $\{m_i\}_{i=1}^I$. 
 
 Lower values of the penalty parameter $\theta$ express more apprehension about the baseline probability  distribution $\pi$.[^2]
 
-We call the minimization problem on theright side of XXXXX a *multiplier problem*. 
+We call the minimization problem on the right side of {eq}`tom11` a *multiplier problem*. 
 
 The minimizing probability that solves the multiplier problem is
 
 $$
 \hat m_i(c; \theta) = \frac{ \exp \bigl(- u(c_i)/\theta\bigr)}{\sum_j \pi_j \exp \bigl(- u(c_j)/\theta\bigr) } .
-$$
+$$ (tom12)
 
 We can solve
 
@@ -209,12 +227,12 @@ $$
 
 to find an entropy level  $\tilde \eta (c; \theta)$ associated with multiplier preferences with penalty parameter $\theta$ and allocation $c$.
 
-For a fixed$\theta$, the $\tilde \eta$ that solves this equation is a function
+For a fixed $\theta$, the $\tilde \eta$ that solves this equation is a function
 of the consumption plan $c$
 
-The forms of XXXXX and XXXXX are identical, but the Lagrange multiplier $\tilde \theta$ appears in XXXXX while the penalty parameter or multiplier $\theta$ appears inXXXXXX.
+The forms of expressions {eq}`tom6`  and {eq}`tom12` are identical, but the Lagrange multiplier $\tilde \theta$ appears in {eq}`tom6`  while the penalty parameter or multiplier $\theta$ appears in {eq}`tom12`.
 
-Formulas XXXX and XXXXX show that worst-case probabilities are *context specific* in the sense that they depend both on the utilityfunction $u$ and the consumption plan $c$.
+Formulas {eq}`tom6`  and {eq}`tom12` show that worst-case probabilities are *context specific* in the sense that they depend both on the utilityfunction $u$ and the consumption plan $c$.
 
 If we add $\theta$ times entropy under the worst-case model to
 expected utility under the worst-case model, we find that the
@@ -222,25 +240,30 @@ indirect utility function function under multiplier preferences is
 
 $$
     -  \theta \log \left(\sum_{j=1}^I \exp(- \theta^{-1} u(c_j) ) \pi_j \right) .
-$$
+$$ (tom13)
 
 **Risk-sensitive preferences.** Substituting $\hat m_i$ into $\sum_{i=1}^I \pi_i \hat m_i [  u(c_i) + \theta \log \hat m_i ]$ gives the indirect utility function
 
 $$
 {\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).
-$$
+$$ (tom14)
     
-Here ${\sf T} u$ in     XXXX is the *risk-sensitivity* operator of Jacobson and Whittle. @jacobson and @whittle. 
+Here ${\sf T} u$ in    {eq}`tom14` is the *risk-sensitivity* operator of Jacobson and Whittle. XXXX 
+{cite}`jacobson_73` and {cite}`whittle_1990`. {cite}`Whittle_1981`
     
 It defines a *risk-sensitive* preference    ordering over plans $c$. 
     
 Because it is not linear in utilities $u(c_i)$ and probabilities $\pi_i$, it is said not to be separable across states.
     
-Because risk-sensitive preferences use a unique probability distribution, they apparently express no model distrust or ambiguity. Instead, they make an additional adjustment for risk-aversion beyond that embedded in the curvature of $u$. 
+Because risk-sensitive preferences use a unique probability distribution, they apparently express no model distrust or ambiguity. 
+
+Instead, they make an additional adjustment for risk-aversion beyond that embedded in the curvature of $u$. 
     
-For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure [1.2] plots the risk-sensitive criterion ${\sf T} u(c)$ defined in    XXXXX as a function of $\pi_1$ for values of $\theta$ of 100 and .6.
+For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure [1.2] plots the risk-sensitive criterion ${\sf T} u(c)$ defined in    {eq}`tom14` as a function of $\pi_1$ for values of $\theta$ of 100 and .6.
     
-For large values of $\theta$, ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$, but for lower values of $\theta$, ${\sf T} u(c)$ has considerable    curvature as a function of $\pi_1$. (Under expected utility, i.e., $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is convex as a function of $\pi_1$ when $\theta< + \infty$.)
+For large values of $\theta$, ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$, but for lower values of $\theta$, ${\sf T} u(c)$ has considerable    curvature as a function of $\pi_1$.
+
+Under expected utility, i.e., $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is convex as a function of $\pi_1$ when $\theta< + \infty$.
 
 ${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) and $\theta=.6$ (convex curved line). Here  $I=2, c_1=2, c_2=1$, $u(c) = \ln c$.](new_figure3.eps){#fig_new_figure3 height="2in"}
 
@@ -248,19 +271,23 @@ ${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) an
 
 $$
 \sum_i \hat \pi_i (c^*) u(c_i)
-$$ 
+$$ (tom15)
 
 where $\hat \pi(c^*)$ is the worst-case probability distribution associated with multiplier or constraint preferences evaluated at a particular consumption plan $c^* = \{c_i^*\}_{i=1}^I$.
 
 At $c^*$, an ex post Bayesian's indifference curves are tangent to those for multiplier and constraint preferences with appropriately chosen $\theta$ and $\eta$, respectively.
 
-**Digression on moment generating functions:**  The object $E \exp\bigl(-u(c_i)/\theta\bigr) = \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$ is evidently a *moment generating function* for the random variable $u(c_i)$, while $g(\theta^{-1}) \doteq  \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$ is a *cumulant generating function*, $g(\theta^{-1}) = \sum_{j=1}^\infty \kappa_j \frac{{(-\theta^{-1})}^{j}}{j!}$, where $\kappa_j$ is the $j$th cumulant of the random variable $u(c)$.
+**Digression on moment generating functions:**  
+
+The object $E \exp\bigl(-u(c_i)/\theta\bigr) = \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$ is evidently a *moment generating function* for the random variable $u(c_i)$, while $g(\theta^{-1}) \doteq  \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr)$ is a *cumulant generating function*, $g(\theta^{-1}) = \sum_{j=1}^\infty \kappa_j \frac{{(-\theta^{-1})}^{j}}{j!}$, where $\kappa_j$ is the $j$th cumulant of the random variable $u(c)$.
 
 Then ${\sf T}u(c) = -\theta g(\theta^{-1}) = -\theta \sum_{j=1}^\infty \kappa_j \frac{{(-\theta^{-1})}^{j}}{j!}$. 
 
 In general, when $\theta < +\infty$, ${\sf T} u(c)$ depends on cumulants of all orders.
 
-These statements extend to cases with continuous probability distributions for $c$ and therefore for $u(c)$. For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 = \mu_u, \kappa_2 = \sigma_u^2$ , and $\kappa_j = 0 \ \forall j \geq 3$, so ${\sf T} u(c) = \mu_u - \frac{1}{2 \theta} \sigma_u^2$, which becomes expected utility $\mu_u$ when $\theta^{-1} = 0$.
+These statements extend to cases with continuous probability distributions for $c$ and therefore for $u(c)$. 
+
+For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 = \mu_u, \kappa_2 = \sigma_u^2,$  and $\kappa_j = 0 \ \forall j \geq 3$, so ${\sf T} u(c) = \mu_u - \frac{1}{2 \theta} \sigma_u^2$, which becomes expected utility $\mu_u$ when $\theta^{-1} = 0$.
 
 
 
@@ -475,7 +502,17 @@ plt.xlabel(r'$\pi_1$');
 plt.legend();
 ```
 
-We break down the transformation that $\mathbf{T}$ produces in the two plots below. First, $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a different space where (i) signs are flipped and (ii) curvature is increased in proportion to $\theta$. Expectations are then computed in this transformed space. Notice that the distance between the expectation and the curve is greater in the transformed space than the original space as a result of additional curvature. Finally, $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ sends the computed expectation back to the original space. Relative to the expected utility case, the distance between the green dot and the orange line reflects the additional adjustment.
+We break down the transformation that $\mathbf{T}$ produces in the two plots below. 
+
+First, $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a different space where (i) signs are flipped and (ii) curvature is increased in proportion to $\theta$.
+
+Expectations are then computed in this transformed space. 
+
+Notice that the distance between the expectation and the curve is greater in the transformed space than the original space as a result of additional curvature. 
+
+Finally, $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ sends the computed expectation back to the original space. 
+
+Relative to the expected utility case, the distance between the green dot and the orange line reflects the additional adjustment.
 
 ```{code-cell} ipython3
 # Parameter values
@@ -662,7 +699,13 @@ The code for this figure is more involved because I formulate a root finding pro
      - Constraint preference: solve $\bar{u}-\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}u\left(c_{i}\right)=0$ numerically where $\theta^{*}$ solves $\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}\right)-\eta=0$ numerically.
      
 
-**Note:** It seems that the constraint problem is hard to solve in its original form, i.e. by finding the distorting measure that minimizes the expected utility. It seems that viewing (2.5) as a root finding problem works much better. Notice that 2.5 does not always have a solution. Under $u=\log$, $c_{1}=c_{2}=1$, we have: 
+**Note:** It seems that the constraint problem is hard to solve in its original form, i.e. by finding the distorting measure that minimizes the expected utility. 
+
+It seems that viewing (2.5) as a root finding problem works much better. 
+
+Notice that 2.5 does not always have a solution. 
+
+Under $u=\log$, $c_{1}=c_{2}=1$, we have: 
 
 $$\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\tilde{\theta}}\right)}{\sum_{j}\pi_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\tilde{\theta}}\right)}\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\tilde{\theta}}\right)}{\sum_{j}\pi_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\tilde{\theta}}\right)}\right)=0$$
 
