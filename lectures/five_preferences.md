@@ -303,32 +303,45 @@ reference="fig_new_figure1"} and
 [1.4](#fig_new_figure2){reference-type="ref"
 reference="fig_new_figure2"} depict the determination of worst-case
 probabilities under constraint and multiplier preferences, respectively.
+
 Figure [1.3](#fig_new_figure1){reference-type="ref"
 reference="fig_new_figure1"} graphs entropy as a function of
-$\hat \pi_1$. The figure also plots expected utility under the twisted
+$\hat \pi_1$.
+
+The figure also plots expected utility under the twisted
 probability distribution, namely,
 $\hat E u(c) = u(c_2) + \hat \pi_1 (u(c_1) - u(c_2))$, which is
-evidently a linear function of $\hat \pi_1$. The entropy constraint
+evidently a linear function of $\hat \pi_1$. 
+
+The entropy constraint
 $\sum_{i=1}^I \pi_i m_i \log m_i \leq \eta$ implies a convex set
 $\hat \Pi_1$ of $\hat \pi_1$'s that constrains the malevolent agent who
 chooses $\hat \pi_1$, namely, the set of $\hat \pi_1$'s for which the
 entropy curve lies below the horizontal dotted line at an entropy level
-of $\eta = .25$. Unless $u(c_1) = u(c_2)$, the $\hat \pi_1$ that
+of $\eta = .25$. 
+
+Unless $u(c_1) = u(c_2)$, the $\hat \pi_1$ that
 minimizes $\hat E u(c)$ is at the boundary of the set $\hat \Pi_1$.
 
 As a function of $\hat \pi_1 = m_1 \pi_1$, figure
 [1.4](#fig_new_figure2){reference-type="ref"
 reference="fig_new_figure2"} shows the function
 $\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ that is to be
-minimized in the multiplier problem. Evidently, from figure
+minimized in the multiplier problem.
+
+Evidently, from figure
 [1.4](#fig_new_figure2){reference-type="ref"
 reference="fig_new_figure2"} and also from formula
 [\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
 reference="eqn:Murphys_law"}, lower values of $\theta$ lead to lower,
-and thus more distorted, minimizing values of $\hat \pi_1$. The figure
+and thus more distorted, minimizing values of $\hat \pi_1$. 
+
+The figure
 indicates how one can construct a Lagrange multiplier $\tilde \theta$
 associated with a given entropy constraint $\eta$ and a given
-consumption plan. Thus, to draw figure
+consumption plan. 
+
+Thus, to draw figure
 [1.4](#fig_new_figure2){reference-type="ref"
 reference="fig_new_figure2"}, we set the penalty parameter for
 multiplier preferences $\theta$ so that the minimizing $\hat \pi_1$
@@ -336,7 +349,7 @@ equals the minimizing $\hat \pi_1$ for the constraint problem from
 figure [1.3](#fig_new_figure1){reference-type="ref"
 reference="fig_new_figure1"}.
 
-![Entropy (the curve) and expected utility
+Entropy (the curve) and expected utility
 $\hat E u(c) = u(c_2) + \hat \pi_1 (u(c_1) - u(c_2))$ (the straight
 line) as functions of $\hat \pi_1$ when
 $c_1 =2, c_2=1, u(c) = \ln c, \pi_1 = .5$ and $\eta=.25$. Values of
@@ -344,7 +357,7 @@ entropy less than or equal to the horizontal dotted line at $.25$
 satisfy the entropy constraint.](new_figure1.eps){#fig_new_figure1
 height="2in"}
 
-![Entropy (the curve that is symmetric about .5), expected utility
+Entropy (the curve that is symmetric about .5), expected utility
 $\sum_{i=1}^I \pi_i m_i   u(c_i)$ (the straight line), and multiplier
 criterion $\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ (the
 asymmetric curved lines) as functions of $\hat \pi_1$ when $\pi_1 = .5$.
@@ -366,8 +379,9 @@ All five types of preferences use curvature of $u$ to express risk
 aversion. Constraint preferences express *ambiguity* with a positive
 $\eta$ that circumscribes an entropy ball around an approximating
 probability distribution $\pi$, and *ambiguity aversion* through
-minimization with respect to a likelihood ratio $m$. Multiplier
-preferences express ambiguity with a parameter $\theta<+\infty$ that
+minimization with respect to a likelihood ratio $m$.
+
+Multiplier preferences express ambiguity with a parameter $\theta<+\infty$ that
 penalizes deviations from the approximating model as measured by
 relative entropy, and they express ambiguity aversion with minimization
 over a probability distortion $m$. By penalizing minimization over the
@@ -387,8 +401,7 @@ reference="eqn:Murphys_law"} asserts that the decision maker acts as if
 he is pessimistic relative to an approximating model $\pi$. It expresses
 what @bucklew2004 [p. 27] calls a statistical version of *Murphy's law*:
 
-> *The probability of anything happening is in inverse ratio to its
-> desirability.*
+   *The probability of anything happening is in inverse ratio to its desirability.*
 
 The minimizing likelihood ratio $\hat m$ slants worst-case probabilities
 $\hat \pi$ exponentially to increase probabilities of events that give
@@ -418,19 +431,27 @@ Indifference curves illuminate how concerns about robustness affect
 asset pricing and utility costs of fluctuations. For $I=2$, the slopes
 of the indifference curves for our five preference specifications are
 
--   Expected utility:
-    $$\frac{d c_2}{d c_1} = - \frac{\pi_1}{\pi_2}\frac{u'(c_1)}{u'(c_2)}$$
+* Expected utility:
+    
+    $$
+        \frac{d c_2}{d c_1} = - \frac{\pi_1}{\pi_2}\frac{u'(c_1)}{u'(c_2)}
+    $$
 
--   Constraint and *ex post* Bayesian preferences:
-    $$\frac{d c_2}{d c_1} = - \frac{\hat \pi_1}{\hat \pi_2}\frac{u'(c_1)}{u'(c_2)}$$
+* Constraint and *ex post* Bayesian preferences:
+    
+    $$
+        \frac{d c_2}{d c_1} = - \frac{\hat \pi_1}{\hat \pi_2}\frac{u'(c_1)}{u'(c_2)}
+    $$
+
     where $\hat \pi_1, \hat \pi_2$ are the minimizing probabilities
-    computed from the worst-case distortions
-    [\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
-    reference="eqn:Murphys_law_2"} from the constraint problem at
-    $(c_1, c_2)$.
+    computed from the worst-case distortions [\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
+    reference="eqn:Murphys_law_2"} from the constraint problem at  $(c_1, c_2)$.
 
--   Multiplier and risk-sensitive preferences:
-    $$\frac{d c_2}{d c_1} = - \frac{\pi_1}{\pi_2} \frac{\exp(- u(c_1)/\theta)}{\exp (- u(c_2)/\theta)}    \frac{u'(c_1)}{u'(c_2)}$$
+* Multiplier and risk-sensitive preferences:
+   
+    $$
+    \frac{d c_2}{d c_1} = - \frac{\pi_1}{\pi_2} \frac{\exp(- u(c_1)/\theta)}{\exp (- u(c_2)/\theta)}    \frac{u'(c_1)}{u'(c_2)}
+    $$
 
 When $c_1 > c_2$, the exponential twisting formula
 [\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
