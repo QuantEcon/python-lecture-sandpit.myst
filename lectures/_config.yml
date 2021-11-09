@@ -34,3 +34,4 @@ sphinx:
   
 bibtex_bibfiles:
   - _static/quant-econ.bib
+  - _static/quant-econ-tom.bib

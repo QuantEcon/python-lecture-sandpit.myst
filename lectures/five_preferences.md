@@ -249,7 +249,7 @@ $$
 $$ (tom14)
     
 Here ${\sf T} u$ in    {eq}`tom14` is the *risk-sensitivity* operator of Jacobson and Whittle. XXXX 
-{cite}`jacobson_73` and {cite}`whittle_1990`. {cite}`Whittle_1981`
+{cite}`Jacobson_73` and {cite}`Whittle_1990`. {cite}`Whittle_1981`
     
 It defines a *risk-sensitive* preference    ordering over plans $c$. 
     
