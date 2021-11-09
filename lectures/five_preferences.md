@@ -248,8 +248,7 @@ $$
 {\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).
 $$ (tom14)
     
-Here ${\sf T} u$ in    {eq}`tom14` is the *risk-sensitivity* operator of Jacobson and Whittle. XXXX 
-{cite}`Jacobson_73` and {cite}`Whittle_1990`. {cite}`Whittle_1981`
+Here ${\sf T} u$ in    {eq}`tom14` is the *risk-sensitivity* operator of  {cite}`Jacobson_73`, {cite}`Whittle_1981`,  and {cite}`Whittle_1990`. 
     
 It defines a *risk-sensitive* preference    ordering over plans $c$. 
     
@@ -288,6 +287,519 @@ In general, when $\theta < +\infty$, ${\sf T} u(c)$ depends on cumulants of all 
 These statements extend to cases with continuous probability distributions for $c$ and therefore for $u(c)$. 
 
 For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 = \mu_u, \kappa_2 = \sigma_u^2,$  and $\kappa_j = 0 \ \forall j \geq 3$, so ${\sf T} u(c) = \mu_u - \frac{1}{2 \theta} \sigma_u^2$, which becomes expected utility $\mu_u$ when $\theta^{-1} = 0$.
+
+
+
+
+
+## Inserts from rest of robustness chapter
+
+**Comparing preferences**
+
+
+For the special case in which $I=2$, $c_1=2, c_2=1$, $u(c) = \ln c$, and
+$\pi_1 =.5$, figures [1.3](#fig_new_figure1){reference-type="ref"
+reference="fig_new_figure1"} and
+[1.4](#fig_new_figure2){reference-type="ref"
+reference="fig_new_figure2"} depict the determination of worst-case
+probabilities under constraint and multiplier preferences, respectively.
+Figure [1.3](#fig_new_figure1){reference-type="ref"
+reference="fig_new_figure1"} graphs entropy as a function of
+$\hat \pi_1$. The figure also plots expected utility under the twisted
+probability distribution, namely,
+$\hat E u(c) = u(c_2) + \hat \pi_1 (u(c_1) - u(c_2))$, which is
+evidently a linear function of $\hat \pi_1$. The entropy constraint
+$\sum_{i=1}^I \pi_i m_i \log m_i \leq \eta$ implies a convex set
+$\hat \Pi_1$ of $\hat \pi_1$'s that constrains the malevolent agent who
+chooses $\hat \pi_1$, namely, the set of $\hat \pi_1$'s for which the
+entropy curve lies below the horizontal dotted line at an entropy level
+of $\eta = .25$. Unless $u(c_1) = u(c_2)$, the $\hat \pi_1$ that
+minimizes $\hat E u(c)$ is at the boundary of the set $\hat \Pi_1$.
+
+As a function of $\hat \pi_1 = m_1 \pi_1$, figure
+[1.4](#fig_new_figure2){reference-type="ref"
+reference="fig_new_figure2"} shows the function
+$\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ that is to be
+minimized in the multiplier problem. Evidently, from figure
+[1.4](#fig_new_figure2){reference-type="ref"
+reference="fig_new_figure2"} and also from formula
+[\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
+reference="eqn:Murphys_law"}, lower values of $\theta$ lead to lower,
+and thus more distorted, minimizing values of $\hat \pi_1$. The figure
+indicates how one can construct a Lagrange multiplier $\tilde \theta$
+associated with a given entropy constraint $\eta$ and a given
+consumption plan. Thus, to draw figure
+[1.4](#fig_new_figure2){reference-type="ref"
+reference="fig_new_figure2"}, we set the penalty parameter for
+multiplier preferences $\theta$ so that the minimizing $\hat \pi_1$
+equals the minimizing $\hat \pi_1$ for the constraint problem from
+figure [1.3](#fig_new_figure1){reference-type="ref"
+reference="fig_new_figure1"}.
+
+![Entropy (the curve) and expected utility
+$\hat E u(c) = u(c_2) + \hat \pi_1 (u(c_1) - u(c_2))$ (the straight
+line) as functions of $\hat \pi_1$ when
+$c_1 =2, c_2=1, u(c) = \ln c, \pi_1 = .5$ and $\eta=.25$. Values of
+entropy less than or equal to the horizontal dotted line at $.25$
+satisfy the entropy constraint.](new_figure1.eps){#fig_new_figure1
+height="2in"}
+
+![Entropy (the curve that is symmetric about .5), expected utility
+$\sum_{i=1}^I \pi_i m_i   u(c_i)$ (the straight line), and multiplier
+criterion $\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ (the
+asymmetric curved lines) as functions of $\hat \pi_1$ when $\pi_1 = .5$.
+For $c_1 =2, c_2=1, u(c) = \ln c$, two values of $\theta$ are depicted,
+$\theta=1$ (the higher asymmetric curve) and $\theta=.42$ (the lower
+asymmetric curve). The penalty parameter $\theta=.42$ also equals the
+Lagrange multiplier $\tilde \theta$ on the entropy constraint for the
+constraint preferences depicted in figure
+[1.3](#fig_new_figure1){reference-type="ref"
+reference="fig_new_figure1"} because the $\hat \pi_1$ that minimizes the
+asymmetric curve associated with penalty parameter $\theta=.42$ is the
+same $\hat \pi_1$ associated with the intersection of the entropy curve
+and the entropy constraint dashed vertical
+line.](new_figure2.eps){#fig_new_figure2 height="2in"}
+
+## Risk aversion and ambiguity aversion
+
+All five types of preferences use curvature of $u$ to express risk
+aversion. Constraint preferences express *ambiguity* with a positive
+$\eta$ that circumscribes an entropy ball around an approximating
+probability distribution $\pi$, and *ambiguity aversion* through
+minimization with respect to a likelihood ratio $m$. Multiplier
+preferences express ambiguity with a parameter $\theta<+\infty$ that
+penalizes deviations from the approximating model as measured by
+relative entropy, and they express ambiguity aversion with minimization
+over a probability distortion $m$. By penalizing minimization over the
+likelihood ratio $m$, a decrease in $\theta$ represents an *increase* in
+ambiguity (or uncertainty) about the specification of the baseline
+approximating model $\{\pi_i\}_{i=1}^I$.
+
+@hsmonograph refer to the minimization problem on the right side of
+([\[Pconstraint\]](#Pconstraint){reference-type="ref"
+reference="Pconstraint"}) as a [*constraint problem*]{.ul} and the
+minimization problem on the right side of
+([\[Pmultiplier\]](#Pmultiplier){reference-type="ref"
+reference="Pmultiplier"}) as a [*multiplier problem*]{.ul}.
+
+Formula [\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
+reference="eqn:Murphys_law"} asserts that the decision maker acts as if
+he is pessimistic relative to an approximating model $\pi$. It expresses
+what @bucklew2004 [p. 27] calls a statistical version of *Murphy's law*:
+
+> *The probability of anything happening is in inverse ratio to its
+> desirability.*
+
+The minimizing likelihood ratio $\hat m$ slants worst-case probabilities
+$\hat \pi$ exponentially to increase probabilities of events that give
+lower utilities. As expressed by the value function bound
+[\[eqn:bound1\]](#eqn:bound1){reference-type="eqref"
+reference="eqn:bound1"} to be displayed below in subsection
+[\[sec:bounds\]](#sec:bounds){reference-type="ref"
+reference="sec:bounds"}, the decision maker uses [pessimism]{.ul}
+instrumentally to protect himself against model uncertainty. The penalty
+parameter $\theta$ or the entropy level $\eta$ that determines the
+Lagrange multiplier $\tilde \theta$ controls how adversely he slants
+probabilities.
+
+A decision rule is said to be *undominated* in the sense of Bayesian
+decision theory if there exists a probability distribution $\pi$ for
+which it is optimal.[^3]
+
+A decision rule is said to be *admissible* if it is undominated.
+
+@hsmonograph use ex post Bayesian preferences to show that robust
+decision rules are undominated and therefore admissible.
+
+**Indifference curves**
+
+
+Indifference curves illuminate how concerns about robustness affect
+asset pricing and utility costs of fluctuations. For $I=2$, the slopes
+of the indifference curves for our five preference specifications are
+
+-   Expected utility:
+    $$\frac{d c_2}{d c_1} = - \frac{\pi_1}{\pi_2}\frac{u'(c_1)}{u'(c_2)}$$
+
+-   Constraint and *ex post* Bayesian preferences:
+    $$\frac{d c_2}{d c_1} = - \frac{\hat \pi_1}{\hat \pi_2}\frac{u'(c_1)}{u'(c_2)}$$
+    where $\hat \pi_1, \hat \pi_2$ are the minimizing probabilities
+    computed from the worst-case distortions
+    [\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
+    reference="eqn:Murphys_law_2"} from the constraint problem at
+    $(c_1, c_2)$.
+
+-   Multiplier and risk-sensitive preferences:
+    $$\frac{d c_2}{d c_1} = - \frac{\pi_1}{\pi_2} \frac{\exp(- u(c_1)/\theta)}{\exp (- u(c_2)/\theta)}    \frac{u'(c_1)}{u'(c_2)}$$
+
+When $c_1 > c_2$, the exponential twisting formula
+[\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
+reference="eqn:Murphys_law"} implies that $\hat \pi_1 < \pi_1$, which in
+turn implies that the indifference curves through $(c_1, c_2)$ for both
+constraint and multiplier preferences are flatter than the indifference
+curve associated with expected utility preferences. As we shall see in
+section
+[\[sec:state_price_static\]](#sec:state_price_static){reference-type="ref"
+reference="sec:state_price_static"}, this gives rise to higher estimates
+of prices of risk.
+
+For an example with $u(c) = \ln c$, $I=2$, and $\pi_1 = .5$, figures
+[1.5](#fig_indiff45){reference-type="ref" reference="fig_indiff45"} and
+[1.6](#fig_indiff_certequiv){reference-type="ref"
+reference="fig_indiff_certequiv"} show indifference curves for expected
+utility, multiplier, and constraint preferences. Evidently, for a given
+$\eta$ and a given $(c_1, c_2)$ off the 45 degree line, by solving
+equations
+[\[eqn:entropy_grand\]](#eqn:entropy_grand){reference-type="eqref"
+reference="eqn:entropy_grand"} and
+[\[eqn:entropy_grand_2\]](#eqn:entropy_grand_2){reference-type="eqref"
+reference="eqn:entropy_grand_2"}, we can find $\tilde \theta (\eta, c)$
+and $\tilde \eta(\theta,c)$ that make the indifference curves for the
+multiplier and constraint preferences be tangent to one another at a
+given allocation $c$. Figure [1.5](#fig_indiff45){reference-type="ref"
+reference="fig_indiff45"} shows indifference curves going through a
+point along the 45 degree line. For fixed $\eta$, a given plan $c$, and
+a utility function increasing in $c$, the worst case probabilities are
+$\hat \pi_1 < .5$ when $c_1 > c_2$ and $\hat \pi_1 > .5$ when
+$c_2 > c_1$. The discontinuity in the worst case $\hat \pi_1$ at the 45
+degree line accounts for the kink in the indifference curve for
+constraint preferences associated with a particular positive entropy
+$\eta$. Figure [1.6](#fig_indiff_certequiv){reference-type="ref"
+reference="fig_indiff_certequiv"} shows indifference curves for
+multiplier and constraint preferences through a point off the 45 degree
+line, namely, $(c(1),c(2)) = (3,1)$, at which $\eta$ and $\theta$ are
+set to render the indifference curves for constraint and multiplier
+preferences tangent.
+
+As we move along the (kinked) indifference curve for the constraint
+preferences for a given $\eta$, the worst-case probabilities remain
+constant, but the Lagrange multiplier $\tilde \theta$ on the entropy
+constraint $\sum_{i=1}^I m_i \log m_i \leq \eta$ varies with
+$(c_1, c_2)$. As we move along the (smooth) indifference curve for the
+multiplier preferences for a given penalty parameter $\theta$, the
+implied entropy $\tilde \eta$ from equation
+[\[eqn:entropy_grand_2\]](#eqn:entropy_grand_2){reference-type="eqref"
+reference="eqn:entropy_grand_2"} and the worst-case probabilities both
+change with $(c_1, c_2)$.
+
+In figure [1.6](#fig_indiff_certequiv){reference-type="ref"
+reference="fig_indiff_certequiv"}, for constraint preferences, there is
+a kink in the indifference curve. For ex post Bayesian preferences,
+there are effectively two sets of indifference curves depending on which
+side of the 45 degree line the $(c_1, c_2)$ endowment point sits. There
+are two sets of indifference curves because, while the worst-case
+probabilities differ above and below the 45 degree line, the idea of ex
+post Bayesian preferences is to use a *single* probability distribution
+to compute expected utilities for all consumption bundles.
+
+![Indifference curves for expected logarithmic utility (solid and
+smooth), multiplier (dotted and smooth), and constraint (kinked at 45
+degree line) preferences. The worst-case probability $\hat \pi_1 < .5$
+when $c_1 > c_2$ and $\hat \pi_1 > .5$ when
+$c_1 < c_2$.](indifference45.eps){#fig_indiff45 height="2in"}
+
+![Indifference curves through point $(c_1, c_2) = (3,1)$ for expected
+logarithmic utility (less curved smooth line), multiplier (more curved
+line), constraint (solid line kinked at 45 degree line), and *ex post*
+Bayesian (dotted lines) preferences. The worst-case probability
+$\hat \pi_1 < .5$ when $c_1 =3 > c_2 =1$ and $\hat \pi_1 > .5$ when
+$c_1=1 < c_2 = 3$.**Tom XXXX: shall we make the ex-post Bayesian lines
+darker?**](indifference3.eps){#fig_indiff_certequiv height="2in"}
+
+State price deflators[\[sec:state_price_static\]]{#sec:state_price_static label="sec:state_price_static"}
+---------------------------------------------------------------------------------------------------------
+
+Concerns about model uncertainty boost prices of risk that are embedded
+in state-price deflators. With complete markets, let $q_i$ be the price
+of consumption in state $i$. The budget set of a representative consumer
+having endowment $\bar c = \{\bar c_i\}_{i=1}^I$ is expressed by
+$\sum_{i}^I q_i (c_i - \bar c_i) \leq 0$. When the representative
+consumer has multiplier preferences, the state prices are
+$$\label{eqn:state_price}
+q_i = \pi_i \hat m_i u'(\bar c_i) = \pi_i \Biggl(\frac{\exp(-u(\bar c_i)/\theta)}{\sum_j  \pi_j \exp(-u(\bar c_j)/\theta)}\Biggr) u'(\bar c_i) .$$
+The worst-case likelihood ratio $\hat m_i$ operates to increase prices
+$q_i$ in relatively low utility states $i$. State prices agree under
+multiplier and constraint preferences when $\eta$ and $\theta$ are
+adjusted according to
+[\[eqn:entropy_grand\]](#eqn:entropy_grand){reference-type="eqref"
+reference="eqn:entropy_grand"} or
+[\[eqn:entropy_grand_2\]](#eqn:entropy_grand_2){reference-type="eqref"
+reference="eqn:entropy_grand_2"} to make the indifference curves tangent
+at the endowment point. See figure
+[1.7](#fig_indifference5){reference-type="ref"
+reference="fig_indifference5"}.
+
+Because budget constraints are linear, asset prices are identical under
+multiplier and constraint preferences for which $\theta$ and $\eta$ are
+adjusted to verify
+[\[eqn:entropy_grand\]](#eqn:entropy_grand){reference-type="eqref"
+reference="eqn:entropy_grand"} or
+[\[eqn:entropy_grand_2\]](#eqn:entropy_grand_2){reference-type="eqref"
+reference="eqn:entropy_grand_2"} at a given consumption endowment
+$\{c_i\}_{i=1}^I$. However, as we note next, though they are tangent at
+the endowment point, the fact that indifference curves differ for
+multiplier and constraint preferences means that certainty equivalent
+consumption compensations of the kind that @lucas1987 [@LucasAEAPres],
+@robustpi, @tallarini2000, and @bhs2007 used to measure the costs of
+business cycles must differ. We discuss such applications in chapter
+[\[sec:asset_pricing\]](#sec:asset_pricing){reference-type="ref"
+reference="sec:asset_pricing"}.
+
+![Budget line and indifference curves through point $(c_1, c_2) = (3,1)$
+for expected logarithmic utility, multiplier, constraint (kinked at 45
+degree line), and *ex post* Bayesian (dotted lines) preferences. **Tom
+XXXX: remove the legend in this graph, or else add more elements to
+it.**](indifference5.eps){#fig_indifference5 height="2in"}
+
+#### Consumption-equivalent measures of uncertainty aversion
+
+For each of our five types of preferences, figure
+[1.8](#fig_indifference4){reference-type="ref"
+reference="fig_indifference4"} allows us to construct a certainty
+equivalent point $(c^*, c^*)$ on the 45 degree line that renders the
+consumer indifferent between it and the risky point
+$(c(1), c(2)) = (3,1)$. Figure
+[1.8](#fig_indifference4){reference-type="ref"
+reference="fig_indifference4"} indicates that the certainty equivalent
+level $c^*$ is higher for the consumer with expected utility preferences
+than for the consumer with multiplier preferences, and that it is higher
+for the consumer with multiplier preferences than for the consumer with
+constraint preferences. The gap between these certainty equivalents
+measures the uncertainty aversion of the multiplier preferences or
+constraint preferences consumer. The gap between the expected value
+$.5 c(1) + .5 c(2)$ at point A and the certainty equivalent for the
+expected utility decision maker at point B is a measure of his risk
+aversion. The gap between points $B$ and $C$ measures the multiplier
+preference consumer's aversion to model uncertainty. The gap between
+points B and D measures the constraint preference consumer's aversion to
+model uncertainty.[^4]
+
+![Indifference curves through point $(c_1,c_2)=(3,1)$ for expected
+logarithmic utility, multiplier, constraint (kinked at 45 degree line),
+and *ex post* Bayesian (dotted lines) preferences. Certainty equivalents
+for risk-neutrality (point A), expected utility with log preferences
+(point B), multiplier preferences (point C), and constraint preferences
+(point D).](indifference4.eps){#fig_indifference4 height="2in"}
+
+Iso-utility and iso-entropy curves and expansion paths
+------------------------------------------------------
+
+Figures [1.9](#fig_num2){reference-type="ref" reference="fig_num2"} and
+[1.10](#fig_num4){reference-type="ref" reference="fig_num4"} show
+iso-entropy and iso-utility lines for the special case in which $I = 3$,
+$\pi_1 = .3, \pi_2 = .4$, and the utility function is
+$u(c)= \frac{c^{1-\alpha}}{1-\alpha}$ with $\alpha =0$ and $\alpha =3$,
+respectively, for the fixed plan $c(1) = 1, c(2) =2 , c(3) =3$. The
+iso-utility lines are the level curves of
+$\hat \pi_1 c_1 + \hat \pi_2 c_2 + (1-\hat \pi_1 - \hat \pi_2) c_3$ and
+are linear in $(\hat \pi_1, \hat \pi_2)$. This is what it means to say
+'expected utility is linear in probabilities.' Both figures plot the
+locus of points of tangency between the iso-entropy and the iso-utility
+curves that is traced out as one varies $\theta^{-1}$ in the interval
+$[0, 2]$. While the iso-entropy lines are identical in the two figures,
+these 'expansion paths' differ because the utility functions differ,
+meaning that for a given $\theta$ and $(c_1, c_2, c_3)$ triple, the
+worst-case probabilities $\hat \pi_i(\theta) =
+ \pi_i \frac{\exp(-u(c_i)/\theta )} {E\exp(-u(c)/\theta )}$ differ as we
+vary $\theta$, causing the associated entropies to differ.
+
+![Iso-entropy and iso-expected utility,
+$u(c) = \frac{c^{1-\alpha}}{1-\alpha}$, $\alpha = 0$. The 'expansion
+path', or locus of points of tangency between the iso-entropy and the
+iso-utility curves, shows the worst-case probabilities as $\theta^{-1}$
+varies over the interval $[0, 2]$. Entropy increases and expected
+utility decreases as we move northwest along an expansion
+path.](fig_4_0.eps){#fig_num2 height="2in"}
+
+![Iso-entropy and iso-expected utility,
+$u(c) = \frac{c^{1-\alpha}}{1-\alpha}$, $\alpha = 3$. The 'expansion
+path', or locus of points of tangency between the iso-entropy and the
+iso-utility curves, shows the worst-case probabilities as $\theta^{-1}$
+varies over the interval $[0, 2]$. Entropy increases and expected
+utility decreases as we move northwest along an expansion
+path.](fig_4_3.eps){#fig_num4 height="2in"}
+
+[Tom XXXXX: do a graph for the Gaussian case. Do the mean-variance
+portfolio case with normal distribution and entropy. These are the notes
+from Paris conference.]{style="color: red"}
+
+Bounds on expected utility[\[sec:bounds\]]{#sec:bounds label="sec:bounds"}
+--------------------------------------------------------------------------
+
+Suppose that a decision maker wants a lower bound on expected utility
+$\sum_{i=1}^I  \hat \pi_i u(c_i)$ that is satisfied for *any*
+distribution $\hat \pi$ with relative entropy less than or equal to
+$\eta$. An attractive feature of multiplier and constraint preferences
+is that they carry with them such a bound.
+
+To show this, it is useful to collect some findings in the following
+string of inequalities associated with multiplier preferences:
+$$\begin{aligned}
+{\sf T}_\theta u(c) & = & -\theta \log \sum_{i=1}^I \exp\Biggl(\frac{-u(c_i)}{\theta}\Biggr) \pi_i \nonumber \\
+    & = & \sum_{i=1}^I m_i^* \pi_i \bigl( u(c_i) + \theta \log m_i^* \bigr) \nonumber \\
+    & \leq & \sum_{i=1}^I m_i \pi_i u(c_i) + \theta \sum_{i=1}^i m_i \log m_i \pi_i \end{aligned}$$
+where $m_i^* \propto \exp \Bigl( \frac{- u(c_i)}{\theta} \Bigr)$ are the
+worst-case distortions to probabilities. The inequality in the last line
+just asserts that minimizers minimize. Therefore, we have the following
+useful bound:
+$$\label{eqn:bound1} \sum_{i=1}^I m_i \pi_i u(c_i ) \geq {\sf T}_\theta u(c) - \theta \sum_{i=1}^I \pi_i m_i \log m_i .$$
+The left side is expected utility under the probability distribution
+$\{ m_i \pi_i\}$. The right side is a *lower bound* on expected utility
+under *all* distributions expressed as an affine function of relative
+entropy $\sum_{i=1}^I \pi_i m_i \log m_i$. The bound is attained for
+$m_i =  m_i^* \propto \exp \Bigl(\frac{- u (c_i)}{\theta} \Bigr)$. The
+*intercept* in the bound is the risk-sensitive criterion
+${\sf T}_\theta u(c)$, while the *slope* is the penalty parameter
+$\theta$. Lowering $\theta$ does two things: (i) it lowers the intercept
+${\sf T}_\theta u(c)$, which makes the bound less informative for small
+values of entropy; and (ii) it lowers the absolute value of the slope,
+which makes the bound more informative for larger values of relative
+entropy $\sum_{i=1}^I \pi_i m_i \log m_i$.
+
+In figure [1.11](#fig1_num5){reference-type="ref"
+reference="fig1_num5"}, expected utility is on the co-ordinate axis
+while entropy is on the ordinate axis. The *lower* curved line depicts
+expected utility under the worst-case model associated with each value
+of entropy $\eta$ recorded on the ordinate axis, i.e., it is
+$\sum_{i=1}^I \pi_i \tilde m_i (\tilde \theta(c,\eta)) u(c_i)$, where
+$\tilde m_i (\tilde \theta(\eta)) \propto \exp \Bigl(\frac{-u(c_i)}{\tilde \theta}\Bigr)$
+and $\tilde \theta$ is the Lagrange multiplier associated with the
+constraint that entropy cannot exceed the value on the ordinate axis.
+The *higher* curved line depicts expected utility under the *best*-case
+model indexed by the value of the Lagrange multiplier $\check \theta >0$
+associated with each value of entropy less than or equal to $\eta$
+recorded on the ordinate axis, i.e., it is
+$\sum_{i=1}^I \pi_i \check m_i (\check \theta(\eta)) u(c_i)$ where
+$\check m_i (\check \theta(c,\eta)) \propto \exp \Bigl(\frac{u(c_i)}{\check \theta}\Bigr)$.
+(Here $\check \theta$ is the Lagrange multiplier associated with
+'max-max' expected utility.) Points between these two curves are
+possible values of expected utility for some distribution with entropy
+less than or equal to the value $\eta$ on the ordinate axis. The
+straight line depicts the right side of inequality
+[\[eqn:bound1\]](#eqn:bound1){reference-type="eqref"
+reference="eqn:bound1"} for a particular value of the penalty parameter
+$\theta$. As noted, when one lowers $\theta$, the intercept
+${\sf T}_\theta u(c)$ and the absolute value of the slope both decrease.
+Thus, as $\theta$ is lowered, ${\sf T}_\theta u(c)$ becomes a more
+conservative estimate of expected utility under the approximating model
+$\pi$. However, as $\theta$ is lowered, the robustness bound
+[\[eqn:bound1\]](#eqn:bound1){reference-type="eqref"
+reference="eqn:bound1"} becomes more informative for sufficiently large
+values of entropy. The slope of straight line depicting a bound is
+$-\theta$ and the projection of the point of tangency with the curved
+depicting the lower bound of expected utility is the entropy associated
+with that $\theta$ when it is interpreted as a Lagrange multiplier on
+the entropy constraint in the constraint problem . This is an
+application of the envelope theorem.
+
+![The upper curved line is the best-case expected utility
+$E \check m(\check \theta(c,\eta)) u (c)$ as a function of entropy
+$\eta = \sum_{i=1}^I \pi_i m_i \log m_i$, where $\check m$ is the
+likelihood ratio associated with the best-case model. The lower curved
+line is the worst-case expected utility
+$\sum_{i=1}^I \pi_i \tilde m_i (\tilde \theta(c,\eta)) u(c_i)$ as a
+function of entropy. Expected utilities for all other densities having
+the same entropy are between the two curved lines. The straight line
+depicts the lower bound on expected utility
+${\sf T}_\theta u(c) - \theta \sum_{i=1}^I \pi_i m_i \log m_i$
+associated with penalty parameter $\theta$. **Tom XXXXX: add statements
+of probabilities and $c$.**](fig_1_3.eps){#fig1_num5 height="2.5in"}
+
+### To be added
+
+**Add graphs from Tom's microsoft notes file, SMU Jan 27.**
+
+Why entropy?
+------------
+
+Beyond the helpful mathematical fact that it leads directly to
+convenient exponential twisting formulas
+[\[eqn:Murphys_law_2\]](#eqn:Murphys_law_2){reference-type="eqref"
+reference="eqn:Murphys_law_2"} and
+[\[eqn:Murphys_law\]](#eqn:Murphys_law){reference-type="eqref"
+reference="eqn:Murphys_law"} for worst-case probability distortions,
+there are two related justifications for using entropy to measure
+discrepancies between probability distribution. One arises from the role
+of entropy in statistical tests for discriminating between models. The
+other comes from axioms.
+
+#### Entropy and statistical detection
+
+Robust control theory starts with a decision maker who has constructed a
+good baseline approximating model whose free parameters he has estimated
+to fit historical data well. The decision maker recognizes that actual
+outcomes might be generated by one of a vast number of other models that
+fit the historical data nearly as well as his. Therefore, he wants to
+evaluate outcomes under a set of alternative models that are plausible
+in the sense of being statistically close to his model. He uses relative
+entropy to quantify what he means by close.
+
+@ahs2003 and @hs2009 describe links between entropy and large deviations
+bounds on test statistics for discriminating between models, in
+particular, statistics that describe the probability of making an error
+in applying a likelihood ratio test to decide whether model A or model B
+generated a data record of length $T$. For a given sample size, an
+informative bound on the detection error probability is a function of
+the entropy parameter $\eta$ in constraint preferences. @hsw2002 and
+@ahs2003 use detection error probabilities to calibrate reasonable
+levels of $\eta$.
+
+As we describe in chapter
+[\[sec:detection_probs\]](#sec:detection_probs){reference-type="ref"
+reference="sec:detection_probs"}, @ahs2003 and @hsmonograph [ch. 9] also
+use detection error probabilities to calibrate reasonable values of the
+penalty parameter $\theta$ in multiplier preferences. For a fixed sample
+size and a fixed $\theta$, they would calculate the worst-case
+$\hat m_i(\theta)$, an associated entropy $\eta(\theta)$, and an
+associated detection error probability. In this way they build up a
+detection error probability as a function of $\theta$. They then invert
+this function to calibrate $\theta$ to deliver a reasonable detection
+error probability.
+
+To indicate outcomes from this approach, figure
+[1.12](#fig_BHS_plot){reference-type="ref" reference="fig_BHS_plot"}
+plots the histogram for U.S. quarterly consumption growth along with a
+representative agent's approximating density and a worst-case density
+that @bhs2007 show imply high measured market prices of risk even when a
+representative consumer has the unit coefficient of relative risk
+aversion associated with a logarithmic one-period utility function. The
+density for the approximating model is
+$\log c_{t+1} - \log c_t = \mu + \sigma_c \epsilon_{t+1}$ where
+$\epsilon_{t+1} \sim {\cal N}(0,1)$ and $\mu$ and $\sigma_c$ are
+estimated by maximum likelihood from the U.S. quarterly data in the
+histogram over the period 1948.I-2006.IV. The consumer's value function
+under logarithmic utility implies that the worst-case model is
+$\log c_{t+1} - \log c_t = (\mu + \sigma_c w)  + \sigma_c \tilde \epsilon_{t+1}$
+where $\{\tilde \epsilon_{t+1}\}$ is also a normalized Gaussian random
+sequence and where $w$ is calculated by setting a detection error
+probability to $.05$. The worst-case model in figure
+[1.12](#fig_BHS_plot){reference-type="ref" reference="fig_BHS_plot"}
+appears to fit the histogram nearly as well as the approximating model.
+
+![Histogram and maximum likelihood and worst-case densities for U.S.
+quarterly consumption growth for the period 1948.I-2006.IV.
+](BHSplot.eps){#fig_BHS_plot height="2in"}
+
+#### Axiomatic justifications
+
+Multiplier and constraint preferences are both special cases of what
+@MMR2006a [@MMR2006b] call variational preferences. They provide an
+axiomatic foundation for variational preferences and describe how they
+express ambiguity aversion. Constraint preferences are particular
+instances of the multiple priors model of [@gilboaschmeidler]. @TSAxioms
+and @CMMM2008 provide axiomatic foundations for multiplier
+preferences.[^5] In situations that express uncertainty about the
+distributions of hidden state variables, @hs2005d link multiplier
+preferences to the smooth ambiguity formulation of @kmm [@kmm2006],
+while @CMMM2008 show that the @hansensargent01 multiplier preferences
+used here are the only preferences that are both variational and
+*smooth* in the sense of @kmm. Specifically, @CMMM2008 show that smooth
+variational preferences use relative entropy to measure discrepancies
+between distributions.
+
+
+
+## End of inserts from robustness chapter
 
 
 
