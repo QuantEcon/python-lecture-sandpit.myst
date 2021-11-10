@@ -9,6 +9,4 @@ sections:
 - file: back_prop
 - file: markov_switching_lss
 - file: five_preferences
-- file: five_pref_wgraphs
-- file: robustness_graphs_chapter
 - file: zreferences
