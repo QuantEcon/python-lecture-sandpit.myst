@@ -13,7 +13,11 @@ kernelspec:
 
 # Five Preference Orderings
 
-This lecture describes static representations of five classes of preferences over risky prospects. All  incorporate **risk aversion**, meaning displeasure from  risks governed by  well known probability distributions.  Two of them also incorporate  **uncertainty aversion**, meaning  dislike of not knowing a  probability distribution.
+This lecture describes static representations of five classes of preferences over risky prospects. 
+
+All  incorporate **risk aversion**, meaning displeasure from  risks governed by  well known probability distributions. 
+
+Two of them also incorporate  **uncertainty aversion**, meaning  dislike of not knowing a  probability distribution.
 
 We begin with some that we'll use to create some graphs.
 
@@ -32,8 +36,10 @@ from scipy.io import loadmat
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from numba import njit
+```
 
-
+```{code-cell} ipython3
+:tags: [hide-input]
 # Plotting parameters
 %matplotlib inline
 %config InlineBackend.figure_format='retina'
@@ -55,6 +61,7 @@ mpl.rcParams['font.size'] = text_size
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Useful functions
 @njit
 def ent(π, π_hat):
@@ -138,7 +145,7 @@ $$
 $$
 
 
-**Remark** The likelihood ratio $m_i$ is a discrete random variable. For any discrete random variable $\{x_i\}_{i=1}^I$, the expected  value under the $\hat \pi_i$ distribution can be represented as the expected  value of  $x_i$ times the `shock'  $m_i$ under the $\pi$ distribution:
+**Remark:** The likelihood ratio $m_i$ is a discrete random variable. For any discrete random variable $\{x_i\}_{i=1}^I$, the expected  value under the $\hat \pi_i$ distribution can be represented as the expected  value of  $x_i$ times the `shock'  $m_i$ under the $\pi$ distribution:
 $ \hat E x = \sum_{i=1}^I x_i \hat \pi_i = \sum_{i=1}^I m_i x_i  \pi_i = E m x ,$ where $\hat E$ is the mathematical  expectation under the $\hat \pi$ distribution and $E$ is the expectation under the $\pi$ distribution. Evidently, 
 
 $$ 
@@ -160,12 +167,23 @@ However, when $\pi_1=0$ or $\pi_1=1$, entropy  is infinite.
 
 
 
-### Figure 1
+### Plots of Relative Entropy
 
-- We remove the dashed line given that it corresponds to the threshold level of entropy $\eta$ in figure 2.3 and is not mentioned up to this point.
-- The figure doesn't contain much information: we propose to vary both $\hat{\pi}_1$ and $\pi_1$ and create an entropy heat map. We create a figure for both entropy and the logarithm of entropy below.
+In the three figures below, we plot entropy from several perspectives.
+
+The first figure plots  entropy as a function of $\hat \pi_1$ when $I=2$ and $\pi_1 = .5$. 
+ 
+When $\pi_1 \in (0,1)$, entropy is finite for both $\hat \pi_1 = 0$  and $\hat \pi_1 = 1$ because $\lim_{x\rightarrow 0} x \log x = 0$  
+ 
+ 
+However, when $\pi_1=0$ or $\pi_1=1$, entropy  is infinite.
+
+The heat maps in  second and third figures are more informative because they vary both $\hat{\pi}_1$ and $\pi_1$ and create  entropy heat maps.
+
+We plot  both entropy and the logarithm of entropy.
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Specify baseline probability vector `π`
 π = np.array([0.5, 0.5])
 
@@ -190,6 +208,8 @@ for i in range(π_hat_0_vals.size):  # Loop over all possible values for `π_hat
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
+:tags: [hide-input]
 plt.figure(figsize=(5, 3))
 plt.plot(π_hat_0_vals, ent_vals, color='blue');
 plt.ylabel(r'entropy ($\pi_{1}=%.2f$)' % π[0] );
@@ -198,6 +218,8 @@ plt.show()
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
+:tags: [hide-input]
 # Use same grid for `π_0_vals` as for `π_hat_0_vals` 
 π_0_vals = π_hat_0_vals.copy() 
 
@@ -219,6 +241,7 @@ for i in range(π_0_vals.size):  # Loop over all possible values for `π_0`
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 x, y = np.meshgrid(π_0_vals, π_hat_0_vals)
 
 plt.figure(figsize=(10, 8))
@@ -231,6 +254,7 @@ plt.show()
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Check the point (0.01, 0.9)
 π = np.array([0.01, 0.99])
 π_hat = np.array([0.9, 0.1])
@@ -238,6 +262,7 @@ ent(π, π_hat)
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 plt.figure(figsize=(10, 8))
 plt.pcolormesh(x, y, np.log(ent_vals_mat.T), shading='gouraud', cmap='seismic')
 plt.colorbar()
@@ -295,7 +320,7 @@ $$
 \sum_{i=1}^I \pi_i m_i = 1 .
 $$ (tom4)
 
-In {eq}`tom3`,  $\eta \geq 0$ defines an  entropy ball of probability distributions $\hat \pi = m \pi$  surrounding a baseline distribution $\pi$.
+In {eq}`tom3`,  $\eta \geq 0$ defines an  entropy ball of probability distributions $\hat \pi = m \pi$  that surround a baseline distribution $\pi$.
 
 As noted earlier,     $\sum_{i=1}^I m_i\pi_i  u(c_i)$ is the expected value of $u(c)$ under a twisted probability distribution $\{\hat \pi_i\}_{i=1}^I = \{m_i \pi_i\}_{i=1}^I$.
 
@@ -309,8 +334,9 @@ $$
 L = \sum_{i=1}^I m_i \pi_i u(c_i) +  \tilde \theta\bigl[\sum_{i=1}^I \pi_i m_i \log m_i - \eta \bigr]
 $$ (tom5)
 
-where $\tilde \theta \geq 0$ is a Lagrange multiplier associated     with the entropy constraint. Subject to the additional constraint
-that $\sum_{i=1}^I m_i  \pi_i =1$, we want to minimize {eq}`tom5` with respect to     $\{m_i\}_{i=1}^I$ and to maximize it with respect to   $\tilde \theta$.
+where $\tilde \theta \geq 0$ is a Lagrange multiplier associated     with the entropy constraint.
+
+Subject to the additional constraint that $\sum_{i=1}^I m_i  \pi_i =1$, we want to minimize {eq}`tom5` with respect to     $\{m_i\}_{i=1}^I$ and to maximize it with respect to   $\tilde \theta$.
 
 The minimizing probability distortions (likelihood ratios) are
 
@@ -342,7 +368,7 @@ For a fixed $\eta$, the $\tilde \theta$ that solves equation {eq}`tom7` is    ev
 
 With  $\tilde \theta(c;\eta)$ in hand we can obtain worst-case  probabilities as functions $\pi_i\tilde m_i(c;\eta)$ of $\eta$.
 
-The indirect (expected) utility function under constraint preferences is
+The **indirect (expected) utility function** under constraint preferences is
 
 $$
 \sum_{i=1}^I   \pi_i \tilde m_i(c_i;\eta) u(c_i) = \sum_{i=1}^I  \pi_i \left[\frac{\exp(-\tilde \theta^{-1} u(c_i))}
@@ -415,16 +441,15 @@ $$ (tom20)
 
 to find an entropy level  $\tilde \eta (c; \theta)$ associated with multiplier preferences with penalty parameter $\theta$ and allocation $c$.
 
-For a fixed $\theta$, the $\tilde \eta$ that solves this equation is a function
-of the consumption plan $c$
+For a fixed $\theta$, the $\tilde \eta$ that solves equation {eq}`tom20` is a function of the consumption plan $c$
 
-The forms of expressions {eq}`tom6`  and {eq}`tom12` are identical, but the Lagrange multiplier $\tilde \theta$ appears in {eq}`tom6`,  while the penalty parameter or multiplier $\theta$ appears in {eq}`tom12`.
+The forms of expressions {eq}`tom6`  and {eq}`tom12` are identical, but the Lagrange multiplier $\tilde \theta$ appears in {eq}`tom6`,  while the penalty parameter $\theta$ appears in {eq}`tom12`.
 
 Formulas {eq}`tom6`  and {eq}`tom12` show that worst-case probabilities are **context specific** in the sense that they depend  on both the utility function $u$ and the consumption plan $c$.
 
 If we add $\theta$ times entropy under the worst-case model to
 expected utility under the worst-case model, we find that the
-**indirect utility function** under multiplier preferences is
+**indirect expected utility function** under multiplier preferences is
 
 $$
     -  \theta \log \left(\sum_{j=1}^I \exp(- \theta^{-1} u(c_j) ) \pi_j \right) .
@@ -438,7 +463,7 @@ $$
 {\sf T} u(c) \doteq - \theta \log \sum_{i=1}^I \pi_i \exp\bigl(- u(c_i)/\theta  \bigr).
 $$ (tom14)
     
-Here ${\sf T} u$ in    {eq}`tom14` is the *risk-sensitivity* operator of  {cite}`Jacobson_73`, {cite}`Whittle_1981`,  and {cite}`Whittle_1990`. 
+Here ${\sf T} u$ in    {eq}`tom14` is the **risk-sensitivity** operator of  {cite}`Jacobson_73`, {cite}`Whittle_1981`,  and {cite}`Whittle_1990`. 
     
 It defines a **risk-sensitive** preference    ordering over plans $c$. 
     
@@ -465,6 +490,7 @@ ${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) an
 - We add a new figure (see below for description) to provide additional insight into the workings of $\textbf{T}$
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 c_bundle = np.array([2., 1.])  # Consumption bundle
 θ_vals = np.array([100, 0.6])  # Array containing the different values of θ
 u = utility_function_factory(1.)  # Utility function
@@ -489,6 +515,7 @@ for i in range(θ_vals.size):  # Loop over θ values
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 plt.figure(figsize=(10, 8))
 plt.plot(π_0_vals, Tuc_vals[0], label=r'$\theta=100$', color='blue');
 plt.plot(π_0_vals, Tuc_vals[1], label=r'$\theta=0.6$', color='red');
@@ -510,6 +537,7 @@ Finally, $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\rig
 Relative to the expected utility case, the distance between the green dot and the orange line reflects the additional adjustment.
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameter values
 θ= 0.8
 π = np.array([0.5, 0.5])
@@ -545,6 +573,7 @@ third_trnsf_u_c_bundle = -θ * np.log(second_trnsf_u_c_bundle)
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), sharex=True, sharey=True)
 
 ax1.plot(c_grid, u_c_grid, label=r'$\log\left(c\right)$', color='blue')
@@ -643,14 +672,10 @@ For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 =
 
 
 For the special case in which $I=2$, $c_1=2, c_2=1$, $u(c) = \ln c$, and
-$\pi_1 =.5$, figures [1.3](#fig_new_figure1){reference-type="ref"
-reference="fig_new_figure1"} and
-[1.4](#fig_new_figure2){reference-type="ref"
-reference="fig_new_figure2"} depict the determination of worst-case
+$\pi_1 =.5$, the following two figures depict the determination of worst-case
 probabilities under constraint and multiplier preferences, respectively.
 
-Figure [1.3](#fig_new_figure1){reference-type="ref"
-reference="fig_new_figure1"} graphs entropy as a function of
+The first figure  graphs entropy as a function of
 $\hat \pi_1$.
 
 The figure also plots expected utility under the twisted
@@ -669,15 +694,8 @@ Unless $u(c_1) = u(c_2)$, the $\hat \pi_1$ that
 minimizes $\hat E u(c)$ is at the boundary of the set $\hat \Pi_1$.
 
 
-HERE IS FIGURE 1.3
-
-
-## Figure 2.3
-
-- Instead of a dashed line, we use an area fill to visualize the zone where the entropy constraint is satisfied
-- We added a dot to represent the solution to the optimization problem
-
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameter 
 η = 0.25
 π = np.array([0.5, 0.5])
@@ -701,6 +719,7 @@ root = optimize.root_scalar(lambda x: ent(π, np.array([x, 1-x])) - η, bracket=
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 plt.figure(figsize=(12, 8))
 plt.plot(π_hat_0_vals, E_hat_uc, label=r'$\hat{E}u\left(c\right)$', color='blue')
 plt.fill_between(π_hat_0_vals, η_line, alpha=0.3, label=r'$\mathrm{ent}\left(\pi,\hat{\pi}\right)\leq\eta$',
@@ -714,15 +733,12 @@ plt.legend();
 
 
 
-As a function of $\hat \pi_1 = m_1 \pi_1$, figure
-[1.4](#fig_new_figure2){reference-type="ref"
-reference="fig_new_figure2"} shows the function
+As a function of $\hat \pi_1 = m_1 \pi_1$, the next  figure
+shows the function
 $\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ that is to be
 minimized in the multiplier problem.
 
-Evidently, from figure
-[1.4](#fig_new_figure2){reference-type="ref"
-reference="fig_new_figure2"} and also from formula {eq}`tom12`, lower values of $\theta$ lead to lower,
+Evidently, from this figure and also from formula {eq}`tom12`, lower values of $\theta$ lead to lower,
 and thus more distorted, minimizing values of $\hat \pi_1$. 
 
 The figure
@@ -730,44 +746,20 @@ indicates how one can construct a Lagrange multiplier $\tilde \theta$
 associated with a given entropy constraint $\eta$ and a given
 consumption plan. 
 
-Thus, to draw figure
-[1.4](#fig_new_figure2){reference-type="ref"
-reference="fig_new_figure2"}, we set the penalty parameter for
+Thus, to draw the figure, we set the penalty parameter for
 multiplier preferences $\theta$ so that the minimizing $\hat \pi_1$
 equals the minimizing $\hat \pi_1$ for the constraint problem from
-figure [1.3](#fig_new_figure1){reference-type="ref"
-reference="fig_new_figure1"}.
+the previous figure.
 
-Entropy (the curve) and expected utility
-$\hat E u(c) = u(c_2) + \hat \pi_1 (u(c_1) - u(c_2))$ (the straight
-line) as functions of $\hat \pi_1$ when
-$c_1 =2, c_2=1, u(c) = \ln c, \pi_1 = .5$ and $\eta=.25$. Values of
-entropy less than or equal to the horizontal dotted line at $.25$
-satisfy the entropy constraint.](new_figure1.eps){#fig_new_figure1
-height="2in"}
-
-Entropy (the curve that is symmetric about .5), expected utility
-$\sum_{i=1}^I \pi_i m_i   u(c_i)$ (the straight line), and multiplier
-criterion $\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ (the
-asymmetric curved lines) as functions of $\hat \pi_1$ when $\pi_1 = .5$.
-For $c_1 =2, c_2=1, u(c) = \ln c$, two values of $\theta$ are depicted,
-$\theta=1$ (the higher asymmetric curve) and $\theta=.42$ (the lower
-asymmetric curve). 
 
 The penalty parameter $\theta=.42$ also equals the
 Lagrange multiplier $\tilde \theta$ on the entropy constraint for the
-constraint preferences depicted in figure
-[1.3](#fig_new_figure1){reference-type="ref"
-reference="fig_new_figure1"} because the $\hat \pi_1$ that minimizes the
+constraint preferences depicted in the previous figure
+because the $\hat \pi_1$ that minimizes the
 asymmetric curve associated with penalty parameter $\theta=.42$ is the
 same $\hat \pi_1$ associated with the intersection of the entropy curve
 and the entropy constraint dashed vertical
-line.](new_figure2.eps){#fig_new_figure2 height="2in"}
-
-
-Here is figure  1.4 aka 2.4
-
-
+line.
 
 
 ## Figure 2.4
@@ -775,6 +767,7 @@ Here is figure  1.4 aka 2.4
 - We add dots for problem solutions
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameter values
 θ_vals = np.array([0.42, 1.])
 
@@ -795,6 +788,7 @@ for i in range(θ_vals.size):  # Loop over θ values
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 plt.figure(figsize=(12, 8))
 
 # Expected utility values
@@ -970,6 +964,7 @@ Guess: the method fails because the derivative of the objective doesn't exist fo
 **Note 2:** Algorithm is tricky to get to work properly for all values of $c_{1}$. In particular, parameters were chosen with [graduate student descent](https://sciencedryad.wordpress.com/2014/01/25/grad-student-descent/).
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 def multiplier_criterion_factory(θ, π, u):
     """
     Return a function to compute the multiplier preferences objective function parametrized 
@@ -1083,6 +1078,7 @@ def solve_root_problem(problem, u_bar, c_1_grid, method='bisect', bracket=[0.5, 
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameters
 c_bundle = np.array([1., 1.])  # Consumption bundle
 u_inv = lambda x: np.exp(x)  # Inverse of the utility function
@@ -1123,6 +1119,7 @@ for i in range(c_1_grid.size):
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 f, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8), sharex=True)
 
 ax1.plot(c_1_grid, c_1_grid, '--', color='black')
@@ -1199,6 +1196,7 @@ HERE IS FIGURE 1.6, 2.6
 ## Figure 2.6
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameters
 θ = 2.
 η = 0.036
@@ -1240,6 +1238,7 @@ for i in range(c_1_grid.size):
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 f, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8), sharex=True)
 
 ax1.plot(c_1_grid, c_1_grid, '--', color='black')
@@ -1320,6 +1319,7 @@ HERE IS FIGURE  1.7, 2.7
 ## Figure 2.7
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameters
 θ = 2.
 η = 0.036
@@ -1342,6 +1342,7 @@ budget_constraint = slope * c_1_grid + intercept
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 plt.figure(figsize=(10, 8))
 
 plt.plot(c_1_grid, c_1_grid, '--', color='black')
@@ -1406,6 +1407,7 @@ HERE IS FIGURE 1.8, 2.8
 ## Figure 2.8
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Compute values for the certainty equivalent line 
 intercept = 4.  # Intercept value
 mask = (1. <= c_1_grid) & (c_1_grid <= 3.)  # Mask to keep only data between c_1=1 and c_1=3
@@ -1430,6 +1432,7 @@ fp_cons = optimize.fixed_point(func_approx, x0, args=([c_2_grid_cons]))
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 plt.figure(figsize=(8, 8))
 
 plt.plot(c_1_grid, c_1_grid, '--', color='black')
@@ -1507,6 +1510,7 @@ HERE IS FIGURE  1.9, 2.9
 - Comment: This figure only uses half of the available space which is inefficient.
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Plotting functions
 def make_segments(x, y):
     '''
@@ -1548,6 +1552,7 @@ def colorline(x, y, z=None, cmap=plt.get_cmap('copper'), norm=plt.Normalize(0.0,
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameters
 π_1 = 0.3
 π_2 = 0.4
@@ -1615,6 +1620,7 @@ def contour_plot(α, π_vals_nb=200, levels_nb=20, min_π_val=1e-8):
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 α = 0.
 
 contour_plot(α)
@@ -1638,6 +1644,7 @@ HERE IS FIGURE 1.10, 2.10
 ## Figure 2.10
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 α = 3.
 
 contour_plot(α)
@@ -1653,6 +1660,7 @@ HERE IS FIGURE 2.11
 I compute the best-case and worst-case expected utility by numerically solving optimization problems with respect to the change of measure.
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Parameters
 α = 3
 u = utility_function_factory(α)
@@ -1711,6 +1719,7 @@ def max_obj_wrapper(m_0_and_1, η):
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 method = 'Nelder-Mead'
 m_0_and_1 = np.ones(2)  # Initial guess
 
@@ -1730,6 +1739,7 @@ for i in range(η_vals_nb):
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Compute lower bound line
 θ = 1.269230769133136
 T_θ = T_θ_factory(θ, π_base)
@@ -1738,6 +1748,7 @@ lower_bound = intercept - θ * η_vals
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 plt.figure(figsize=(8, 6))
 plt.plot(η_vals, min_EU, color='blue')
 plt.plot(η_vals, max_EU, color='blue')
@@ -1960,6 +1971,7 @@ HERE IS FIGURE  2.12
 Density is originally scaled by a number `intconstant`
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Load data
 data = loadmat('dataBHS.mat')
 
@@ -1970,6 +1982,7 @@ data = loadmat('dataBHS.mat')
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 # Compute consumption growth
 c = data['c']
 c_growth = c[1:] - c[:-1]
@@ -1990,6 +2003,7 @@ worst_case = stats.norm(loc=μ_c_tilde, scale=σ_c).pdf(pdf_x)
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111)
 lns1 = ax.hist(c_growth, bins=bins, alpha=0.5, label='consumption growth (LHS)')
@@ -2005,6 +2019,7 @@ ax.legend(lns, labs, loc=0);
 ```
 
 ```{code-cell} ipython3
+:tags: [hide-input]
 rc('text',usetex=True)
 ```
 

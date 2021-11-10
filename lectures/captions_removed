@@ -1,0 +1,19 @@
+
+Captions for the two figures about multiplier and constraint preferences
+
+
+Entropy (the curve) and expected utility
+$\hat E u(c) = u(c_2) + \hat \pi_1 (u(c_1) - u(c_2))$ (the straight
+line) as functions of $\hat \pi_1$ when
+$c_1 =2, c_2=1, u(c) = \ln c, \pi_1 = .5$ and $\eta=.25$. Values of
+entropy less than or equal to the horizontal dotted line at $.25$
+satisfy the entropy constraint.](new_figure1.eps){#fig_new_figure1
+height="2in"}
+
+Entropy (the curve that is symmetric about .5), expected utility
+$\sum_{i=1}^I \pi_i m_i   u(c_i)$ (the straight line), and multiplier
+criterion $\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ (the
+asymmetric curved lines) as functions of $\hat \pi_1$ when $\pi_1 = .5$.
+For $c_1 =2, c_2=1, u(c) = \ln c$, two values of $\theta$ are depicted,
+$\theta=1$ (the higher asymmetric curve) and $\theta=.42$ (the lower
+asymmetric curve). 
