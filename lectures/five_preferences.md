@@ -2008,6 +2008,3 @@ ax.legend(lns, labs, loc=0);
 rc('text',usetex=True)
 ```
 
-```{code-cell} ipython3
-
-``` -->

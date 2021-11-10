@@ -18,7 +18,7 @@ parse:
 execute:
   execute_notebooks: "cache"
   timeout: 3600
-  run_in_temp: true
+  # run_in_temp: true
 
 sphinx:
   extra_extensions: [sphinxcontrib.youtube, sphinx.ext.todo]
