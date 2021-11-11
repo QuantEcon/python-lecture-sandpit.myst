@@ -184,6 +184,7 @@ We plot  both entropy and the logarithm of entropy.
 
 ```{code-cell} ipython3
 :tags: [hide-input]
+
 # Specify baseline probability vector `π`
 π = np.array([0.5, 0.5])
 
@@ -208,8 +209,16 @@ for i in range(π_hat_0_vals.size):  # Loop over all possible values for `π_hat
 ```
 
 ```{code-cell} ipython3
-:tags: [hide-input]
-:tags: [hide-input]
+---
+tags: [hide-input]
+render:
+  figure:
+    caption: |
+      FIGURE CAPTION
+    name: test-figure
+---
+
+
 plt.figure(figsize=(5, 3))
 plt.plot(π_hat_0_vals, ent_vals, color='blue');
 plt.ylabel(r'entropy ($\pi_{1}=%.2f$)' % π[0] );
@@ -217,9 +226,11 @@ plt.xlabel(r'$\hat{\pi}_1$');
 plt.show()
 ```
 
+Let's try and {ref}`test-figure`
+
 ```{code-cell} ipython3
 :tags: [hide-input]
-:tags: [hide-input]
+
 # Use same grid for `π_0_vals` as for `π_hat_0_vals` 
 π_0_vals = π_hat_0_vals.copy() 
 
@@ -1972,6 +1983,7 @@ Density is originally scaled by a number `intconstant`
 
 ```{code-cell} ipython3
 :tags: [hide-input]
+
 # Load data
 data = loadmat('dataBHS.mat')
 
@@ -1983,6 +1995,7 @@ data = loadmat('dataBHS.mat')
 
 ```{code-cell} ipython3
 :tags: [hide-input]
+
 # Compute consumption growth
 c = data['c']
 c_growth = c[1:] - c[:-1]
@@ -2004,6 +2017,7 @@ worst_case = stats.norm(loc=μ_c_tilde, scale=σ_c).pdf(pdf_x)
 
 ```{code-cell} ipython3
 :tags: [hide-input]
+
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111)
 lns1 = ax.hist(c_growth, bins=bins, alpha=0.5, label='consumption growth (LHS)')
@@ -2020,6 +2034,7 @@ ax.legend(lns, labs, loc=0);
 
 ```{code-cell} ipython3
 :tags: [hide-input]
+
 rc('text',usetex=True)
 ```
 
