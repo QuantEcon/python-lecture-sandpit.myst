@@ -13,11 +13,42 @@ kernelspec:
 
 # Five Preference Orderings
 
-This lecture describes static representations of five classes of preferences over risky prospects. 
+## Overview
 
-All  incorporate **risk aversion**, meaning displeasure from  risks governed by  well known probability distributions. 
+As an introduction to one possible approach to modeling **Knightian  uncertainty**, 
+this lecture describes static representations of five classes of preferences over risky prospects. 
+
+These preference specifications  allow  us to distinguish **risk** from **uncertainty** along lines proposed by
+{cite}`Knight:1921`.  
+
+All  five preference specifications incorporate **risk aversion**, meaning displeasure from  risks governed by  well known probability distributions. 
 
 Two of them also incorporate  **uncertainty aversion**, meaning  dislike of not knowing a  probability distribution.
+
+The preference orderings are 
+
+ * Expected utility preferences
+ * Constraint preferences
+ * Multiplier preferences
+ * Risk-sensitive preferences
+ * Ex post Bayesian expected utility preferences
+
+This labeling  scheme is taken from {cite}`HansenSargent2001`.
+
+
+Constraint and multiplier preferences express  aversion to not knowing a unique probabiity distribution
+that desribes random outcomes.
+
+Expected utility, risk-sensitive, and ex post Bayesian expected utility preferences all attribute a unique known
+probability distribution to a decision maker.
+
+We present things in a simple before-and-after one-period setting.  
+
+In addition to learning about these preference orderings, this lecture also describes some interesting code for computing and graphing some representations  of indifference curves, utility functions, and related objects.
+
+Staring at these indifference curves provides insights into the different preferences.  
+
+Watch for the presence of a kink at the $45$ degree line for the constraint preference indifference curves.
 
 We begin with some that we'll use to create some graphs.
 
@@ -214,8 +245,8 @@ tags: [hide-input]
 render:
   figure:
     caption: |
-      FIGURE CAPTION BLAHs
-    name: test-figure
+      Figure 1
+    name: figure1
 ---
 
 
@@ -226,11 +257,11 @@ plt.xlabel(r'$\hat{\pi}_1$');
 plt.show()
 ```
 
-Let's try and {ref}`test-figure`
+GGHH Let's try and {ref}`figure1`
+
 
 ```{code-cell} ipython3
 :tags: [hide-input]
-
 # Use same grid for `π_0_vals` as for `π_hat_0_vals` 
 π_0_vals = π_hat_0_vals.copy() 
 
@@ -254,7 +285,6 @@ for i in range(π_0_vals.size):  # Loop over all possible values for `π_0`
 ```{code-cell} ipython3
 :tags: [hide-input]
 x, y = np.meshgrid(π_0_vals, π_hat_0_vals)
-
 plt.figure(figsize=(10, 8))
 plt.pcolormesh(x, y, ent_vals_mat.T, cmap='seismic', shading='gouraud')
 plt.colorbar();
@@ -496,9 +526,6 @@ ${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) an
 
 
 
-## Figure 2.2
-
-- We add a new figure (see below for description) to provide additional insight into the workings of $\textbf{T}$
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -535,17 +562,26 @@ plt.xlabel(r'$\pi_1$');
 plt.legend();
 ```
 
-We break down the transformation that $\mathbf{T}$ produces in the two plots below. 
 
-First, $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a different space where (i) signs are flipped and (ii) curvature is increased in proportion to $\theta$.
 
-Expectations are then computed in this transformed space. 
+Two  panels in the  figure below  can help us to visualize how the $\mathbf{T}$ transformation works and 
+what function is being averaged. 
 
-Notice that the distance between the expectation and the curve is greater in the transformed space than the original space as a result of additional curvature. 
+Thus, the panel on the right portrays how the transformation $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a new function by  (i)  flipping the  sign,  and (ii) increasing curvature in proportion to $\theta$.
 
-Finally, $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ sends the computed expectation back to the original space. 
+In the left panel, the red line is our tool for computing  the mathematical expectation for different
+values  of $\pi$.
 
-Relative to the expected utility case, the distance between the green dot and the orange line reflects the additional adjustment.
+The green lot indicates the mathematical expectation of $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ 
+when $\pi = .5$.  
+
+Notice that the distance between the green dot  and the curve is greater in the transformed space than the original space as a result of additional curvature. 
+
+The inverse transformation  $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ generates  the green dot on the left panel that constitutes the risk-sensitive utility  index.  
+
+
+The gap between the green dot and the red line on the left panel measures the additional adjustment for risk
+that risk-sensitive preferences make relative to plain vanilla expected utility preferences. 
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -683,8 +719,8 @@ For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 =
 
 
 For the special case in which $I=2$, $c_1=2, c_2=1$, $u(c) = \ln c$, and
-$\pi_1 =.5$, the following two figures depict the determination of worst-case
-probabilities under constraint and multiplier preferences, respectively.
+$\pi_1 =.5$, the following two figures depict how worst-case
+probabilities are determined with  constraint and multiplier preferences, respectively.
 
 The first figure  graphs entropy as a function of
 $\hat \pi_1$.
@@ -830,28 +866,31 @@ plt.xlabel(r'$\hat{\pi}_1$');
 plt.legend();
 ```
 
-## Risk aversion and ambiguity aversion
+## Risk aversion and misspecification aversion
 
 All five types of preferences use curvature of $u$ to express risk
-aversion. Constraint preferences express *ambiguity* with a positive
+aversion. 
+
+Constraint preferences express **concern about misspecification** or **ambiguity** for short with a positive
 $\eta$ that circumscribes an entropy ball around an approximating
-probability distribution $\pi$, and *ambiguity aversion* through
+probability distribution $\pi$, and *aversion aversion to model misspecification* through
 minimization with respect to a likelihood ratio $m$.
 
-Multiplier preferences express ambiguity with a parameter $\theta<+\infty$ that
+Multiplier preferences express misspecification concerns with a parameter $\theta<+\infty$ that
 penalizes deviations from the approximating model as measured by
-relative entropy, and they express ambiguity aversion with minimization
-over a probability distortion $m$. By penalizing minimization over the
-likelihood ratio $m$, a decrease in $\theta$ represents an *increase* in
-ambiguity (or uncertainty) about the specification of the baseline
+relative entropy, and they express  aversion to misspecification  concerns with minimization
+over a probability distortion $m$. 
+
+By penalizing minimization over the
+likelihood ratio $m$, a decrease in $\theta$ represents an **increase** in
+ambiguity (or what {cite}`Knight:1921` called uncertainty) about the specification of the baseline
 approximating model $\{\pi_i\}_{i=1}^I$.
 
 
 Formulas {eq}`tom6`  assert that the decision maker acts as if
 he is pessimistic relative to an approximating model $\pi$. 
 
-It expresses
-what {cite}`Bucklew_2004` [p. 27] calls a statistical version of *Murphy's law*:
+It expresses what {cite}`Bucklew_2004` [p. 27] calls a statistical version of *Murphy's law*:
 
    *The probability of anything happening is in inverse ratio to its desirability.*
 
@@ -859,8 +898,7 @@ The minimizing likelihood ratio $\hat m$ slants worst-case probabilities
 $\hat \pi$ exponentially to increase probabilities of events that give
 lower utilities. 
 
-As expressed by the value function bound {eq}`eqn:bound1` to be displayed below, the decision maker uses **pessimism**
-instrumentally to protect himself against model uncertainty. 
+As expressed by the value function bound {eq}`eqn:bound1` to be displayed below, the decision maker uses **pessimism** instrumentally to protect himself against model misspecification. 
 
 The penalty parameter $\theta$ for multipler preferences or the entropy level $\eta$ that determines the
 Lagrange multiplier $\tilde \theta$ for constraint  preferences controls how adversely the decision maker exponentially slants probabilities.
@@ -1668,7 +1706,7 @@ HERE IS FIGURE 2.11
 
 ## Figure 2.11
 
-I compute the best-case and worst-case expected utility by numerically solving optimization problems with respect to the change of measure.
+Here we compute  best-case and worst-case expected utility by numerically solving optimization problems with respect to the change of measure.
 
 ```{code-cell} ipython3
 :tags: [hide-input]
