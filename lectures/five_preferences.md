@@ -214,7 +214,7 @@ tags: [hide-input]
 render:
   figure:
     caption: |
-      FIGURE CAPTION
+      FIGURE CAPTION BLAHs
     name: test-figure
 ---
 
