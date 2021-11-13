@@ -644,34 +644,8 @@ ax2.set_title('Transformed space')
 ax2.legend();
 ```
 
-Thus, the panel on the right portrays how the transformation $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a new function by  (i)  flipping the  sign,  and (ii) increasing curvature in proportion to $\theta$.
 
-In the left panel, the red line is our tool for computing  the mathematical expectation for different
-values  of $\pi$.
-
-The green lot indicates the mathematical expectation of $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ 
-when $\pi = .5$.  
-
-Notice that the distance between the green dot  and the curve is greater in the transformed space than the original space as a result of additional curvature. 
-
-The inverse transformation  $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ generates  the green dot on the left panel that constitutes the risk-sensitive utility  index.  
-
-The gap between the green dot and the red line on the left panel measures the additional adjustment for risk
-that risk-sensitive preferences make relative to plain vanilla expected utility preferences. 
-
-## Ex post Bayesian preferences 
-
-A decision maker is said to have **ex post Bayesian preferences** when he ranks consumption plans according to the expected utility function    
-
-$$
-\sum_i \hat \pi_i (c^*) u(c_i)
-$$ (tom15)
-
-where $\hat \pi(c^*)$ is the worst-case probability distribution associated with multiplier or constraint preferences evaluated at a particular consumption plan $c^* = \{c_i^*\}_{i=1}^I$.
-
-At $c^*$, an ex post Bayesian's indifference curves are tangent to those for multiplier and constraint preferences with appropriately chosen $\theta$ and $\eta$, respectively.
-
-## Digression on moment generating functions 
+### Digression on moment generating functions and ${\sf T}$ 
 
 The object 
 
@@ -717,30 +691,53 @@ For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 =
 
 
 
+Thus, the panel on the right portrays how the transformation $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a new function by  (i)  flipping the  sign,  and (ii) increasing curvature in proportion to $\theta$.
+
+In the left panel, the red line is our tool for computing  the mathematical expectation for different
+values  of $\pi$.
+
+The green lot indicates the mathematical expectation of $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ 
+when $\pi = .5$.  
+
+Notice that the distance between the green dot  and the curve is greater in the transformed space than the original space as a result of additional curvature. 
+
+The inverse transformation  $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ generates  the green dot on the left panel that constitutes the risk-sensitive utility  index.  
+
+The gap between the green dot and the red line on the left panel measures the additional adjustment for risk
+that risk-sensitive preferences make relative to plain vanilla expected utility preferences. 
+
+## Ex post Bayesian preferences 
+
+A decision maker is said to have **ex post Bayesian preferences** when he ranks consumption plans according to the expected utility function    
+
+$$
+\sum_i \hat \pi_i (c^*) u(c_i)
+$$ (tom15)
+
+where $\hat \pi(c^*)$ is the worst-case probability distribution associated with multiplier or constraint preferences evaluated at a particular consumption plan $c^* = \{c_i^*\}_{i=1}^I$.
+
+At $c^*$, an ex post Bayesian's indifference curves are tangent to those for multiplier and constraint preferences with appropriately chosen $\theta$ and $\eta$, respectively.
+
+
+
 ## Comparing preferences
 
 
 For the special case in which $I=2$, $c_1=2, c_2=1$, $u(c) = \ln c$, and
 $\pi_1 =.5$, the following two figures depict how worst-case
-probabilities are determined with  constraint and multiplier preferences, respectively.
+probabilities are determined under  constraint and multiplier preferences, respectively.
 
-The first figure  graphs entropy as a function of
-$\hat \pi_1$.
+The first figure  graphs entropy as a function of $\hat \pi_1$.
 
-The figure also plots expected utility under the twisted
-probability distribution, namely,
+It also plots expected utility under the twisted probability distribution, namely,
 $\hat E u(c) = u(c_2) + \hat \pi_1 (u(c_1) - u(c_2))$, which is
 evidently a linear function of $\hat \pi_1$. 
 
-The entropy constraint
-$\sum_{i=1}^I \pi_i m_i \log m_i \leq \eta$ implies a convex set
-$\hat \Pi_1$ of $\hat \pi_1$'s that constrains the malevolent agent who
-chooses $\hat \pi_1$, namely, the set of $\hat \pi_1$'s for which the
-entropy curve lies below the horizontal dotted line at an entropy level
-of $\eta = .25$. 
+The entropy constraint  $\sum_{i=1}^I \pi_i m_i \log m_i \leq \eta$ implies a convex set
+$\hat \Pi_1$ of $\hat \pi_1$'s that constrains the adversary who chooses $\hat \pi_1$, namely, the set of $\hat \pi_1$'s for which the
+entropy curve lies below the horizontal dotted line at an entropy level of $\eta = .25$. 
 
-Unless $u(c_1) = u(c_2)$, the $\hat \pi_1$ that
-minimizes $\hat E u(c)$ is at the boundary of the set $\hat \Pi_1$.
+Unless $u(c_1) = u(c_2)$, the $\hat \pi_1$ that minimizes $\hat E u(c)$ is at the boundary of the set $\hat \Pi_1$.
 
 
 ```{code-cell} ipython3
@@ -782,38 +779,12 @@ plt.legend();
 
 
 
-As a function of $\hat \pi_1 = m_1 \pi_1$, the next  figure
-shows the function
-$\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ that is to be
+The next  figure shows the function $\sum_{i=1}^I \pi_i m_i [  u(c_i) + \theta \log m_i ]$ that is to be
 minimized in the multiplier problem.
 
-Evidently, from this figure and also from formula {eq}`tom12`, lower values of $\theta$ lead to lower,
-and thus more distorted, minimizing values of $\hat \pi_1$. 
-
-The figure
-indicates how one can construct a Lagrange multiplier $\tilde \theta$
-associated with a given entropy constraint $\eta$ and a given
-consumption plan. 
-
-Thus, to draw the figure, we set the penalty parameter for
-multiplier preferences $\theta$ so that the minimizing $\hat \pi_1$
-equals the minimizing $\hat \pi_1$ for the constraint problem from
-the previous figure.
+The argument of the function is  $\hat \pi_1 = m_1 \pi_1$.
 
 
-The penalty parameter $\theta=.42$ also equals the
-Lagrange multiplier $\tilde \theta$ on the entropy constraint for the
-constraint preferences depicted in the previous figure
-because the $\hat \pi_1$ that minimizes the
-asymmetric curve associated with penalty parameter $\theta=.42$ is the
-same $\hat \pi_1$ associated with the intersection of the entropy curve
-and the entropy constraint dashed vertical
-line.
-
-
-## Figure 2.4
-
-- We add dots for problem solutions
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -868,6 +839,31 @@ plt.xlabel(r'$\hat{\pi}_1$');
 plt.legend();
 ```
 
+
+
+Evidently, from this figure and also from formula {eq}`tom12`, lower values of $\theta$ lead to lower,
+and thus more distorted, minimizing values of $\hat \pi_1$. 
+
+The figure
+indicates how one can construct a Lagrange multiplier $\tilde \theta$
+associated with a given entropy constraint $\eta$ and a given
+consumption plan. 
+
+Thus, to draw the figure, we set the penalty parameter for
+multiplier preferences $\theta$ so that the minimizing $\hat \pi_1$
+equals the minimizing $\hat \pi_1$ for the constraint problem from
+the previous figure.
+
+
+The penalty parameter $\theta=.42$ also equals the
+Lagrange multiplier $\tilde \theta$ on the entropy constraint for the
+constraint preferences depicted in the previous figure
+because the $\hat \pi_1$ that minimizes the
+asymmetric curve associated with penalty parameter $\theta=.42$ is the
+same $\hat \pi_1$ associated with the intersection of the entropy curve
+and the entropy constraint dashed vertical
+line.
+
 ## Risk aversion and misspecification aversion
 
 All five types of preferences use curvature of $u$ to express risk
@@ -894,7 +890,7 @@ he is pessimistic relative to an approximating model $\pi$.
 
 It expresses what {cite}`Bucklew_2004` [p. 27] calls a statistical version of *Murphy's law*:
 
-   *The probability of anything happening is in inverse ratio to its desirability.*
+**$\quad \quad$ The probability of anything happening is in inverse ratio to its desirability.**
 
 The minimizing likelihood ratio $\hat m$ slants worst-case probabilities
 $\hat \pi$ exponentially to increase probabilities of events that give
@@ -951,68 +947,13 @@ curve associated with expected utility preferences.
 As we shall see soon when we discuss state price
 deflators, this gives rise to higher estimates of prices of risk.
 
-For an example with $u(c) = \ln c$, $I=2$, and $\pi_1 = .5$, figures
-[1.5](#fig_indiff45){reference-type="ref" reference="fig_indiff45"} and
-[1.6](#fig_indiff_certequiv){reference-type="ref"
-reference="fig_indiff_certequiv"} show indifference curves for expected
+For an example with $u(c) = \ln c$, $I=2$, and $\pi_1 = .5$, the next two  figures show indifference curves for expected
 utility, multiplier, and constraint preferences. 
 
-Evidently, for a given $\eta$ and a given $(c_1, c_2)$ off the 45 degree line, by solving
-equations {eq}`tom7` and {eq}`tom20`, we can find $\tilde \theta (\eta, c)$
-and $\tilde \eta(\theta,c)$ that make the indifference curves for 
-multiplier and constraint preferences be tangent to one another at a
-given allocation $c$.
 
-Figure [1.5](#fig_indiff45){reference-type="ref"
-reference="fig_indiff45"} shows indifference curves going through a
+The following figure shows indifference curves going through a
 point along the 45 degree line. 
 
-For fixed $\eta$, a given plan $c$, and
-a utility function increasing in $c$, the worst case probabilities are
-$\hat \pi_1 < .5$ when $c_1 > c_2$ and $\hat \pi_1 > .5$ when
-$c_2 > c_1$. 
-
-The discontinuity in the worst case $\hat \pi_1$ at the 45
-degree line accounts for the kink in the indifference curve for
-constraint preferences associated with a particular positive entropy
-$\eta$. 
-
-HERE IS FIGURE 1.5, 2.5
-
-
-
-## Figure 2.5
-
-The code for this figure is more involved because I formulate a root finding problem for finding indifference curves. Below is a description of the method I used:
-
-**Parameters**
-
-- Consumption bundle $c=\left(1,1\right)$
-- Penalty parameter $θ=2$
-- Utility function $u=\log$
-- Probability vector $\pi=\left(0.5,0.5\right)$
-
-**Algorithm:**
-- Compute $\bar{u}=\pi_{1}u\left(c_{1}\right)+\pi_{2}u\left(c_{2}\right)$
-- Given values for $c_{1}$, solve for values of $c_{2}$ such that $\bar{u}=u\left(c_{1},c_{2}\right)$:
-     - Expected utility: $c_{2,EU}=u^{-1}\left(\frac{\bar{u}-\pi_{1}u\left(c_{1}\right)}{\pi_{2}}\right)$
-     - Multiplier preferences: solve $\bar{u}-\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta}\right)}\left(u\left(c_{i}\right)+\theta\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta}\right)}\right)\right)=0$ numerically
-     - Constraint preference: solve $\bar{u}-\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}u\left(c_{i}\right)=0$ numerically where $\theta^{*}$ solves $\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}\right)-\eta=0$ numerically.
-     
-
-**Note:** It seems that the constraint problem is hard to solve in its original form, i.e. by finding the distorting measure that minimizes the expected utility. 
-
-It seems that viewing (2.5) as a root finding problem works much better. 
-
-Notice that 2.5 does not always have a solution. 
-
-Under $u=\log$, $c_{1}=c_{2}=1$, we have: 
-
-$$\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\tilde{\theta}}\right)}{\sum_{j}\pi_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\tilde{\theta}}\right)}\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\tilde{\theta}}\right)}{\sum_{j}\pi_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\tilde{\theta}}\right)}\right)=0$$
-
-Guess: the method fails because the derivative of the objective doesn't exist for these parameter choices
-
-**Note 2:** Algorithm is tricky to get to work properly for all values of $c_{1}$. In particular, parameters were chosen with [graduate student descent](https://sciencedryad.wordpress.com/2014/01/25/grad-student-descent/).
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -1193,58 +1134,68 @@ ax2.legend();
 
 
 
+Evidently, for a given $\eta$ and a given $(c_1, c_2)$ off the 45 degree line, by solving
+equations {eq}`tom7` and {eq}`tom20`, we can find $\tilde \theta (\eta, c)$
+and $\tilde \eta(\theta,c)$ that make the indifference curves for 
+multiplier and constraint preferences be tangent to one another at a
+given allocation $c$.
 
-Figure [1.6](#fig_indiff_certequiv){reference-type="ref"
-reference="fig_indiff_certequiv"} shows indifference curves for
+
+
+For fixed $\eta$, a given plan $c$, and
+a utility function increasing in $c$, the worst case probabilities are
+$\hat \pi_1 < .5$ when $c_1 > c_2$ and $\hat \pi_1 > .5$ when
+$c_2 > c_1$. 
+
+The discontinuity in the worst case $\hat \pi_1$ at the 45
+degree line accounts for the kink in the indifference curve for
+constraint preferences associated with a particular positive entropy
+$\eta$. 
+
+
+
+
+
+The code for generating the preceding figure is somewhat intricate we formulate a root finding problem for finding indifference curves.
+
+Here is a brief literary  description of the method we used.
+
+**Parameters**
+
+- Consumption bundle $c=\left(1,1\right)$
+- Penalty parameter $θ=2$
+- Utility function $u=\log$
+- Probability vector $\pi=\left(0.5,0.5\right)$
+
+**Algorithm:**
+- Compute $\bar{u}=\pi_{1}u\left(c_{1}\right)+\pi_{2}u\left(c_{2}\right)$
+- Given values for $c_{1}$, solve for values of $c_{2}$ such that $\bar{u}=u\left(c_{1},c_{2}\right)$:
+     - Expected utility: $c_{2,EU}=u^{-1}\left(\frac{\bar{u}-\pi_{1}u\left(c_{1}\right)}{\pi_{2}}\right)$
+     - Multiplier preferences: solve $\bar{u}-\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta}\right)}\left(u\left(c_{i}\right)+\theta\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta}\right)}\right)\right)=0$ numerically
+     - Constraint preference: solve $\bar{u}-\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}u\left(c_{i}\right)=0$ numerically where $\theta^{*}$ solves $\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\theta^{*}}\right)}{\sum_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\theta^{*}}\right)}\right)-\eta=0$ numerically.
+     
+
+**Remark:** It seems that the constraint problem is hard to solve in its original form, i.e. by finding the distorting measure that minimizes the expected utility. 
+
+It seems that viewing (2.5) GGHH as a root finding problem works much better. 
+
+Notice that 2.5 does not always have a solution. 
+
+Under $u=\log$, $c_{1}=c_{2}=1$, we have: 
+
+$$\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\tilde{\theta}}\right)}{\sum_{j}\pi_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\tilde{\theta}}\right)}\log\left(\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\tilde{\theta}}\right)}{\sum_{j}\pi_{j}\exp\left(\frac{-u\left(c_{j}\right)}{\tilde{\theta}}\right)}\right)=0$$
+
+**Conjecture:** when our numerical  method fails it  because the derivative of the objective doesn't exist for our choice of  parameters.
+
+**Remark:** It is tricky to get the algorithm  to work properly for all values of $c_{1}$. In particular, parameters were chosen with [graduate student descent](https://sciencedryad.wordpress.com/2014/01/25/grad-student-descent/).
+
+
+The following figure shows indifference curves for
 multiplier and constraint preferences through a point off the 45 degree
 line, namely, $(c(1),c(2)) = (3,1)$, at which $\eta$ and $\theta$ are
 set to render the indifference curves for constraint and multiplier
 preferences tangent.
 
-As we move along the (kinked) indifference curve for the constraint
-preferences for a given $\eta$, the worst-case probabilities remain
-constant, but the Lagrange multiplier $\tilde \theta$ on the entropy
-constraint $\sum_{i=1}^I m_i \log m_i \leq \eta$ varies with
-$(c_1, c_2)$. 
-
-As we move along the (smooth) indifference curve for the
-multiplier preferences for a given penalty parameter $\theta$, the
-implied entropy $\tilde \eta$ from equation {eq}`tom20` and the worst-case probabilities both
-change with $(c_1, c_2)$.
-
-In figure [1.6](#fig_indiff_certequiv){reference-type="ref"
-reference="fig_indiff_certequiv"}, for constraint preferences, there is
-a kink in the indifference curve. 
-
-For ex post Bayesian preferences,
-there are effectively two sets of indifference curves depending on which
-side of the 45 degree line the $(c_1, c_2)$ endowment point sits.
-
-There are two sets of indifference curves because, while the worst-case
-probabilities differ above and below the 45 degree line, the idea of ex
-post Bayesian preferences is to use a *single* probability distribution
-to compute expected utilities for all consumption bundles.
-
-Indifference curves for expected logarithmic utility (solid and
-smooth), multiplier (dotted and smooth), and constraint (kinked at 45
-degree line) preferences. The worst-case probability $\hat \pi_1 < .5$
-when $c_1 > c_2$ and $\hat \pi_1 > .5$ when
-$c_1 < c_2$.](indifference45.eps){#fig_indiff45 height="2in"}
-
-Indifference curves through point $(c_1, c_2) = (3,1)$ for expected
-logarithmic utility (less curved smooth line), multiplier (more curved
-line), constraint (solid line kinked at 45 degree line), and *ex post*
-Bayesian (dotted lines) preferences. The worst-case probability
-$\hat \pi_1 < .5$ when $c_1 =3 > c_2 =1$ and $\hat \pi_1 > .5$ when
-$c_1=1 < c_2 = 3$.**Tom XXXX: shall we make the ex-post Bayesian lines
-darker?**](indifference3.eps){#fig_indiff_certequiv height="2in"}
-
-
-HERE IS FIGURE 1.6, 2.6
-
-
-
-## Figure 2.6
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -1313,7 +1264,35 @@ ax2.legend();
 Note that all three lines of the left graph intersect at (1, 3). While the intersection at (3, 1) is hard-coded, the intersection at (1,3) arises from the computation which is a good sign.
 
 
+As we move along the (kinked) indifference curve for the constraint
+preferences for a given $\eta$, the worst-case probabilities remain
+constant, but the Lagrange multiplier $\tilde \theta$ on the entropy
+constraint $\sum_{i=1}^I m_i \log m_i \leq \eta$ varies with
+$(c_1, c_2)$. 
 
+As we move along the (smooth) indifference curve for the
+multiplier preferences for a given penalty parameter $\theta$, the
+implied entropy $\tilde \eta$ from equation {eq}`tom20` and the worst-case probabilities both
+change with $(c_1, c_2)$.
+
+
+For constraint preferences, there is a kink in the indifference curve. 
+
+For ex post Bayesian preferences, there are effectively two sets of indifference curves depending on which
+side of the 45 degree line the $(c_1, c_2)$ endowment point sits.
+
+There are two sets of indifference curves because, while the worst-case
+probabilities differ above and below the 45 degree line, the idea of ex
+post Bayesian preferences is to use a *single* probability distribution
+to compute expected utilities for all consumption bundles.
+
+
+Indifference curves through point $(c_1, c_2) = (3,1)$ for expected
+logarithmic utility (less curved smooth line), multiplier (more curved
+line), constraint (solid line kinked at 45 degree line), and *ex post*
+Bayesian (dotted lines) preferences. The worst-case probability
+$\hat \pi_1 < .5$ when $c_1 =3 > c_2 =1$ and $\hat \pi_1 > .5$ when
+$c_1=1 < c_2 = 3$.
 
 
 ## State price deflators
@@ -1336,34 +1315,15 @@ $$ (eqn:state_price)
 The worst-case likelihood ratio $\hat m_i$ operates to increase prices
 $q_i$ in relatively low utility states $i$.
 
- State prices agree under
-multiplier and constraint preferences when $\eta$ and $\theta$ are
+State prices agree under multiplier and constraint preferences when $\eta$ and $\theta$ are
 adjusted according to {eq}`tom7` or {eq}`tom20` to make the indifference curves tangent
 at the endowment point. 
 
-See figure
-[1.7](#fig_indifference5){reference-type="ref"
-reference="fig_indifference5"}.
+The next figure can help us think about state-price deflators under our different preference orderings.
 
-Because budget constraints are linear, asset prices are identical under
-multiplier and constraint preferences for which $\theta$ and $\eta$ are
-adjusted to verify {eq}`tom7` or {eq}`tom20` at a given consumption endowment
-$\{c_i\}_{i=1}^I$. 
-
-However, as we note next, though they are tangent at
-the endowment point, the fact that indifference curves differ for
-multiplier and constraint preferences means that certainty equivalent
-consumption compensations of the kind that {cite}`Lucas1987`,
-{cite}`HST_1999`, {cite}`Tall2000`, and {cite}`BHS_2009` used to measure the costs of
-business cycles must differ. 
-
-Budget line and indifference curves through point $(c_1, c_2) = (3,1)$
+In this figure, budget line and indifference curves through point $(c_1, c_2) = (3,1)$
 for expected logarithmic utility, multiplier, constraint (kinked at 45
-degree line), and *ex post* Bayesian (dotted lines) preferences. **Tom
-XXXX: remove the legend in this graph, or else add more elements to
-it.**](indifference5.eps){#fig_indifference5 height="2in"}
-
-HERE IS FIGURE  1.7, 2.7
+degree line), and *ex post* Bayesian (dotted lines) preferences. 
 
 
 
@@ -1410,48 +1370,25 @@ plt.legend();
 ```
 
 
+Because budget constraints are linear, asset prices are identical under
+multiplier and constraint preferences for which $\theta$ and $\eta$ are
+adjusted to verify {eq}`tom7` or {eq}`tom20` at a given consumption endowment
+$\{c_i\}_{i=1}^I$. 
+
+However, as we note next, though they are tangent at
+the endowment point, the fact that indifference curves differ for
+multiplier and constraint preferences means that certainty equivalent
+consumption compensations of the kind that {cite}`Lucas1987`,
+{cite}`HST_1999`, {cite}`Tall2000`, and {cite}`BHS_2009` used to measure the costs of
+business cycles must differ. 
 
 
 #### Consumption-equivalent measures of uncertainty aversion
 
-For each of our five types of preferences, figure
-[1.8](#fig_indifference4){reference-type="ref"
-reference="fig_indifference4"} allows us to construct a certainty
-equivalent point $(c^*, c^*)$ on the 45 degree line that renders the
-consumer indifferent between it and the risky point
+For each of our five types of preferences, the following figure allows us to construct a certainty
+equivalent point $(c^*, c^*)$ on the 45 degree line that renders the consumer indifferent between it and the risky point
 $(c(1), c(2)) = (3,1)$. 
 
-Figure [1.8](#fig_indifference4){reference-type="ref"
-reference="fig_indifference4"} indicates that the certainty equivalent
-level $c^*$ is higher for the consumer with expected utility preferences
-than for the consumer with multiplier preferences, and that it is higher
-for the consumer with multiplier preferences than for the consumer with
-constraint preferences. 
-
-The gap between these certainty equivalents
-measures the uncertainty aversion of the multiplier preferences or
-constraint preferences consumer. 
-
-The gap between the expected value
-$.5 c(1) + .5 c(2)$ at point A and the certainty equivalent for the
-expected utility decision maker at point B is a measure of his risk
-aversion. 
-
-The gap between points $B$ and $C$ measures the multiplier
-preference consumer's aversion to model uncertainty. 
-
-The gap between
-points B and D measures the constraint preference consumer's aversion to
-model uncertainty.
-
-Indifference curves through point $(c_1,c_2)=(3,1)$ for expected
-logarithmic utility, multiplier, constraint (kinked at 45 degree line),
-and *ex post* Bayesian (dotted lines) preferences. Certainty equivalents
-for risk-neutrality (point A), expected utility with log preferences
-(point B), multiplier preferences (point C), and constraint preferences
-(point D).](indifference4.eps){#fig_indifference4 height="2in"}
-
-HERE IS FIGURE 1.8, 2.8
 
 
 
@@ -1513,11 +1450,35 @@ plt.annotate('D', (fp_cons-0.01, fp_cons+0.06))
 plt.legend();
 ```
 
+
+
+The figure indicates that the certainty equivalent
+level $c^*$ is higher for the consumer with expected utility preferences
+than for the consumer with multiplier preferences, and that it is higher
+for the consumer with multiplier preferences than for the consumer with
+constraint preferences. 
+
+The gap between these certainty equivalents
+measures the uncertainty aversion of the multiplier preferences or
+constraint preferences consumer. 
+
+The gap between the expected value
+$.5 c(1) + .5 c(2)$ at point A and the certainty equivalent for the
+expected utility decision maker at point B is a measure of his risk
+aversion. 
+
+The gap between points $B$ and $C$ measures the multiplier
+preference consumer's aversion to model uncertainty. 
+
+The gap between
+points B and D measures the constraint preference consumer's aversion to
+model uncertainty.
+
+
+
 ## Iso-utility and iso-entropy curves and expansion paths
 
-
-Figures [1.9](#fig_num2){reference-type="ref" reference="fig_num2"} and
-[1.10](#fig_num4){reference-type="ref" reference="fig_num4"} show
+The following figures show
 iso-entropy and iso-utility lines for the special case in which $I = 3$,
 $\pi_1 = .3, \pi_2 = .4$, and the utility function is
 $u(c)= \frac{c^{1-\alpha}}{1-\alpha}$ with $\alpha =0$ and $\alpha =3$,
@@ -1535,30 +1496,14 @@ worst-case probabilities $\hat \pi_i(\theta) =
  \pi_i \frac{\exp(-u(c_i)/\theta )} {E\exp(-u(c)/\theta )}$ differ as we
 vary $\theta$, causing the associated entropies to differ.
 
-![Iso-entropy and iso-expected utility,
-$u(c) = \frac{c^{1-\alpha}}{1-\alpha}$, $\alpha = 0$. The 'expansion
-path', or locus of points of tangency between the iso-entropy and the
-iso-utility curves, shows the worst-case probabilities as $\theta^{-1}$
-varies over the interval $[0, 2]$. Entropy increases and expected
-utility decreases as we move northwest along an expansion
-path.](fig_4_0.eps){#fig_num2 height="2in"}
 
-![Iso-entropy and iso-expected utility,
-$u(c) = \frac{c^{1-\alpha}}{1-\alpha}$, $\alpha = 3$. The 'expansion
-path', or locus of points of tangency between the iso-entropy and the
-iso-utility curves, shows the worst-case probabilities as $\theta^{-1}$
-varies over the interval $[0, 2]$. Entropy increases and expected
-utility decreases as we move northwest along an expansion
-path.](fig_4_3.eps){#fig_num4 height="2in"}
+**Color bars:** 
 
-HERE IS FIGURE  1.9, 2.9
+ * First color bar: variation in $\theta$  
+ * Second color bar: variation in utility levels  
+ * Third color bar: variation in entropy levels
 
 
-
-
-## Figure 2.9
-
-- Comment: This figure only uses half of the available space which is inefficient.
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -1677,22 +1622,6 @@ def contour_plot(α, π_vals_nb=200, levels_nb=20, min_π_val=1e-8):
 contour_plot(α)
 ```
 
-#### Description of color bars 
-
-First color bar: variation in $\theta$  
-Second color bar: variation in utility levels  
-Third color bar: variation in entropy levels
-
-+++
-
-Comment: This plot looks quite different from the original one. However, I think this one is more sensible. My reasoning is as follows. When $\theta$ is close to 0, the penalty for distorting the baseline probability measure is very small. Therefore, the optimal distortion should put a lot of weight on the worst-case state. In this case, this translates to a high $\hat{\pi}_{1}$. As this penalty increases, the optimal distortion gets smaller and small and as such, the distorted probability measure is closer` to the baseline one.
-
-
-HERE IS FIGURE 1.10, 2.10
-
-
-
-## Figure 2.10
 
 ```{code-cell} ipython3
 :tags: [hide-input]
