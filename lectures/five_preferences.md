@@ -27,11 +27,11 @@ Two of them also incorporate  **uncertainty aversion**, meaning  dislike of not 
 
 The preference orderings are 
 
- * Expected utility preferences
- * Constraint preferences
- * Multiplier preferences
- * Risk-sensitive preferences
- * Ex post Bayesian expected utility preferences
+  *  Expected utility preferences
+  *  Constraint preferences
+  *  Multiplier preferences
+  *  Risk-sensitive preferences
+  *  Ex post Bayesian expected utility preferences
 
 This labeling  scheme is taken from {cite}`HansenSargent2001`.
 
@@ -176,8 +176,15 @@ $$
 $$
 
 
-**Remark:** The likelihood ratio $m_i$ is a discrete random variable. For any discrete random variable $\{x_i\}_{i=1}^I$, the expected  value under the $\hat \pi_i$ distribution can be represented as the expected  value of  $x_i$ times the `shock'  $m_i$ under the $\pi$ distribution:
-$ \hat E x = \sum_{i=1}^I x_i \hat \pi_i = \sum_{i=1}^I m_i x_i  \pi_i = E m x ,$ where $\hat E$ is the mathematical  expectation under the $\hat \pi$ distribution and $E$ is the expectation under the $\pi$ distribution. Evidently, 
+**Remark:** A likelihood ratio $m_i$ is a discrete random variable. For any discrete random variable $\{x_i\}_{i=1}^I$, the expected  value of $x$  under the $\hat \pi_i$ distribution can be represented as the expected  value  under the $\pi$ distribution of the product of  $x_i$ times the `shock'  $m_i$:
+
+$$
+ \hat E x = \sum_{i=1}^I x_i \hat \pi_i = \sum_{i=1}^I m_i x_i  \pi_i = E m x ,
+ $$
+ 
+where $\hat E$ is the mathematical  expectation under the $\hat \pi$ distribution and $E$ is the expectation under the $\pi$ distribution. 
+ 
+Evidently, 
 
 $$ 
   \hat E 1 = E m = 1
@@ -189,7 +196,9 @@ $$
  E m \log m  = \hat E \log m .
 $$
 
-Figure 1 depicts  entropy as a function of $\hat \pi_1$ when $I=2$ and $\pi_1 = .5$. 
+In the three figures below, we plot relative entropy from several perspectives.
+
+Our first figure depicts  entropy as a function of $\hat \pi_1$ when $I=2$ and $\pi_1 = .5$. 
  
 When $\pi_1 \in (0,1)$, entropy is finite for both $\hat \pi_1 = 0$  and $\hat \pi_1 = 1$ because $\lim_{x\rightarrow 0} x \log x = 0$  
  
@@ -197,21 +206,6 @@ When $\pi_1 \in (0,1)$, entropy is finite for both $\hat \pi_1 = 0$  and $\hat \
 However, when $\pi_1=0$ or $\pi_1=1$, entropy  is infinite.
 
 
-
-### Plots of Relative Entropy
-
-In the three figures below, we plot entropy from several perspectives.
-
-The first figure plots  entropy as a function of $\hat \pi_1$ when $I=2$ and $\pi_1 = .5$. 
- 
-When $\pi_1 \in (0,1)$, entropy is finite for both $\hat \pi_1 = 0$  and $\hat \pi_1 = 1$ because $\lim_{x\rightarrow 0} x \log x = 0$  
- 
- 
-However, when $\pi_1=0$ or $\pi_1=1$, entropy  is infinite.
-
-The heat maps in  second and third figures are more informative because they vary both $\hat{\pi}_1$ and $\pi_1$ and create  entropy heat maps.
-
-We plot  both entropy and the logarithm of entropy.
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -257,8 +251,11 @@ plt.xlabel(r'$\hat{\pi}_1$');
 plt.show()
 ```
 
-GGHH Let's try and {ref}`figure1`
 
+
+The heat maps in  the next two  figures vary both $\hat{\pi}_1$ and $\pi_1$.
+
+The following figure plots  entropy.  
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -294,6 +291,9 @@ plt.title('Entropy Heat Map');
 plt.show()
 ```
 
+
+The next figure plots  the logarithm of entropy.
+
 ```{code-cell} ipython3
 :tags: [hide-input]
 # Check the point (0.01, 0.9)
@@ -317,12 +317,18 @@ plt.show()
 
 We describe five types of preferences over plans.
 
+  * Expected utility preferences 
+  * Constraint preferences
+  * Multiplier preferences
+  * Risk-sensitive preferences
+  * Ex post Bayesian expected utility preferences
 
-Types 1, 4, and 5, each of which is cast in terms of a unique probability distribution, express risk-aversion, but not model ambiguity aversion. 
+
+Expected utility, risk-sensitive, and ex post Bayesian prefernces are  each cast in terms of a unique probability distribution, so they can express risk-aversion, but not model ambiguity aversion. 
 
 
-Our main focus will eventually be on types 2 and 3, each of which expresses aversion to
-model ambiguity and each of which is cast in terms of a set of probability distributions. 
+Multiplier and constraint prefernces both  express aversion to
+concerns about model misppecification, i.e., model uncertainty;  both are cast  in terms of a set or sets  of probability distributions. 
 
 * The set of distributions expresses the decision maker's ambiguity about the probability model.
 * Minimization over probability distributions expresses his aversion to ambiguity.
@@ -488,8 +494,7 @@ The forms of expressions {eq}`tom6`  and {eq}`tom12` are identical, but the Lagr
 
 Formulas {eq}`tom6`  and {eq}`tom12` show that worst-case probabilities are **context specific** in the sense that they depend  on both the utility function $u$ and the consumption plan $c$.
 
-If we add $\theta$ times entropy under the worst-case model to
-expected utility under the worst-case model, we find that the
+If we add $\theta$ times entropy under the worst-case model to expected utility under the worst-case model, we find that the
 **indirect expected utility function** under multiplier preferences is
 
 $$
@@ -513,19 +518,10 @@ Because it is not linear in utilities $u(c_i)$ and probabilities $\pi_i$, it is 
 Because risk-sensitive preferences use a unique probability distribution, they apparently express no model distrust or ambiguity. 
 
 Instead, they make an additional adjustment for risk-aversion beyond that embedded in the curvature of $u$. 
+
+ 
     
-For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, figure [1.2] plots the risk-sensitive criterion ${\sf T} u(c)$ defined in    {eq}`tom14` as a function of $\pi_1$ for values of $\theta$ of 100 and .6.
-    
-For large values of $\theta$, ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$, but for lower values of $\theta$, ${\sf T} u(c)$ has considerable    curvature as a function of $\pi_1$.
-
-Under expected utility, i.e., $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is convex as a function of $\pi_1$ when $\theta< + \infty$.
-
-${\sf T} u(c)$ as a function of $\pi_1$ for $\theta=100$ (nearly linear line) and $\theta=.6$ (convex curved line). Here  $I=2, c_1=2, c_2=1$, $u(c) = \ln c$.](new_figure3.eps){#fig_new_figure3 height="2in"}
-
-### Graphs of risk-sensitivity operator
-
-
-
+For $I=2, c_1=2, c_2=1$, $u(c) = \ln c$, the following figure plots the risk-sensitive criterion ${\sf T} u(c)$ defined in    {eq}`tom14` as a function of $\pi_1$ for values of $\theta$ of 100 and .6.
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -564,24 +560,16 @@ plt.legend();
 
 
 
-Two  panels in the  figure below  can help us to visualize how the $\mathbf{T}$ transformation works and 
-what function is being averaged. 
+    
+For large values of $\theta$, ${\sf T} u(c)$ is approximately linear in the probability $\pi_1$, but for lower values of $\theta$, ${\sf T} u(c)$ has considerable    curvature as a function of $\pi_1$.
 
-Thus, the panel on the right portrays how the transformation $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a new function by  (i)  flipping the  sign,  and (ii) increasing curvature in proportion to $\theta$.
-
-In the left panel, the red line is our tool for computing  the mathematical expectation for different
-values  of $\pi$.
-
-The green lot indicates the mathematical expectation of $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ 
-when $\pi = .5$.  
-
-Notice that the distance between the green dot  and the curve is greater in the transformed space than the original space as a result of additional curvature. 
-
-The inverse transformation  $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ generates  the green dot on the left panel that constitutes the risk-sensitive utility  index.  
+Under expected utility, i.e., $\theta =+\infty$, ${\sf T}u(c)$ is linear in $\pi_1$, but it is convex as a function of $\pi_1$ when $\theta< + \infty$.
 
 
-The gap between the green dot and the red line on the left panel measures the additional adjustment for risk
-that risk-sensitive preferences make relative to plain vanilla expected utility preferences. 
+The two  panels in the next  figure below  can help us to visualize the extra adjustment for risk that the risk-sensitive operator entails.  
+
+This will help us understand  how the $\mathbf{T}$ transformation works by envisioning  what function is being averaged. 
+
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -656,6 +644,20 @@ ax2.set_title('Transformed space')
 ax2.legend();
 ```
 
+Thus, the panel on the right portrays how the transformation $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a new function by  (i)  flipping the  sign,  and (ii) increasing curvature in proportion to $\theta$.
+
+In the left panel, the red line is our tool for computing  the mathematical expectation for different
+values  of $\pi$.
+
+The green lot indicates the mathematical expectation of $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ 
+when $\pi = .5$.  
+
+Notice that the distance between the green dot  and the curve is greater in the transformed space than the original space as a result of additional curvature. 
+
+The inverse transformation  $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ generates  the green dot on the left panel that constitutes the risk-sensitive utility  index.  
+
+The gap between the green dot and the red line on the left panel measures the additional adjustment for risk
+that risk-sensitive preferences make relative to plain vanilla expected utility preferences. 
 
 ## Ex post Bayesian preferences 
 
