@@ -41,6 +41,50 @@ for risk-neutrality (point A), expected utility with log preferences
 
 HERE IS FIGURE 1.8, 2.8
 
+
+![Iso-entropy and iso-expected utility,
+$u(c) = \frac{c^{1-\alpha}}{1-\alpha}$, $\alpha = 0$. The 'expansion
+path', or locus of points of tangency between the iso-entropy and the
+iso-utility curves, shows the worst-case probabilities as $\theta^{-1}$
+varies over the interval $[0, 2]$. Entropy increases and expected
+utility decreases as we move northwest along an expansion
+path.](fig_4_0.eps){#fig_num2 height="2in"}
+
+![Iso-entropy and iso-expected utility,
+$u(c) = \frac{c^{1-\alpha}}{1-\alpha}$, $\alpha = 3$. The 'expansion
+path', or locus of points of tangency between the iso-entropy and the
+iso-utility curves, shows the worst-case probabilities as $\theta^{-1}$
+varies over the interval $[0, 2]$. Entropy increases and expected
+utility decreases as we move northwest along an expansion
+path.](fig_4_3.eps){#fig_num4 height="2in"}
+
+HERE IS FIGURE  1.9, 2.9
+
+
+
+![The upper curved line is the best-case expected utility
+$E \check m(\check \theta(c,\eta)) u (c)$ as a function of entropy
+$\eta = \sum_{i=1}^I \pi_i m_i \log m_i$, where $\check m$ is the
+likelihood ratio associated with the best-case model. The lower curved
+line is the worst-case expected utility
+$\sum_{i=1}^I \pi_i \tilde m_i (\tilde \theta(c,\eta)) u(c_i)$ as a
+function of entropy. Expected utilities for all other densities having
+the same entropy are between the two curved lines. The straight line
+depicts the lower bound on expected utility
+${\sf T}_\theta u(c) - \theta \sum_{i=1}^I \pi_i m_i \log m_i$
+associated with penalty parameter $\theta$. **Tom XXXXX: add statements
+of probabilities and $c$.**](fig_1_3.eps){#fig1_num5 height="2.5in"}
+
+
+
+![Histogram and maximum likelihood and worst-case densities for U.S.
+quarterly consumption growth for the period 1948.I-2006.IV.
+](BHSplot.eps){#fig_BHS_plot height="2in"}
+
+### To be added
+
+**Add graphs from Tom's microsoft notes file, SMU Jan 27.**
+
 END OF CAPTIONS
 
 
@@ -97,3 +141,14 @@ $$\sum_{i}\pi_{i}\frac{\exp\left(\frac{-u\left(c_{i}\right)}{\tilde{\theta}}\rig
 Guess: the method fails because the derivative of the objective doesn't exist for these parameter choices
 
 **Note 2:** Algorithm is tricky to get to work properly for all values of $c_{1}$. In particular, parameters were chosen with [graduate student descent](https://sciencedryad.wordpress.com/2014/01/25/grad-student-descent/).
+
+
+
+
+=============
+
+
+
+## Figure 2.11
+
+Here we compute  best-case and worst-case expected utility by numerically solving optimization problems with respect to the change of measure.

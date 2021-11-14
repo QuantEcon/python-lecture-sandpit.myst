@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# Five Preference Orderings
+# Risk and Model Uncertainty
 
 ## Overview
 
@@ -644,10 +644,26 @@ ax2.set_title('Transformed space')
 ax2.legend();
 ```
 
+The panel on the right portrays how the transformation $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a new function by  (i)  flipping the  sign,  and (ii) increasing curvature in proportion to $\theta$.
 
-### Digression on moment generating functions and ${\sf T}$ 
+In the left panel, the red line is our tool for computing  the mathematical expectation for different
+values  of $\pi$.
 
-The object 
+The green lot indicates the mathematical expectation of $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ 
+when $\pi = .5$.  
+
+Notice that the distance between the green dot  and the curve is greater in the transformed space than the original space as a result of additional curvature. 
+
+The inverse transformation  $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ generates  the green dot on the left panel that constitutes the risk-sensitive utility  index.  
+
+The gap between the green dot and the red line on the left panel measures the additional adjustment for risk
+that risk-sensitive preferences make relative to plain vanilla expected utility preferences.
+
+### Digression on moment generating functions
+
+The risk-sensitivity operator ${\sf T}$ is intimately connected to a moment generating function.
+
+In particular, a principal constinuent of the ${\sf T}$ operator, namely,  
 
 $$ 
 
@@ -690,21 +706,7 @@ For the particular case $u(c) \sim {\mathcal N}(\mu_u, \sigma_u^2)$, $\kappa_1 =
 
 
 
-
-Thus, the panel on the right portrays how the transformation $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ sends $u\left(c\right)$ to a new function by  (i)  flipping the  sign,  and (ii) increasing curvature in proportion to $\theta$.
-
-In the left panel, the red line is our tool for computing  the mathematical expectation for different
-values  of $\pi$.
-
-The green lot indicates the mathematical expectation of $\exp\left(\frac{-u\left(c\right)}{\theta}\right)$ 
-when $\pi = .5$.  
-
-Notice that the distance between the green dot  and the curve is greater in the transformed space than the original space as a result of additional curvature. 
-
-The inverse transformation  $\theta\log E\left[\exp\left(\frac{-u\left(c\right)}{\theta}\right)\right]$ generates  the green dot on the left panel that constitutes the risk-sensitive utility  index.  
-
-The gap between the green dot and the red line on the left panel measures the additional adjustment for risk
-that risk-sensitive preferences make relative to plain vanilla expected utility preferences. 
+ 
 
 ## Ex post Bayesian preferences 
 
@@ -1177,9 +1179,9 @@ Here is a brief literary  description of the method we used.
 
 **Remark:** It seems that the constraint problem is hard to solve in its original form, i.e. by finding the distorting measure that minimizes the expected utility. 
 
-It seems that viewing (2.5) GGHH as a root finding problem works much better. 
+It seems that viewing equation {eq}`tom7` as a root finding problem works much better. 
 
-Notice that 2.5 does not always have a solution. 
+But notice that  equation {eq}`tom7` does not always have a solution. 
 
 Under $u=\log$, $c_{1}=c_{2}=1$, we have: 
 
@@ -1482,19 +1484,24 @@ The following figures show
 iso-entropy and iso-utility lines for the special case in which $I = 3$,
 $\pi_1 = .3, \pi_2 = .4$, and the utility function is
 $u(c)= \frac{c^{1-\alpha}}{1-\alpha}$ with $\alpha =0$ and $\alpha =3$,
-respectively, for the fixed plan $c(1) = 1, c(2) =2 , c(3) =3$. The
-iso-utility lines are the level curves of
-$\hat \pi_1 c_1 + \hat \pi_2 c_2 + (1-\hat \pi_1 - \hat \pi_2) c_3$ and
-are linear in $(\hat \pi_1, \hat \pi_2)$. This is what it means to say
-'expected utility is linear in probabilities.' Both figures plot the
-locus of points of tangency between the iso-entropy and the iso-utility
+respectively, for the fixed plan $c(1) = 1, c(2) =2 , c(3) =3$.
+
+The iso-utility lines are the level curves of
+
+$$ 
+\hat \pi_1 c_1 + \hat \pi_2 c_2 + (1-\hat \pi_1 - \hat \pi_2) c_3
+$$
+
+and are linear in $(\hat \pi_1, \hat \pi_2)$. 
+
+This is what it means to say 'expected utility is linear in probabilities.'
+
+Both figures plot the locus of points of tangency between the iso-entropy and the iso-utility
 curves that is traced out as one varies $\theta^{-1}$ in the interval
-$[0, 2]$. While the iso-entropy lines are identical in the two figures,
-these 'expansion paths' differ because the utility functions differ,
-meaning that for a given $\theta$ and $(c_1, c_2, c_3)$ triple, the
-worst-case probabilities $\hat \pi_i(\theta) =
- \pi_i \frac{\exp(-u(c_i)/\theta )} {E\exp(-u(c)/\theta )}$ differ as we
-vary $\theta$, causing the associated entropies to differ.
+$[0, 2]$. 
+
+While the iso-entropy lines are identical in the two figures, these 'expansion paths' differ because the utility functions differ,
+meaning that for a given $\theta$ and $(c_1, c_2, c_3)$ triple, the worst-case probabilities $\hat \pi_i(\theta) =  \pi_i \frac{\exp(-u(c_i)/\theta )} {E\exp(-u(c)/\theta )}$ differ as we vary $\theta$, causing the associated entropies to differ.
 
 
 **Color bars:** 
@@ -1630,14 +1637,72 @@ contour_plot(α)
 contour_plot(α)
 ```
 
-HERE IS FIGURE 2.11
 
 
 
 
-## Figure 2.11
+## Bounds on expected utility
 
-Here we compute  best-case and worst-case expected utility by numerically solving optimization problems with respect to the change of measure.
+Suppose that a decision maker wants a lower bound on expected utility
+$\sum_{i=1}^I  \hat \pi_i u(c_i)$ that is satisfied for **any**
+distribution $\hat \pi$ with relative entropy less than or equal to
+$\eta$. 
+
+An attractive feature of multiplier and constraint preferences
+is that they carry with them such a bound.
+
+To show this, it is useful to collect some findings in the following
+string of inequalities associated with multiplier preferences:
+
+
+$$
+
+\begin{aligned}
+{\sf T}_\theta u(c) & = & -\theta \log \sum_{i=1}^I \exp\Biggl(\frac{-u(c_i)}{\theta}\Biggr) \pi_i \nonumber \\
+    & = & \sum_{i=1}^I m_i^* \pi_i \bigl( u(c_i) + \theta \log m_i^* \bigr) \nonumber \\
+    & \leq & \sum_{i=1}^I m_i \pi_i u(c_i) + \theta \sum_{i=1}^i m_i \log m_i \pi_i
+\end{aligned}
+    
+$$
+where $m_i^* \propto \exp \Bigl( \frac{- u(c_i)}{\theta} \Bigr)$ are the
+worst-case distortions to probabilities.
+
+The inequality in the last line just asserts that minimizers minimize.
+
+Therefore, we have the following useful bound:
+
+$$
+
+ \sum_{i=1}^I m_i \pi_i u(c_i ) \geq {\sf T}_\theta u(c) - \theta \sum_{i=1}^I \pi_i m_i \log m_i .
+
+$$ (eqn:bound1)
+
+
+The left side is expected utility under the probability distribution $\{ m_i \pi_i\}$. 
+
+The right side is a *lower bound* on expected utility
+under *all* distributions expressed as an affine function of relative
+entropy $\sum_{i=1}^I \pi_i m_i \log m_i$.
+
+The bound is attained for $m_i =  m_i^* \propto \exp \Bigl(\frac{- u (c_i)}{\theta} \Bigr)$.
+ 
+The *intercept* in the bound is the risk-sensitive criterion ${\sf T}_\theta u(c)$, while the *slope* is the penalty parameter $\theta$. 
+
+Lowering $\theta$ does two things:
+
+ * it lowers the intercept ${\sf T}_\theta u(c)$, which makes the bound less informative for small
+values of entropy; and
+
+ * it lowers the absolute value of the slope, which makes the bound more informative for larger values of relative
+entropy $\sum_{i=1}^I \pi_i m_i \log m_i$.
+
+
+The following figure reports  best-case and worst-case expected utilities.
+
+We calculate the lines in this figure  numerically by solving optimization problems with respect to the change of measure.
+
+
+
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -1738,69 +1803,7 @@ plt.ylabel(r'$E\left[mu\left(c\right)\right]$');
 plt.xlabel(r'$\eta$');
 ```
 
-
-
-[Tom XXXXX: do a graph for the Gaussian case. Do the mean-variance
-portfolio case with normal distribution and entropy. These are the notes
-from Paris conference.]{style="color: red"}
-
-## Bounds on expected utility
-
-Suppose that a decision maker wants a lower bound on expected utility
-$\sum_{i=1}^I  \hat \pi_i u(c_i)$ that is satisfied for **any**
-distribution $\hat \pi$ with relative entropy less than or equal to
-$\eta$. 
-
-An attractive feature of multiplier and constraint preferences
-is that they carry with them such a bound.
-
-To show this, it is useful to collect some findings in the following
-string of inequalities associated with multiplier preferences:
-
-
-$$
-
-\begin{aligned}
-{\sf T}_\theta u(c) & = & -\theta \log \sum_{i=1}^I \exp\Biggl(\frac{-u(c_i)}{\theta}\Biggr) \pi_i \nonumber \\
-    & = & \sum_{i=1}^I m_i^* \pi_i \bigl( u(c_i) + \theta \log m_i^* \bigr) \nonumber \\
-    & \leq & \sum_{i=1}^I m_i \pi_i u(c_i) + \theta \sum_{i=1}^i m_i \log m_i \pi_i
-\end{aligned}
-    
-$$
-where $m_i^* \propto \exp \Bigl( \frac{- u(c_i)}{\theta} \Bigr)$ are the
-worst-case distortions to probabilities.
-
-The inequality in the last line just asserts that minimizers minimize.
-
-Therefore, we have the following useful bound:
-
-$$
-
- \sum_{i=1}^I m_i \pi_i u(c_i ) \geq {\sf T}_\theta u(c) - \theta \sum_{i=1}^I \pi_i m_i \log m_i .
-
-$$ (eqn:bound1)
-
-
-The left side is expected utility under the probability distribution $\{ m_i \pi_i\}$. 
-
-The right side is a *lower bound* on expected utility
-under *all* distributions expressed as an affine function of relative
-entropy $\sum_{i=1}^I \pi_i m_i \log m_i$.
-
-The bound is attained for $m_i =  m_i^* \propto \exp \Bigl(\frac{- u (c_i)}{\theta} \Bigr)$.
- 
-The *intercept* in the bound is the risk-sensitive criterion ${\sf T}_\theta u(c)$, while the *slope* is the penalty parameter $\theta$. 
-
-Lowering $\theta$ does two things:
-
- * it lowers the intercept ${\sf T}_\theta u(c)$, which makes the bound less informative for small
-values of entropy; and
-
- * it lowers the absolute value of the slope, which makes the bound more informative for larger values of relative
-entropy $\sum_{i=1}^I \pi_i m_i \log m_i$.
-
-In figure [1.11](#fig1_num5){reference-type="ref"
-reference="fig1_num5"}, expected utility is on the co-ordinate axis
+In this figure, expected utility is on the co-ordinate axis
 while entropy is on the ordinate axis. 
 
 The *lower* curved line depicts
@@ -1825,7 +1828,7 @@ Points between these two curves are
 possible values of expected utility for some distribution with entropy
 less than or equal to the value $\eta$ on the ordinate axis. 
 
-The straight line depicts the right side of inequality {cite}`eqn:bound1` for a particular value of the penalty parameter
+The straight line depicts the right side of inequality {eq}`eqn:bound1` for a particular value of the penalty parameter
 $\theta$. 
 
 As noted, when one lowers $\theta$, the intercept ${\sf T}_\theta u(c)$ and the absolute value of the slope both decrease.
@@ -1844,22 +1847,6 @@ the entropy constraint in the constraint problem .
 
 This is an application of the envelope theorem.
 
-![The upper curved line is the best-case expected utility
-$E \check m(\check \theta(c,\eta)) u (c)$ as a function of entropy
-$\eta = \sum_{i=1}^I \pi_i m_i \log m_i$, where $\check m$ is the
-likelihood ratio associated with the best-case model. The lower curved
-line is the worst-case expected utility
-$\sum_{i=1}^I \pi_i \tilde m_i (\tilde \theta(c,\eta)) u(c_i)$ as a
-function of entropy. Expected utilities for all other densities having
-the same entropy are between the two curved lines. The straight line
-depicts the lower bound on expected utility
-${\sf T}_\theta u(c) - \theta \sum_{i=1}^I \pi_i m_i \log m_i$
-associated with penalty parameter $\theta$. **Tom XXXXX: add statements
-of probabilities and $c$.**](fig_1_3.eps){#fig1_num5 height="2.5in"}
-
-### To be added
-
-**Add graphs from Tom's microsoft notes file, SMU Jan 27.**
 
 ## Why entropy?
 
@@ -1903,52 +1890,15 @@ detection error probability as a function of $\theta$. They then invert
 this function to calibrate $\theta$ to deliver a reasonable detection
 error probability.
 
-To indicate outcomes from this approach, figure
-[1.12](#fig_BHS_plot){reference-type="ref" reference="fig_BHS_plot"}
+To indicate outcomes from this approach, the following figure
 plots the histogram for U.S. quarterly consumption growth along with a
 representative agent's approximating density and a worst-case density
 that {cite}`BHS_2009` show imply high measured market prices of risk even when a
 representative consumer has the unit coefficient of relative risk
 aversion associated with a logarithmic one-period utility function.
 
-The
-density for the approximating model is
-$\log c_{t+1} - \log c_t = \mu + \sigma_c \epsilon_{t+1}$ where
-$\epsilon_{t+1} \sim {\cal N}(0,1)$ and $\mu$ and $\sigma_c$ are
-estimated by maximum likelihood from the U.S. quarterly data in the
-histogram over the period 1948.I-2006.IV. The consumer's value function
-under logarithmic utility implies that the worst-case model is
-$\log c_{t+1} - \log c_t = (\mu + \sigma_c w)  + \sigma_c \tilde \epsilon_{t+1}$
-where $\{\tilde \epsilon_{t+1}\}$ is also a normalized Gaussian random
-sequence and where $w$ is calculated by setting a detection error
-probability to $.05$. The worst-case model in figure
-[1.12](#fig_BHS_plot){reference-type="ref" reference="fig_BHS_plot"}
-appears to fit the histogram nearly as well as the approximating model.
-
-![Histogram and maximum likelihood and worst-case densities for U.S.
-quarterly consumption growth for the period 1948.I-2006.IV.
-](BHSplot.eps){#fig_BHS_plot height="2in"}
-
-### Axiomatic justifications
-
-Multiplier and constraint preferences are both special cases of what
-{cite}`MaccheroniMarinacciRustichini:2006b` call variational preferences. 
-
-They provide an
-axiomatic foundation for variational preferences and describe how they
-express ambiguity aversion.
-
-Constraint preferences are particular
-instances of the multiple priors model of {cite}`GilboaSchmeidler:1989`.
 
 
-
-HERE IS FIGURE  2.12
-
-
-## Figure 2.12
-
-Density is originally scaled by a number `intconstant`
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -2006,4 +1956,32 @@ ax.legend(lns, labs, loc=0);
 
 rc('text',usetex=True)
 ```
+
+
+
+The density for the approximating model is
+$\log c_{t+1} - \log c_t = \mu + \sigma_c \epsilon_{t+1}$ where
+$\epsilon_{t+1} \sim {\cal N}(0,1)$ and $\mu$ and $\sigma_c$ are
+estimated by maximum likelihood from the U.S. quarterly data in the
+histogram over the period 1948.I-2006.IV. The consumer's value function
+under logarithmic utility implies that the worst-case model is
+$\log c_{t+1} - \log c_t = (\mu + \sigma_c w)  + \sigma_c \tilde \epsilon_{t+1}$
+where $\{\tilde \epsilon_{t+1}\}$ is also a normalized Gaussian random
+sequence and where $w$ is calculated by setting a detection error
+probability to $.05$. The worst-case model appears to fit the histogram nearly as well as the approximating model.
+
+
+### Axiomatic justifications
+
+Multiplier and constraint preferences are both special cases of what
+{cite}`MaccheroniMarinacciRustichini:2006b` call variational preferences. 
+
+They provide an
+axiomatic foundation for variational preferences and describe how they
+express ambiguity aversion.
+
+Constraint preferences are particular
+instances of the multiple priors model of {cite}`GilboaSchmeidler:1989`.
+
+
 
