@@ -42,7 +42,7 @@ np.set_printoptions(precision=3, suppress=True)
 
 ## Constructing a circulant matrix
 
-To construct an $N \times N$ circulant matrix, we only need to know  $N$ entries that occur in a single row.
+To construct an $N \times N$ circulant matrix, we  need to know  only the  $N$ entries that occur in a single row.
 
 After setting entries in the first row, the remaining rows of a circulant matrix are determined as
 follows:
@@ -58,6 +58,9 @@ c_{2} & c_{3} & c_{4} & c_{5} & c_{6} & \cdots & c_{1}\\
 c_{1} & c_{2} & c_{3} & c_{4} & c_{5} & \cdots & c_{0}
 \end{array}\right]
 $$ (eqn:circulant)
+
+(It is also possible to create a circulant matrix by creating the transpose of the above matrix, in which case only the
+first column needs to be specified.)
 
 Let's write some Python code to generate a circulant matrix in this way.
 
@@ -81,7 +84,42 @@ def construct_cirlulant(row):
 # a simple case when N = 3
 construct_cirlulant(np.array([1., 2., 3.]))
 ```
-## Connection to avpermutation matrix
+
+### Some properties of circulant matrices
+
+The transpose of a circulant matrix is a circulant matrix.
+
+Suppose that $A$ and $B$ are both circulant matrices. 
+
+It can be verified that
+ 
+* $A + B$ is a circulant matrix
+* $A B$ is a circulant matrix
+* $A B = B A$ 
+
+Consider a circulant matrix as defined above with first row 
+
+$$  c = \begin{bmatrix} c_0 & c_1 & \cdots & c_{N-1} \end{bmatrix} $$
+
+and consider a vector 
+
+$$ a = \begin{bmatrix} a_0 & a_1 & \cdots  &  a_{N-1} \end{bmatrix} $$
+
+Define the **convolution** $b = c * a $ as a vector with components
+
+$$ b_k = \sum_{i=0}^n-1 c_{k-i} a_i  $$
+
+It can be verified that the vector $b$ is given by
+
+$$ b = C^T a  $$
+
+where $C^T$ is the transpose of the circulant matrix as defined above.  
+
+
+
+
+
+## Connection to a permutation matrix
 
 A good way to construct a circulant matrix is to use a **permutation matrix**.
 
@@ -92,7 +130,7 @@ A **permutation** of a set of the set of non-negative integers $\{0, 1, 2, \ldot
 A permutation of a set $\{1, 2, \ldots, n\}$ rearranges the $n$ integers in the set.  
 
 
-A [permutation matrix](https://mathworld.wolfram.com/PermutationMatrix.html) is a matrix obtained by permuting the rows of an $n \times n$ identity matrix according to some permutation of the numbers $1$ to $n$. 
+A [permutation matrix](https://mathworld.wolfram.com/PermutationMatrix.html) is a matrix obtained by permuting the rows of an $n \times n$ identity matrix according to a permutation of the numbers $1$ to $n$. 
 
 
 Thus, every row and every column contain precisely a single $1$ with $0$s everywhere else.
@@ -112,11 +150,11 @@ P=\left[\begin{array}{cccccc}
 \end{array}\right]
 $$
 
-is a **cyclic shift**  operator that, when applied to an $N \times 1$ vector $h$, shifts entries in rows $2$ through $N$ up one row and shifts the entry in row $1$ to row $N$. 
+serves as  a **cyclic shift**  operator that, when applied to an $N \times 1$ vector $h$, shifts entries in rows $2$ through $N$ up one row and shifts the entry in row $1$ to row $N$. 
 
-The singular values of a permutation matrix are all $1$s.
+Singular values of a permutation matrix are all $1$s.
 
-The eigenvalues of permutation matrix $P$ can be computed  by first constructing
+Eigenvalues of permutation matrix $P$ can be computed  by constructing
 
 $$
 P-\lambda I=\left[\begin{array}{cccccc}
@@ -141,9 +179,9 @@ $$
 P P' = I 
 $$
 
- Eigenvalues $\lambda_i$ can be complex.
+ Eigenvalues $\lambda_i$ of a permuation matrix can be complex.
 
-Magnitudes $\mid \lambda_i \mid$  of eigenvalues $\lambda_i$ all equal  $1$.
+Magnitudes $\mid \lambda_i \mid$  of these  eigenvalues $\lambda_i$ all equal  $1$.
 
 ## Examples with Python
 
@@ -177,13 +215,13 @@ for i in range(4):
     print(f'𝜆{i} = {𝜆[i]:.1f} \nvec{i} = {Q[i, :]}\n')
 ```
 
-In graphs  below we shall portray eigenvalues of the shift  permutation matrix   in the complex plane. 
+In graphs  below we shall portray eigenvalues of a shift  permutation matrix   in the complex plane. 
 
 These eigenvalues are uniformly distributed along the unit circle.
 
-They are the $n$ roots of unity, meaning they are the $n$ $z$'s that solve $z^n =1$, where $z$ is a complex number.
+They are the **$n$ roots of unity**, meaning they are the $n$  numbers  $z$  that solve $z^n =1$, where $z$ is a complex number.
 
-In particular, they are
+In particular, the $n$ roots of unity are
 
 $$
 z = \exp\left(\frac{2 \pi j k }{N} \right) , \quad k = 1, \ldots, N-1
@@ -220,7 +258,7 @@ $$
 C = c_{0} I + c_{1} P + c_{2} P^{2} +\cdots + c_{N-1} P^{N-1}.
 $$
 
-Consider an example in which  $N=8$ and let $w = e^{-2 \pi i / N}$.
+Consider an example in which  $N=8$ and let $w = e^{-2 \pi j / N}$.
 
 It can be verified that the matrix $F_8$ of eigenvectors of $P_{8}$  is
 
@@ -278,7 +316,7 @@ Q8 = F8 / np.sqrt(8)
 Q8 @ np.conjugate(Q8)
 ```
 
-Let's Verify that $j$th column of $Q_{8}$ is a eigenvector of $P_{8}$ with a eigenvalue $w^{j}$.
+Let's verify that $k$th column of $Q_{8}$ is a eigenvector of $P_{8}$ with a eigenvalue $w^{k}$.
 
 ```{code-cell} ipython3
 P8 = construct_P(8)
@@ -305,13 +343,13 @@ $$
 C = c_{0} I + c_{1} P + \cdots + c_{n-1} P^{n-1}
 $$
 
-and that every eigenvector of $P$ is also a eigenvector of $C$.
+and that every eigenvector of $P$ is also an eigenvector of $C$.
 
 ```{code-cell} ipython3
 
 ```
 
-We illustrate this for the $N=8$ case.
+We illustrate this for $N=8$ case.
 
 ```{code-cell} ipython3
 c = np.random.random(8)
@@ -346,13 +384,13 @@ C
 C8
 ```
 
-Compute the difference between two circulant matrices that we constructed in two different ways.
+Now let's compute the difference between two circulant matrices that we have  constructed in two different ways.
 
 ```{code-cell} ipython3
 np.abs(C - C8).max()
 ```
 
-The  $j$th column of $P_{8}$ associated with eigenvalue $w^{j-1}$ is an eigenvector of $C_{8}$ associated with an eigenvalue $\sum_{k=0}^{7} c_{k} w^{j * k}$.
+The  $k$th column of $P_{8}$ associated with eigenvalue $w^{k-1}$ is an eigenvector of $C_{8}$ associated with an eigenvalue $\sum_{h=0}^{7} c_{j} w^{h k}$.
 
 ```{code-cell} ipython3
 𝜆_C8 = np.zeros(8, dtype=np.complex)
@@ -381,7 +419,7 @@ The **discrete fourier transform** (DFT) allows us to  represent a  discrete tim
 
 Consider a sequence of $N$ real number $\{x_j\}_{j=0}^{N-1}$. 
 
-The *discrete fourier transform* maps $\{x_j\}_{j=0}^{N-1}$ into a sequence of complex numbers $\{X_k\}_{k=0}^{N-1}$
+The **discrete fourier transform** maps $\{x_j\}_{j=0}^{N-1}$ into a sequence of complex numbers $\{X_k\}_{k=0}^{N-1}$
 
 where
 
@@ -432,7 +470,7 @@ X = DFT(x)
 X
 ```
 
-We can plot  magnitudes of the original sequence of numbers and the associated discrete Fourier transform of that sequence.
+We can plot  magnitudes of a sequence of numbers and the  associated discrete Fourier transform.
 
 ```{code-cell} ipython3
 def plot_magnitude(x=None, X=None):
@@ -466,7 +504,7 @@ def plot_magnitude(x=None, X=None):
 plot_magnitude(x=x, X=X)
 ```
 
-The **inverse Fourier transform**  transforms $X$ back to $x$.
+The **inverse Fourier transform**  transforms a Fourier transform  $X$ of $x$  back to $x$.
 
 The inverse Fourier transform is defined by
 
@@ -498,8 +536,9 @@ $$
 x_{n}=2\cos\left(2\pi\frac{11}{40}n\right),\ n=0,1,2,\cdots19
 $$
 
-Since $N=20$ and we cannot use an integer multiple of $\frac{1}{20}$ to represent a frequency $\frac{11}{40}$, we shall end up using
-all $N$ of the availble   frequencies in the DFT.
+Since $N=20$, we cannot use an integer multiple of $\frac{1}{20}$ to represent a frequency $\frac{11}{40}$.
+
+To handle this,  we shall end up using all $N$ of the availble   frequencies in the DFT.
 
 Since $\frac{11}{40}$ is in between $\frac{10}{40}$ and $\frac{12}{40}$ (each of which is an integer multiple of $\frac{1}{20}$), the complex coefficients in the DFT   have their  largest magnitudes at $k=5,6,15,16$, not just at a single frequency.
 
@@ -519,7 +558,9 @@ X = DFT(x)
 plot_magnitude(x=x, X=X)
 ```
 
-What happens if we change the last example to $x_{n}=2\cos\left(2\pi\frac{10}{40}n\right)$ now? Note that $\frac{10}{40}$ is an integer multiple of $\frac{1}{20}$.
+What happens if we change the last example to $x_{n}=2\cos\left(2\pi\frac{10}{40}n\right)$? 
+
+Note that $\frac{10}{40}$ is an integer multiple of $\frac{1}{20}$.
 
 ```{code-cell} ipython3
 N = 20
@@ -537,7 +578,7 @@ X = DFT(x)
 plot_magnitude(x=x, X=X)
 ```
 
-If we represent the discrete fourier transform as a matrix, we discover that it equals the  matrix $F_{N}$ of eigenvectors  of the permutation matrix $P_{N}$ studied above.
+If we represent the discrete fourier transform as a matrix, we discover that it equals the  matrix $F_{N}$ of eigenvectors  of the permutation matrix $P_{N}$.
 
 We can use the example where $x_{n}=2\cos\left(2\pi\frac{11}{40}n\right),\ n=0,1,2,\cdots19$ to illustrate this.
 
