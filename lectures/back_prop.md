@@ -26,26 +26,30 @@ kernelspec:
 This lecture describes the structure of a plain vanilla **artificial neural network**  (ANN) of a type that is widely used to 
 approximate a function $f$ that maps an  $x$ in  a space $X$ into a $y$ in a space $Y$.  
 
-To introduce elementary concepts, we study a simple example in which $x$ and $y$ are scalars.
+To introduce elementary concepts, we study an example in which $x$ and $y$ are scalars.
 
 We'll describe the following concepts:
 
  * a neuron
  * an activation function
  * a network of neurons 
+ * A neural network as a composition of functions
  * back-propogation and its relationship  to the chain rule of differential calculus
+ 
 
 ## A simple deep but wide artificial neural net
 
-We describe a simple "deep" neural network of "width" one.  
+We describe a  "deep" neural network of "width" one.  
 
-By **deep** we mean that the network composes a large number of functions organized into nodes of a graph.
+**Deep** means that the network composes a large number of functions organized into nodes of a graph.
 
 **Width** refers to the number of right hand  side variables on the right hand side of the function being approximated.
 
-Setting the "width" to one means that the network   just composes univariate functions.
+Setting "width" to one means that the network   just composes univariate functions.
 
-We let $x \in \mathbb{R}$ be a scalar and $y \in \mathbb{R}$ be another scalar that is a nonlinear function of $x$:
+Let $x \in \mathbb{R}$ be a scalar and $y \in \mathbb{R}$ be another scalar.
+
+We assume  that $y$ is  a nonlinear function of $x$:
 
 $$
 y = f(x)
@@ -53,11 +57,11 @@ $$
 
 We want to approximate  $f(x)$ with another function that we define recursively.
 
-For a network of depth $N \geq 1$, each layer $i =1, \ldots N$ consists of 
+For a network of depth $N \geq 1$, each **layer** $i =1, \ldots N$ consists of 
 
 * an input $x_i$
 
-* an **affine function** $w_i x_i + bI$, where $w_i$ is a scalar "weight" placed on the input and $b_i$ is a scalar "bias"
+* an **affine function** $w_i x_i + bI$, where $w_i$ is a scalar **weight** placed on the input and $b_i$ is a scalar **bias**
 
 * an **activation function** $h_i$ that takes $(w_i x_i + b_i)$ as an argument and produces an output $x_{i+1}$
    
@@ -68,9 +72,23 @@ $$
 h (z) = \frac{1}{1 + e^{-z}} 
 $$
 
-Below, we'll use the sigmoid function for layers $1$ to $N-1$ and the identity function for  layer $N$.
 
-To approximate the function $f(x)$ we create a new function $\hat f(x)$ by proceeding as follows.
+Another popular activation function is the **rectified linear unit** (ReLU) function
+
+$$
+h(z) = \max (0, z) 
+$$
+
+
+Yet another activation function is the identity function
+
+$$ 
+h(z) = z 
+$$
+
+As activation functions below, we'll use the sigmoid function for layers $1$ to $N-1$ and the identity function for  layer $N$.
+
+To approximate a function $f(x)$ we construct   $\hat f(x)$  by proceeding as follows.
 
 Let 
 
@@ -88,7 +106,7 @@ If $N >1$, we call the right side a "deep" neural net.
 
 The larger is the integer $N$, the "deeper" is the neural net.
 
-Evidently,  if we know the values of the parameters $\{w_i, b_i\}_{i=1}^N$, then we can compute
+Evidently,  if we know  the parameters $\{w_i, b_i\}_{i=1}^N$, then we can compute
 $\hat f(x)$ for a given $x = \tilde x$ by iterating on the recursion
 
 $$
@@ -111,7 +129,7 @@ Let $\left\{ \left(w_{i},b_{i}\right)\right\} _{i=1}^{N}$ denote a sequence of w
 As mentioned above, for a given input $x_{1}$, our approximating function $\hat f$ evaluated
 at $x_1$ equals the "output" $x_{N+1}$ from our network that  can be computed by iterating on $x_{i+1}=h_{i}\left(w_{i}x_{i}+b_{i}\right)$.
 
-For a given "prediction" $\hat{y} (x) $ and target $y= f(x)$, consider the loss function
+For a given **prediction** $\hat{y} (x) $ and **target** $y= f(x)$, consider the loss function
 
 $$
 \mathcal{L} \left(\hat{y},y\right)(x)=\frac{1}{2}\left(\hat{y}-y\right)^{2}(x) .
@@ -128,7 +146,7 @@ $$
 
 where $\mu(x)$ is some measure of  points $x \in \mathbb{R}$ over which we want a good approximation $\hat f(x)$ to $f(x)$.
 
-Stack the weights into a vector of parameters $p$:
+Stack  weights and biases into a vector of parameters $p$:
 
 $$ 
 p = \begin{bmatrix}     
@@ -147,7 +165,7 @@ Applying a "poor man's version" of a **stochastic gradient descent** algorithm f
 
 $$
 p_{k+1}=p_k-\alpha\frac{d \mathcal{L}}{dx_{N+1}}\frac{dx_{N+1}}{dp_k}
-$$
+$$ (eq:sgd)
 
 where $\frac{d {\mathcal L}}{dx_{N+1}}=-\left(x_{N+1}-y\right)$ and $\alpha > 0 $ is a step size.
 
@@ -158,9 +176,9 @@ To implement one step of this parameter update rule, we want  the vector of deri
 
 In the neural network literature, this step is accomplished by what is known as **back propogation**
 
-Thanks to some properties of
+Thanks to  properties of
 
-* the chain and product rules for differentiation, and
+* the chain and product rules for differentiation from differential calculus, and
 
 * lower triangular matrices
    
@@ -263,7 +281,7 @@ Choosing a  training set amounts to a choice of measure $\mu$ in the above  form
 
 In this spirit,  we shall use a uniform grid of, say, 50 or 200 or $\ldots$,  points. 
 
-There are many possible approaches solving the minimization  problem posed above:
+There are many possible approaches to the minimization  problem posed above:
 
 * batch gradient descent in which you use an average gradient over the training set
 
@@ -271,7 +289,7 @@ There are many possible approaches solving the minimization  problem posed above
 
 * something in-between (so-called "mini-batch gradient descent")
  
-The update rule described above  corresponds to a stochastic gradient descent algorithm
+The update rule {eq}`eq:sgd` described above  amounts  to a stochastic gradient descent algorithm
 
 ```{code-cell} ipython3
 from IPython.display import Image
