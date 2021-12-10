@@ -28,8 +28,7 @@ approximate a function $f$ that maps an  $x$ in  a space $X$ into a $y$ in a spa
 
 To introduce elementary concepts, we study an example in which $x$ and $y$ are scalars.
 
-We'll describe the following concepts:
-
+We'll describe the following concepts that are brick and mortar for neural networks:
  * a neuron
  * an activation function
  * a network of neurons 

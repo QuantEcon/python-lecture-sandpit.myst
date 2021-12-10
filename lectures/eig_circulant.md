@@ -15,10 +15,10 @@ kernelspec:
 
 ## Overview
 
-This lecture is an introduction circulant matrices and some of their useful properties.
+This lecture introduces circulant matrices and some of their useful properties.
 
-Circulant matrices have a special structure that connects them to  important concepts
-such  as
+Circulant matrices have a special structure that connects them to  useful concepts
+including
 
   * convolution
   * Fourier transforms
@@ -42,7 +42,7 @@ np.set_printoptions(precision=3, suppress=True)
 
 ## Constructing a circulant matrix
 
-To construct an $N \times N$ circulant matrix, we  need to know  only the  $N$ entries that occur in a single row.
+To construct an $N \times N$ circulant matrix, we  need only the  $N$ entries that occur in a single row.
 
 After setting entries in the first row, the remaining rows of a circulant matrix are determined as
 follows:
@@ -59,10 +59,10 @@ c_{1} & c_{2} & c_{3} & c_{4} & c_{5} & \cdots & c_{0}
 \end{array}\right]
 $$ (eqn:circulant)
 
-(It is also possible to create a circulant matrix by creating the transpose of the above matrix, in which case only the
-first column needs to be specified.)
+It is also possible to construct a circulant matrix by creating the transpose of the above matrix, in which case only the
+first column needs to be specified.
 
-Let's write some Python code to generate a circulant matrix in this way.
+Let's write some Python code to generate a circulant matrix.
 
 ```{code-cell} ipython3
 @njit
@@ -87,33 +87,35 @@ construct_cirlulant(np.array([1., 2., 3.]))
 
 ### Some properties of circulant matrices
 
-The transpose of a circulant matrix is a circulant matrix.
+Here are some useful properties:
 
-Suppose that $A$ and $B$ are both circulant matrices. 
+Suppose that $A$ and $B$ are both circulant matrices. Then it can be verified that
 
-It can be verified that
+ * The transpose of a circulant matrix is a circulant matrix.
+
+
  
-* $A + B$ is a circulant matrix
-* $A B$ is a circulant matrix
-* $A B = B A$ 
+  * $A + B$ is a circulant matrix
+  * $A B$ is a circulant matrix
+  * $A B = B A$ 
 
-Consider a circulant matrix as defined above with first row 
+Now consider a circulant matrix as defined above with first row 
 
-$$  c = \begin{bmatrix} c_0 & c_1 & \cdots & c_{N-1} \end{bmatrix} $$
+  $$  c = \begin{bmatrix} c_0 & c_1 & \cdots & c_{N-1} \end{bmatrix} $$
 
-and consider a vector 
+ and consider a vector 
 
-$$ a = \begin{bmatrix} a_0 & a_1 & \cdots  &  a_{N-1} \end{bmatrix} $$
+ $$ a = \begin{bmatrix} a_0 & a_1 & \cdots  &  a_{N-1} \end{bmatrix} $$
 
-Define the **convolution** $b = c * a $ as a vector with components
+ Define the **convolution** of the two vectors $c$ and $a$ as $b = c * a $ as a vector with components
 
 $$ b_k = \sum_{i=0}^n-1 c_{k-i} a_i  $$
 
-It can be verified that the vector $b$ is given by
+It can be verified that the vector $b$ satisfies
 
 $$ b = C^T a  $$
 
-where $C^T$ is the transpose of the circulant matrix as defined above.  
+where $C^T$ is the transpose of the circulant matrix as defined in equation {eq}`eqn:circulant`.  
 
 
 
@@ -130,7 +132,7 @@ A **permutation** of a set of the set of non-negative integers $\{0, 1, 2, \ldot
 A permutation of a set $\{1, 2, \ldots, n\}$ rearranges the $n$ integers in the set.  
 
 
-A [permutation matrix](https://mathworld.wolfram.com/PermutationMatrix.html) is a matrix obtained by permuting the rows of an $n \times n$ identity matrix according to a permutation of the numbers $1$ to $n$. 
+A [permutation matrix](https://mathworld.wolfram.com/PermutationMatrix.html) is obtained by permuting the rows of an $n \times n$ identity matrix according to a permutation of the numbers $1$ to $n$. 
 
 
 Thus, every row and every column contain precisely a single $1$ with $0$s everywhere else.
@@ -152,7 +154,6 @@ $$
 
 serves as  a **cyclic shift**  operator that, when applied to an $N \times 1$ vector $h$, shifts entries in rows $2$ through $N$ up one row and shifts the entry in row $1$ to row $N$. 
 
-Singular values of a permutation matrix are all $1$s.
 
 Eigenvalues of permutation matrix $P$ can be computed  by constructing
 
@@ -179,9 +180,11 @@ $$
 P P' = I 
 $$
 
- Eigenvalues $\lambda_i$ of a permuation matrix can be complex.
+Eigenvalues $\lambda_i$ of a permuation matrix can be complex.
 
 Magnitudes $\mid \lambda_i \mid$  of these  eigenvalues $\lambda_i$ all equal  $1$.
+
+Thus, **singular values** of a permutation matrix are all $1$s.
 
 ## Examples with Python
 
@@ -252,7 +255,7 @@ for i, N in enumerate([3, 4, 6, 8]):
 
 plt.show()
 ```
-For any coefficients $\{c_i\}_{i=0}^{n-1}$, eigenvectors of $P$ are also  eigenvectors of 
+For a vector of  coefficients $\{c_i\}_{i=0}^{n-1}$, eigenvectors of $P$ are also  eigenvectors of 
 
 $$
 C = c_{0} I + c_{1} P + c_{2} P^{2} +\cdots + c_{N-1} P^{N-1}.
@@ -277,8 +280,9 @@ $$
 
 The matrix $F_8$ defines a  [Discete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform).
 
-To convert it into an orthogonal eigenvector matrix, we can simply normalize it by dividing every entry  by $\sqrt{8}$ (stare at the 
-first column of $F_8$ above to convince yourself of this fact). 
+To convert it into an orthogonal eigenvector matrix, we can simply normalize it by dividing every entry  by $\sqrt{8}$. 
+
+ *  stare at the first column of $F_8$ above to convince yourself of this fact 
 
 The eigenvalues corresponding to each eigenvector are $\{w^{j}\}_{j=0}^{7}$ in order.
 

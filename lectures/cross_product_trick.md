@@ -82,12 +82,11 @@ F & = F^* + Q^{-1} H.
 
 ## Kalman filter
 
-Duality between a linear-quadratic optimal control and a Kalman filtering problem suggests that there
+The **duality** that prevails  between a linear-quadratic optimal control and a Kalman filtering problem means that there
 is an analogous transformation that allows us to transform a Kalman filtering problem
 with non-zero covariance matrix  between between shocks to states and shocks to measurements to an equivalent Kalman filtering problem with zero covariance between shocks to states and measurments.
 
-Yes, there is.
-
+Let's look at the appropriate transformations.
 
 
 First, let's recall the Kalman filter with covariance between noises to states and measurements.
@@ -123,8 +122,10 @@ B^* {B^*}' & = BB' - BF' (FF')^{-1} FB'.
 
 #### Algorithm
 
+A consequence of the above formulas is that we can use the following algorithm to solve Kalman filtering problems that involve 
+non zero covariances between state and signal noises. 
 
-Compute $\Sigma, K^*$ using the ordinary Kalman filtering  formula with $BF' = 0$, i.e.,
+First, compute $\Sigma, K^*$ using the ordinary Kalman filtering  formula with $BF' = 0$, i.e.,
 with zero covariance matrix between random shocks to  states and  random shocks to measurements. 
 
 That is, compute  $K^*$ and $\Sigma$ that  satisfy
