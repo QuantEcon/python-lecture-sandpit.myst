@@ -23,9 +23,11 @@ from scipy.linalg import schur
 
 ## Overview
 
-This lecture describes a Lagrangian formulation of an infinite horizon undiscounted dynamic programming problem, also called an  optimal linear regulator problem.
+This lecture describes a Lagrangian formulation of an infinite horizon linear quadratic undiscounted dynamic programming problem.
 
-The formulation 
+Such a problem is  also sometimes called an  optimal linear regulator problem.
+
+A Lagrangian formulation 
 
  * carries insights about connections between stability and optimality
  
@@ -33,20 +35,18 @@ The formulation
   
  * opens the way to constructing solutions of dynamic systems that don't come directly from an  intertemporal optimization problem
   
-## The Undiscounted Problem
+## The Undiscounted LQ Dynamic Programming Problem
 
 
-The undiscounted optimal linear regulator problem
-is to choose a sequence of controls  $\{u_t\}_{t=0}^\infty$ to maximize the criterion
+The problem is to choose a sequence of controls  $\{u_t\}_{t=0}^\infty$ to maximize the criterion
 
 $$ 
 - \sum_{t=0}^\infty \{x'_t Rx_t+u'_tQu_t\} 
 $$
 
-subject to $x_{t+1}=Ax_t+Bu_t$, $x_0$ given. 
+subject to $x_{t+1}=Ax_t+Bu_t$, where  $x_0$ is a  given initial state vector. 
 
- Here $x_t$ is an
-$(n\times 1)$ vector of state variables, $u_t$ is a $(k\times 1)$
+ Here $x_t$ is an $(n\times 1)$ vector of state variables, $u_t$ is a $(k\times 1)$
 vector of controls, $R$ is a positive semidefinite symmetric matrix,
 $Q$ is a positive definite symmetric matrix, $A$ is an $(n\times n)$
 matrix, and $B$ is an $(n\times k)$ matrix.
@@ -62,8 +62,8 @@ $$
 - x'Px=\max_u \{- x' Rx-u'Qu-(Ax+Bu)' P(Ax+Bu)\}
 $$ (bellman0)
 
-The first-order necessary condition for the maximum problem on the
-right side of equation {eq}`bellman0` is
+The first-order necessary conditions for the maximum problem on the
+right side of equation {eq}`bellman0` are
 
 ```{note} 
 We use the following rules for differentiating quadratic and bilinear matrix forms: 
@@ -75,13 +75,17 @@ $$
 (Q+B'PB)u=-B'PAx,
 $$
 
-which implies an optimal feedback rule for setting $u$
+which implies that an optimal decision rule for $u$ is 
 
 $$
 u=-(Q+B'PB)^{-1} B'PAx
 $$ 
 
-or $u=-Fx,$
+or 
+
+$$
+ u=-Fx,
+$$
 where 
 
 $$ 
@@ -95,9 +99,15 @@ $$
 P=R+A'PA-A'PB(Q+B'PB)^{-1} B'PA.
 $$ (riccati)
 
-Equation {eq}`riccati` is called an **algebraic matrix Riccati** equation.
+Equation {eq}`riccati` is called an **algebraic matrix Riccati** equation that determines the matrix $P$ in the value function.
 
-It expresses the matrix $P$ as an implicit function of the matrices
+There are multiple solutions of equation {eq}`riccati`.
+
+But only one of them is positive definite.  
+
+The positive define solution is associated with the maximum of our problem.
+
+It  expresses the matrix $P$ as an implicit function of the matrices
 $R,Q,A,B$. 
 
 Notice that the **gradient of the value function** is
@@ -116,8 +126,10 @@ For the undiscounted optimal linear regulator problem, form the Lagrangian
 
 $$
 \cal L = - \sum^\infty_{t=0} \biggl\{ x^\prime_t R x_t + u_t^\prime Q u_t +
-                                 2 \mu^\prime_{t+1} [A x_t + B u_t - x_{t+1}]\biggr\}.
+                                 2 \mu^\prime_{t+1} [A x_t + B u_t - x_{t+1}]\biggr\}
 $$ (eq1)
+
+where $\mu_{t+1}$ is a vector of Lagrange multipliers on the time $t$ transition law $x_{t+1} = A x_t + b u_t$.
 
 First-order conditions for maximization with respect to $\{u_t,x_{t+1}\}_{t=0}^\infty$ are
 
@@ -140,21 +152,20 @@ $$
  \mu_{t+1} = P x_{t+1}
 $$ (eqn:muPx)
 
-where $P$ is the matrix that solves an  appropriate algebraic Riccati equation. 
+where $P$ is a positive define  matrix that solves  the algebraic Riccati equation {eq}`riccati`. 
 
 Thus, from equations {eq}`eqn:valgrad` and  {eq}`eqn:muPx`,  $- 2 \mu_{t}$ is
-the gradient of the value function. 
+the gradient of the value function with respect to $x_t$. 
 
-The Lagrange multiplier vector $\mu_{t}$ is often called the *costate* vector
-corresponding to the state vector $x_t$.
+The Lagrange multiplier vector $\mu_{t}$ is often called the **costate** vector that 
+corresponds to the **state** vector $x_t$.
 
 Solve the first equation of {eq}`eq2`  for $u_t$ in terms of $\mu_{t+1}$.
 
 Substitute
 into the law of motion $x_{t+1} = A x_t + B u_t$.
 
-Then arrange the resulting
-equation and the second equation of {eq}`eq2`  into the form
+Then arrange the resulting equation and the second equation of {eq}`eq2`  into the form
 
 $$
 L\ \pmatrix{x_{t+1}\cr \mu_{t+1}\cr}\ = \ N\ \pmatrix{x_t\cr \mu_t\cr}\
@@ -180,7 +191,7 @@ where
 $$
 M\equiv L^{-1} N = \pmatrix{A+B Q^{-1} B^\prime A^{\prime-1}R &
 -B Q^{-1} B^\prime A^{\prime-1}\cr -A^{\prime -1} R & A^{\prime -1}\cr}.
-$$
+$$ (Mdefn)
 
 +++
 
@@ -188,8 +199,13 @@ $$
 
 
 We seek to solve the difference equation system  {eq}`eq4orig` for a sequence $\{x_t\}_{t=0}^\infty$
-that satisfies the initial condition for $x_0$ and a terminal condition
-$\lim_{t \rightarrow +\infty} x_t =0$ that expresses our wish for a *stable* solution.
+that satisfies 
+
+ * an initial condition for $x_0$
+ * a terminal condition $\lim_{t \rightarrow +\infty} x_t =0$ 
+
+This  terminal condition reflects our desire for a **stable** solution, one that does not diverge as $t \rightarrow \infty$.
+
 
 We inherit our wish for stability of the $\{x_t\}$ sequence from a desire to maximize
 
@@ -202,10 +218,9 @@ which requires that $x_t' R x_t$ converge to zero as $t \rightarrow + \infty$.
 
 ### Reciprocal pairs property
 
-To proceed, we study properties of the $(2n \times 2n)$ matrix $M$. 
+To proceed, we study properties of the $(2n \times 2n)$ matrix $M$ defined in {eq}`Mdefn`. 
 
-It helps to introduce
-a $(2n \times 2n)$ matrix
+It helps to introduce a $(2n \times 2n)$ matrix
 
 $$
 J= \pmatrix{0 & -I_n\cr I_n & 0\cr}.
@@ -237,7 +252,7 @@ For square matrices, recall that
   
   *  eigenvalues of the inverse of a matrix are  inverses of  eigenvalues of the matrix
   
-  * a matrix and its transpose have the same eigenvalues
+  * a matrix and its transpose share eigenvalues
 
 It then follows from equation {eq}`eq4`  that
 the eigenvalues of $M$ occur in reciprocal pairs: if $\lambda$ is an
@@ -255,16 +270,19 @@ Consider the following triangularization of $M$
 
 $$
 V^{-1} M V= \pmatrix{W_{11} & W_{12} \cr 0 & W_{22}\cr}
-$$
+$$ (eqn:triangledecomp)
 
-where each block on the right side is $(n\times n)$, where $V$ is
-nonsingular, and where $W_{22}$ has all its eigenvalues exceeding $1$ in modulus
-and $W_{11}$ has all of its eigenvalues less than $1$ in modulus. 
+where 
+
+* each block on the right side is $(n\times n)$
+* $V$ is nonsingular
+* all eigenvalues of $W_{22}$ exceed $1$ in modulus
+* all  eigenvalues of $W_{11}$ are  less than $1$ in modulus 
 
 ### Schur decomposition
 
 The **Schur decomposition** and the **eigenvalue decomposition**
-are two such decompositions. 
+are two  decompositions of the form {eq}`eqn:triangledecomp`. 
 
 Write equation {eq}`eq658`  as
 
@@ -368,10 +386,11 @@ Thus, the preceding argument establishes that
 
 $$
 P = V_{21} V_{11}^{-1}.
-$$
+$$ (eqn:Pvaughn)
 
-This formula provides us with an alternative, and typically computationally very
-efficient, way of computing the matrix $P$.
+Remarkably, formula {eq}`eqn:Pvaughn` provides us with a computationally 
+efficient way of computing the positive definite  matrix $P$ that solves the algebraic Riccati equation {eq}`riccati` that emerges
+from dynamic programming.
 
 This same method can be applied to compute the solution of
 any system of the form {eq}`eq4orig` if a solution exists, even
@@ -459,10 +478,10 @@ eigvals = sorted(np.linalg.eigvals(M))
 eigvals
 ```
 
-When we apply Schur decomposition such that $M=V W V^{-1}$, we want the upper left block of $W$, $W_{11}$, has all of its
-eigenvalues less than 1 in modulus, and the lower right block $W_{22}$ has all its eigenvalues exceeding 1 in modulus. 
+When we apply Schur decomposition such that $M=V W V^{-1}$, we want the upper left block of $W$, $W_{11}$, to have all of its
+eigenvalues that are  less than 1 in modulus, and the lower right block $W_{22}$ to have  eigenvalues that  exceed 1 in modulus. 
 
-To do so, let's define a sorting function that tells `scipy.schur` to sort the corresponding eigenvalues with modulus smaller than 1 to the upper left.
+To get what we want, let's define a sorting function that tells `scipy.schur` to sort the corresponding eigenvalues with modulus smaller than 1 to the upper left.
 
 ```{code-cell} ipython3
 stable_eigvals = eigvals[:n]
@@ -499,7 +518,7 @@ np.diag(W[:n, :n])
 np.diag(W[n:, n:])
 ```
 
-The following functions wrap the procedure of $M$ matrix construction, Schur decomposition, and computation of $P$ by imposing stability on the solution.
+The following functions wrap  $M$ matrix construction, Schur decomposition, and stability-imposing computation of $P$.
 
 ```{code-cell} ipython3
 def stable_solution(M, verbose=True):
@@ -599,11 +618,14 @@ stationary_P(lq, verbose=False)
 lq.stationary_values()
 ```
 
-This way of finding the solution to a potentially unstable linear difference equations system is not necessarily limited to the LQ optimization problems. 
 
-For example, this same method is used in our [Stability in Linear Rational Expectations Models](https://python.quantecon.org/re_with_feedback.html#Another-perspective) lecture.
+## Other applications
 
-Let's try to solve for the solution again using the `stable_solution` function defined above.
+The preceding approach to imposing stability on a system  of potentially unstable linear difference equations is not limited to  linear quadratic dynamic optimization problems. 
+
+For example, the same method is used in our [Stability in Linear Rational Expectations Models](https://python.quantecon.org/re_with_feedback.html#Another-perspective) lecture.
+
+Let's try to solve the model described in that lecture by applying the `stable_solution` function defined in this lecture above.
 
 ```{code-cell} ipython3
 def construct_H(ρ, λ, δ):
@@ -645,9 +667,21 @@ and that the state transition equation
 is again $x_{t +1 }=Ax_t+Bu_t$.
 
 Define the transformed state and control variables
-$\hat x_t = \beta^{\frac{t}{2}} x_t, \hat u_t = \beta^{\frac{t}{2}} u_t$ and the transformed transition equation
-matrices $\hat A = \beta^{\frac{1}{2}} A , \hat B =  \beta^{\frac{1}{2}} B  $ so that the adjusted state and control variables
-obey the transition law $\hat x_{t+1} = \hat A \hat x_t + \hat B \hat u_t$. 
+
+* $\hat x_t = \beta^{\frac{t}{2}} x_t $
+* $\hat u_t = \beta^{\frac{t}{2}} u_t$
+  
+and the transformed transition equation
+matrices
+* $\hat A = \beta^{\frac{1}{2}} A$
+* $\hat B =  \beta^{\frac{1}{2}} B  $
+  
+so that the adjusted state and control variables
+obey the transition law
+
+$$
+\hat x_{t+1} = \hat A \hat x_t + \hat B \hat u_t. 
+$$ 
 
 Then a discounted optimal control problem
 defined by $A, B, R, Q, \beta$ having  optimal policy characterized by $P, F$ is associated with an equivalent
@@ -745,8 +779,13 @@ which in the special case that $\beta = 1$ agrees with equation {eq}`eq2`, as ex
 By staring at system {eq}`eq663`, we can infer  identities that shed light on the structure of optimal linear regulator problems,
 some of which will be useful in XXXXX THIS QUANTECON LECTURE when we apply and  extend the methods of this chapter to study Stackelberg and Ramsey problems.
 
-First, note that the first block of equation system {eq}`eq663` asserts that when  $\mu_{t+1} = P x_{t+1}$, then    $(I + \beta Q^{-1} B' P B P ) x_{t+1} = A x_t$, which  can be rearranged to
-be
+First, note that the first block of equation system {eq}`eq663` asserts that when  $\mu_{t+1} = P x_{t+1}$, then   
+
+$$ 
+(I + \beta Q^{-1} B' P B P ) x_{t+1} = A x_t, 
+$$
+ 
+which  can be rearranged to sbe
 
 $$
 x_{t+1} = (I + \beta B Q^{-1} B' P)^{-1}  A x_t .
@@ -764,7 +803,11 @@ $$
 F=\beta (Q+\beta B'PB)^{-1} B'PA 
 $$ (eqn:optimalFformula)
 
-it follows that $A - B F = (I - \beta B (Q+ \beta B' P B)^{-1} B' P) A $. 
+it follows that 
+
+$$ 
+A- B F = (I - \beta B (Q+ \beta B' P B)^{-1} B' P) A .
+$$ 
 
 Thus, our two expressions for the
 closed loop dynamics will agree if and only if
@@ -781,7 +824,7 @@ Just use the formula $(a - b d^{-1} c)^{-1} = a^{-1} + a^{-1} b (d - c a^{-1} b)
 
 
 
-Next, note that for *any*  fixed $F$ for which eigenvalues of $A- BF$ are less than $\frac{1}{\beta}$ in modulus the value function associated with using this rule forever is $- x_0 \tilde P x_0$ where  $\tilde P$ obeys the following  matrix  equation:
+Next, note that for *any*  fixed $F$ for which eigenvalues of $A- BF$ are less than $\frac{1}{\beta}$ in modulus, the value function associated with using this rule forever is $- x_0 \tilde P x_0$ where  $\tilde P$ obeys the following  matrix  equation:
 
 $$
 \tilde P = (R + F' Q F) + \beta (A - B F)' P (A - BF) .
@@ -789,14 +832,25 @@ $$ (eq666)
 
 Evidently, $\tilde P = P $ only when $F $ obeys formula {eq}`eqn:optimalFformula`. 
 
-Next, note that  the second equation of system {eq}`eq663` implies the "forward looking" equation for the Lagrange multiplier $\mu_t = R x_t + \beta A' \mu_{t+1}$ whose
-solution is $\mu_t = P x_t$, where
+Next, note that  the second equation of system {eq}`eq663` implies the "forward looking" equation for the Lagrange multiplier
+
+$$ 
+\mu_t = R x_t + \beta A' \mu_{t+1}
+$$
+
+whose solution is 
+
+$$
+\mu_t = P x_t ,
+$$
+
+where
 
 $$
 P = R + \beta A' P (A - BF)  
 $$ (eq667)
 
-where we must require that $F$ obeys equation {eq}`eqn:optimalFformula`
+where we must require that $F$ obeys equation {eq}`eqn:optimalFformula`.
 
 Equations {eq}`eq666` and {eq}`eq667` provide views of the optimal value function from different perspectives. 
 
