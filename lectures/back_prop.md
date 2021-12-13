@@ -22,6 +22,10 @@ kernelspec:
 
 ## Overview
 
+Substantial parts of **machine learning** and **artificial intelligence** are about 
+
+* approximating an unknown function with a known function
+* estimating the known function from a set of data on the left- and right-hand variables
 
 This lecture describes the structure of a plain vanilla **artificial neural network**  (ANN) of a type that is widely used to 
 approximate a function $f$ that maps an  $x$ in  a space $X$ into a $y$ in a space $Y$.  
