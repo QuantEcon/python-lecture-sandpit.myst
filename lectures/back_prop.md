@@ -4,21 +4,21 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.5
 kernelspec:
-  display_name: Python 3 (ipykernel)
+  display_name: Python 3
   language: python
   name: python3
 ---
 
 # Introduction to Neural Networks
 
-```{code-cell} python3
+```{code-cell} ipython3
 :tags: [hide-output]
+
 !pip install --upgrade jax jaxlib
 !conda install -y -c plotly plotly plotly-orca
 ```
-
 
 ## Overview
 
@@ -501,7 +501,7 @@ fig.add_trace(go.Scatter(x=grid, y=f_val, name=r'$-3x+2$'))
 fig.add_trace(go.Scatter(x=grid, y=predictions, name='Approximation'))
 
 # Export to PNG file
-Image(fig.to_image(format="png"))
+#Image(fig.to_image(format="png"))
 # fig.show() will provide interactive plot when running
 # notebook locally
 ```
@@ -581,7 +581,7 @@ fig.add_trace(go.Scatter(x=grid, y=predictions_2, name='Two-layer neural network
 fig.add_trace(go.Scatter(x=grid, y=predictions_3, name='Three-layer neural network'))
 
 # Export to PNG file
-Image(fig.to_image(format="png"))
+#Image(fig.to_image(format="png"))
 # fig.show() will provide interactive plot when running
 # notebook locally
 ```
