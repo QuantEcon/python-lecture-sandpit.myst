@@ -30,7 +30,7 @@ sphinx:
     html_theme_options:
       header_organisation_url: https://quantecon.org
       header_organisation: QuantEcon
-    mathjax2_config:
+    mathjax_config:
       TeX:
         extensions: ["autobold.js"]
         Macros:
@@ -43,7 +43,7 @@ sphinx:
         SVG:
           scale: 0.92,
           useGlobalCache: true
-    mathjax_path: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML
+    mathjax_path: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG.js
   
 bibtex_bibfiles:
   - _static/quant-econ.bib
