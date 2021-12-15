@@ -282,7 +282,7 @@ We can then solve the above problem by applying our update for $p$ multiple time
 
 Choosing a  training set amounts to a choice of measure $\mu$ in the above  formulation of our  function approximation problem as a minimization problem.
 
-In this spirit,  we shall use a uniform grid of, say, 50 or 200 or $\ldots$,  points. 
+In this spirit,  we shall use a uniform grid of, say, 50 or 200 or $\ldots$  points. 
 
 There are many possible approaches to the minimization  problem posed above:
 
@@ -506,16 +506,16 @@ fig.add_trace(go.Scatter(x=grid, y=predictions, name='Approximation'))
 # notebook locally
 ```
 
-## Under construction: 
+## How Deep? 
 
 It  is  fun to think about how deepening the neural net for the above example affects the quality of  approximation 
 
 
- * if the network is too deep, you'll run into the [vanishing gradient problem](http://neuralnetworksanddeeplearning.com/chap5.html)
-* other parameters such as the step size and the number of epochs are probably more important than the number of layers in the situation considered in this lecture.
+* if the network is too deep, you'll run into the [vanishing gradient problem](http://neuralnetworksanddeeplearning.com/chap5.html)
+* other parameters such as the step size and the number of epochs can be as  important or more important than the number of layers in the situation considered in this lecture.
 * Indeed, since $f$ is a linear function of $x$, a one-layer network with the identity map as an activation would probably work best. 
   
-We  added a comparison for the example below (TOM -- FIND AND EDIT)
+
 
 
 ### Example 2
