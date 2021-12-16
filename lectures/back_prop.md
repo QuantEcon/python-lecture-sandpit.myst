@@ -17,7 +17,7 @@ kernelspec:
 :tags: [hide-output]
 
 !pip install --upgrade jax jaxlib
-!conda install -y -c plotly plotly plotly-orca
+!conda install -y -c plotly plotly plotly-orca retrying
 ```
 
 ## Overview
