@@ -34,6 +34,14 @@ A Lagrangian formulation
  * is the basis for fast algorithms for solving Riccati equations
   
  * opens the way to constructing solutions of dynamic systems that don't come directly from an  intertemporal optimization problem
+
+A key tool in this lecture is the concept of an $n \times n$ **symplectic** matrix.
+
+A symplectic matrix has eigenvalues that occur in **reciprocal pairs**, meaning that if $\lambda_i \in (-1,1)$ is an eigenvalue, then
+so is $\lambda_i^{-1}$.  
+
+This reciprocal pairs property of the eigenvalues of a matrix  is a tell-tale sign that the matrix describes the joint dynamics of a system of 
+equations describing the **states** and **costates** that constitute   first-order necessary  conditions for solving an undiscounted linear-quadratic  infinite-horizon optimization problem. 
   
 ## The Undiscounted LQ Dynamic Programming Problem
 

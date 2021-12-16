@@ -107,9 +107,13 @@ Now consider a circulant matrix as defined above with first row
 
  $$ a = \begin{bmatrix} a_0 & a_1 & \cdots  &  a_{N-1} \end{bmatrix} $$
 
- Define the **convolution** of the two vectors $c$ and $a$ as $b = c * a $ as a vector with components
+ Define the **convolution** of  vectors $c$ and $a$   as a vector $b = c * a $  with components
 
-$$ b_k = \sum_{i=0}^n-1 c_{k-i} a_i  $$
+$$
+ b_k = \sum_{i=0}^{n-1} c_{k-i} a_i  
+$$ (eqn:conv)
+
+Here we use $*$ to denote **convolution** via the calculation described in equation {eq}`eqn:conv`.
 
 It can be verified that the vector $b$ satisfies
 
@@ -150,12 +154,12 @@ P=\left[\begin{array}{cccccc}
 0 & 0 & 0 & 0 & \cdots & 1\\
 1 & 0 & 0 & 0 & \cdots & 0
 \end{array}\right]
-$$
+$$ (eqn:exampleP)
 
 serves as  a **cyclic shift**  operator that, when applied to an $N \times 1$ vector $h$, shifts entries in rows $2$ through $N$ up one row and shifts the entry in row $1$ to row $N$. 
 
 
-Eigenvalues of permutation matrix $P$ can be computed  by constructing
+Eigenvalues of  the cyclic shift permutation matrix $P$ defined in equation {eq}`eqn:exampleP` can be computed  by constructing
 
 $$
 P-\lambda I=\left[\begin{array}{cccccc}
@@ -171,8 +175,15 @@ $$
 and solving 
 
 $$
-\textrm{det}(P - \lambda I) = \lambda^{N}-1=0
+\textrm{det}(P - \lambda I) = (-1)^N \lambda^{N}-1=0
 $$
+
+
+Eigenvalues $\lambda_i$  can be complex.
+
+Magnitudes $\mid \lambda_i \mid$  of these  eigenvalues $\lambda_i$ all equal  $1$.
+
+Thus, **singular values** of the  permutation matrix $P$ defined in equation {eq}`eqn:exampleP` are all $1$s.
 
 It can be verified that permutation matrices are orthogonal matrices, which means that they satisfy
 
@@ -180,11 +191,8 @@ $$
 P P' = I 
 $$
 
-Eigenvalues $\lambda_i$ of a permuation matrix can be complex.
 
-Magnitudes $\mid \lambda_i \mid$  of these  eigenvalues $\lambda_i$ all equal  $1$.
 
-Thus, **singular values** of a permutation matrix are all $1$s.
 
 ## Examples with Python
 
@@ -218,7 +226,7 @@ for i in range(4):
     print(f'𝜆{i} = {𝜆[i]:.1f} \nvec{i} = {Q[i, :]}\n')
 ```
 
-In graphs  below we shall portray eigenvalues of a shift  permutation matrix   in the complex plane. 
+In graphs  below, we shall portray eigenvalues of a shift  permutation matrix   in the complex plane. 
 
 These eigenvalues are uniformly distributed along the unit circle.
 
@@ -227,7 +235,7 @@ They are the **$n$ roots of unity**, meaning they are the $n$  numbers  $z$  tha
 In particular, the $n$ roots of unity are
 
 $$
-z = \exp\left(\frac{2 \pi j k }{N} \right) , \quad k = 1, \ldots, N-1
+z = \exp\left(\frac{2 \pi j k }{N} \right) , \quad k = 0, \ldots, N-1
 $$
 
 where $j$ denotes the purely imaginary unit number.
