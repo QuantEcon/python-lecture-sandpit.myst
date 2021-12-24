@@ -3,7 +3,6 @@ root: index
 options:
   numbered: true
 sections:
-- file: lagrangian_lqdp
 - file: cross_product_trick
 - file: eig_circulant
 - file: back_prop
