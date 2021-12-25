@@ -3,7 +3,6 @@ root: index
 options:
   numbered: true
 sections:
-- file: cross_product_trick
 - file: eig_circulant
 - file: back_prop
 - file: markov_switching_lss
