@@ -11,6 +11,7 @@ kernelspec:
   name: python3
 ---
 
+# Title
 
 ## Spear and Srivastava
 
@@ -43,7 +44,7 @@ must satisfy the following two sets of constraints:
 $$
 w = \int \{ u[c(w,q), a(w)] + \beta \tilde w(w,q)\}\ dF[q\vert a(w)]
 $$ (eq:eq1}
-% \EQN 1 
+
 and
 
 $$
@@ -53,7 +54,6 @@ dF[q\vert a(w)]\cr
 (w,q)\} dF(q\vert\hat a)\,, \hskip.5cm \forall\; \hat a \in A.
 \end{align}
 $$ (eq:eq2)
-%\EQN 2\cr}$$
 
 Equation \Ep{1} requires the contract to deliver the promised
 level of discounted utility. Equation \Ep{2} is the **incentive
@@ -67,7 +67,6 @@ $$
 v(w) =\max_{a,c,\tilde w}\ \{q-c(w,q)+\beta \ v[\tilde w(w,q)]\}\
 dF[q\vert a(w)]
 $$ (eq:eq3}
-% \EQN 3
 
 where the maximization is over functions $a(w)$, $c(w,q)$, and $\tilde w(w,q)$
 and is subject to the constraints \Ep{1} and \Ep{2}.
@@ -98,17 +97,16 @@ $$
 \sum_{C\times W} \Pi (\bar a, \bar q, c, w^\prime) = P (\bar q\vert \bar a)
 \sum_{Q\times C\times W}\ \Pi(\bar a, q,c,w')
 $$ (eq:town1a)
-%\EQN town1;a
 
 $$
 \Pi(a,q,c,w')\geq 0 
 $$(eq:town1b)
-%EQN town1;b
+
 
 $$
 \sum_{A\times Q\times C\times W}\ \Pi(a,q,c,w^\prime)=1 .
 $$ (eq:town1c)
-%\EQN town1;c
+
 
 Equation \Ep{town1;a}  states that
 ${\rm Prob} (\bar a, \bar q) = {\rm Prob}(\bar q \vert \bar a)
@@ -121,7 +119,6 @@ $$
 w=\sum_{A\times Q\times C\times W}\ \{u(c,a) +\beta w^\prime\}\
 \Pi(a,q,c,w^\prime) . 
 $$ (eq:eq1prime)
-%\EQN 1'
 
 The counterpart to Spear-Srivastava's equation \Ep{2}  for each
 $a,\hat a$ is
@@ -132,45 +129,43 @@ $$
 \ \{u(c,\hat a) + \beta w' \}\ \Pi(c,w' \vert q,a) P(q\vert\hat a).
 \end{align)
 $$
-%
 
 Here $\Pi(c,w^\prime\vert q,a) P(q\vert \hat a)$ is the probability of $(c,w^\prime, q)$ 
 if the agent claims to be working $a$ but is actually working $\hat a$.  Express
 
 $$
-\begin{align}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \cr
+\begin{aligned}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \cr
 \Pi(c,w^\prime\vert q,a) P(q\vert a)\ {P(q\vert\hat a)\over P(q\vert a)} & =
 \Pi(c,w^\prime,q\vert a)\ \cdot\ {P(q\vert\hat a)\over P(q\vert a).
-\end{align)
+\end{aligned)
 $$
 
 Write the incentive constraint as
 
 $$
-\begin{align} \sum_{Q\times C\times W}\ &\{u(c,a)
+\begin{aligned} \sum_{Q\times C\times W}\ &\{u(c,a)
  +\beta w^\prime\} \Pi(c,w^\prime, q\vert a)\cr & \geq
 \sum_{Q\times C\times W}\ \{u(c,\hat a) +\beta w^\prime\}\
 \Pi(c,w^\prime, q\vert \hat a)\     \cdot\ {P(q\vert \hat a)\over P(q\vert a)}.
-\end{align}
+\end{aligned}
 $$
 
 Multiplying both sides by the unconditional probability $P(a)$ gives expression \Ep{2'}.
 
 $$
-\begin{align} & \sum_{Q\times C\times W}\ \{u(c,a)+\beta w^\prime\}\
+\begin{aligned} & \sum_{Q\times C\times W}\ \{u(c,a)+\beta w^\prime\}\
 \Pi(a,q,c,w^\prime)\cr 
 &\geq \sum_{Q\times C\times W}\ \{u(c,\hat a) + \beta w^\prime\} \
 {P(q\vert\hat a)\over P(q\vert a)}\ \Pi (a,q,c,w^\prime)
-\end{align}
+\end{aligned}
 $$
-%\EQN 2'\cr}
 
 The Bellman equation for the principal's problem is
+
 $$
 v(w) =\max_{\Pi} \{(q -c) +
      \beta v(w')\} \Pi(a,q,c,w') , 
 $$ (eq:bell2)
-% \EQN  bell2
 
 where  maximization is over the probabilities $\Pi(a,q,c,w')$
 subject to equations \Ep{town1}, \Ep{1'}, and \Ep{2'}.
@@ -191,13 +186,6 @@ at each step of the iteration on the  Bellman equation,
 there is  one linear program to be solved for each point
 $w$ in the space of grid values for $W$.
 
-   In practice, Phelan and Townsend have found that
+In practice, Phelan and Townsend have found that
 lotteries are often redundant in the sense that most of the
-$\Pi(a,q,c,w')$'s  are  zero and only a   few are $1$.
-
-
-
-
-```{code-cell} ipython3
-
-```
+$\Pi(a,q,c,w')$'s  are  zero and only a few are $1$.

@@ -30,20 +30,20 @@ sphinx:
     html_theme_options:
       header_organisation_url: https://quantecon.org
       header_organisation: QuantEcon
-    mathjax_config:
-      TeX:
-        extensions: ["autobold.js"]
-        Macros:
-          "argmax" : "arg\\,max"
-          "argmin" : "arg\\,min"
-          "col"    : "col"
-        tex2jax: 
-          inlineMath: [ ['$','$'], ['\\(','\\)'] ]
-          processEscapes: true
-        SVG:
-          scale: 0.92,
-          useGlobalCache: true
-    mathjax_path: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG.js
+    # mathjax_config:
+    #   TeX:
+    #     extensions: ["autobold.js"]
+    #     Macros:
+    #       "argmax" : "arg\\,max"
+    #       "argmin" : "arg\\,min"
+    #       "col"    : "col"
+    #     tex2jax: 
+    #       inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+    #       processEscapes: true
+    #     SVG:
+    #       scale: 0.92,
+    #       useGlobalCache: true
+    # mathjax_path: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG.js
   
 bibtex_bibfiles:
   - _static/quant-econ.bib
