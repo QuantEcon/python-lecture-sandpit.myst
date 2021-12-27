@@ -19,7 +19,7 @@ Spear and Srivastava (1987) introduced the following
 recursive formulation of an infinitely repeated, discounted  repeated
 principal-agent problem.
 
- *  A **principal** owns a technology
+*  A **principal** owns a technology
 that produces output $q_t$ at time $t$, where $q_t$ is determined
 by a family of c.d.f.'s  $F(q_t\vert a_t)$
 *  $a_t$ is an action taken at the beginning of $t$ by an **agent** who
@@ -51,11 +51,11 @@ $$ (eq:eq1)
 and
 
 $$
-\begin{align} & \int \left\{ u[c(w,q), a(w)] + \beta\tilde w (w,q)\right\}\
+\begin{aligned} & \int \left\{ u[c(w,q), a(w)] + \beta\tilde w (w,q)\right\}\
 dF[q\vert a(w))\cr
 &\geq \int \{u [c(w,q),\hat a] + \beta\tilde w
 (w,q)\} dF(q\vert\hat a)\,, \hskip.5cm \forall\; \hat a \in A.
-\end{align}
+\end{aligned}
 $$ (eq:eq2)
 
  * Equation {eq}`eq:eq1`  requires the contract to deliver the promised
@@ -135,9 +135,9 @@ $a,\hat a$ is
 
 
 $$
-\begin{align}  \sum_{Q\times C\times W}\ &\{u(c,a) & + \beta w' \}\ \Pi (c,w' \vert q, a) P(q\vert a)\cr
+\begin{aligned}  \sum_{Q\times C\times W}\ &\{u(c,a) & + \beta w' \}\ \Pi (c,w' \vert q, a) P(q\vert a)\cr
 &\geq \sum_{Q\times C\times W}\ \{u(c,\hat a) + \beta w' \}\ \Pi(c,w' \vert q,a) P(q\vert\hat a).
-\end{align)
+\end{aligned)
 $$ (eq:eq2prime)
 
 
@@ -145,10 +145,10 @@ Here $\Pi(c,w^\prime\vert q,a) P(q\vert \hat a)$ is the probability of $(c,w^\pr
 if the agent claims to be working $a$ but is actually working $\hat a$.  Write
 
 $$
-\begin{align}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \cr
+\begin{aligned}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \cr
 \Pi(c,w^\prime\vert q,a) P(q\vert a)\ \frac{P(q\vert\hat a)}{P(q\vert a)} & =
 \Pi(c,w^\prime,q\vert a)\ \cdot\ \frac{P(q\vert\hat a)}{P(q\vert a)}.
-\end{align)
+\end{aligned)
 $$
 
 Write the incentive constraint as
