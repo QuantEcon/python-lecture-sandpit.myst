@@ -135,9 +135,9 @@ $a,\hat a$ is
 
 
 $$
-\begin{aligned}  \sum_{Q\times C\times W}\ &\{u(c,a) & + \beta w' \}\ \Pi (c,w' \vert q, a) P(q\vert a)\cr
+\begin{aligned} & \sum_{Q\times C\times W}\ \{u(c,a)  + \beta w' \}\ \Pi (c,w' \vert q, a) P(q\vert a)\\
 &\geq \sum_{Q\times C\times W}\ \{u(c,\hat a) + \beta w' \}\ \Pi(c,w' \vert q,a) P(q\vert\hat a).
-\end{aligned)
+\end{aligned}
 $$ (eq:eq2prime)
 
 
@@ -145,10 +145,10 @@ Here $\Pi(c,w^\prime\vert q,a) P(q\vert \hat a)$ is the probability of $(c,w^\pr
 if the agent claims to be working $a$ but is actually working $\hat a$.  Write
 
 $$
-\begin{aligned}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \cr
+\begin{aligned}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \\
 \Pi(c,w^\prime\vert q,a) P(q\vert a)\ \frac{P(q\vert\hat a)}{P(q\vert a)} & =
 \Pi(c,w^\prime,q\vert a)\ \cdot\ \frac{P(q\vert\hat a)}{P(q\vert a)}.
-\end{aligned)
+\end{aligned}
 $$
 
 Write the incentive constraint as
