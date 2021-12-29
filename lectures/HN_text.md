@@ -207,15 +207,15 @@ conditions with
 respect to $c, a$, and $V^u$, respectively, are
 
 $$
-\begin{align} \theta & = {1 \over u'(c)}\,,  \EQN hugo7;a \cr
+\begin{align} \theta & = {1 \over u'(c)}\,,   \cr
              C(V^u) & = \theta \left[ {1 \over \beta p'(a)} -
-                           (V^e - V^u) \right]\,,  \EQN hugo7;b  \cr
-             C'(V^u) & = \theta\,.  \EQN hugo7;c 
+                           (V^e - V^u) \right]\,,    \cr
+             C'(V^u) & = \theta\,.   
 \end{align}
 $$ (eq:hugo7)
 
-The envelope condition   $C'(V) = \theta$ and equation
-\Ep{hugo7;c} imply that $C'(V^u) =C'(V)$. 
+The envelope condition   $C'(V) = \theta$ and the third equation
+of {eq}`eq:hugo7`  imply that $C'(V^u) =C'(V)$. 
 
 Strict convexity of $C$ then
 implies that $V^u =V$
@@ -225,8 +225,8 @@ $V^u=V$ makes
 the continuation value remain constant during the entire
 spell of unemployment.  
 
-Equation
-\Ep{hugo7;a} determines $c$, and equation \Ep{hugo7;b} determines
+The first equation of {eq}`eq:hugo7`
+determines $c$, and the second equation of {eq}`eq:hugo7`  determines
 $a$, both as functions of the promised $V$. 
 
 That $V^u = V$ then
@@ -262,12 +262,12 @@ search effort is *higher* than what the worker would choose
 if he were to be guaranteed consumption level $c$ while he
 remains unemployed.
 
-This follows from equations \Ep{hugo7;a} and \Ep{hugo7;b} and the
+This follows from the first two equations of {eq}`eq:hugo7` and the
 fact that the insurance scheme is costly, $C(V^u)>0$, which imply
 $[ \beta p'(a) ]^{-1} > (V^e - V^u)$.
 
- But look at the worker's
-first-order condition \Ep{hugo4} under autarky.
+But look at the worker's
+first-order condition {eq}`eq:hugo4`  under autarky.
 
 It implies that if search effort $a>0$, then
 $[\beta p'(a)]^{-1} = [V^e - V^u]$, which is inconsistent
@@ -277,13 +277,13 @@ the social
 insurance arrangement.
 
 If he were free to choose $a$, the worker would therefore want to
-fulfill \Ep{hugo4}, either at equality so long as $a >0$, or by setting
+fulfill {eq}`eq:hugo4`, either at equality so long as $a >0$, or by setting
 $a=0$ otherwise.  
 
 Starting from the  $a$ associated with
 the social insurance scheme,
 he  would establish the desired equality
-in \Ep{hugo4} by *lowering* $a$, thereby decreasing
+in {eq}`eq:hugo4` by *lowering* $a$, thereby decreasing
 the term $[ \beta p'(a) ]^{-1}$ (which also lowers $(V^e - V^u)$
 when the value of being
 unemployed $V^u$ increases]). 
@@ -308,24 +308,24 @@ Following Shavell and Weiss (1979) and Hopenhayn and Nicolini
 (1997), now assume that  the unemployment insurance agency cannot
 observe or enforce $a$, though it can observe and control $c$.
 
-The worker is free to choose $a$, which puts expression \Ep{hugo4}, the worker's first-order condition under autarky,
+The worker is free to choose $a$, which puts expression {eq}`eq:hugo4`, the worker's first-order condition under autarky,
 back in the picture.
 
 (We are assuming that the worker's
 best response to the unemployment insurance arrangement is
-completely characterized by the first-order condition  \Ep{hugo4},
+completely characterized by the first-order condition {eq}`eq:hugo4`,
 an instance of the so-called first-order approach to incentive problems.)
 
 Given a contract, the individual will choose search effort according to
-first-order condition \Ep{hugo4}. 
+first-order condition {eq}`eq:hugo4`. 
 
 This fact leads the insurance agency
 to design the unemployment insurance contract to respect this restriction.
 
 Thus, the recursive contract design problem is now to minimize the right side of equation
-\Ep{hugo5} subject to expression \Ep{hugo6} and the incentive constraint \Ep{hugo4}.
+{eq}`eq:hugo5` subject to expression {eq}`eq:hugo6` and the incentive constraint {eq}`eq:hugo4`.
 
-Since the restrictions \Ep{hugo4} and \Ep{hugo6} are not linear
+Since the restrictions {eq}`eq:hugo4` and {eq}`eq:hugo6` are not linear
 and generally do not define a convex set, it becomes difficult
 to provide conditions under which the solution to the dynamic
 programming problem results in a convex function $C(V)$.
@@ -342,10 +342,10 @@ Following Hopenhayn and Nicolini (1997), we therefore proceed
 under the assumption that $C(V)$ is strictly convex in order to
 characterize the optimal solution.
 
-Let $\eta$ be the multiplier on constraint \Ep{hugo4}, while
-$\theta$ continues to denote the multiplier on constraint \Ep{hugo6}.
+Let $\eta$ be the multiplier on constraint {eq}`eq:hugo4`, while
+$\theta$ continues to denote the multiplier on constraint {eq}`eq:hugo6`.
 
-But now we replace the weak inequality in \Ep{hugo6} by an equality.
+But now we replace the weak inequality in {eq}`eq:hugo6` by an equality.
 
 The unemployment insurance agency cannot award a higher utility than
 $V$ because that might violate an incentive-compatibility constraint
@@ -354,47 +354,49 @@ for exerting the proper search effort in earlier periods.
 At an interior solution,  first-order conditions with
 respect to $c, a$, and $V^u$, respectively, are
 
-\begin{align} \theta & = {1 \over u'(c)}\,,  \EQN hugo8;a \cr
+$$
+\begin{align} \theta & = {1 \over u'(c)}\,,   \cr
  C(V^u)  & = \theta \left[ {1 \over \beta p'(a)} - (V^e - V^u) \right]
             \,-\, \eta {p''(a) \over p'(a)} (V^e - V^u)                  \cr
-         & = \,- \eta {p''(a) \over p'(a)} (V^e - V^u) \,,  \EQN hugo8;b \cr
- C'(V^u) & = \theta \,-\, \eta {p'(a) \over 1-p(a)}\, ,  \EQN hugo8;c 
-\end{align}
+         & = \,- \eta {p''(a) \over p'(a)} (V^e - V^u) \,,   \cr
+ C'(V^u) & = \theta \,-\, \eta {p'(a) \over 1-p(a)}\, ,  
+\end{align} 
+$$ (eq:hugo8)
 
-where the second equality in equation \Ep{hugo8;b} follows from strict equality
-of the incentive constraint \Ep{hugo4} when $a>0$.
+where the second equality in the second equation in {eq}`eq:hugo8`  follows from strict equality
+of the incentive constraint {eq}`eq:hugo4` when $a>0$.
 
 As long as the
 insurance scheme is associated with costs, so that $C(V^u)>0$, first-order
-condition \Ep{hugo8;b} implies that the multiplier $\eta$ is strictly
+condition in the second equation of {eq}`eq:hugo8` implies that the multiplier $\eta$ is strictly
 positive. 
 
-The first-order condition \Ep{hugo8;c} and the
+The first-order condition in the second equation of the third equality in {eq}`eq:hugo8`  and the
 envelope condition $C'(V) = \theta$ together allow us to conclude that
 $C'(V^u) < C'(V)$. 
 
 Convexity of $C$ then implies that $V^u < V$.
 
 
-After we have also used equation \Ep{hugo8;a}, it follows that
+After we have also used e the first equation of {eq}`eq:hugo8`, it follows that
 in order to provide  the proper incentives, the consumption
 of the unemployed worker must decrease as the duration of the unemployment
 spell lengthens. 
 
-It also follows from \Ep{hugo4} at equality that
+It also follows from {eq}`eq:hugo4` at equality that
 search effort $a$ rises as $V^u$ falls, i.e., it rises with the duration
 of unemployment.
 
 The duration dependence of benefits is  designed to provide
 incentives to search.  
 
-To see this, from \Ep{hugo8;c}, notice how
+To see this, from  the third equation of {eq}`eq:hugo8`, notice how
 the conclusion that consumption falls with the duration of
 unemployment depends on the assumption that more search effort
 raises the prospect of finding a job, i.e., that $p'(a) > 0$. 
 
 If
-$p'(a) =0$, then \Ep{hugo8;c} and the strict convexity of $C$ imply that
+$p'(a) =0$, then  the third equation of {eq}`eq:hugo8` and the strict convexity of $C$ imply that
 $V^u =V$. 
 
 Thus, when $p'(a) =0$, there is no reason for the
