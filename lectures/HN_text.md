@@ -138,7 +138,7 @@ an iterative algorithm for computing $V^u = V_{\rm aut}$.
 the estimate of $V_{\rm aut}$ at the $j$th iteration.   
 
  * Use this value
-in equation {eq}`eq:hugo4}  and solve
+in equation {eq}`eq:hugo4`  and solve
 for an estimate of effort  $a_j$. 
 
  * Use this value in a version of equation
@@ -324,10 +324,10 @@ observe or enforce $a$, though it can observe and control $c$.
 The worker is free to choose $a$, which puts expression {eq}`eq:hugo4`, the worker's first-order condition under autarky,
 back in the picture.
 
-(We are assuming that the worker's
+ * We are assuming that the worker's
 best response to the unemployment insurance arrangement is
 completely characterized by the first-order condition {eq}`eq:hugo4`,
-an instance of the so-called first-order approach to incentive problems.)
+an instance of the so-called first-order approach to incentive problems.
 
 Given a contract, the individual will choose search effort according to
 first-order condition {eq}`eq:hugo4`. 
@@ -343,17 +343,12 @@ and generally do not define a convex set, it becomes difficult
 to provide conditions under which the solution to the dynamic
 programming problem results in a convex function $C(V)$.
 
-Sometimes this complication can be handled by convexifying
+* Sometimes this complication can be handled by convexifying
 the constraint set through the introduction of lotteries.
-
-See lecture XXXX for an example of this approach.
-
-However, a common finding is that optimal plans do not involve
+* A common finding is that optimal plans do not involve
 lotteries, because convexity of the constraint set is a sufficient
 but not necessary condition for convexity of the cost function.
-Following Hopenhayn and Nicolini (1997), we therefore proceed
-under the assumption that $C(V)$ is strictly convex in order to
-characterize the optimal solution.
+* Following Hopenhayn and Nicolini (1997) {cite}`Hopenhayn_Nicolini_97`, we therefore proceed under the assumption that $C(V)$ is strictly convex in order to characterize the optimal solution.
 
 Let $\eta$ be the multiplier on constraint {eq}`eq:hugo4`, while
 $\theta$ continues to denote the multiplier on constraint {eq}`eq:hugo6`.
@@ -421,38 +416,6 @@ unemployment.
 ```
 
 
- This schedule was computed by finding the optimal policy functions
-
-$$
-\begin{align} V^u_{t+1} & = f(V^u_t) \cr
-             c_t & = g(V^u_t)
-\end{align}
-$$
-
-and iterating on them, starting from some initial $V^u_0 > V_{\rm aut}$,
-where $V_{\rm aut}$ is the autarky level for an unemployed worker.
-Notice how the replacement ratio declines with duration.
-Figure XXX
-sets $V^u_0$ at 16,942, a number that
-has to be interpreted in the context of Hopenhayn and Nicolini's
-parameter settings.
-
-We computed these numbers using the parametric version studied by Hopenhayn
-and Nicolini.
-
-
- Hopenhayn and Nicolini chose parameterizations and parameters as follows:
-They interpreted one  period as one week, which led them
-to set $\beta=.999$.  They took  $u(c) = {c^{(1-\sigma)} \over 1 - \sigma}$
-and set
-$\sigma=.5$.  They set the wage $w=100$ and
-specified the hazard function to be  $p(a) = 1 - \exp(-ra)$, with $r$ chosen
-to give a hazard rate $ p(a^*) = .1$, where
-$a^*$ is the optimal search  effort under autarky. To compute the numbers
-in Figure XXXXX we used
-these same settings.
-
-+++
 
 
 ### Computational details
@@ -560,12 +523,12 @@ class params_instance:
         self.Ve = uw/(1-β)
 ```
 
-### 1 Calibration exercise 
+### Parameter values 
 
 
-For  the parameters we have just loaded, we'll calabrate the net  interest rate $r$ to match the hazard rate (i.e., the probability of finding a job at the beginning of the period) in US data.
+For  the other parameters we have just loaded in the above Python code, we'll set brate the net  interest rate $r$ to match the hazard rate --  the probability of finding a job in one period --  in US data.
 
-We want an $r$ such that in  autarky `p(a(r)) = 0.1`, where `a` is the optimal search effort under autarky.
+In particular, we seek an $r$ so that in  autarky `p(a(r)) = 0.1`, where `a` is the optimal search effort.
 
 +++
 
@@ -902,11 +865,11 @@ plt.title("Optimal search effort")
 plt.show()
 ```
 
-The charts show that for all initial promised values that are different from the autarchic equilibrium, the replacement ratio falls as the duration of unemployment increases.
+The above graphs show that for all initial promised values that are different from the autarchic equilibrium, the replacement ratio falls as the duration of unemployment increases.
 
-In essence, the planner is incentivising higher search effort as the duration of unemployment increases by reducing the promised values. 
+In essence,  by reducing the promised value, the planner motivates higher search effort as the duration of unemployment increases. 
 
-Note that due to the incentive compatibility of the contract  it is not the case that the worker is searching less than the planner would want -- indeed the contract itself is designed to ensure the worker searches at the intensity the planner expects. 
+Note that the contract  is designed to ensure the worker searches at the intensity the planner expects. 
 
 For an initial promised value $V^u = V_{aut}$, the planner cannot reduce the replacement ratio by any amount, and so the worker is searching at higher intensity from the beginning. 
 
