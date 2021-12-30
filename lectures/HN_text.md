@@ -13,14 +13,20 @@ kernelspec:
 
 # Optimal Unemployment Compensation
 
+## Overview
 
-This notebook describes a model of optimal unemployment
-compensation along the lines of Shavell and Weiss (1979) and
-Hopenhayn and Nicolini (1997).
+This lecture describes a model of optimal unemployment
+compensation created by  Shavell and Weiss (1979) {cite}`Shavell_Weiss_79`.
+ 
 
-We shall use the techniques of
-Hopenhayn and Nicolini to analyze a model closer to Shavell and
-Weiss's. 
+We  use recursive techniques of
+Hopenhayn and Nicolini (1997) {cite}`Hopenhayn_Nicolini_97` to 
+compute optimal insurance plans for  Shavell and
+Weiss's model.
+
+Hopenhayn and Nicolini's model is a generalization of Shavell and Weiss's along dimenstions that we'll soon describe.
+
+## Shavell and Weiss's Model
 
 An unemployed worker orders stochastic processes of
 consumption and  search effort $\{c_t , a_t\}_{t=0}^\infty$
@@ -46,19 +52,6 @@ worker searches with effort $a$ and with probability
 $p(a)$ receives a permanent job at the beginning
 of the next period. 
 
-Once
-a worker has found a job, he is beyond the planner's grasp.
-
-(This is Shavell and
-Weiss's assumption, but not Hopenhayn and Nicolini's. Hopenhayn
-and Nicolini allow the unemployment insurance agency to
-impose history-dependent taxes on previously unemployed workers.
-Since there is no incentive problem after the worker has found
-a job, it is optimal for the agency to provide an employed worker with
-a constant level of consumption, and hence, the agency imposes
-a permanent per-period history-dependent tax on a previously
-unemployed worker.)
-
 Furthermore, $a=0$ when the worker is
 employed. 
 
@@ -70,11 +63,26 @@ $p(a)   \in [0,1]$ for  $a \geq 0$, $p(0)=0$.
 The consumption good is nonstorable.
 
 The unemployed worker has no savings and cannot borrow or lend.
-The  insurance agency is the unemployed worker's only source of consumption
+
+
+An insurance agency or *planner* is the unemployed worker's only source of consumption
 smoothing over time and across states.
 
 
-### autarky problem
+Once a worker has found a job, he is beyond the planner's grasp.
+
+ * This is Shavell and Weiss's assumption, but not Hopenhayn and Nicolini's.
+ * Hopenhayn and Nicolini allow the unemployment insurance agency to
+impose history-dependent taxes on previously unemployed workers. 
+ * Since there is no incentive problem after the worker has found
+a job, it is optimal for the agency to provide an employed worker with
+a constant level of consumption.
+ * Hence, Hopenhayn and Nicolini's insurance agency imposes
+a permanent per-period history-dependent tax on a previously
+unemployed worker.
+
+
+### Autarky 
 
 As a benchmark, we first study the fate of the unemployed worker
 who has no access to unemployment insurance. 
@@ -139,9 +147,13 @@ to compute $V^u_{j+1}$.
 
  * Iterate to convergence.
 
-### Unemployment insurance with full information
+### Insurance with full information
 
-As another benchmark, we study the provision of insurance with
+Another benchmark model helps set the stage for the model with private information that we ultimately want to study.
+
+In this bench mark model, the unemployment agency has full information about the unemployed work.
+
+We study the provision of insurance with
 full information.  
 
 An insurance agency can observe and control
@@ -170,28 +182,29 @@ only at an increasing marginal cost in terms of the consumption good.
 
 Given $V$, the planner assigns first-period pair   $(c,a)$ and promised
 continuation value $V^u$, should  the worker  be unlucky
-and not find a job; $(c, a, V^u)$ will all be
-chosen to be functions of $V$ and to
+and not find a job.
+
+$(c, a, V^u)$ are chosen to be functions of $V$ and to
 satisfy the Bellman equation 
 
 $$ 
 C(V) = \min_{c, a, V^u} \biggl\{ c  + \beta [1 - p(a)] C(V^u) \biggr\} ,
 $$ (eq:hugo5)
-%\EQN hugo5
+
 where  minimization is subject to the promise-keeping constraint
 
 $$
  V \leq u(c) - a + \beta
 \left\{ p(a) V^e + [1-p(a)] V^u \right\}.
 $$ (eq:hugo6)
-%\EQN hugo6
+
 
 Here $V^e$ is given by equation {eq}`eq:hugo2`, which reflects the
 assumption that once the worker is employed, he is beyond the
 reach of the unemployment insurance agency.
 
 
-The right side of  Bellman equation \Ep{hugo5} is attained by
+The right side of  Bellman equation {eq}`eq:hugo5` is attained by
 policy functions $c=c(V), a=a(V)$, and $V^u=V^u(V)$.
 
 The promise-keeping constraint,
@@ -227,7 +240,7 @@ spell of unemployment.
 
 The first equation of {eq}`eq:hugo7`
 determines $c$, and the second equation of {eq}`eq:hugo7`  determines
-$a$, both as functions of the promised $V$. 
+$a$, both as functions of promised value $V$. 
 
 That $V^u = V$ then
 implies that $c$ and $a$ are held constant during the unemployment
@@ -254,11 +267,11 @@ Here is why.
 The  agency delivers a value $V^u$  higher than
 the autarky value $V_{\rm aut}$ by doing two things.
 
-It *increases* the unemployed worker's consumption $c$ and *decreases* his search
+It **increases** the unemployed worker's consumption $c$ and **decreases** his search
 effort $a$.
 
 But the prescribed
-search effort is *higher* than what the worker would choose
+search effort is **higher** than what the worker would choose
 if he were to be guaranteed consumption level $c$ while he
 remains unemployed.
 
@@ -286,7 +299,7 @@ he  would establish the desired equality
 in {eq}`eq:hugo4` by *lowering* $a$, thereby decreasing
 the term $[ \beta p'(a) ]^{-1}$ (which also lowers $(V^e - V^u)$
 when the value of being
-unemployed $V^u$ increases]). 
+unemployed $V^u$ increases). 
 
 
 If an equality can be established before
@@ -302,10 +315,10 @@ The efficient contract
 relies on  the agency's ability to control *both* the unemployed
 worker's consumption *and* his search effort.
 
-## Unemployment insurance with asymmetric information}
+## Insurance with asymmetric information
 
-Following Shavell and Weiss (1979) and Hopenhayn and Nicolini
-(1997), now assume that  the unemployment insurance agency cannot
+Following Shavell and Weiss (1979) {cite}`Shavell_Weiss_79` and
+Hopenhayn and Nicolini (1997) {cite}`Hopenhayn_Nicolini_97`, now assume that  the unemployment insurance agency cannot
 observe or enforce $a$, though it can observe and control $c$.
 
 The worker is free to choose $a$, which puts expression {eq}`eq:hugo4`, the worker's first-order condition under autarky,
@@ -330,10 +343,10 @@ and generally do not define a convex set, it becomes difficult
 to provide conditions under which the solution to the dynamic
 programming problem results in a convex function $C(V)$.
 
-As
-discussed in XXXX Appendix A of chapter socialinsurance,
-this complication can be handled by convexifying
+Sometimes this complication can be handled by convexifying
 the constraint set through the introduction of lotteries.
+
+See lecture XXXX for an example of this approach.
 
 However, a common finding is that optimal plans do not involve
 lotteries, because convexity of the constraint set is a sufficient
@@ -407,32 +420,28 @@ unemployment.
 
 ```
 
-or parameters chosen by Hopenhayn and Nicolini, Figure \Fg{hugoreplnewf} %15.5
-displays the
-replacement ratio $c / w$ as a function of  the duration of the unemployment
-spell.\NFootnote{This figure was computed using the Matlab programs
-{\tt hugo.m}, {\tt hugo1a.m}, {\tt hugofoc1.m}, {\tt valhugo.m}.
-These are available in the subdirectory {\tt hugo}, which
-contains a readme file.  These programs were composed
-by various members of Economics 233 at Stanford in 1998,
-especially Eva Nagypal, Laura Veldkamp, and Chao Wei.}
+
  This schedule was computed by finding the optimal policy functions
-$$ \eqalign{ V^u_{t+1} & = f(V^u_t) \cr
-             c_t & = g(V^u_t). \cr} $$
+
+$$
+\begin{align} V^u_{t+1} & = f(V^u_t) \cr
+             c_t & = g(V^u_t)
+\end{align}
+$$
+
 and iterating on them, starting from some initial $V^u_0 > V_{\rm aut}$,
 where $V_{\rm aut}$ is the autarky level for an unemployed worker.
 Notice how the replacement ratio declines with duration.
-Figure \Fg{hugoreplnewf} %15.5
+Figure XXX
 sets $V^u_0$ at 16,942, a number that
 has to be interpreted in the context of Hopenhayn and Nicolini's
 parameter settings.
 
 We computed these numbers using the parametric version studied by Hopenhayn
-and Nicolini.\NFootnote{In  section \use{HNalgorithm}, %of chapter \use{practical},
-we described a computational strategy
-of iterating to convergence on the Bellman equation \Ep{hugo5}, subject
-to expressions \Ep{hugo6} at equality, and \Ep{hugo4}.}
-  Hopenhayn and Nicolini chose parameterizations and parameters as follows:
+and Nicolini.
+
+
+ Hopenhayn and Nicolini chose parameterizations and parameters as follows:
 They interpreted one  period as one week, which led them
 to set $\beta=.999$.  They took  $u(c) = {c^{(1-\sigma)} \over 1 - \sigma}$
 and set
@@ -440,70 +449,479 @@ $\sigma=.5$.  They set the wage $w=100$ and
 specified the hazard function to be  $p(a) = 1 - \exp(-ra)$, with $r$ chosen
 to give a hazard rate $ p(a^*) = .1$, where
 $a^*$ is the optimal search  effort under autarky. To compute the numbers
-in Figure \Fg{hugoreplnewf} we used
+in Figure XXXXX we used
 these same settings.
 
 +++
 
 
-\subsection{Computational details}
-Exercise {\it \the\chapternum.1\/} asks the reader  to solve the Bellman equation
-numerically. \index{Bellman equation}%
-In doing so, it is useful to note that there
-%%is a natural upper bound to the set
-%%of continuation values $V^u$.  To  compute it,
+### Computational details
+
+It is useful to note that there
 are natural lower and upper bounds to the set
-of continuation values $V^u$. The lower bound is
+of continuation values $V^u$. 
+
+The lower bound is
 the expected lifetime utility in autarky,
-$V_{\rm aut}$. To compute the upper bound,
-represent condition \Ep{hugo4} as
-$$ V^u \geq V^e  - [\beta  p'(a)]^{-1},$$
+$V_{\rm aut}$. 
+
+To compute the upper bound,
+represent condition {eq}`eq:hugo4` as
+
+$$
+ V^u \geq V^e  - [\beta  p'(a)]^{-1},
+$$
+
 with equality if $ a > 0$.
-If there is zero search effort, then $V^u \geq V^e -[\beta p'(0)]^{-1}$.  %% >
+
+If there is zero search effort, then $V^u \geq V^e -[\beta p'(0)]^{-1}$.  
+
 Therefore, to rule out zero search effort we require
-$$ V^u < V^e - [\beta p'(0)]^{-1} .$$                                     %% \leq
-(Remember that $p''(a) < 0$.)  This step gives  our upper bound
+
+$$
+V^u < V^e - [\beta p'(0)]^{-1} .
+$$                                    
+
+(Remember that $p''(a) < 0$.) 
+
+This step gives  our upper bound
 for $V^u$.
 
 To formulate the Bellman equation numerically,
 we suggest using the constraints to eliminate $c$ and $a$ as choice
 variables, thereby reducing the Bellman equation to
 a minimization over the one choice variable $V^u$.
-First express the promise-keeping constraint \Ep{hugo6} as
-$u(c) = V + a - \beta \{p(a) V^e +[1-p(a)] V^u \}$.                       %% \geq
-That is, consumption is equal to
-$$ c = u^{-1}\left(
-     V+a -\beta [p(a)V^e + (1-p(a))V^u] \right). \EQN hugo21$$
-%%For the preceding utility function,
-%%whenever the right side of this
-%%inequality is negative, then this  promise-keeping constraint  is
-%%not binding and can be satisfied with $c=0$.   This observation
-%%allows us to write
-%%$$ c = u^{-1}\left( \max\left\{0,
-%%     V+a -\beta [p(a)V^e + (1-p(a))V^u] \right\} \right). \EQN hugo21$$
-Similarly, solving the inequality \Ep{hugo4} for $a$ and using the
+
+First express the promise-keeping constraint {eq}`eq:hugo6`  as
+
+$$ 
+u(c) = V + a - \beta \{p(a) V^e +[1-p(a)] V^u \} 
+$$                       
+
+so that  consumption is 
+
+$$ 
+c = u^{-1}\left(
+     V+a -\beta [p(a)V^e + (1-p(a))V^u] \right). 
+$$ (eq:hugo21)
+
+Similarly, solving the inequality {eq}`eq:hugo4`  for $a$ and using the
 assumed  functional
 form for $p(a)$  leads to
-$$ a = \max\left\{0, {\log[r \beta (V^e - V^u)] \over r } \right\}.
-             \EQN hugo22 $$
-Formulas \Ep{hugo21} and \Ep{hugo22} express $(c,a)$ as functions
-of $V$ and  the continuation value $V^u$.  Using these functions
-allows us to write the Bellman equation in $C(V)$ as
-$$ C(V)  = \min_{V^u} \left\{ c + \beta [1 - p(a)] C(V^u) \right\} \EQN hugo23 $$
-where $c$ and $a$ are given by equations \Ep{hugo21} and \Ep{hugo22}.
 
+$$
+a = \max\left\{0, {\log[r \beta (V^e - V^u)] \over r } \right\}.
+$$ (eq:hugo22)
+
+Formulas {eq}`eq:hugo21`  and {eq}`eq:hugo22`  express $(c,a)$ as functions
+of $V$ and  the continuation value $V^u$. 
+
+Using these functions
+allows us to write the Bellman equation in $C(V)$ as
+
+$$ 
+C(V)  = \min_{V^u} \left\{ c + \beta [1 - p(a)] C(V^u) \right\} 
+$$ (eq:hugo23)
+
+where $c$ and $a$ are given by equations {eq}`eq:hugo21`  and {eq}`eq:hugo22`.
+
+
+
+
+### Python Computations
+
+We'll approximate the planners's optimal cost function  using cubic splines.
+
+To do this, we'll load some useful modules
+
+```{code-cell} ipython3
+import numpy as np
+import scipy as sp
+from scipy import optimize
+import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
+```
+
+We first create a class to set up a particular parametrization. 
+
+```{code-cell} ipython3
+class params_instance:
+    
+    def __init__(self,
+                r,
+                β = 0.999,
+                σ = 0.500,
+                w = 100,
+                n_grid = 50):
+
+        self.β,self.σ,self.w,self.r = β,σ,w,r
+        self.n_grid = n_grid
+        uw = self.w**(1-self.σ)/(1-self.σ)  #Utility from consuming all wage
+        self.Ve = uw/(1-β)
+```
+
+### 1 Calibration exercise 
+
+
+For  the parameters we have just loaded, we'll calabrate the net  interest rate $r$ to match the hazard rate (i.e., the probability of finding a job at the beginning of the period) in US data.
+
+We want an $r$ such that in  autarky `p(a(r)) = 0.1`, where `a` is the optimal search effort under autarky.
+
++++
+
+First, we create some helper functions.
+
+```{code-cell} ipython3
+# The probability of finding a job given search effort, a and interest rate r.
+def p(a,r):
+    return 1-np.exp(-r*a)
+
+def invp_prime(x,r):
+    return -np.log(x/r)/r
+
+def p_prime(a,r):
+    return r*np.exp(-r*a)
+
+# The utiliy function
+def u(self,c):        
+    return (c**(1-self.σ))/(1-self.σ)
+
+def u_inv(self,x):
+    return ((1-self.σ)*x)**(1/(1-self.σ)) 
+```
+
+Recall that under  autarky the value for an unemployed worker
+satisfies  the Bellman equation 
+
+\begin{equation}
+V^u = \max_{a} \{u(0) - a + \beta\left[p_{r}(a)V^e + (1-p_{r}(a))V^u\right]\} \tag{1}
+\end{equation}
+
+At the optimal choice of $a$, we have the first order condition for this problem as: 
+
+\begin{equation}
+\beta p_{r}'(a)[V^e - V^u] \leq 1 \tag{2}
+\end{equation}
+
+with equality when a >0.
+
+Given an interest rate $\bar{r}$, we can solve the autarky problem as follows: 
+
+1. Guess $V^u \in \mathbb{R}^{+}$
+2. Given $V^u$, use the FOC (2) to calculate the implied optimal search effort $a$
+3. Evaluate the difference between the LHS and RHS of the Bellman equation (1)
+4. Update guess for $V^u$ accordingly, and go to 2) until the Bellman equation is satisfied.
+
+For a given $r$ and guess $V^u$,
+the function `Vu_error` calculates the error in the Bellman equation under the optimal search intensity. 
+
+We'll  soon use this as an input to computing $V^u$.
+
+```{code-cell} ipython3
+# The error in the Bellman equation that requires equality at 
+# the optimal choices.
+def Vu_error(self,Vu,r):
+    β= self.β
+    Ve = self.Ve
+
+    a = invp_prime(1/(β*(Ve-Vu)),r)
+    error = u(self,0) -a + β*(p(a,r)*Ve + (1-p(a,r))*Vu) - Vu
+    return error
+```
+
+Since the calibration exercise is to match the hazard rate under autarky to the data, we must find an interest rate $r$ to match `p(a,r) = 0.1`. 
+
+The function below `r_error` calculates, for a given guess of $r$ the difference between the model implied equilibrium hazard rate and 0.1. 
+
+This will be used to solve for the a calibrated $r^*$.
+
+```{code-cell} ipython3
+# The error of our p(a^*) relative to our calibration target
+def r_error(self,r):
+    β = self.β
+    Ve = self.Ve
+
+    Vu_star = sp.optimize.fsolve(Vu_error_Λ,15000,args = (r))
+    a_star = invp_prime(1/(β*(Ve-Vu_star)),r) # Assuming a>0
+    return    p(a_star,r) - 0.1
+```
+
+Now, let us create an instance of the model with our parametrization
+
+```{code-cell} ipython3
+params = params_instance(r = 1e-2) 
+# Create some lambda functions useful for fsolve function
+Vu_error_Λ =  lambda Vu,r: Vu_error(params,Vu,r)
+r_error_Λ =  lambda r: r_error(params,r)
+```
+
+We want to compuate an  $r$ that is consistent with the hazard rate 0.1 in autarky.
+
+To do so, we will use a bisection strategy. 
+
+```{code-cell} ipython3
+r_calibrated = sp.optimize.brentq(r_error_Λ,1e-10,1-1e-10)
+print(f"Interest rate to match 0.1 hazard rate: r = {r_calibrated}")
+
+Vu_aut = sp.optimize.fsolve(Vu_error_Λ,15000,args = (r_calibrated))[0]
+a_aut = invp_prime(1/(params.β*(params.Ve-Vu_aut)),r_calibrated)
+
+print(f"Check p at r: {p(a_aut,r_calibrated)}")
+```
+
+Now that we have calibrated our interest rate $r$, we can continue with solving the full model with asymmetric information.
+
++++
+
+### Computation under Private Information
+
++++
+
+Our approach to solving the full model is a variant on Judd (1998), who uses a polynomial to approximate the value function and a numerical optimizer to perform the optimization at each iteration. 
+
+In contrast, we will use cubic splines to interpolate across a pre-set grid of points to approximate the value function. For further details of the Judd (1998) method, see RMT 5, Section 5.7.
+
++++
+
+Our strategy involves finding a function $C(V)$ -- the expected cost of giving the worker value $V$ -- that satisfies the Bellman equation:
+  
+\begin{equation}
+    C(V) = \min_{c,a,V^u} \{c + \beta\left[1-p(a)\right]C(V^u)\}
+    \tag{3}
+\end{equation}
+
+To solve this model, notice that we have analytical solutions of $c$ and $a$ in terms of (at most) promised value $V$ and $V^u$ (and other parameters). For $c$, we have:
+
+\begin{equation}
+u(c) = V + a - \beta \{p(a)V^e + \left[1-p(a)\right]V^u\}
+\end{equation}
+
+\begin{equation}
+c = u^{-1}\left(V + a - \beta \{p(a)V^e + \left[1-p(a)\right]V^u\}\right)
+\end{equation}
+
+
+and for $a$, we use the FOC of the worker's problem in equation (2) to get:
+
+\begin{equation}
+a = \max\left\{0, (p')^{-1}\left[\frac{1}{\beta\left[V^e - V^u\right]}\right]\right\}
+\end{equation}
+
+With our particular expression for $p$, we have:
+
+\begin{equation}
+a = \max\left\{0,\frac{\log\left[r\beta(V^e-V^u)\right]}{r}\right\}
+\end{equation}
+
+```{code-cell} ipython3
+def calc_c(self,Vu,V,a):
+    '''
+    Calculates the optimal consumption choice coming from the constraint of the insurer's problem 
+    (which is also a Bellman equation)
+    '''    
+    β,Ve,r = self.β,self.Ve,self.r
+
+    c = u_inv(self,V + a - β*(p(a,r)*Ve + (1-p(a,r))*Vu))
+    return c
+
+def calc_a(self,Vu):
+    '''
+    Calculates the optimal effort choice coming from the worker's effort optimality condition.
+    '''
+
+    r,β,Ve = self.r,self.β,self.Ve
+    
+    a_temp = np.log(r*β*(Ve - Vu))/r
+    a = max(0,a_temp)
+    return a
+```
+
+With these analytical solutions for optimal $c$ and $a$ in hand, we can reduce the minimization in (3) to only 1-dimension -- V^u.
+
+With this in hand, the roadmap is straighforward. 
+
+#### Algorithm 1
+
+1. Fix a set of grid points for $V$ -- `grid_V` and $V^u$ -- `grid_V^u`.
+2. Guess a function $C_0(V)$ that is evaluated at `grid_V`.
+3. For each point in `grid_V` find the V^u that minimizes the expression on the LHS of (3). We find the minimum by evaluating the LHS of (3) at each `grid_V^u` and then finding the minimum using cubic splines.
+4. Evaluating the minimum across all `grid_V` gives you another function $C_1(V)$. 
+5. If $C_0(V)$ and $C_1(V)$ are sufficiently different, then repeat steps 3-4 again. Otherwise, we are done.
+
+The function `iterate_C` below executes step 3 in the above algorithm. 
+
+```{code-cell} ipython3
+# Operator iterate_C that calculates the next iteration of the cost function.
+def iterate_C(self,C_old,Vu_grid):
+
+    '''
+    We solve the model by minimising the value function across a grid of possible promised values.
+    '''
+    β,r,n_grid = self.β,self.r,self.n_grid
+
+    C_new = np.zeros(n_grid)
+    cons_star = np.zeros(n_grid)
+    a_star = np.zeros(n_grid)
+    V_star = np.zeros(n_grid)
+
+    C_new2 = np.zeros(n_grid)
+    V_star2 = np.zeros(n_grid)    
+
+    for V_i in range(n_grid):
+        C_Vi_temp = np.zeros(n_grid)
+        cons_Vi_temp = np.zeros(n_grid)
+        a_Vi_temp = np.zeros(n_grid)
+
+        for Vu_i in range(n_grid):
+            a_i = calc_a(self,Vu_grid[Vu_i])
+            c_i = calc_c(self,Vu_grid[Vu_i],Vu_grid[V_i],a_i)
+
+            C_Vi_temp[Vu_i] = c_i + β*(1-p(a_i,r))*C_old[Vu_i] 
+            cons_Vi_temp[Vu_i] = c_i
+            a_Vi_temp[Vu_i] = a_i
+
+        # Interpolate across the grid to get better approximation of the minimum
+        C_Vi_temp_interp = sp.interpolate.interp1d(Vu_grid,C_Vi_temp, kind = 'cubic')
+        cons_Vi_temp_interp = sp.interpolate.interp1d(Vu_grid,cons_Vi_temp, kind = 'cubic')
+        a_Vi_temp_interp = sp.interpolate.interp1d(Vu_grid,a_Vi_temp, kind = 'cubic')
+
+        res = sp.optimize.minimize_scalar(C_Vi_temp_interp,method='bounded',bounds = (Vu_min,Vu_max))
+        V_star[V_i] = res.x
+        C_new[V_i] = res.fun
+        
+        # Save the associated consumpton and search policy functions as well
+        cons_star[V_i] = cons_Vi_temp_interp(V_star[V_i])
+        a_star[V_i] = a_Vi_temp_interp(V_star[V_i])        
+
+    return C_new,V_star,cons_star,a_star
+```
+
+The below code executes steps 4 and 5 in Algorithm 1 until convergence to a function $C^*(V)$.
+
+```{code-cell} ipython3
+def solve_incomplete_info_model(self,Vu_grid,Vu_aut,tol = 1e-6,max_iter = 10000):
+    iter = 0
+    error = 1
+
+    C_init = np.ones(self.n_grid)*0
+    C_old = np.copy(C_init)
+
+    while iter<max_iter and error >tol:
+        C_new,V_new,cons_star,a_star = iterate_C(self,C_old,Vu_grid)
+        error = np.max(np.abs(C_new - C_old))
+        
+        #Only print the iterations every 50 steps
+        if iter % 50 ==0:
+            print(f"Iteration: {iter}, error:{error}")
+        C_old = np.copy(C_new)
+        iter+=1
+
+    return C_new,V_new,cons_star,a_star
+```
+
+## Equilibrium calculation
+
++++
+
+Using the above functions, we create another instance of the parameters with the correctly calibrated interest rate, $r$.
+
+```{code-cell} ipython3
+##? Create another instance with the correct r now
+params = params_instance(r = r_calibrated) 
+
+#Set up grid
+Vu_min = Vu_aut
+Vu_max = params.Ve - 1/(params.β*p_prime(0,params.r))
+Vu_grid = np.linspace(Vu_min,Vu_max,params.n_grid)
+
+#Solve model
+C_star,V_star,cons_star,a_star = solve_incomplete_info_model(params,Vu_grid,Vu_aut,tol = 1e-6,max_iter = 10000) #,cons_star,a_star
+
+# Since we have the policy functions in grid form, we will interpolate them to be able to
+# evaluate any promised value
+cons_star_interp = sp.interpolate.interp1d(Vu_grid,cons_star)
+a_star_interp = sp.interpolate.interp1d(Vu_grid,a_star)
+V_star_interp = sp.interpolate.interp1d(Vu_grid,V_star)
+```
+
+### Analysis
+
++++
+
+We are interested in the finding the replacement ratio ($c/w$) and the search effort, $a$, as a function of duration of unemployment.
+
+We can do this using the optimal policy functions `V_star`, `cons_star` and `a_star` above, and an iterative procedure below:
+
+```{code-cell} ipython3
+# Replacement ratio and effort as a function of unemployment duration
+T_max = 52
+Vu_t = np.empty((T_max,3))
+cons_t = np.empty((T_max-1,3))
+a_t = np.empty((T_max-1,3))
+
+# Calculate the replacement ratios depending on different initial
+# promised values
+Vu_0_hold = np.array([Vu_aut,16942,17000])
+```
+
+```{code-cell} ipython3
+for i,Vu_0, in enumerate(Vu_0_hold):
+    Vu_t[0,i] = Vu_0 
+    for t in range(1,T_max):
+        cons_t[t-1,i] = cons_star_interp(Vu_t[t-1,i])
+        a_t[t-1,i] = a_star_interp(Vu_t[t-1,i])
+        Vu_t[t,i] = V_star_interp(Vu_t[t-1,i])
+```
+
+```{code-cell} ipython3
+fontSize = 10
+plt.rc('font', size=fontSize)          # controls default text sizes
+plt.rc('axes', titlesize=fontSize)     # fontsize of the axes title
+plt.rc('axes', labelsize=fontSize)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=fontSize)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=fontSize)    # fontsize of the tick labels
+plt.rc('legend', fontsize=fontSize)    # legend fontsize
+
+f1 = plt.figure(figsize = (8,8))
+plt.subplot(2,1,1)
+plt.plot(range(T_max-1),cons_t[:,0]/params.w,label = '$V^u_0$ = 16759 (aut)',color = 'red')
+plt.plot(range(T_max-1),cons_t[:,1]/params.w,label = '$V^u_0$ = 16942',color = 'blue')
+plt.plot(range(T_max-1),cons_t[:,2]/params.w,label = '$V^u_0$ = 17000',color = 'green')
+plt.ylabel("Replacement ratio (c/w)")
+plt.legend()
+plt.title("Optimal replacement ratio")
+
+plt.subplot(2,1,2)
+plt.plot(range(T_max-1),a_t[:,0],color = 'red')
+plt.plot(range(T_max-1),a_t[:,1],color = 'blue')
+plt.plot(range(T_max-1),a_t[:,2],color = 'green')
+plt.ylim(0,320)
+plt.ylabel("Optimal search effort (a)")
+plt.xlabel("Duration of unemployment")
+plt.title("Optimal search effort")
+plt.show()
+```
+
+The charts show that for all initial promised values that are different from the autarchic equilibrium, the replacement ratio falls as the duration of unemployment increases.
+
+In essence, the planner is incentivising higher search effort as the duration of unemployment increases by reducing the promised values. 
+
+Note that due to the incentive compatibility of the contract  it is not the case that the worker is searching less than the planner would want -- indeed the contract itself is designed to ensure the worker searches at the intensity the planner expects. 
+
+For an initial promised value $V^u = V_{aut}$, the planner cannot reduce the replacement ratio by any amount, and so the worker is searching at higher intensity from the beginning. 
 
 ### Interpretations
-The substantial downward slope in the replacement ratio in Figure \Fg{hugoreplnewf}
+
+The substantial downward slope in the replacement ratio in the above figure
 comes entirely  from the incentive constraints facing the
-planner.   
-We saw earlier that without private information, the
+planner. 
+
+We saw earlier that with full  information, the
 planner would smooth consumption
 over an unemployment spell by
 keeping the  replacement ratio constant. 
 
-In the situation depicted in
-Figure \Fg{hugoreplnewf}, the planner can't observe the worker's search effort
+With private information, the planner can't observe the worker's search effort
 and therefore makes   the replacement ratio  fall and search
 effort rise as the duration of unemployment increases, especially
 early in an unemployment spell.   
@@ -517,17 +935,14 @@ effort early in an unemployment spell.
  * the **stick** occurs in the low compensation and high effort  later in
 the spell.   
 
-XXXXXXWe shall see  this carrot-and-stick feature in some of the
-credible government policies analyzed in chapters \use{credible}, \use{chang}, and
-\use{wldtrade}.
+XXXXXXWe shall see  this carrot-and-stick feature in these lectures XXXX.
 
 The planner offers declining benefits and asks for increased search
 effort as the duration of an unemployment spell rises in order to provide an
 unemployed worker with proper incentives, not to punish an unlucky worker
 who has been unemployed for a long time.  
 
-The planner believes that a
-worker who has been unemployed a long time is unlucky, not that he has
+The planner believes that a worker who has been unemployed a long time is unlucky, not that he has
 done anything wrong (i.e., not lived up to the contract).  
 
 Indeed, the
@@ -538,7 +953,3 @@ The falling consumption and rising
 search effort of the unlucky ones with long unemployment spells are
 simply  prices that have to be paid for the common good of providing
 proper incentives.
-
-```{code-cell} ipython3
-
-```
