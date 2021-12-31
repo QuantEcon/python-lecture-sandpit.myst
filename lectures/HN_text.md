@@ -62,10 +62,10 @@ $p(a)   \in [0,1]$ for  $a \geq 0$, $p(0)=0$.
 
 The consumption good is nonstorable.
 
-The unemployed worker has no savings and cannot borrow or lend.
+An unemployed worker has no savings and cannot borrow or lend.
 
 
-An insurance agency or *planner* is the unemployed worker's only source of consumption
+An **insurance agency** or **planner** is the unemployed worker's only source of consumption
 smoothing over time and across states.
 
 
@@ -79,12 +79,12 @@ a job, it is optimal for the agency to provide an employed worker with
 a constant level of consumption.
  * Hence, Hopenhayn and Nicolini's insurance agency imposes
 a permanent per-period history-dependent tax on a previously
-unemployed worker.
+unemployed but presently employed worker.
 
 
 ### Autarky 
 
-As a benchmark, we first study the fate of the unemployed worker
+As a benchmark, we first study the fate of an unemployed worker
 who has no access to unemployment insurance. 
 
 Because employment
@@ -102,7 +102,7 @@ $$  V^e = {u(w) \over (1-\beta)}  .
 $$ (eq:hugo2)
 % \EQN hugo2
 
-Now let $V^u$ be the expected present value of utility for an
+Now let $V^u$ be the expected discounted present value of utility for an
 unemployed worker who chooses  current effort $a$ %period pair $(c,a)$
 optimally. 
 
@@ -114,7 +114,7 @@ V^u = \max_{a \geq 0} \biggl\{ u(0) - a + \beta \left[
 $$ (eq:hugo3)
 %EQN hugo3
    
-The first-order condition for this problem is
+The first-order condition for a maximum is
 
 $$ 
 \beta p'(a) \left[V^e - V^u \right] \leq 1 , 
@@ -127,7 +127,7 @@ Since there is no state variable in this
 infinite horizon problem, there is a time-invariant optimal
 search intensity $a$ and an associated value of being unemployed $V^u$.
 
-Let $V_{\rm aut} = V^u$ denote the solution of Bellman equation {eq}`eq:hugo3`. 
+Let $V_{\rm aut} = V^u$ solve Bellman equation {eq}`eq:hugo3`. 
 
 Equations {eq}`eq:hugo3` 
  and {eq}`eq:hugo4` 
@@ -147,24 +147,24 @@ to compute $V^u_{j+1}$.
 
  * Iterate to convergence.
 
-### Insurance with full information
+### Unemployment Insurance with Full Information
 
 Another benchmark model helps set the stage for the model with private information that we ultimately want to study.
 
-In this bench mark model, the unemployment agency has full information about the unemployed work.
+In this model, the unemployment agency has full information about the unemployed work.
 
-We study the provision of insurance with
+We study optimal provision of insurance with
 full information.  
 
-An insurance agency can observe and control
-the unemployed person's consumption and search effort. 
+An insurance agency can set both 
+the  consumption and search effort of an unemployed person. 
 
 The
 agency wants to design an unemployment insurance contract to give
 the unemployed worker expected discounted utility $V > V_{\rm aut}$.
 
-The planner wants to deliver value $V$ in the most efficient way,
-meaning the way that minimizes expected
+The planner wants to deliver value $V$ efficiently,
+meaning in a  way that minimizes expected
  discounted cost, using $\beta$ as the discount factor.
  
 We formulate the optimal insurance problem
@@ -315,7 +315,7 @@ The efficient contract
 relies on  the agency's ability to control *both* the unemployed
 worker's consumption *and* his search effort.
 
-## Insurance with asymmetric information
+## Unemployment Insurance with Private Information
 
 Following Shavell and Weiss (1979) {cite}`Shavell_Weiss_79` and
 Hopenhayn and Nicolini (1997) {cite}`Hopenhayn_Nicolini_97`, now assume that  the unemployment insurance agency cannot
@@ -418,7 +418,7 @@ unemployment.
 
 
 
-### Computational details
+### Computational Details
 
 It is useful to note that there
 are natural lower and upper bounds to the set
@@ -523,7 +523,7 @@ class params_instance:
         self.Ve = uw/(1-β)
 ```
 
-### Parameter values 
+### Parameter Values 
 
 
 For  the other parameters we have just loaded in the above Python code, we'll set brate the net  interest rate $r$ to match the hazard rate --  the probability of finding a job in one period --  in US data.
@@ -556,24 +556,24 @@ def u_inv(self,x):
 Recall that under  autarky the value for an unemployed worker
 satisfies  the Bellman equation 
 
-\begin{equation}
-V^u = \max_{a} \{u(0) - a + \beta\left[p_{r}(a)V^e + (1-p_{r}(a))V^u\right]\} \tag{1}
-\end{equation}
+$$
+V^u = \max_{a} \{u(0) - a + \beta\left[p_{r}(a)V^e + (1-p_{r}(a))V^u\right]\} 
+$$ (eq:yad1)
 
 At the optimal choice of $a$, we have the first order condition for this problem as: 
 
-\begin{equation}
-\beta p_{r}'(a)[V^e - V^u] \leq 1 \tag{2}
-\end{equation}
+$$
+\beta p_{r}'(a)[V^e - V^u] \leq 1 
+$$ (eq:yad2)
 
 with equality when a >0.
 
 Given an interest rate $\bar{r}$, we can solve the autarky problem as follows: 
 
 1. Guess $V^u \in \mathbb{R}^{+}$
-2. Given $V^u$, use the FOC (2) to calculate the implied optimal search effort $a$
-3. Evaluate the difference between the LHS and RHS of the Bellman equation (1)
-4. Update guess for $V^u$ accordingly, and go to 2) until the Bellman equation is satisfied.
+2. Given $V^u$, use the FOC {eq}`eq:yad2` to calculate the implied optimal search effort $a$
+3. Evaluate the difference between the LHS and RHS of the Bellman equation {eq}`eq:yad1`
+4. Update guess for $V^u$ accordingly, then return  to 2) and repeat until the Bellman equation is satisfied.
 
 For a given $r$ and guess $V^u$,
 the function `Vu_error` calculates the error in the Bellman equation under the optimal search intensity. 
@@ -618,7 +618,7 @@ Vu_error_Λ =  lambda Vu,r: Vu_error(params,Vu,r)
 r_error_Λ =  lambda r: r_error(params,r)
 ```
 
-We want to compuate an  $r$ that is consistent with the hazard rate 0.1 in autarky.
+We want to compute an  $r$ that is consistent with the hazard rate 0.1 in autarky.
 
 To do so, we will use a bisection strategy. 
 
@@ -640,20 +640,21 @@ Now that we have calibrated our interest rate $r$, we can continue with solving 
 
 +++
 
-Our approach to solving the full model is a variant on Judd (1998), who uses a polynomial to approximate the value function and a numerical optimizer to perform the optimization at each iteration. 
+Our approach to solving the full model is a variant on Judd (1998) {cite}`Judd1998`, who uses a polynomial to approximate the value function and a numerical optimizer to perform the optimization at each iteration. 
 
-In contrast, we will use cubic splines to interpolate across a pre-set grid of points to approximate the value function. For further details of the Judd (1998) method, see RMT 5, Section 5.7.
+In contrast, we will use cubic splines to interpolate across a pre-set grid of points to approximate the value function. For further details of the Judd (1998) {cite}`Judd1998` method, see {cite}`Ljungqvist2012`, Section 5.7.
 
 +++
 
 Our strategy involves finding a function $C(V)$ -- the expected cost of giving the worker value $V$ -- that satisfies the Bellman equation:
   
-\begin{equation}
+$$
     C(V) = \min_{c,a,V^u} \{c + \beta\left[1-p(a)\right]C(V^u)\}
-    \tag{3}
-\end{equation}
+$$ (eq:yad3)
 
-To solve this model, notice that we have analytical solutions of $c$ and $a$ in terms of (at most) promised value $V$ and $V^u$ (and other parameters). For $c$, we have:
+To solve this model, notice that we have analytical solutions of $c$ and $a$ in terms of (at most) promised value $V$ and $V^u$ (and other parameters). 
+
+For $c$, we have:
 
 \begin{equation}
 u(c) = V + a - \beta \{p(a)V^e + \left[1-p(a)\right]V^u\}
@@ -664,7 +665,7 @@ c = u^{-1}\left(V + a - \beta \{p(a)V^e + \left[1-p(a)\right]V^u\}\right)
 \end{equation}
 
 
-and for $a$, we use the FOC of the worker's problem in equation (2) to get:
+and for $a$, we use the FOC of the worker's problem in equation {eq}`eq:yad2` to get:
 
 \begin{equation}
 a = \max\left\{0, (p')^{-1}\left[\frac{1}{\beta\left[V^e - V^u\right]}\right]\right\}
@@ -701,9 +702,9 @@ def calc_a(self,Vu):
 
 With these analytical solutions for optimal $c$ and $a$ in hand, we can reduce the minimization in (3) to only 1-dimension -- V^u.
 
-With this in hand, the roadmap is straighforward. 
+With this in hand, we have our algorithm.
 
-#### Algorithm 1
+### Algorithm 
 
 1. Fix a set of grid points for $V$ -- `grid_V` and $V^u$ -- `grid_V^u`.
 2. Guess a function $C_0(V)$ that is evaluated at `grid_V`.
@@ -759,7 +760,7 @@ def iterate_C(self,C_old,Vu_grid):
     return C_new,V_star,cons_star,a_star
 ```
 
-The below code executes steps 4 and 5 in Algorithm 1 until convergence to a function $C^*(V)$.
+The below code executes steps 4 and 5 in the Algorithm  until convergence to a function $C^*(V)$.
 
 ```{code-cell} ipython3
 def solve_incomplete_info_model(self,Vu_grid,Vu_aut,tol = 1e-6,max_iter = 10000):
@@ -782,7 +783,7 @@ def solve_incomplete_info_model(self,Vu_grid,Vu_aut,tol = 1e-6,max_iter = 10000)
     return C_new,V_new,cons_star,a_star
 ```
 
-## Equilibrium calculation
+## Outcomes
 
 +++
 
@@ -807,13 +808,15 @@ a_star_interp = sp.interpolate.interp1d(Vu_grid,a_star)
 V_star_interp = sp.interpolate.interp1d(Vu_grid,V_star)
 ```
 
-### Analysis
+### Replacement Ratios and Continuation Values
 
 +++
 
-We are interested in the finding the replacement ratio ($c/w$) and the search effort, $a$, as a function of duration of unemployment.
+We want to graph the  replacement ratio ($c/w$) and  search effort $a$ as  functions of the duration of unemployment.
 
-We can do this using the optimal policy functions `V_star`, `cons_star` and `a_star` above, and an iterative procedure below:
+We'll do this for three levels of $V_0$, the lowest being the autarky value $V_{\rm aut}$.
+
+We accomplish this by using the optimal policy functions `V_star`, `cons_star` and `a_star` computed above as well the following  iterative procedure:
 
 ```{code-cell} ipython3
 # Replacement ratio and effort as a function of unemployment duration
@@ -865,19 +868,19 @@ plt.title("Optimal search effort")
 plt.show()
 ```
 
-The above graphs show that for all initial promised values that are different from the autarchic equilibrium, the replacement ratio falls as the duration of unemployment increases.
 
-In essence,  by reducing the promised value, the planner motivates higher search effort as the duration of unemployment increases. 
+For an initial promised value $V^u = V_{\rm aut}$, the planner chooses the autarky level of $0$ for the replacement ratio and instructs the worker to search at the autarky search intensity, regardless of the duration of unemployment
 
-Note that the contract  is designed to ensure the worker searches at the intensity the planner expects. 
+But for $V^u > V_{\rm aut}$, the planner makes the replacement ratio  decline and search effor increase  with the duration of unemployment. 
 
-For an initial promised value $V^u = V_{aut}$, the planner cannot reduce the replacement ratio by any amount, and so the worker is searching at higher intensity from the beginning. 
 
 ### Interpretations
 
-The substantial downward slope in the replacement ratio in the above figure
-comes entirely  from the incentive constraints facing the
-planner. 
+The  downward slope of the replacement ratio when $V^u > V_{\rm aut}$ is a consequence of the 
+ the planner's limited information about the worker's search effort. 
+
+By providing the worker with a duration-dependent schedule of replacement ratios, the planner induces the worker in effect to reveal
+his/her search effort to the planner. 
 
 We saw earlier that with full  information, the
 planner would smooth consumption
@@ -885,7 +888,9 @@ over an unemployment spell by
 keeping the  replacement ratio constant. 
 
 With private information, the planner can't observe the worker's search effort
-and therefore makes   the replacement ratio  fall and search
+and therefore makes   the replacement ratio  fall.
+
+Evidently, search
 effort rise as the duration of unemployment increases, especially
 early in an unemployment spell.   
 
@@ -898,15 +903,15 @@ effort early in an unemployment spell.
  * the **stick** occurs in the low compensation and high effort  later in
 the spell.   
 
-XXXXXXWe shall see  this carrot-and-stick feature in these lectures XXXX.
+XXXXXX We shall encounter a related  carrot-and-stick feature in these lectures XXXX.
 
-The planner offers declining benefits and asks for increased search
+The planner offers declining benefits and induces increased search
 effort as the duration of an unemployment spell rises in order to provide an
 unemployed worker with proper incentives, not to punish an unlucky worker
 who has been unemployed for a long time.  
 
 The planner believes that a worker who has been unemployed a long time is unlucky, not that he has
-done anything wrong (i.e., not lived up to the contract).  
+done anything wrong (i.e., has not lived up to the contract).  
 
 Indeed, the
 contract is designed to induce the unemployed workers to search in
@@ -914,5 +919,5 @@ the way the planner expects.
 
 The falling consumption and rising
 search effort of the unlucky ones with long unemployment spells are
-simply  prices that have to be paid for the common good of providing
+simply  costs that have to be paid in order to  provide
 proper incentives.
