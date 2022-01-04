@@ -5,7 +5,6 @@ options:
 sections:
 - file: eig_circulant
 - file: PT_intro
-- file: HN_text.md
 - file: back_prop
 - file: markov_switching_lss
 - file: zreferences
