@@ -24,7 +24,7 @@ Hopenhayn and Nicolini (1997) {cite}`Hopenhayn_Nicolini_97` to
 compute optimal insurance plans for  Shavell and
 Weiss's model.
 
-Hopenhayn and Nicolini's model is a generalization of Shavell and Weiss's along dimenstions that we'll soon describe.
+Hopenhayn and Nicolini's model is a generalization of Shavell and Weiss's along dimensions that we'll soon describe.
 
 ## Shavell and Weiss's Model
 
@@ -103,7 +103,7 @@ $$ (eq:hugo2)
 % \EQN hugo2
 
 Now let $V^u$ be the expected discounted present value of utility for an
-unemployed worker who chooses  current effort $a$ %period pair $(c,a)$
+unemployed worker who chooses  consumption, effort  pair $(c,a)$
 optimally. 
 
 It satisfies the Bellman equation  
@@ -386,7 +386,7 @@ $C'(V^u) < C'(V)$.
 Convexity of $C$ then implies that $V^u < V$.
 
 
-After we have also used e the first equation of {eq}`eq:hugo8`, it follows that
+After we have also used  the first equation of {eq}`eq:hugo8`, it follows that
 in order to provide  the proper incentives, the consumption
 of the unemployed worker must decrease as the duration of the unemployment
 spell lengthens. 
@@ -455,7 +455,7 @@ we suggest using the constraints to eliminate $c$ and $a$ as choice
 variables, thereby reducing the Bellman equation to
 a minimization over the one choice variable $V^u$.
 
-First express the promise-keeping constraint {eq}`eq:hugo6`  as
+First express the promise-keeping constraint {eq}`eq:hugo6`  at equality as
 
 $$ 
 u(c) = V + a - \beta \{p(a) V^e +[1-p(a)] V^u \} 
@@ -468,9 +468,15 @@ c = u^{-1}\left(
      V+a -\beta [p(a)V^e + (1-p(a))V^u] \right). 
 $$ (eq:hugo21)
 
-Similarly, solving the inequality {eq}`eq:hugo4`  for $a$ and using the
-assumed  functional
-form for $p(a)$  leads to
+Similarly, solving the inequality {eq}`eq:hugo4`  for $a$  leads to
+
+$$
+a = \max\left\{0, p'^{-1} \left({ 1 \over \beta (V^e - V^u)  } \right) \right\}.
+$$ (eq:hugo22a)
+
+
+When we specialize {eq}`eq:hugo22a` to the   functional
+form for $p(a)$ used by Hopenhayn and Nicolini, we obtain
 
 $$
 a = \max\left\{0, {\log[r \beta (V^e - V^u)] \over r } \right\}.
@@ -493,7 +499,7 @@ where $c$ and $a$ are given by equations {eq}`eq:hugo21`  and {eq}`eq:hugo22`.
 
 ### Python Computations
 
-We'll approximate the planners's optimal cost function  using cubic splines.
+We'll approximate the planner's optimal cost function  with cubic splines.
 
 To do this, we'll load some useful modules
 
@@ -632,7 +638,7 @@ a_aut = invp_prime(1/(params.β*(params.Ve-Vu_aut)),r_calibrated)
 print(f"Check p at r: {p(a_aut,r_calibrated)}")
 ```
 
-Now that we have calibrated our interest rate $r$, we can continue with solving the full model with asymmetric information.
+Now that we have calibrated our interest rate $r$, we can continue with solving the  model with private information.
 
 +++
 
@@ -652,30 +658,10 @@ $$
     C(V) = \min_{c,a,V^u} \{c + \beta\left[1-p(a)\right]C(V^u)\}
 $$ (eq:yad3)
 
-To solve this model, notice that we have analytical solutions of $c$ and $a$ in terms of (at most) promised value $V$ and $V^u$ (and other parameters). 
+To solve this model, notice that in equations {eq}`eq:hugo21` and {eq}`eq:hugo22`, we have analytical solutions of $c$ and $a$ in terms of (at most) promised value $V$ and $V^u$ (and other parameters). 
 
-For $c$, we have:
+We can substitute these equations for $c$ and $a$ and obtain the functional equation {eq}`eq:hugo23` that we want to solve.
 
-\begin{equation}
-u(c) = V + a - \beta \{p(a)V^e + \left[1-p(a)\right]V^u\}
-\end{equation}
-
-\begin{equation}
-c = u^{-1}\left(V + a - \beta \{p(a)V^e + \left[1-p(a)\right]V^u\}\right)
-\end{equation}
-
-
-and for $a$, we use the FOC of the worker's problem in equation {eq}`eq:yad2` to get:
-
-\begin{equation}
-a = \max\left\{0, (p')^{-1}\left[\frac{1}{\beta\left[V^e - V^u\right]}\right]\right\}
-\end{equation}
-
-With our particular expression for $p$, we have:
-
-\begin{equation}
-a = \max\left\{0,\frac{\log\left[r\beta(V^e-V^u)\right]}{r}\right\}
-\end{equation}
 
 ```{code-cell} ipython3
 def calc_c(self,Vu,V,a):
@@ -700,17 +686,19 @@ def calc_a(self,Vu):
     return a
 ```
 
-With these analytical solutions for optimal $c$ and $a$ in hand, we can reduce the minimization in (3) to only 1-dimension -- V^u.
+With these analytical solutions for optimal $c$ and $a$ in hand, we can reduce the minimization to  {eq}`eq:hugo23`  in the single variable
+$V^u$.
 
 With this in hand, we have our algorithm.
 
 ### Algorithm 
 
-1. Fix a set of grid points for $V$ -- `grid_V` and $V^u$ -- `grid_V^u`.
-2. Guess a function $C_0(V)$ that is evaluated at `grid_V`.
-3. For each point in `grid_V` find the V^u that minimizes the expression on the LHS of (3). We find the minimum by evaluating the LHS of (3) at each `grid_V^u` and then finding the minimum using cubic splines.
-4. Evaluating the minimum across all `grid_V` gives you another function $C_1(V)$. 
+1. Fix a set of grid points $grid_V$ for $V$   and $Vu_{grid}$ for $V^u$ 
+2. Guess a function $C_0(V)$ that is evaluated at a grid $grid_V$.
+3. For each point in $grid_V$ find the $V^u$ that minimizes the expression on  right side  of {eq}`eq:hugo23`. We find the minimum by evaluating the right side of {eq}`eq:hugo23` at each point in $Vu_{grid}$  and then finding the minimum using cubic splines.
+4. Evaluating the minimum across all points in $grid_V$ gives you another function $C_1(V)$. 
 5. If $C_0(V)$ and $C_1(V)$ are sufficiently different, then repeat steps 3-4 again. Otherwise, we are done.
+6. Thus, the iterations are $C_{j+1}(V) = \min_{c,a, V^u} \{c - \beta [1 - p(a) ] C_j(V)\} $.
 
 The function `iterate_C` below executes step 3 in the above algorithm. 
 
@@ -871,7 +859,7 @@ plt.show()
 
 For an initial promised value $V^u = V_{\rm aut}$, the planner chooses the autarky level of $0$ for the replacement ratio and instructs the worker to search at the autarky search intensity, regardless of the duration of unemployment
 
-But for $V^u > V_{\rm aut}$, the planner makes the replacement ratio  decline and search effor increase  with the duration of unemployment. 
+But for $V^u > V_{\rm aut}$, the planner makes the replacement ratio  decline and search effort increase  with the duration of unemployment. 
 
 
 ### Interpretations
@@ -903,7 +891,7 @@ effort early in an unemployment spell.
  * the **stick** occurs in the low compensation and high effort  later in
 the spell.   
 
-XXXXXX We shall encounter a related  carrot-and-stick feature in these lectures XXXX.
+We shall encounter a related  carrot-and-stick feature in our other lectures about dynamic programming squared.
 
 The planner offers declining benefits and induces increased search
 effort as the duration of an unemployment spell rises in order to provide an
