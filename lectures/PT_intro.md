@@ -15,7 +15,7 @@ kernelspec:
 
 ## Spear and Srivastava
 
-Spear and Srivastava (1987) introduced the following
+Spear and Srivastava (1987) {cite}`Spear_Srivastava_87` introduced the following
 recursive formulation of an infinitely repeated, discounted  repeated
 principal-agent problem.
 
@@ -61,7 +61,7 @@ $$ (eq:eq2)
  * Equation {eq}`eq:eq1`  requires the contract to deliver the promised
 level of discounted utility. 
  * Equation {eq}`eq:eq2`  is the **incentive
-compatibility** constraint requiring the agent to want to
+compatibility** constraint that requires that the agent choose to
 deliver the amount of effort called for in the
 contract. 
 
@@ -79,14 +79,14 @@ and is subject to the constraints {eq}`eq:eq1` and {eq}`eq:eq2`.
 This value function $v(w)$ and the associated optimum policy functions
 are to be solved by iterating on the Bellman equation {eq}`eq:eq3`.
 
-## Use of lotteries
+## Lotteries
 
 A difficulty in problems like thes can be that the the structure of the incentive
 constraints makes the constraint set fail to
 be convex. 
 
 This problem has been overcome by Phelan and
-Townsend (1991) by convexifying the constraint set through **randomization**.
+Townsend (1991) {cite}`Phelan_Townsend_91` by convexifying the constraint set through **randomization**.
 
 Phelan and Townsend alter the problem by extending the
 principal's choice to the space of lotteries
@@ -180,21 +180,27 @@ where  maximization is over the probabilities $\Pi(a,q,c,w')$
 subject to equations {eq}`eq:town1a`, {eq}`eq:town1b`,  {eq}`eq:eq1prime`, and {eq}`eq:eq2prime`.
  
 
-This is a linear
-programming problem. 
+This is a **linear
+programming** problem. 
 
 Think of each of $(a,q,c,w')$
 being constrained to a discrete grid of points.
 
 Then, for example,the term $(q-c)+\beta v(w')$ on the right side of equation {eq}`eq:bell2` 
-can be represented as a {\it fixed} vector that multiplies a vectorized
+can be represented as a *fixed* vector that multiplies a vectorized
 version of  the
-probabilities $\Pi(a,q,c,w')$.  Similarly, each of the
+probabilities $\Pi(a,q,c,w')$.  
+
+Similarly, each of the
 constraints  {eq}`eq:town1a`, {eq}`eq:town1b`,  {eq}`eq:eq1prime`, and {eq}`eq:eq2prime` can be represented
 as a linear inequality in the choice variables, the
-probabilities $\Pi$.   Phelan and Townsend compute solutions
+probabilities $\Pi$.  
+
+Phelan and Townsend compute solutions
 of these linear programs to
-iterate on the Bellman equation {eq}`eq:bell2`.   Note that
+iterate on the Bellman equation {eq}`eq:bell2`.  
+
+Note that
 at each step of the iteration on the  Bellman equation,
 there is  one linear program to be solved for each point
 $w$ in the space of grid values for $W$.

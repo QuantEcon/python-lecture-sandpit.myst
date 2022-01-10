@@ -5,6 +5,7 @@ options:
 sections:
 - file: eig_circulant
 - file: PT_intro
+- file: house_auction
 - file: back_prop
 - file: markov_switching_lss
 - file: zreferences
