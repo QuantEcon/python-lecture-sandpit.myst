@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# Introduction to Neural Networks
+# Introduction to Artificial Neural Networks
 
 ```{code-cell} ipython3
 :tags: [hide-output]
@@ -28,7 +28,7 @@ Substantial parts of **machine learning** and **artificial intelligence** are ab
 * estimating the known function from a set of data on the left- and right-hand variables
 
 This lecture describes the structure of a plain vanilla **artificial neural network**  (ANN) of a type that is widely used to 
-approximate a function $f$ that maps an  $x$ in  a space $X$ into a $y$ in a space $Y$.  
+approximate a function $f$ that maps   $x$ in  a space $X$ into  $y$ in a space $Y$.  
 
 To introduce elementary concepts, we study an example in which $x$ and $y$ are scalars.
 
@@ -40,7 +40,7 @@ We'll describe the following concepts that are brick and mortar for neural netwo
  * back-propogation and its relationship  to the chain rule of differential calculus
  
 
-## A simple deep but wide artificial neural net
+## A Deep (but not Wide) Artificial Neural Network
 
 We describe a  "deep" neural network of "width" one.  
 
@@ -48,7 +48,7 @@ We describe a  "deep" neural network of "width" one.
 
 **Width** refers to the number of right hand  side variables on the right hand side of the function being approximated.
 
-Setting "width" to one means that the network   just composes univariate functions.
+Setting "width" to one means that the network    composes just univariate functions.
 
 Let $x \in \mathbb{R}$ be a scalar and $y \in \mathbb{R}$ be another scalar.
 
@@ -64,7 +64,7 @@ For a network of depth $N \geq 1$, each **layer** $i =1, \ldots N$ consists of
 
 * an input $x_i$
 
-* an **affine function** $w_i x_i + bI$, where $w_i$ is a scalar **weight** placed on the input and $b_i$ is a scalar **bias**
+* an **affine function** $w_i x_i + bI$, where $w_i$ is a scalar **weight** placed on the input $x_i$ and $b_i$ is a scalar **bias**
 
 * an **activation function** $h_i$ that takes $(w_i x_i + b_i)$ as an argument and produces an output $x_{i+1}$
    
@@ -121,7 +121,7 @@ starting from $x_1 = \tilde x$.
 The value of $x_{N+1}$ that emerges from this iterative scheme
 equals $\hat f(\tilde x)$.
 
-## Calibrating  parameters
+## Calibrating  Parameters
 
 
 We now consider a  neural network like the one describe above  with width 1, depth $N$,  and activation functions $h_{i}$ for $1\leqslant i\leqslant N$ that map $\mathbb{R}$ into itself.
@@ -178,6 +178,8 @@ relates to Newton's method.)
 To implement one step of this parameter update rule, we want  the vector of derivatives $\frac{dx_{N+1}}{dp_k}$.
 
 In the neural network literature, this step is accomplished by what is known as **back propogation**
+
+## Back Propogation and the Chain Rule
 
 Thanks to  properties of
 
@@ -278,7 +280,7 @@ We can then solve the above problem by applying our update for $p$ multiple time
 
 
 
-## Training set
+## Training Set
 
 Choosing a  training set amounts to a choice of measure $\mu$ in the above  formulation of our  function approximation problem as a minimization problem.
 
@@ -440,9 +442,9 @@ update_la(params, x, y)
 update_ad(params, x, y)
 ```
 
-### Example 1
+## Example 1
 
-Consider the following function 
+Consider the function 
 
 $$
 f\left(x\right)=-3x+2
@@ -518,7 +520,7 @@ It  is  fun to think about how deepening the neural net for the above example af
 
 
 
-### Example 2
+## Example 2
 
 We use the same setup as for the previous example with
 
