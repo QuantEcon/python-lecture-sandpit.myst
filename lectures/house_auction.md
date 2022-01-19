@@ -11,17 +11,21 @@ kernelspec:
   name: python3
 ---
 
-# Multiple Item Ascending Bids Auction
+# Multiple Good Allocation Mechanisms
 
 ##  Overview
 
-This lecture describes two mechanisms for allocating $n$ distinct individual goods ("houses")  to $m$ people ("buyers") and $m > n$.
+This lecture describes two mechanisms for allocating $n$ private goods ("houses")  to $m$ people ("buyers").
+
+We assume that  $m > n$ so that there are more potential buyers than there are houses.  
 
 Prospective buyers regard the houses  as **substitutes**.
 
-Buyer $j$ attaches private value $v_{ij}$ to house $i$.  
+Buyer $j$ attaches  value $v_{ij}$ to house $i$.  
 
-These private values are private, known only to person $j$ unless person $j$ chooses to tell someone.
+These  values are **private**
+
+  * $v_{ij}$ is  known only to person $j$ unless person $j$ chooses to tell someone.
 
 We require that a mechanism allocate **at most** one house to one prospective buyer.
 
@@ -31,14 +35,21 @@ We describe two distinct mechanisms
  * A multiple rounds, ascending bid auction
  
  * A special case of a Groves-Clarke ({cite}`Groves_73`, {cite}`Clarke_71`) mechanism with a benevolent social planner
+
+
+**Note:** In 1994, the multiple rounds, ascending bid auction was actually used by Stanford University to sell leases to 9 lots on the Stanford campus to eligible faculty members.
  
-Before we dive into details, let's give overviews of these two mechanisms.
+We begin with  overviews of the two mechanisms.
 
 ## Ascending Bids Auction for Multiple Goods
 
 An auction is administered by an **auctioneer** 
 
-The auctionioneer  allocates all $n$ houses **simultaneously** 
+The auctioneer has an $n \times 1$ vector $r$ of reservation prices on the $n$ houses.
+
+The auctioneer sells house $i$ only if the final price bid for it exceeds $r_i$
+
+The auctioneer  allocates all $n$ houses **simultaneously** 
 
 The auctioneer does not know bidders' private values $v_{ij}$ 
 
@@ -50,38 +61,39 @@ There are multiple **rounds**
  
  - each bidder can bid on only one house during one round
  
- - a person who was high bidder on a particular house in one round  is understood to sit tight by submitting  that same bid for the same  house in the next round
+ - a person who was high bidder on a particular house in one round  is understood to submit  that same bid for the same  house in the next round
  
  - between rounds, a bidder who was not a high bidder can change the house on which he/she chooses to bid
  
  - the auction ends when the price of no house changes from one round to the next
  
  - all $n$ houses are allocated after the final round
+
+ - house $i$  is retained by the auctioneer if not prospective buyer offers more that $r_i$ for the house 
  
 In this auction,  person $j$ never tells anyone else his/her private values $v_{ij}$
 
 
 
 
-## A Benevolent Social Planner
+## A Benevolent Planner
 
-In this mechanism, prospective buyers voluntarily choose to reveal their private values to a 
-**social planner** who uses them to construct a socially optimal allocation
+This mechanism is designed so that all prospective buyers voluntarily choose to reveal their private values to a **social planner** who uses them to construct a socially optimal allocation.
 
 Among all feasible allocations,  a **socially optimal allocation** maximizes the sum of  private values across all prospective buyers.
 
-The planner tells everyone in advance how he/she will allocate houses based on the matrix of private values that prospective buyers report.
+The planner tells everyone in advance how he/she will allocate houses based on the matrix of values that prospective buyers report.
 
-The mechanism is designed to provide every prospective buyer the incentive to reveal his vector of private values to the planner.
+The mechanism provide every prospective buyer an incentive to reveal his vector of private values to the planner.
 
-After the planner receives everyone's vector of private values, the planner deploys a **sequential** algorithm to determine an **allocation** of houses and a set of **fees** that he charges awardees  for the negative **externalities** that their presence impose on other prospective buyers. 
+After the planner receives everyone's vector of private values, the planner deploys a **sequential** algorithm to determine an **allocation** of houses and a set of **fees** that he charges awardees  for the negative **externality** that their presence impose on other prospective buyers. 
 
 
 
 
 ## Equivalence of Allocations
 
-Remarkably, these two mechanisms produce virtually identical allocations.
+Remarkably, these two mechanisms can produce virtually identical allocations.
 
 We construct Python code for both mechanism.
 
@@ -91,13 +103,13 @@ We also work out some examples by hand or almost by hand.
 Next, let's dive down into the details.
 
 
-## The Ascending Bid Auction
+## Ascending Bid Auction
 
 
 ### Basic Setting
 
 
-We start with  a streamlined description of the setting. 
+We start with  a more detailed description of the setting. 
 
 
 * A seller owns $n$ houses that he wants to sell for the maximum possible amounts to a  set of $m$ prospective eligible buyers.
@@ -114,7 +126,7 @@ We start with  a streamlined description of the setting.
 
     * If buyer $j$ pays $p_i$ for house $i$, he enjoys surplus value $v_{ij} - p_i$.
 
-    * Each buyer $j$ wants to maximize his/her surplus value $v_{ij} - p_i$.
+    * Each buyer $j$ wants to choose the $i$ that maximizes his/her surplus value $v_{ij} - p_i$.
 
     * The seller wants to maximize $\sum_i p_i$.  
 
@@ -160,13 +172,13 @@ For each round of the auction, new bids on a house  must be at least the prevail
 
 - the auction consists of a  finite number of **rounds**
 - in each round, a prospective buyer can bid on one and only one house
-- after each round,  a particular house is temporarily awarded to the person who made the  highest bid for that house
+- after each round,  a  house is temporarily awarded to the person who made the  highest bid for that house
     - temporarily winning bids on each house are announced
     - this sets the stage to move on to the next round
 - a new round is held
-    - bids for temporary winners from the previous round are again attached to the houses on which they bid; temporary winners of the last round just leave their bids from the previous round unchanged
-    - all other active  prospective buyers are required to submit new bids
-    - new bids must be at least equal to the prevailing temporary price that won the last round **plus** $\epsilon$
+    - bids for temporary winners from the previous round are again attached to the houses on which they bid; temporary winners of the last round  leave their bids from the previous round unchanged
+    - all other active  prospective buyers must submit a new bid on some house
+    - new bids on a house must be at least equal to the prevailing temporary price that won the last round **plus** $\epsilon$
     - if a person does not submit a new bid and was also not a temporary winner from the previous round, that  person must  drop out of the auction permanently
     - for each house, the highest bid, whether it is a new bid or was the temporary winner from the previous round, is announced, with the person who made that new (temporarily) winning bid being (temporarily) awarded the house to start the next round
 - rounds continue until no price on **any** house changes from the previous round
@@ -176,14 +188,14 @@ For each round of the auction, new bids on a house  must be at least the prevail
 - an $n \times 1$ vector $p$ of sales prices
 - an $n \times m$ matrix $S$ of surplus values consisting of all zeros unless
 person $j$ bought house $i$, in which case $S_{ij} = v_{ij} - p_i$
-- an $n \times (m+1)$  matrix $Q$ of $0$'s and $1$'s that tells which buyer bought which buyer bough which house.  (The last column is to account for unsold houses.)
+- an $n \times (m+1)$  matrix $Q$ of $0$'s and $1$'s that tells which buyer bought which  house.  (The last column  accounts for unsold houses.)
 
 
 **Proposed buyer strategy:**
 
-In this pseudo code and the actual Python code below, we'll assume that all buyers choose to use the following  strategy.
+In this pseudo code and the actual Python code below, we'll assume that all buyers choose to use the following  strategy
 
-   * This  is an optimal choice for each buyer 
+   * The strategy is optimal  for each buyer 
 
 Each buyer $j = 1, \ldots, m$ uses the same strategy.
 
@@ -637,17 +649,17 @@ total_revenue = p[list(allocation.keys())].sum()
 total_revenue
 ```
 
-## Constructing  a Python Class
+## A Python Class
 
 +++
 
-Earlier, we simulated an ascending bid auction step by step. 
+Above we simulated an ascending bid auction step by step. 
 
 When defining  functions, we repeatedly computed some intermediate objects because our Python function loses track of variables once the  function is executed.
 
 That of course led  to redundancy in our code 
 
-It is much more efficient  to compile all the aforementioned code into a class that  records information about all rounds. 
+It is much more efficient  to collect all of the aforementioned code into a class that  records information about all rounds. 
 
 ```{code-cell} ipython3
 class ascending_bid_auction:
@@ -1005,11 +1017,11 @@ auction_6.start_auction()
 We now decribe an alternative way for society to allocate $n$  houses to $m$ possible buyers in a way that maximizes
  total value across all potential buyers.
  
-We continue to assume that each buyer is allowed to have at most one house.
+We continue to assume that each buyer can purchase at most one house.
 
-We describe a mechanism that is a very special case of a Groves-Clarke mechanism.
+The mechanism  is a very special case of a Groves-Clarke mechanism({cite}`Groves_73`, {cite}`Clarke_71`). 
 
-It's simple structure substantially simplifies writing Python code to find an optimal allocation.
+Its special structure substantially simplifies writing Python code to find an optimal allocation.
 
 Our mechanims works like this.
 
@@ -1022,7 +1034,8 @@ Our mechanims works like this.
 * The social planner tells no one these, but uses them to allocate houses and set prices
 
 * The mechanism is designed in a way that makes all prospective buyers want to tell the planner their private values 
-   - i.e., ``truth telling is a dominant strategy for each potential buyer''
+  
+   - truth telling is a dominant strategy for each potential buyer
 
 * The planner finds a house, bidder pair with highest private value by computing 
    $(\tilde i, \tilde j) = \operatorname{argmax} (V_{ij})$
@@ -1037,7 +1050,7 @@ Our mechanims works like this.
 
 * The planner returns  to the original step and repeat it.
 
-* The planner iterates until all $n$  houses  are allocated and the prices of all $n$ houses are set.
+* The planner iterates until all $n$  houses  are allocated and the charges for  all $n$ houses are set.
 
 +++
 
@@ -1186,9 +1199,9 @@ S = V_orig*Q - np.diag(p)@Q
 p, Q, V, S
 ```
 
-##  Constructing  a Python Class
+##  Another Python Class
 
-It is efficient to combine our calculations in a single Python Class.
+It is efficient to assemble our calculations in a single Python Class.
 
 ```{code-cell} ipython3
 class GC_Mechanism:

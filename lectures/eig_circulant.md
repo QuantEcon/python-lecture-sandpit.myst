@@ -15,7 +15,7 @@ kernelspec:
 
 ## Overview
 
-This lecture introduces circulant matrices and some of their useful properties.
+This lecture describes circulant matrices and some of their properties.
 
 Circulant matrices have a special structure that connects them to  useful concepts
 including
@@ -40,9 +40,11 @@ import matplotlib.pyplot as plt
 np.set_printoptions(precision=3, suppress=True)
 ```
 
-## Constructing a circulant matrix
+## Constructing a Circulant Matrix
 
-To construct an $N \times N$ circulant matrix, we  need only the  $N$ entries that occur in a single row.
+To construct an $N \times N$ circulant matrix, we  need only the first row, say,  
+
+$$ \begin{bmatrix} c_{0} & c_{1} & c_{2} & c_{3} & c_{4} & \cdots & c_{N-1} \end{bmatrix} .$$
 
 After setting entries in the first row, the remaining rows of a circulant matrix are determined as
 follows:
@@ -85,7 +87,7 @@ def construct_cirlulant(row):
 construct_cirlulant(np.array([1., 2., 3.]))
 ```
 
-### Some properties of circulant matrices
+### Some Properties of Circulant Matrices
 
 Here are some useful properties:
 
@@ -99,7 +101,7 @@ Suppose that $A$ and $B$ are both circulant matrices. Then it can be verified th
   * $A B$ is a circulant matrix
   * $A B = B A$ 
 
-Now consider a circulant matrix as defined above with first row 
+Now consider a circulant matrix with first row 
 
   $$  c = \begin{bmatrix} c_0 & c_1 & \cdots & c_{N-1} \end{bmatrix} $$
 
@@ -107,31 +109,31 @@ Now consider a circulant matrix as defined above with first row
 
  $$ a = \begin{bmatrix} a_0 & a_1 & \cdots  &  a_{N-1} \end{bmatrix} $$
 
- Define the **convolution** of  vectors $c$ and $a$   as a vector $b = c * a $  with components
+ The **convolution** of  vectors $c$ and $a$ is defined   as the vector $b = c * a $  with components
 
 $$
  b_k = \sum_{i=0}^{n-1} c_{k-i} a_i  
 $$ (eqn:conv)
 
-Here we use $*$ to denote **convolution** via the calculation described in equation {eq}`eqn:conv`.
+We use $*$ to denote **convolution** via the calculation described in equation {eq}`eqn:conv`.
 
 It can be verified that the vector $b$ satisfies
 
 $$ b = C^T a  $$
 
-where $C^T$ is the transpose of the circulant matrix as defined in equation {eq}`eqn:circulant`.  
+where $C^T$ is the transpose of the circulant matrix  defined in equation {eq}`eqn:circulant`.  
 
 
 
 
 
-## Connection to a permutation matrix
+## Connection to Permutation Matrix
 
 A good way to construct a circulant matrix is to use a **permutation matrix**.
 
-Before defining a permutation matrix, we'll define a **permutation**.
+Before defining a permutation **matrix**, we'll define a **permutation**.
 
-A **permutation** of a set of the set of non-negative integers $\{0, 1, 2, \ldots, \}$ is a one-to-one mapping of the set into itself.
+A **permutation** of a set of the set of non-negative integers $\{0, 1, 2, \ldots \}$ is a one-to-one mapping of the set into itself.
 
 A permutation of a set $\{1, 2, \ldots, n\}$ rearranges the $n$ integers in the set.  
 
@@ -139,7 +141,7 @@ A permutation of a set $\{1, 2, \ldots, n\}$ rearranges the $n$ integers in the 
 A [permutation matrix](https://mathworld.wolfram.com/PermutationMatrix.html) is obtained by permuting the rows of an $n \times n$ identity matrix according to a permutation of the numbers $1$ to $n$. 
 
 
-Thus, every row and every column contain precisely a single $1$ with $0$s everywhere else.
+Thus, every row and every column contain precisely a single $1$ with $0$ everywhere else.
 
 Every permutation corresponds to a unique permutation matrix.
 
@@ -183,9 +185,9 @@ Eigenvalues $\lambda_i$  can be complex.
 
 Magnitudes $\mid \lambda_i \mid$  of these  eigenvalues $\lambda_i$ all equal  $1$.
 
-Thus, **singular values** of the  permutation matrix $P$ defined in equation {eq}`eqn:exampleP` are all $1$s.
+Thus, **singular values** of the  permutation matrix $P$ defined in equation {eq}`eqn:exampleP` all equal $1$.
 
-It can be verified that permutation matrices are orthogonal matrices, which means that they satisfy
+It can be verified that permutation matrices are orthogonal matrices:
 
 $$
 P P' = I 
@@ -328,7 +330,7 @@ Q8 = F8 / np.sqrt(8)
 Q8 @ np.conjugate(Q8)
 ```
 
-Let's verify that $k$th column of $Q_{8}$ is a eigenvector of $P_{8}$ with a eigenvalue $w^{k}$.
+Let's verify that $k$th column of $Q_{8}$ is an eigenvector of $P_{8}$ with an eigenvalue $w^{k}$.
 
 ```{code-cell} ipython3
 P8 = construct_P(8)
@@ -427,11 +429,11 @@ for j in range(8):
 
 ## Discrete Fourier Transform
 
-The **discrete fourier transform** (DFT) allows us to  represent a  discrete time sequence as a weighted sum of complex sinusoids.
+The **Discrete Fourier Transform** (DFT) allows us to  represent a  discrete time sequence as a weighted sum of complex sinusoids.
 
 Consider a sequence of $N$ real number $\{x_j\}_{j=0}^{N-1}$. 
 
-The **discrete fourier transform** maps $\{x_j\}_{j=0}^{N-1}$ into a sequence of complex numbers $\{X_k\}_{k=0}^{N-1}$
+The **Discrete Fourier Transform** maps $\{x_j\}_{j=0}^{N-1}$ into a sequence of complex numbers $\{X_k\}_{k=0}^{N-1}$
 
 where
 
@@ -441,7 +443,7 @@ $$
 
 ```{code-cell} ipython3
 def DFT(x):
-    "The discrete fourier transform."
+    "The discrete Fourier transform."
 
     N = len(x)
     w = np.e ** (-np.complex(0, 2*np.pi/N))
@@ -518,7 +520,7 @@ plot_magnitude(x=x, X=X)
 
 The **inverse Fourier transform**  transforms a Fourier transform  $X$ of $x$  back to $x$.
 
-The inverse Fourier transform is defined by
+The inverse Fourier transform is defined as
 
 $$
 x_{n} = \sum_{k=0}^{N-1} \frac{1}{N} X_{k} e^{2\pi\left(\frac{kn}{N}\right)i}, \quad n=0, 1, \ldots, N-1
@@ -590,7 +592,7 @@ X = DFT(x)
 plot_magnitude(x=x, X=X)
 ```
 
-If we represent the discrete fourier transform as a matrix, we discover that it equals the  matrix $F_{N}$ of eigenvectors  of the permutation matrix $P_{N}$.
+If we represent the discrete Fourier transform as a matrix, we discover that it equals the  matrix $F_{N}$ of eigenvectors  of the permutation matrix $P_{N}$.
 
 We can use the example where $x_{n}=2\cos\left(2\pi\frac{11}{40}n\right),\ n=0,1,2,\cdots19$ to illustrate this.
 
