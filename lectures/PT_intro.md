@@ -81,21 +81,21 @@ are to be solved by iterating on the Bellman equation {eq}`eq:eq3`.
 
 ## Lotteries
 
-A difficulty in problems like thes can be that the the structure of the incentive
-constraints makes the constraint set fail to
+A difficulty in problems like these is that   incentive
+constraints might make the constraint set fail to
 be convex. 
 
-This problem has been overcome by Phelan and
-Townsend (1991) {cite}`Phelan_Townsend_91` by convexifying the constraint set through **randomization**.
+Phelan and
+Townsend (1991) {cite}`Phelan_Townsend_91` circumvented this problem  by convexifying the constraint set through **randomization**.
 
 Phelan and Townsend alter the problem by extending the
-principal's choice to the space of lotteries
+principal's choice to a space of lotteries
 over actions $a$ and outcomes $c,w'$.
 
 To introduce Phelan and Townsend's formulation, let $P(q\vert a)$ be
 a family of discrete conditional probability distributions
 over discrete spaces of outputs and actions $Q,A$, and
-imagine that consumption and values are also constrained to
+suppose that consumption and values are also constrained to
 lie in discrete spaces $C,W$, respectively.
 
 Phelan and Townsend's principal 
@@ -121,8 +121,10 @@ $$ (eq:town1c)
 Equation {eq}`eq:town1a`  states that
 ${\rm Prob} (\bar a, \bar q) = {\rm Prob}(\bar q \vert \bar a)
 {\rm Prob}(\bar a)$.
-The remaining pieces of the preceding three equations  just
-require that ``probabilities are probabilities.''
+
+Remaining parts of the preceding three equations  just
+require that *probabilities are probabilities*.
+
 The counterpart of Spear-Srivastava's equation {eq}`eq:eq1`  is
 
 $$
@@ -142,7 +144,9 @@ $$ (eq:eq2prime)
 
 
 Here $\Pi(c,w^\prime\vert q,a) P(q\vert \hat a)$ is the probability of $(c,w^\prime, q)$ 
-if the agent claims to be working $a$ but is actually working $\hat a$.  Write
+if the agent claims to be working $a$ but is actually working $\hat a$. 
+
+Write
 
 $$
 \begin{aligned}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \\
@@ -169,7 +173,7 @@ $$
 \end{aligned}
 $$
 
-The Bellman equation for the principal's problem is
+The value function  for the principal's problem satisfies the Bellman equation 
 
 $$
 v(w) =\max_{\Pi} \{(q -c) +
@@ -186,25 +190,24 @@ programming** problem.
 Think of each of $(a,q,c,w')$
 being constrained to a discrete grid of points.
 
-Then, for example,the term $(q-c)+\beta v(w')$ on the right side of equation {eq}`eq:bell2` 
+The term $(q-c)+\beta v(w')$ on the right side of equation {eq}`eq:bell2` 
 can be represented as a *fixed* vector that multiplies a vectorized
 version of  the
 probabilities $\Pi(a,q,c,w')$.  
 
 Similarly, each of the
 constraints  {eq}`eq:town1a`, {eq}`eq:town1b`,  {eq}`eq:eq1prime`, and {eq}`eq:eq2prime` can be represented
-as a linear inequality in the choice variables, the
+as a linear inequality in the choice variables, namely,  the
 probabilities $\Pi$.  
 
 Phelan and Townsend compute solutions
 of these linear programs to
 iterate on the Bellman equation {eq}`eq:bell2`.  
 
-Note that
-at each step of the iteration on the  Bellman equation,
-there is  one linear program to be solved for each point
+At each step of the iteration on the  Bellman equation,
+one linear program is to be solved for each point
 $w$ in the space of grid values for $W$.
 
-In practice, Phelan and Townsend have found that
-lotteries are often redundant in the sense that most of the
+Phelan and Townsend found that
+lotteries were often redundant in the sense that most of the
 $\Pi(a,q,c,w')$'s  are  zero and only a few are $1$.
