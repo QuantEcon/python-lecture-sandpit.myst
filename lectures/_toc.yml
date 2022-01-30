@@ -7,5 +7,6 @@ sections:
 - file: PT_intro
 - file: house_auction
 - file: back_prop
+- file: hoist_failure
 - file: markov_switching_lss
 - file: zreferences
