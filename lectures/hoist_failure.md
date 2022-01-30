@@ -1,22 +1,21 @@
 ---
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .md
-      format_name: markdown
-      format_version: '1.3'
-      jupytext_version: 1.13.4
-  kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
-    name: python3
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.10.3
+kernelspec:
+  display_name: Python 3
+  language: python
+  name: python3
 ---
 
-```{code-cell} ipython3
-pip install tabulate
+```{code-cell} python3
+!pip install tabulate
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 import numpy as np
 from numpy import fft
 import matplotlib.pyplot as plt
@@ -28,7 +27,7 @@ import time
 ```
 
 
-```{code-cell} ipython3
+```{code-cell} python3
 np.set_printoptions(precision=3, suppress=True)
 ```
 
@@ -150,7 +149,7 @@ Let's compute  an example using the numpy program convolve and the scipy_signal 
 
 
 
-```{code-cell} ipython3
+```{code-cell} python3
 f = [.75, .25]
 g = [0., .6,  0., .4]
 h = np.convolve(f,g)
@@ -177,7 +176,7 @@ We'll start by generating samples of size 25000 of three independent  log normal
 
 Then we'll plot  histograms and compare them with convolutions of appropriate discretized log normal distributions.
 
-```{code-cell} ipython3
+```{code-cell} python3
 ## create sum of two log normal random variates ssum = s1 + s2
 
 
@@ -199,17 +198,17 @@ count, bins, ignored = plt.hist(s1, 1000, density=True, align='mid')
 
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 
 count, bins, ignored = plt.hist(ssum2, 1000, density=True, align='mid')
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 
 count, bins, ignored = plt.hist(ssum3, 1000, density=True, align='mid')
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 samp_mean2 = np.mean(s2)
 pop_mean2 = np.exp(mu2+ (sigma2**2)/2)
 
@@ -219,7 +218,7 @@ pop_mean2, samp_mean2, mu2, sigma2
 Here are helper functions that create a discretized version of a log normal
 probability density function. 
 
-```{code-cell} ipython3
+```{code-cell} python3
 def p_log_normal(x,μ,σ):
     p = 1 / (σ*x*np.sqrt(2*np.pi)) * np.exp(-1/2*((np.log(x) - μ)/σ)**2)
     return p
@@ -244,14 +243,14 @@ Setting it to 15 rather than 12, for example, improves how well the discretized 
 
 <!-- #endregion -->
 
-```{code-cell} ipython3
+```{code-cell} python3
 p=12
 I = 2**p # Truncation value
 m = .1 # increment size
 
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 ## Cell to check -- note what happens when don't normalize!  
 ## things match up without adjustment. Compare with above
 
@@ -268,7 +267,7 @@ count, bins, ignored = plt.hist(s1, 1000, density=True, align='mid')
 plt.show()
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 # Compute mean from discretized pdf and compare with the theoretical value
 
 mean= np.sum(np.multiply(x[:NT],p1_norm[:NT]))
@@ -303,7 +302,7 @@ This is the algorithm that  the _scipy.signal.fftconvolve_ uses.
 
 Let's do a warmup calculation that compares the times taken by numpy.convove and scipy.signal.fftconvolve.
 
-```{code-cell} ipython3
+```{code-cell} python3
 
 
 p1,p1_norm,x = pdf_seq(mu1,sigma1,I,m)
@@ -340,7 +339,7 @@ Notice that using the fft is two orders of magnitude faster
 
 Now let's plot our computed probability mass function approximation  for the sum of two log normal random variables against the histogram of the sample that we formed above.
 
-```{code-cell} ipython3
+```{code-cell} python3
 NT= np.size(x)
 
 plt.figure(figsize = (8,8))
@@ -354,7 +353,7 @@ count, bins, ignored = plt.hist(ssum2, 1000, density=True, align='mid')
 plt.show()
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 NT= np.size(x)
 plt.figure(figsize = (8,8))
 plt.subplot(2,1,1)
@@ -367,14 +366,14 @@ count, bins, ignored = plt.hist(ssum3, 1000, density=True, align='mid')
 plt.show()
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 ## Let's compute the mean of the discretized pdf
 mean= np.sum(np.multiply(x[:NT],c1f[:NT]))
 # meantheory = np.exp(mu1+.5*sigma1**2)
 mean, 2*meantheory
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 ## Let's compute the mean of the discretized pdf
 mean= np.sum(np.multiply(x[:NT],c2f[:NT]))
 # meantheory = np.exp(mu1+.5*sigma1**2)
@@ -476,7 +475,7 @@ Of these fourteen log normal random variables, there are **seven pairs**
 
  * As described in table 10 of Greenfield-Sargent, p. 27, parameters of log normal distributions for  the seven unique probabilities $P(A_i)$ have been calibrated to be the values in the following Python code:
 
-```{code-cell} ipython3
+```{code-cell} python3
 mu1, sigma1 = 4.28, 1.1947
 mu2, sigma2 = 3.39, 1.1947
 mu3, sigma3 = 2.795, 1.1947
@@ -495,7 +494,7 @@ So the probabilities that we'll put on the $x$ axis of the probability mass func
 
 To extract a table that summarizes computed quantiles, we'll use a helper function
 
-```{code-cell} ipython3
+```{code-cell} python3
 def find_nearest(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
@@ -508,7 +507,7 @@ We'll do "Design Option B-2 (Case I) on page 28 of Greenfield-Sargent
 
 Here goes
 
-```{code-cell} ipython3
+```{code-cell} python3
 p=12
 I = 2**p # Truncation value
 m =  .05 # increment size
@@ -555,7 +554,7 @@ print("time for 13 convolutions = ", tdiff13)
 
 ```
 
-```{code-cell} ipython3
+```{code-cell} python3
 d13 = np.cumsum(c13)
 Nx=np.int(1400)
 plt.figure()
