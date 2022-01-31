@@ -33,9 +33,32 @@ np.set_printoptions(precision=3, suppress=True)
 
 <!-- #region -->
 
-# Failure Tree Analysis 
+# Fault Tree Uncertainties
+
+
+## Overview
+
+This lecture puts elementary tools to work to approximate probability distributions of the annual failure rates of a system consisting of 
+a number of critical parts.  
+
+We'll use log normal distributions to approximate probability distributions of critical  component parts.
+
+To  approximate the probability distribution of the **sum** of $n$ log normal probability distributions that describes the failure rate of the 
+entire system, we'll compute the convolution of those $n$ log normal probability distributions.
+
+We'll use the following concepts and tools:
+
+* log normal distributions
+* the convolution theorem that describes the probability distribution of the sum independent random variables
+* fault tree analysis for approximating the failure rate of a multi-component system
+* hierarchical probability models for describing uncertain probabilities  
+* Fourier transforms and inverse Fourier tranforms as efficient ways of computing convolutions of sequences
+
+El-Shanawany, Ardron,  and Walker {cite}`Ardron_2018` and Greenfield and Sargent {cite}`Greenfield_Sargent_1993`  used some of the methods described here  to approximate probabilities of failures of safety systems in nuclear facilities.
 
 ## Log normal distribution
+
+
 
 If a random variable $x$ follows a normal distribution with mean $\mu$ and variance $\sigma^2$,
 then the natural logarithm of $x$, say $y = \log(x)$, follows a **log normal distribution** with parameters $\mu, \sigma^2$.  
@@ -145,7 +168,7 @@ The convolution property tells us that
 
 $$ h = f* g = g* f $$
 
-Let's compute  an example using the numpy program convolve and the scipy_signal program fftconvolve.
+Let's compute  an example using the `numpy.convolve` and `scipy.signal.fftconvolve`.
 
 
 
@@ -161,14 +184,14 @@ print("h = ", h, ", np.sum(h) = ", np.sum(h))
 print("hf = ", hf, ",np.sum(hf) = ", np.sum(hf))
 ```
 
-A little later we'll explain some advantages that come from using the scipy_signal program fftconvolve rather than the numpy program convolve.
+A little later we'll explain some advantages that come from using `scipy.signal.ftconvolve` rather than `numpy.convolve`.numpy program convolve.
 
-They provide the same answers but fftconvolve is much faster.
+They provide the same answers but `scipy.signal.ftconvolve` is much faster.
 
 That's why we rely on it later in this lecture.
 
 
-## Approximating log normal distributions
+## Approximating Distributions
 
 Let's provide an example.
 
@@ -244,7 +267,7 @@ Setting it to 15 rather than 12, for example, improves how well the discretized 
 <!-- #endregion -->
 
 ```{code-cell} python3
-p=12
+p=15
 I = 2**p # Truncation value
 m = .1 # increment size
 
@@ -275,6 +298,9 @@ meantheory = np.exp(mu1+.5*sigma1**2)
 mean, meantheory
 ```
 
+
+## Convolving Probability Mass Functions
+
 Now let's use the convolution theorem to compute the probability distribution of a sum of the two log normal random variables we have parameterized above. 
 
 We'll also compute the probability of a sum of three log normal distributions constructed above.
@@ -283,24 +309,50 @@ We'll also compute the probability of a sum of three log normal distributions co
 Before we do these things, we shall explain our choice of Python algorithm to compute a convolution
 of two sequences.
 
-Because the sequences that we convolve are long, we use the _scipy.signal.fftconvolve_ function
+Because the sequences that we convolve are long, we use the `scipy.signal.fftconvolve` function
 rather than the numpy.convove function.  
 
-These two functions give virtually equivalent answers but for long sequences scipy.signal.fftconvolve
+These two functions give virtually equivalent answers but for long sequences `scipy.signal.fftconvolve`
 is much faster.
 
-It exploits the theorem that  a convolution of two sequences $\{f_k\}, \{g_k\}$ can be computed in the following way:
+The program `scipy.signal.fftconvolve` uses fast Fourier transforms and their inverses to calculate convolutions.
+
+Let's define the Fourier transform and the inverse Fourier transform.
+
+The **Fourier transform** of a sequence $\{x_t\}_{t=0}^{T-1}$ is  a sequence of complex numbers
+$\{x(\omega_j)\}_{j=0}^{T-1}$ given by
+
+$$
+ x(\omega_j) = \sum_{t=0}^{T-1} x_t \exp(- i \omega_j t)
+$$ (eq:ft1)
+
+where $\omega_j = \frac{2 \pi j}{T}$ for $j=0, 1, \ldots, T-1$.
+
+The **inverse Fourier transform** of the sequence $\{x(\omega_j)\}_{j=0}^{T-1}$ is
+
+$$
+ x_t = T^{-1} \sum_{j=0}^{T-1} x(\omega_j) \exp (i \omega_j t) 
+$$ (eq:ift1)
+
+The sequences $\{x_t\}_{t=0}^{T-1}$ and $\{x(\omega_j)\}_{j=0}^{T-1}$ contain the same information.
+
+The pair of equations {eq}`eq:ft1` and {eq}`eq:ift1` tell how to recover one series from its Fourier partner.
+
+
+
+The program `scipy.signal.fftconvolve` deploys  the theorem that  a convolution of two sequences $\{f_k\}, \{g_k\}$ can be computed in the following way:
 
 -  Compute Fourier transforms $F(\omega), G(\omega)$ of the $\{f_k\}$ and $\{g_k\}$ sequences, respectively
 -  Form the product $H (\omega) = F(\omega) G (\omega)$
 - The convolution of $f * g$ is the inverse Fourier transform of $H(\omega)$
 
+
 The **fast Fourier transform** and the associated **inverse fast Fourier transform** execute these
 calculations very quickly.
 
-This is the algorithm that  the _scipy.signal.fftconvolve_ uses.
+This is the algorithm that   `scipy.signal.fftconvolve` uses.
 
-Let's do a warmup calculation that compares the times taken by numpy.convove and scipy.signal.fftconvolve.
+Let's do a warmup calculation that compares the times taken by `numpy.convove` and `scipy.signal.fftconvolve`.
 
 ```{code-cell} python3
 
@@ -334,7 +386,7 @@ print("time with np.convolve = ", tdiff1,  "; time with fftconvolve = ",  tdiff2
 
 ```
 
-Notice that using the fft is two orders of magnitude faster
+Notice that using the fast Fourier transform is two orders of magnitude faster
 
 
 Now let's plot our computed probability mass function approximation  for the sum of two log normal random variables against the histogram of the sample that we formed above.
@@ -411,7 +463,7 @@ $$ P(A \cup B) \approx P(A) + P(B)  $$
 This approximation is widely used in evaluating system failures.
 
 
-## Application to Assessing Probability of a System Failure
+## Application 
 
 A system has been designed with the feature a system  failure occurs when **any** of  $n$ critical  components  fails.
 
@@ -427,14 +479,22 @@ $$ P(F) \approx P(A_1) + P (A_2) + \cdots + P (A_n) $$
 
 or 
 
-$$ P(F) \approx \sum_{i=1}^n P (A_i) $$
+$$ 
+P(F) \approx \sum_{i=1}^n P (A_i) 
+$$ (eq:probtop)
 
 Probabilities for each event are recorded as failure rates per year.
 
 
-## Failure rates Unknown
+## Failure Rates Unknown
 
-A system analyst is uncertain about  the failure rates $P(A_i)$. 
+Now we come to the problem that really interests us.  
+
+The problem involves **probabilities of probabilities** to capture a notion of not knowing the constituent probabilities that are inputs into
+a failure tree analysis.
+
+
+Thus, we assume that a system analyst is uncertain about  the failure rates $P(A_i), i =1, \ldots, n$ for components of a system.
 
 The analyst copes with this situation by regarding the systems failure probability $P(F)$ and each of the component probabilities $P(A_i)$ as  random variables.
 
@@ -444,7 +504,10 @@ The analyst copes with this situation by regarding the systems failure probabili
   
 This leads to what is sometimes called a **hierarchical** model in which the analyst has  probabilities about the probabilities $P(A_i)$.
 
-The analyst formalizes his uncertainty by assuming that the failure probability $P(A_i)$ is itself a log normal random variable with parameters $(\mu_i, \sigma_i)$.
+The analyst formalizes his uncertainty by assuming that 
+
+ * the failure probability $P(A_i)$ is itself a log normal random variable with parameters $(\mu_i, \sigma_i)$.
+ * failure rates $P(A_i)$ and $P(A_j)$ are statistically independent for all pairs with $i \neq j$.
 
 The analyst  calibrates the parameters  $(\mu_i, \sigma_i)$ for the failure events $i = 1, \ldots, n$ by reading reliability studies in engineering papers about the historical failure rates of components as similar as possible to the components being used in the system under study. 
 
@@ -459,21 +522,26 @@ of the systems failure probability $P(F)$.
 
   * We say probability mass function because of how we discretize each random variable, as described earlier.
 
-The analyst calculates the probability mass function for the **top event**, i.e., a **system failure**,  by repeatedly applying the convolution theorem to compute the probability distribution of a sum of independent log normal random variables. 
+The analyst calculates the probability mass function for the **top event** $F$, i.e., a **system failure**,  by repeatedly applying the convolution theorem to compute the probability distribution of a sum of independent log normal random variables, as described in equation
+{eq}`eq:probtop`. 
 
 <!-- #endregion -->
 
-## An Example
+## Waste Hoist Failure Rate
 
 We'll take close to a real world example by assuming that $n = 14$.
 
 The example estimates the annual failure rate of a critical  hoist at a nuclear waste facility.
 
-Of these fourteen log normal random variables, there are **seven pairs** 
+A regulatory agency wants the sytem to be designed in a way that makes the failure rate of the top event small with high probability.
+
+This example is Design Option B-2 (Case I) described in Table 10 on page 27 of {cite}`Greenfield_Sargent_1993`.
+
+The table describes parameters $\mu_i, \sigma_i$ for  fourteen log normal random variables that consist of  **seven pairs** of random variables that are identically and independently distributed.
 
  * Within a pair, parameters $\mu_i, \sigma_i$ are the same 
 
- * As described in table 10 of Greenfield-Sargent, p. 27, parameters of log normal distributions for  the seven unique probabilities $P(A_i)$ have been calibrated to be the values in the following Python code:
+ * As described in table 10 of {cite}`Greenfield_Sargent_1993`  p. 27, parameters of log normal distributions for  the seven unique probabilities $P(A_i)$ have been calibrated to be the values in the following Python code:
 
 ```{code-cell} python3
 mu1, sigma1 = 4.28, 1.1947
@@ -501,14 +569,16 @@ def find_nearest(array, value):
     return idx
 ```
 
-# Greenfield-Sargent replication
+We compute the required thirteen convolutions in the following code.
 
-We'll do "Design Option B-2 (Case I) on page 28 of Greenfield-Sargent
+(Please feel free to try different values of the power parameter $p$ that we use to set the number of points in our grid for constructing
+the probability mass functions that discretize the continuous log normal distributions.)
 
-Here goes
+We'll plot a counterpart to the cumulative distribution function (CDF) in  figure 5 on page 29 of {cite}`Greenfield_Sargent_1993` 
+and we'll also present a counterpart to their Table 11 on page 28.
 
 ```{code-cell} python3
-p=12
+p=15
 I = 2**p # Truncation value
 m =  .05 # increment size
 
@@ -593,5 +663,7 @@ print(tabulate([
     ['99.78%',f"{x_9978}"]],    
     headers = ['Percentile', 'x * 1e-9']))
 ```
+The above table agrees closely with column 2 of  Table 11 on p. 28 of  of {cite}`Greenfield_Sargent_1993`. 
 
-The above table agrees closely with column 2 of Table 11 of Greenfield-Sargent, p. 28; their "design option B-2 (case I)
+Discrepancies are probably due to slight differences in the number of digits retained in inputting $\mu_i, \sigma_i, i = 1, \ldots, 14$
+and in the number of points deployed in the discretizations.
