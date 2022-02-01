@@ -245,24 +245,25 @@ sns.despine()
 
 We now compare  FPSB and a SPSB auctions from the point of view of the  revenues that a seller can expect to acquire.
 
-> **Theorem (Revenue Equivalence Theorem)** Assume each of $N$ <font color='red'>risk-Neutral</font> bidders has a <font color='red'>privately</font> known value that is <font color='red'>independently</font> drawn from <font color='red'>a common distribution</font> $F(v)$ that is strictly increasing and atomless on $[\underline{v}, \bar{v}]$. Suppose that no buyer wants more than one of the $k$ available identical indivisible objects. Then any auction mechanism in which
-1. the objects always go to the $k$ buyers with the <font color='red'>highest</font> values (or the probability that a bidder with value $v$ wins an object is the same) and
-2. any bidder with value <font color='red'>$\underline{v}$ expects 0 surplus</font> 
->
-> yields the <font color='red'>same expected revenue</font>  and results in a buyer with value $v$ making the <font color='red'>same expected payment.</font> 
 
-+++
 
-**In case of FPSB:**
+**Expected Revenue FPSB:**
 
-The winner with valuation $y$ pays $\frac{n-1}{n}*y$, where n is the number of bidders. As indicated in section  2.2, the CDF is $F_{n}(y) = y^{n}$ and PDF is $f_{n} = ny^{n-1}$. Thus,  expected revenue is:
+The winner with valuation $y$ pays $\frac{n-1}{n}*y$, where n is the number of bidders.
+
+Above we computed that the  CDF is $F_{n}(y) = y^{n}$ and  the PDF is $f_{n} = ny^{n-1}$. 
+
+Consequently,  expected revenue is
+
 $$
 \mathbf{R} = \int_{0}^{1}\frac{n-1}{n}v_{i}\times n v_{i}^{n-1}dv_{i} = \frac{n-1}{n+1}
 $$
 
-**In case of SPSB:**
+**Expected Revenue SPSB:**
 
-The expected revenue of the auctioneer (n $\times$ expected payment of a bidder) is
+The expected revenue equals n $\times$ expected payment of a bidder.
+
+Computing this we get
 
 $$
 \begin{aligned}
@@ -276,7 +277,7 @@ $$
 
 +++
 
-Thus, the revenue equivalence theorem tells us that the average payments in FPSB and SPSB  are identical even though probability distributions of winning bids typically differ. 
+Thus, while probability distributions of winning bids typically differ across the two types of auction, we deduce that  expected payments are identical in FPSB and SPSB. 
 
 ```{code-cell} ipython3
 fig, ax = plt.subplots(figsize=(6, 4))
@@ -294,7 +295,7 @@ ax.set_ylabel('Density')
 sns.despine()
 ```
 
-**<center>Table: A summary of FPSB and SPSB results with uniform distribution on $[0,1]$</center>**
+**<center>Summary of FPSB and SPSB results with uniform distribution on $[0,1]$</center>**
 
 |    Auction: Sealed-Bid    |             First-Price              |              Second-Price               |
 | :-----------------------: | :----------------------------------: | :-------------------------------------: |
@@ -307,9 +308,9 @@ sns.despine()
 
 +++
 
-**Detour: Computing a BNE for FPSB**
+**Detour: Computing a Bayesian Nash Equibrium for  FPSB**
 
-In light of the Revenue Equivalence Theorem, we can back out the optimal bidding strategy of a participant in a  FPSB auction  from outcomes of a SPSB auction.
+The Revenue Equivalence Theorem lets us an optimal bidding strategy for  a  FPSB auction  from outcomes of a SPSB auction.
 
 Let  $b(v_{i})$ be the optimal bid in a FPSB auction. 
 
@@ -325,23 +326,28 @@ It follows that an optimal bidding strategy in a FPSB auction is $b(v_{i}) = \ma
 
 +++
 
-## 3 Numerical Solution to the Bid Price in FPSB
+##  Calculation of  Bid Price in FPSB
 
 +++
 
-Above, we computed an optimal  bid price in a FPSB auction analytically. 
+In equations {eq}`eq:optbid1` and {eq}`eq:optbid1`, we displayed formulas for optimal bids in a symmetric Bayesian Nash Equilibrium of a
+a FPSB auction"
 
-A FPSB auction has a unique symmetric BNE in which the bid of player $i$ is given by: 
-$$\mathbf{E}[y_{i} | y_{i} < v_{i}]$$ 
-where: <br>
+$$
+\mathbf{E}[y_{i} | y_{i} < v_{i}]
+$$ 
+
+where 
 - $v_{i} = $  value of bidder $i$
 - $y_{i} = $: maximum value of all bidders except $i$, i.e., $y_{i} = \max_{j \neq i} v_{j}$
 
-XXXXX GGHH -- Tom: number equations and eliminate redundancy XXXX
+
+Above, we computed an optimal  bid price in a FPSB auction analytically for a case in which private values are uniformly distributed. 
+
 
 For most probability distributions of private values, analytical solutions aren't  easy to compute.
 
-Instead, we can  compute  bid prices in FPSB auctions numerically as functions of a distribution of private values.
+Instead, we can  compute  bid prices in FPSB auctions numerically as functions of the distribution of private values.
 
 ```{code-cell} ipython3
 def evaluate_largest(v_hat, array, order=1):
@@ -371,7 +377,7 @@ def evaluate_largest(v_hat, array, order=1):
     return array_conditional[-order,:].mean()
 ```
 
-We check the accuracy of our evaluate_largest method by comparing it with an analytical solution.
+We can check the accuracy of our `evaluate_largest` method by comparing it with an analytical solution.
 
 We find that despite small discrepancy, the evaluate_largest method functions well. 
 
@@ -396,9 +402,9 @@ sns.despine()
 
 ##  $\chi^2$ Distribution
 
-+++
+Let's try an example in which the distribution of private values is a $\chi^2$ distribution.  
 
-###  View  of a $\chi^2$ Distribution
+We'll start by taking a look at a $\chi^2$ distribution with the help of the following Python code:
 
 ```{code-cell} ipython3
 np.random.seed(1337)
@@ -409,7 +415,7 @@ plt.xlabel('Values: $v$')
 plt.show()
 ```
 
-### 4.2 Construct  Bid Pice Function
+Now we'll get Python to construct a bid price function
 
 ```{code-cell} ipython3
 np.random.seed(1337)
@@ -449,7 +455,7 @@ ax.set_ylabel('Optimal Bid in FPSB')
 sns.despine()
 ```
 
-### 4.3 Distribution of Winner's Payment
+Now we can use Python to compute the probability distribution of the price paid by the winning bidder 
 
 ```{code-cell} ipython3
 b=b_star_num(v)

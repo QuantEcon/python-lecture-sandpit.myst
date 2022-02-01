@@ -11,6 +11,38 @@ kernelspec:
   name: python3
 ---
 
+
+# Fault Tree Uncertainties
+
+
+## Overview
+
+This lecture puts elementary tools to work to approximate probability distributions of the annual failure rates of a system consisting of 
+a number of critical parts.  
+
+We'll use log normal distributions to approximate probability distributions of critical  component parts.
+
+To  approximate the probability distribution of the **sum** of $n$ log normal probability distributions that describes the failure rate of the 
+entire system, we'll compute the convolution of those $n$ log normal probability distributions.
+
+We'll use the following concepts and tools:
+
+* log normal distributions
+* the convolution theorem that describes the probability distribution of the sum independent random variables
+* fault tree analysis for approximating a failure rate of a multi-component system
+* a hierarchical probability model for describing uncertain probabilities  
+* Fourier transforms and inverse Fourier tranforms as efficient ways of computing convolutions of sequences
+
+El-Shanawany, Ardron,  and Walker {cite}`Ardron_2018` and Greenfield and Sargent {cite}`Greenfield_Sargent_1993`  used some of the methods described here  to approximate probabilities of failures of safety systems in nuclear facilities.
+
+These methods respond to some of the recommendations made by Apostolakis  {cite}`apostolakis1990` for constructing procedures for quantifying
+uncertainty about the reliability of a safety system.
+
+We'll start by bringing in some Python machinery.
+
+
+
+
 ```{code-cell} python3
 !pip install tabulate
 ```
@@ -33,28 +65,6 @@ np.set_printoptions(precision=3, suppress=True)
 
 <!-- #region -->
 
-# Fault Tree Uncertainties
-
-
-## Overview
-
-This lecture puts elementary tools to work to approximate probability distributions of the annual failure rates of a system consisting of 
-a number of critical parts.  
-
-We'll use log normal distributions to approximate probability distributions of critical  component parts.
-
-To  approximate the probability distribution of the **sum** of $n$ log normal probability distributions that describes the failure rate of the 
-entire system, we'll compute the convolution of those $n$ log normal probability distributions.
-
-We'll use the following concepts and tools:
-
-* log normal distributions
-* the convolution theorem that describes the probability distribution of the sum independent random variables
-* fault tree analysis for approximating the failure rate of a multi-component system
-* hierarchical probability models for describing uncertain probabilities  
-* Fourier transforms and inverse Fourier tranforms as efficient ways of computing convolutions of sequences
-
-El-Shanawany, Ardron,  and Walker {cite}`Ardron_2018` and Greenfield and Sargent {cite}`Greenfield_Sargent_1993`  used some of the methods described here  to approximate probabilities of failures of safety systems in nuclear facilities.
 
 ## Log normal distribution
 
@@ -193,14 +203,15 @@ That's why we rely on it later in this lecture.
 
 ## Approximating Distributions
 
-Let's provide an example.
+We'll construct an example to verify that  discretized distributions can do a good job of approximating  samples drawn from underlying
+continuous distributions. 
 
 We'll start by generating samples of size 25000 of three independent  log normal random variates as well as pairwise and triple-wise sums.
 
 Then we'll plot  histograms and compare them with convolutions of appropriate discretized log normal distributions.
 
 ```{code-cell} python3
-## create sum of two log normal random variates ssum = s1 + s2
+## create sums of two and three log normal random variates ssum2 = s1 + s2 and ssum3 = s1 + s2 + s3
 
 
 mu1, sigma1 = 5., 1. # mean and standard deviation
@@ -386,7 +397,7 @@ print("time with np.convolve = ", tdiff1,  "; time with fftconvolve = ",  tdiff2
 
 ```
 
-Notice that using the fast Fourier transform is two orders of magnitude faster
+The fast Fourier transform is two orders of magnitude faster than `numpy.convolve`
 
 
 Now let's plot our computed probability mass function approximation  for the sum of two log normal random variables against the histogram of the sample that we formed above.
@@ -435,9 +446,14 @@ mean, 3*meantheory
 <!-- #region -->
 ## Failure Tree Analysis
 
-We apply the convolution theorem to compute the probability of a **top event** in a failure tree analysis.
+We shall soon apply the convolution theorem to compute the probability of a **top event** in a failure tree analysis.
 
-We repeatedly use  what is called the **rare event approximation**
+Before applying the convolution theorem, we first describe the model that connects constituent events to the **top** end whose
+failure rate we seek to quantify.
+
+The model is an example of the widely used  **failure tree analysis** described by  El-Shanawany, Ardron,  and Walker {cite}`Ardron_2018`.
+
+To construct the statistical model, we repeatedly use  what is called the **rare event approximation**.
 
 We want to compute the probabilty of an event $A \cup B$. 
 
@@ -488,10 +504,11 @@ Probabilities for each event are recorded as failure rates per year.
 
 ## Failure Rates Unknown
 
-Now we come to the problem that really interests us.  
+Now we come to the problem that really interests us, following {cite}`Ardron_2018` and Greenfield and Sargent {cite}`Greenfield_Sargent_1993`  in the spirit of Apostolakis  {cite}`apostolakis1990`.  
 
-The problem involves **probabilities of probabilities** to capture a notion of not knowing the constituent probabilities that are inputs into
-a failure tree analysis.
+The constituent probabilities or failure rates $P(A_i)$ are not known a priori and have to be estimated.  
+
+We address this problem by specifying **probabilities of probabilities** that  capture one  notion of not knowing the constituent probabilities that are inputs into a failure tree analysis.
 
 
 Thus, we assume that a system analyst is uncertain about  the failure rates $P(A_i), i =1, \ldots, n$ for components of a system.
@@ -509,7 +526,7 @@ The analyst formalizes his uncertainty by assuming that
  * the failure probability $P(A_i)$ is itself a log normal random variable with parameters $(\mu_i, \sigma_i)$.
  * failure rates $P(A_i)$ and $P(A_j)$ are statistically independent for all pairs with $i \neq j$.
 
-The analyst  calibrates the parameters  $(\mu_i, \sigma_i)$ for the failure events $i = 1, \ldots, n$ by reading reliability studies in engineering papers about the historical failure rates of components as similar as possible to the components being used in the system under study. 
+The analyst  calibrates the parameters  $(\mu_i, \sigma_i)$ for the failure events $i = 1, \ldots, n$ by reading reliability studies in engineering papers that have studied historical failure rates of components that are as similar as possible to the components being used in the system under study. 
 
 The analyst assumes that such  information about the observed dispersion of annual failure rates, or times to failure, can inform him of what to expect about parts' performances in his system.
 
