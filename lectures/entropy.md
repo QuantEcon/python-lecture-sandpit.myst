@@ -23,7 +23,7 @@ This lecture describes and compares several notions of entropy.
 Among the senses of entropy, we'll encounter these
 
 * A measure of **uncertainty** of a random variable advanced by Claude Shannon
-* A key criterion that guides thermodynamics
+* A key object governing thermodynamics
 * Kullback and Leibler's measure of the statistical divergence between two probability distributions
 * A measure of the volatility of stochastic discount factors that appear in asset pricing theory
 * Measures of unpredictability that occur in classical Wiener-Kolmogorov prediction theory
@@ -250,7 +250,78 @@ D(p|q) = \int p(x) \log \left(\frac{p(x)}{q(x)} \right) d \, x .
 $$
 
 
-## Example 
+
+
+
+## Relative entropy and Gaussian distributions
+
+We want to compute relative entropy for two continuous densities $\phi$ and $\hat \phi$ when
+  $\phi$ is ${\cal N}(0,I)$ 
+ and  ${\hat \phi}$ is ${\cal N}(w, \Sigma)$, where the covariance matrix $\Sigma$ is nonsingular.
+
+We seek
+ a formula for 
+ 
+ $$ \textrm{ent} = \int (\log {\hat \phi(\varepsilon)} - \log \phi(\varepsilon) ){\hat \phi(\varepsilon)} d \varepsilon. 
+ $$
+
+**Claim**
+
+$$
+\textrm{ent} = %\int (\log {\hat \phi} - \log \phi ){\hat \phi} d \varepsilon=
+-{1 \over 2} \log
+\det \Sigma + {1 \over 2}w'w + {1 \over 2}\mathrm{trace} (\Sigma - I)
+. \label{relentropy101}
+$$ (eq:relentropy101)
+
+**Proof**
+
+The log likelihood ratio is
+
+\begin{equation} \log {\hat \phi}(\varepsilon) - \log \phi(\varepsilon) =
+{1 \over 2} \left[ - (\varepsilon - w)' \Sigma^{-1} (\varepsilon - w)
+    +  \varepsilon' \varepsilon - \log \det
+    \Sigma\right] .\label{footnote2} \end{equation}
+    
+
+ Observe
+that
+
+$$
+ - \int {1 \over 2} (\varepsilon - w)' \Sigma^{-1} (\varepsilon -
+w) {\hat \phi}(\varepsilon) d\varepsilon = - {1 \over 2}\mathrm{trace}(I).
+$$
+
+
+Applying the identity $\varepsilon = w + (\varepsilon - w)$ gives
+
+$$
+{1\over 2}\varepsilon' \varepsilon = {1 \over 2}w' w + {1 \over 2}
+(\varepsilon - w)' (\varepsilon - w) +  w' (\varepsilon - w).
+$$ 
+
+Taking mathematical expectations
+
+$$
+{1 \over 2} \int \varepsilon' \varepsilon {\hat \phi}(\varepsilon) d
+\varepsilon = {1\over 2} w'w + {1 \over 2} \mathrm{trace}(\Sigma).
+$$
+
+Combining terms gives
+
+$$
+\textrm{ent} = \int (\log {\hat \phi} - \log \phi ){\hat \phi} d \varepsilon= -{1 \over 2} \log
+\det \Sigma + {1 \over 2}w'w + {1 \over 2}\mathrm{trace} (\Sigma - I)
+. \label{relentropy}
+$$ (eq:relentropy)
+
+which agrees with equation {eq}`eq:relentropy101`.
+Notice the separate  appearances of the mean distortion $w$ and the covariance distortion
+$\Sigma - I$ in equation {eq}`eq:relentropy`.
+
+
+
+**Extension**
 
 Let  $N_0 = {\mathcal N}(\mu_0,\Sigma_0)$ and $N_1={\mathcal N}(\mu_1, \Sigma_1)$ be two multivariate Gaussian
 distributions.
@@ -357,7 +428,7 @@ Let $y_t$ be an $n \times 1$ covariance stationary stochastic process with mean 
 matrix covariogram $C_y(j) = E y_t y_{t-j}' $ and spectral density matrix
 
 $$
-S_y(\omega) = \sum_{j=-\infty}^\infty e^{- i \omega j} C_y(j), \omega \in [-\pi, \pi].  
+S_y(\omega) = \sum_{j=-\infty}^\infty e^{- i \omega j} C_y(j), \quad \omega \in [-\pi, \pi].  
 $$
 
 Let
@@ -466,6 +537,7 @@ Under the ${\mathcal N}(0,1.5)$ density, $E g =1$.
  $g \log g$ and $g-1$ where  $g$ is the ratio of the density of a ${\mathcal N}(0,1)$ random variable to the density of a ${\mathcal N}(0,1.5)$ random variable.
 Under the ${\mathcal N}(0,1.5)$ density, $E g =1$.
 ```
+
 
 
 
