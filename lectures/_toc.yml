@@ -3,11 +3,7 @@ root: index
 options:
   numbered: true
 sections:
-- file: eig_circulant
 - file: PT_intro
-- file: house_auction
-- file: back_prop
-- file: hoist_failure
-- file: two_auctions
+- file: entropy
 - file: markov_switching_lss
 - file: zreferences
