@@ -26,7 +26,7 @@ Among the senses of entropy, we'll encounter these
 * A key object governing thermodynamics
 * Kullback and Leibler's measure of the statistical divergence between two probability distributions
 * A measure of the volatility of stochastic discount factors that appear in asset pricing theory
-* Measures of unpredictability that occur in classical Wiener-Kolmogorov prediction theory
+* Measures of unpredictability that occur in classical Wiener-Kolmogorov linear prediction theory
 * A frequency domain criterion for constructing robust decision rules 
 
 ## Information theory
