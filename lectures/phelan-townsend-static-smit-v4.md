@@ -11,31 +11,6 @@ kernelspec:
   name: python3
 ---
 
-# Contents
-
-- [1 The Full-Information Economy](#1)  
-    - [1.1 Setting And Formulation](#1.1)  
-    - [1.2 Solve The Primal Problem](#1.2) 
-        - [1.2.1 Scipy.linprog](#1.2.1)
-        - [1.2.2 CVXPY](#1.2.2)
-        - [1.2.3 PuLP](#1.2.3)
-        - [1.2.4 QuantEcon](#1.2.4)
-        - [1.2.5 Time Comparison](#1.2.5)
-    - [1.3 Solve The Dual Problem](#1.3) 
-        - [1.3.1 Scipy.linprog](#1.3.1)
-        - [1.3.2 CVXPY](#1.3.2)
-        - [1.3.3 PuLP](#1.3.3)
-        - [1.3.4 Time Comparison](#1.3.4)
-- [2 The Static Unobserved-Action Economy](#2)
-    - [2.1 Setting And Formulation](#2.1)
-    - [2.2 Solve The Primal Problem](#2.2)
-    - [2.3 Solve The Dual Problem](#2.3)
-    - [2.4 Figures](#2.3)
-- [3 The Static Unobserved-Action Economy(Based on Another Formulation)](#3)
-    - [3.1 Another Formulation](#3.1)
-    - [3.2 Solve The Primal Problem](#3.2)
-    - [3.3 Figures](#3.3)
-
 ```{code-cell} ipython3
 # Importing the required libraries
 import numpy as np
@@ -57,24 +32,14 @@ set_matplotlib_formats('retina')
 from warnings import filterwarnings
 ```
 
-<a id='1'></a>
 # 1 The Full-Information Economy
 
-+++
-
-<a id='1.1'></a>
 ## 1.1 Setting And Formulation
 
-+++
-
-<font face="Times New Roman" size=4.5> 
-In this section, we consider the social planning problem for an economy with a continuum of identical agents each having an identical but independent production technology taking in an agent's own labour and producing the single consumption good as a function of this labour and an independent shock. </font>
-
-+++
-
-<font face="Times New Roman" size=4.5> 
+In this section, we consider the social planning problem for an economy with a continuum of identical agents each having an identical but independent production technology taking in an agent's own labour and producing the single consumption good as a function of this labour and an independent shock. 
     
 **Setting:**
+
  - Action $a$ from a finite set of possible actions $\mathbf{A} \subset \mathbf{R}_{+}$ 
  - Output $q \in \text{finite }\mathbf{Q} \subset \mathbf{R}_{+}$  determined by an exogenous probability $\mathbf{P}(q|a)>0$ for all $q$
  - Consumption $c \in \text{finite } \mathbf{C} \subset \mathbf{R}_{+}$ with mixed outcomes allowed
@@ -87,11 +52,6 @@ In this section, we consider the social planning problem for an economy with a c
    - Arbitrary utility level in between, $w = \alpha\underline{w}+(1-\alpha)\overline{w}\in\mathbf{W}=[\underline{w},\overline{w}]$, $\alpha\in[0,1]$
  - $d_{0}(w)$ denotes the fraction of agent whose required utility is $w$
  - $\Pi^{w}(a,q,c)$: choice variable, the probability for an agent required to receive $w$ of taking action $a$, having output $q$ occur in his own production technology and receiving consumption amount $c$
-</font>
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Formulation:**
 - Contract: Such function $\Pi^{w}$ for given $w\in\mathbf{W}$ satisfying certain constraints
@@ -109,19 +69,11 @@ s.t. \text{C1:} & w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{C}}U(a,c)\Pi
 & \text{(probability measure)} \\
 \end{aligned}
 $$
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Solution:**
 - Total social surplus for initial distribution $d_{0}$: $S^{*}(d_{0})\equiv \sum_{\mathbf{W}}s^{*}(w)d_{0}(w) \geqq 0$ for feasibility
 - **Pareto Optima**: An initial distribution of utilities $d_{0}$ and its associated surplus maximizing plans $\{\Pi^{w*}\}^{w\in\mathbf{W}}$ represent a Pareto optimum if the support of $d_{0}$ lies within the non-increasing portion of s*(w).
 </font>
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Parameterization:**
 - $\mathbf{A} = \{0\}$
@@ -132,9 +84,6 @@ $$
 - $w = 1.5$
 </font>
 
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Primal Problem:**
     
@@ -209,14 +158,8 @@ p \\
 $$
 Call this formulation as the **"compact version"**.
 
-+++
 
-<font face="Times New Roman" size=4.5> 
 As derivation above shows, we can either implement the "elemnentary version" by CVXPY and PuLP or the "compact version" by CVXPY and Scipy.linprog. All these computational implementations are showed in the "optimalAssignment_v4.ipynb". In section 1.2, we will use Scipy.linprog to implement the "compact version" and CVXPY and PuLP to implement "elementary version".
-
-+++
-
-<font face="Times New Roman" size=4.5>
 
 **Dual Problem:**
     
@@ -243,7 +186,6 @@ where, $\lambda$ is the dual variable vector with $\lambda_1 = \nu_1$, $\left( \
 Furthermore, by rewriting the "elementary version" of the dual problem, we can derive the same "compact version" of the dual problem as shown above.(See "optimalAssignment_v4.ipynb" written by Jiahui, the mathematical statement is similiar to that in this file.)
 
 Again, we can use CVXPY and Scipy.linprog to solve the "compact version" of the dual problem and CVXPY and PuLP to the "elementary version" of the dual problem. Those are also shown in "optimalAssignment_v4.ipynb". In section 1.3, we will use Scipy.linprog and CVXPY to implement the "compact version" and CVXPY and PuLP to implement "elementary version".
-</font>
 
 ```{code-cell} ipython3
 # Define parameters
@@ -274,17 +216,12 @@ X = list(range(N))
 Y = list(range(M))
 ```
 
-<a id='1.2'></a>
 ## 1.2 Solve The Primal Problem
 
-+++
-
-<a id='1.2.1'></a>
 ### 1.2.1 SciPy
 
-+++
 
-<font face="Times New Roman" size=4.5> All three methods from `scipy.linprog` give different solutions to the prorgamming problem. </font>
+All three methods from `scipy.linprog` give different solutions to the prorgamming problem.
 
 ```{code-cell} ipython3
 # Different methods available in scipy
@@ -312,7 +249,6 @@ for i in range(n):
 print(soln_tb_scipy)
 ```
 
-<a id='1.2.2'></a>
 ### 1.2.2 CVXPY
 
 ```{code-cell} ipython3
@@ -357,7 +293,6 @@ for i in range(n):
 print(soln_tb_cv)
 ```
 
-<a id='1.2.3'></a>
 ### 1.2.3 PuLP
 
 ```{code-cell} ipython3
@@ -393,7 +328,6 @@ for x in X:
       print([round(Pi[x,y].varValue,3) for y in Y])
 ```
 
-<a id='1.2.4'></a>
 ### 1.2.4 QuantEcon
 
 We will use quantecon's `linprog_simplex` to solve the same problem.
@@ -411,7 +345,6 @@ print("Optimal value:", round(result_qe.fun, 2))
 print("solution:", [round(val, 2) for val in result_qe.x])
 ```
 
-<a id='1.2.5'></a>
 ### 1.2.5 Time Comparison
 
 ```{code-cell} ipython3
@@ -427,12 +360,8 @@ for lib_name, time_vals in time_comparison:
 print(time_tb)
 ```
 
-<a id='1.3'></a>
 ## 1.3 Solve The Dual Problem
 
-+++
-
-<a id='1.3.1'></a>
 ### 1.3.1 `scipy.linprog`
 
 ```{code-cell} ipython3
@@ -450,12 +379,8 @@ print("nu_2:", round(res_d.x[3], 2))
 print("Time taken(s):", scipy_time)
 ```
 
-<a id='1.3.2'></a>
 ### 1.3.2 CVXPY
 
-+++
-
-<font face="Times New Roman" size=4.5> 
 First, let implement the "compact version".
 
 ```{code-cell} ipython3
@@ -483,12 +408,8 @@ print("mu:", np.round([_lambda.value[1]],2), np.round([_lambda.value[2]],2))
 print("nu_2:", np.round(_lambda.value[3],2))
 ```
 
-<font face="Times New Roman" size=4.5> 
 This result is the same as the primal problems we implement above, meaning the "compact version" of the dual problem is theoretically correct!!
 
-+++
-
-<font face="Times New Roman" size=4.5> 
 Next, let's implement the "elementary version" of the dual problem.
 
 ```{code-cell} ipython3
@@ -522,7 +443,6 @@ print("nu_2:", np.round(nu_1.value, 2))
 print("Time taken(s):", cvxpy_time)
 ```
 
-<a id='1.3.3'></a>
 ### 1.3.3 PuLP
 
 ```{code-cell} ipython3
@@ -557,7 +477,6 @@ print("nu_2:", round(nu_2.varValue, 2))
 print("Time taken(s):", pulp_time)
 ```
 
-<a id='1.3.4'></a>
 ### 1.3.4 Time Comparison
 
 ```{code-cell} ipython3
@@ -573,17 +492,9 @@ for lib_name, time_val in time_comparison:
 print(time_tb)
 ```
 
-<a id='2'></a>
 # 2 The Static Unobserved-Action Economy
 
-+++
-
-<a id='2.1'></a>
 ## 2.1 Setting And Formulation
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Setting:**
  - An agent's action is unobservable by everyone other than the agent himself
@@ -596,11 +507,6 @@ print(time_tb)
     - $\Pi^{w}(c \mid q, a) P(q \mid \hat{a})$ is the probability of a given $(q, c)$ combination given that action $a$ is announced and deviation action $\hat{a}$ is taken instead
     - $\Pi^{w}(q, c \mid a) = \Pi^{w}(c \mid q, a) P(q \mid a) \implies \sum_{\mathbf{Q} \times \mathbf{C}} U[a, c] \Pi^{w}(q, c \mid a) \geqq \sum_{\mathbf{Q} \times \mathbf{C}} U[\hat{a}, c] \frac{\mathbf{P}(q \mid \hat{a})}{\mathbf{P}(q \mid a)} \Pi^{w}(q, c \mid a) \\ \qquad\qquad\qquad\qquad\qquad\quad\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\implies \sum_{\mathbf{Q} \times \mathbf{C}} U[a, c] \Pi^{w}(a, q, c) \geqq \sum_{\mathbf{Q} \times \mathbf{C}} U[\hat{a}, c] \frac{P(q \mid \hat{a})}{P(q \mid a)} \Pi^{w}(a, q, c) \qquad \text{ (C4)}$ 
     - The ration $\frac{P(q \mid \hat{a})}{P(q \mid a)}$ gives how many more times likely it is that output $q$ will occur given deviation action $\hat{a}$ as opposed to recommended action $a$, and thus updates the joint probability of observing recommended action $a$, output $q$, and consumption $c$.
-</font>
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Formulation:**
 $$
@@ -613,11 +519,6 @@ s.t.
 \text{C4:} & \ \sum_{\mathbf{Q} \times \mathbf{C}} U[a, c] \Pi^{w}(a, q, c) \geqq \sum_{\mathbf{Q} \times \mathbf{C}} U[\hat{a}, c] \frac{P(q \mid \hat{a})}{P(q \mid a)} \Pi^{w}(a, q, c)
 \end{aligned}
 $$
-</font>
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Parameterization:**
  - $U[a,c] = [(c^{0.5}/0.5+(1-a)^{0.5}/0.5]$
@@ -632,12 +533,6 @@ $$
 |0.2|0.6|0.4|
 |0.4|0.4|0.6|
 |0.6|0.25|0.75|
-
-</font>
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Primal Problem:**
     
@@ -659,11 +554,7 @@ Call this formulation as the "elementay version" of the primal problem.
 It is worthy to emphasis that this formulation contains a three-dimension matrix $\Pi$. As what we have done before, we can expand matrix $\Pi$ by one axis and then convert it to a two-dimension matrix. In this way, we obtain a new formulation of this problem(see section 3.1). Furthermore, we can reuse "vectorization" to convert two-dimension version of matrix $\Pi$ to a vector and then get a third formulation of the problem. However, this third version is much more sophisticated than we can imagine.
 
 Here, we directly implement the "elementary version" of the primal problem by CVXPY. Variables in CVXPY have at most two axises, so that it is impossible to create a three-dimension matrix of cp.Variable. The way we do this is to create four two-dimension matrices of cp.Variable.
-</font>
 
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 **Dual Problem:**
     
@@ -772,7 +663,6 @@ P = np.array([[0.9, 0.1], [0.6, 0.4], [0.4, 0.6], [0.25, 0.75]])
 w = cp.Parameter()
 ```
 
-<a id='2.2'></a>
 ## 2.2 Solve The Primal Problem
 
 ```{code-cell} ipython3
@@ -811,7 +701,6 @@ print("fun:", round(obj_expr.value, 8))
 print("Time taken(s):", cvxpy_time)
 ```
 
-<a id='2.3'></a>
 ## 2.3 Solve The Dual Problem
 
 ```{code-cell} ipython3
@@ -852,12 +741,8 @@ print("fun:", round(obj_expr_d.value, 8))
 print("Time taken(s):", cvxpy_time)
 ```
 
-<a id='2.4'></a>
 ## 2.4 Figures
 
-+++
-
-<font face="Times New Roman" size=4.5> 
 In section 2.2, we solve the primal problem setting $w = 3$. In this section, for the purpose of plotting, we shall give $w$ dynamic values and compute corresponding results based on the codes for the primal problem in section 2.2.
     
 **Notice:** When plotting figure 3 and 4, only cp.CBC solver can derive the same figures as presented in Phelan & Townsend, 1991.
@@ -970,17 +855,10 @@ plt.title("Figure 4\n Full Information Consumption", y=-0.2)
 plt.show()
 ```
 
-<a id='3'></a>
 # 3 The Static Unobserved-Action Economy(Based on Another Formlation)
 
-+++
 
-<a id='3.1'></a>
-## 3.1 Another Formulation
-
-+++
-
-<font face="Times New Roman" size=4.5> 
+## 3.1 Another Formulation 
     
 **Formulation:**
 $$
@@ -998,11 +876,6 @@ C3: \quad& \sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{C}} \Pi^{w}(a, q, c
 C4: \quad& \sum_{\mathbf{Q} \times \mathbf{C}} U[a, c] \Pi^{w}(a, q, c) \geqq \sum_{\mathbf{Q} \times \mathbf{C}} U[\hat{a}, c] \frac{P(q \mid \hat{a})}{P(q \mid a)} \Pi^{w}(a, q, c)
 \end{aligned}
 $$
-</font>
-
-+++
-
-<font face="Times New Roman" size=4.5> 
     
 Let 
 
@@ -1042,11 +915,7 @@ C4: \quad & (U\times\Pi)\mathbf{1}_{(mn)\times 1}\mathbf{1}_{l\times 1}^{'} \geq
 $$
 
 where "$\times$" denotes elementwise multiplication or the Hadamard product.
-</font>
 
-+++
-
-<a id='3.2'></a>
 ## 3.2 Solve The Primal Problem
 
 ```{code-cell} ipython3
@@ -1093,14 +962,9 @@ print("The dual solution is ", cons[0].dual_value, cons[1].dual_value, cons[2].d
 
 ```
 
-<a id='3.3'></a>
 ## 3.3 Figures
 
-+++
-
-<font face="Times New Roman" size=4.5> 
 We then wrap everything into the function for convenience to plot.
-</font>
 
 ```{code-cell} ipython3
 def u(x, y):
@@ -1162,7 +1026,7 @@ def LP(w, A, Q, C, P_tilde, u):
 
 ```
 
-## <font face="Times New Roman"> Plot Replication </font>
+## Plot Replication
 
 ```{code-cell} ipython3
 w = np.linspace(1, 5, 100)
@@ -1175,7 +1039,7 @@ def LP_fig12(w):
 rev_fig12 = np.array(list(map(LP_fig12, w)))
 ```
 
-### <font face="Times New Roman"> Figure 1 </font>
+### Figure 1
 
 ```{code-cell} ipython3
 plt.figure(figsize=(6.5, 6.5))
@@ -1192,7 +1056,7 @@ plt.text(1.5, 0.8, "Unobserved Action", size=15)
 plt.show()
 ```
 
-### <font face="Times New Roman"> Figure 2 </font>
+### Figure 2
 
 ```{code-cell} ipython3
 plt.figure(figsize=(6.5, 6.5))
@@ -1243,7 +1107,7 @@ plt.text(2.6, 0.15, "Unobserved Action", size=15)
 plt.show()
 ```
 
-### <font face="Times New Roman"> Figure 3 & 4 </font>
+### Figure 3 & 4
 
 ```{code-cell} ipython3
 filterwarnings("ignore")
