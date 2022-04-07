@@ -6,4 +6,5 @@ sections:
 - file: PT_intro
 - file: entropy
 - file: markov_switching_lss
+- file: phelan-townsend-static-smit-v4
 - file: zreferences

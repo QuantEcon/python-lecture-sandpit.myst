@@ -16,5 +16,10 @@ dependencies:
     - sphinxcontrib-youtube
     - quantecon
     - array-to-latex
+    - PuLP
+    - cvxpy
+    - cvxopt
+    - cylp
+    - prettytable
 
 
