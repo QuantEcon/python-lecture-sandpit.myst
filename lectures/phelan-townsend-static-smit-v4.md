@@ -334,7 +334,7 @@ We will use quantecon's `linprog_simplex` to solve the same problem.
 
 ```{code-cell} ipython3
 in_time = time.time()
-result_qe = linprog_simplex.linprog_simplex(Phi_vec.flatten(), A_eq=A, b_eq=b.flatten())
+result_qe = linprog_simplex(Phi_vec.flatten(), A_eq=A, b_eq=b.flatten())
 out_time = time.time()
 
 qe_times = [round(out_time-in_time, 3)] # stores time taken for execution
