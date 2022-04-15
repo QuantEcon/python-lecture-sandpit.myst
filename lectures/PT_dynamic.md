@@ -1,12 +1,12 @@
 ---
 jupytext:
   text_representation:
-    extension: .myst
+    extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.11.5
+    jupytext_version: 1.13.8
 kernelspec:
-  display_name: Python 3 (ipykernel)
+  display_name: Python 3
   language: python
   name: python3
 ---
@@ -598,7 +598,7 @@ def solve_repeated_problem_2(W=None, W_m=None, A=None, Q=None, C=None, W_prime=N
     return s_W, Pi_W_s1, Pi_W_m_s2
 ```
 
-Let's test this new function and compare the results with results from the previous function. 
+Let's test this new function and compare the results with results from the previous function.
 
 ```{code-cell} ipython3
 # Define the function u[a,c]
