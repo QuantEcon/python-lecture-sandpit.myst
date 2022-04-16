@@ -447,27 +447,28 @@ In the first step, $a, q, w^m$ are random variables but $w$ are given. We seek t
 In the second step, $c, w'$ are random variables but $w^m$ are given. We seek to find the optimal probability of $(c, w')$ that maximize the surplus function $s^m(w^m)$.
 
 The problem of the first step is:
+
 $$
-\begin{align*}
+\begin{aligned}
 \max_{\Pi^{w}} & \ s(w) = \sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{W^m}} \{q + s^m(w^m)\} \Pi^w(a, q, w^m) \\
-\mbox{subject to} \ 
+\textrm{subject to} \\
 \mbox{C5:} & \ w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{W^m}}\{2 \sqrt{1-a} +w^m\} \Pi^w(a, q, w^m) \\
 \mbox{C6:} & \ \sum_{\mathbf{W^m}} \Pi^w(\bar{a}, \bar{q}, w^m)=P(\bar{q} \mid \bar{a}) \sum_{\mathbf{Q} \times \mathbf{W^m}} \Pi^w(\bar{a}, q, w^m) \\
 \mbox{C7:} & \ \sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{W^m}} \Pi^w(a, q, w^m)=1, \Pi^w(a, q, w^m) \geqq 0 \\
 \mbox{C8:} & \ \sum_{\mathbf{Q} \times \mathbf{W^m}} \{2 \sqrt{1-a}+w^m\} \Pi^w(a, q, w^m) \geqq \\
 & \ \sum_{\mathbf{Q} \times \mathbf{W^m}} \{2 \sqrt{1-\hat{a}} + w^m \} \frac{P(q \mid \hat{a})}{P(q \mid a)} \Pi^w(a, q, w^m)
-\end{align*}
+\end{aligned}
 $$
 
 The problem of the second step is:
 
 $$
-\begin{align*}
+\begin{aligned}
 \max_{\Pi^{w^m}} & \ s^m(w^m) = \sum_{\mathbf{C}  \times \mathbf{W'}} \{\beta s^*(w') - c\}\Pi^{w^m}(c, w') \\
-\mbox{subject to} \ 
+\textrm{subject to} \\ 
 \mbox{C5:} & \ w^m = \sum_{\mathbf{C} \times \mathbf{W'}} \{ 2\sqrt{c}+\beta w'\}\Pi^{w^m}(c, w') \\
 \mbox{C7:} & \ \sum_{\mathbf{C} \times \mathbf{W'}} \Pi^{w^m}(c, w')=1, \Pi^{w^m}(c, w') \ge 0 \\
-\end{align*}
+\end{aligned}
 $$
 
 We need to solve the problem of step 2 firstly in order to get the value of $s^m(w^m)$. After solving this problem, we also get the optimal probability $\Pi^{w^m}(c, w') = Pr(c, w'|w^m)$. 

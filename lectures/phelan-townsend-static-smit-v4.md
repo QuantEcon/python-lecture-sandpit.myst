@@ -104,6 +104,7 @@ $$
 where, $N=2,M=4$.
 
 This is equivalent to:
+
 $$
 \begin{aligned}
 & \max_{\Pi_{xy} \ge 0} \ \sum_{xy} \Pi_{xy} \Phi_{xy} \\
@@ -113,9 +114,11 @@ s.t. \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
 \text{C3:} & \  \sum_{xy}\Pi_{xy} = 1 \\
 \end{aligned}
 $$
-Call this formulation as the **"elementary version"**.
+
+Call this  the **"elementary version"**.
 
 We can rewrite this in the compact matrix form as follow:
+
 $$
 \begin{aligned}
 & \max_{\Pi_{xy} \ge 0} \ Tr (\Pi' \Phi)\\
@@ -124,9 +127,11 @@ s.t. \text{C1:} & \ \mathbf{1}_2' \cdot \Pi \cdot u = w \\
 \text{C3:} & \ \mathbf{1}_2' \cdot \Pi \cdot \mathbf{1}_4 = 1 \\
 \end{aligned}
 $$
+
 where, $p=(P(\underline{q}|a=0),P(\overline{q}|a=0))=(\frac{1}{2},\frac{1}{2})$.
 
 Using vectorizing and Kronecker product, FIP can be formulated as:
+
 $$
 \begin{aligned}
 \max_{z \ge 0} & \ vec(\Phi)' z\\
@@ -135,12 +140,19 @@ s.t. \text{C1:} & \ (u' \otimes \mathbf{1}_2') \cdot z = w \\
 \text{C3:} & \ (\mathbf{1}_4' \otimes \mathbf{1}_2) \cdot z = 1 \\
 \end{aligned}
 $$
+
 where, $z = vec(\Pi)$.
 
 As notated in "optimalAssignment_v4.ipynb", FIP can be written as:
+
+
 $$
-\max_{z \ge 0} \ vec(\Phi)^\prime z \\
-s.t. 
+\max_{z \ge 0} \ vec(\Phi)^\prime z 
+$$
+
+subject to
+
+$$. 
 Az = 
 \left( \begin{array}\
 u' \otimes \mathbf{1}_2' \\
@@ -154,9 +166,10 @@ w \\
 p \\
 1
 \end{array}\right)
-=b,\\
+=b
 $$
-Call this formulation as the **"compact version"**.
+
+Call this  the **"compact version"**.
 
 
 As derivation above shows, we can either implement the "elemnentary version" by CVXPY and PuLP or the "compact version" by CVXPY and Scipy.linprog. All these computational implementations are showed in the "optimalAssignment_v4.ipynb". In section 1.2, we will use Scipy.linprog to implement the "compact version" and CVXPY and PuLP to implement "elementary version".
@@ -164,23 +177,35 @@ As derivation above shows, we can either implement the "elemnentary version" by 
 **Dual Problem:**
     
 By mathematical derivation (see "DSS_Chpt5.ipynb" writen by Jiahui, the proof is similiar to those in "DSS_Chpt5.ipynb"), it can be easily proved the dual problem of FIP is:
+
 $$
-\min_{\nu_1, \mu, \nu_2} w\nu_1 + \sum_{x=1}^N p_x \mu_x + \nu_2\\
-s.t. u_y \nu_1 + \mu_x + \nu_2 \ge \Phi_{xy}, \forall x,y \\
-\nu_1, \mu, \nu_2 \ unrestricted
+\min_{\nu_1, \mu, \nu_2} w\nu_1 + \sum_{x=1}^N p_x \mu_x + \nu_2
 $$
-where, N = 2, $\nu_1$ is the dual variable corresponding to C1, $\mu$ is the dual variable corresponding to C2 and $\nu_2$ is the dual variable corresponding to C3. Notice, here, $\mu$ is a vector with two entries while $\nu_1$ and $\nu_2$ are both scalars.
+
+subject to 
+$$  u_y \nu_1 + \mu_x + \nu_2 \ge \Phi_{xy}, \forall x,y; 
+\nu_1, \mu, \nu_2 \ \textrm{unrestricted}
+$$
+
+where N = 2, $\nu_1$ is the dual variable corresponding to C1, $\mu$ is the dual variable corresponding to C2 and $\nu_2$ is the dual variable corresponding to C3. Notice, here, $\mu$ is a vector with two entries while $\nu_1$ and $\nu_2$ are both scalars.
     
 Call this the **"elementary version"** of the dual problem.
     
 Based on the "compact version" of the primal problem, we can directly derive the "compact version" of the dual problem since the "compact version" of the primal problem is a standard form of LP.
 
 The **"compact version"** of the dual problem is:
+
 $$
-\min_{\lambda} b' \lambda\\
-s.t. A' \lambda \ge vec(\Phi)\\
-\lambda \ unrestricted
+\min_{\lambda} b' \lambda 
 $$
+
+subject to 
+
+$$
+A' \lambda \ge vec(\Phi) 
+$$
+
+where $\lambda$ is  unrestricted and 
 where, $\lambda$ is the dual variable vector with $\lambda_1 = \nu_1$, $\left( \begin{array}\ \lambda_2 \\ \lambda_3 \end{array} \right)= \mu$, $\lambda_4 = \nu_2$.
 
 Furthermore, by rewriting the "elementary version" of the dual problem, we can derive the same "compact version" of the dual problem as shown above.(See "optimalAssignment_v4.ipynb" written by Jiahui, the mathematical statement is similiar to that in this file.)
@@ -509,10 +534,11 @@ print(time_tb)
     - The ration $\frac{P(q \mid \hat{a})}{P(q \mid a)}$ gives how many more times likely it is that output $q$ will occur given deviation action $\hat{a}$ as opposed to recommended action $a$, and thus updates the joint probability of observing recommended action $a$, output $q$, and consumption $c$.
     
 **Formulation:**
+
 $$
 \begin{aligned}
 & \max_{\Pi^{w}} \sum_{A \times Q \times C} (q-c)\Pi^{w}(a,q,c) \\
-s.t. 
+& \textrm{subject to}  \\
 \text{C1:} & \ w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{C}}U(a,c)\Pi^{w}(a,q,c) \\
 \text{C2:} & \ \sum_{\mathbf{C}} \Pi^{w}(\bar{a}, \bar{q}, c)=P(\bar{q} \mid \bar{a}) \sum_{\mathbf{Q} \times \mathbf{C}} \Pi^{w}(\bar{a}, q, c) \\
 \text{C3:} & \ \sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{C}} \Pi^{w}(a, q, c)=1, \Pi^{w}(a, q, c) \geqq 0 \\
@@ -527,22 +553,24 @@ $$
  - $\mathbf{C} = \{c = 0.028125n: 0\leq n\leq80,n\in\mathbb{N}\}$: 81 equally spaced points between 0 and 2.25
  - The technology relating action to the probability of each output:
     
-|a|P(q=1)|P(q=2)|
-|:-:|:---:|:---:|
-|0|0.9|0.1|
-|0.2|0.6|0.4|
-|0.4|0.4|0.6|
-|0.6|0.25|0.75|
+|   a   | P(q=1) | P(q=2) |
+| :---: | :----: | :----: |
+|   0   |  0.9   |  0.1   |
+|  0.2  |  0.6   |  0.4   |
+|  0.4  |  0.4   |  0.6   |
+|  0.6  |  0.25  |  0.75  |
     
 **Primal Problem:**
     
 Firstly, define a three-dimension matrix $\Pi^w$ with a size of $(l \times m \times n) = (4 \times 2 \times 81)$, in which each dimension represents $A$, $Q$ or $C$ respectively. For example, $\Pi_{3,2,5}^w = \Pi^w(a=0.4,q=2,c=0.140625)$. In the same way, we define a two-dimension matrix $\Phi$ with entries $\Phi_{yz} = q_y - c_z$, a two-dimension matrix $U$ with entries $U_{x,z} = U[a_x,c_z] = [(c_z^{0.5}/0.5+(1-a_x)^{0.5}/0.5]$ and a two-dimension matrix $P$ with entries $P_{xy} = P(q=q_y|a=a_x)$.
 
-Then the problem can be formulated as follow:
+Then the problem can be formulated as:
+
 $$
 \begin{aligned}
 & \max_{\Pi_{xyz}^w \ge 0} \ \sum_{x=1}^4\sum_{y=1}^2\sum_{z=1}^{81} \Pi^w_{xyz} \Phi_{yz} \\
-s.t. \text{C1:} & \ \sum_{x=1}^4\sum_{y=1}^2\sum_{z=1}^{81} U_{xz} \Pi^w_{xyz} = w\\
+& \textrm{subject to} \\ 
+     \text{C1:} & \ \sum_{x=1}^4\sum_{y=1}^2\sum_{z=1}^{81} U_{xz} \Pi^w_{xyz} = w\\
 \text{C2:} & \ \sum_{z=1}^{81} \Pi^w_{xyz} = P_{xy} \sum_{y=1}^2 \sum_{z=1}^{81} \Pi^w_{xyz}, \forall x,y \\
 \text{C3:} & \ \sum_{x=1}^4\sum_{y=1}^2\sum_{z=1}^{81} \Pi^w_{xyz} = 1 \\
 \text{C4:} & \ \sum_{y=1}^2\sum_{z=1}^{81} U_{xz}\Pi^w_{x,y,z} \ge \sum_{y=1}^2\sum_{z=1}^{81} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \Pi^w_{x,y,z}, \forall x, x^*
@@ -575,8 +603,9 @@ $$
 Denote $\alpha(scalar), \beta(l\times m = 4\times2), \gamma(scalar), \delta(l\times l =4\times4), \lambda(l\times l =4\times4)$ and $\mu(l\times m \times n=4\times 2 \times 81)$ are dual variables corresponding to C1, C2, C3, C4, $\ s_{xx^*} \ge 0$ and $\Pi_{xyz} \ge 0$, respectively.
 
 Then the Langrangian function is:
+
 $$
-\begin{align}
+\begin{aligned}
 & L(\Pi,s,\alpha,\beta,\gamma,\delta,\lambda,\mu) \\
 = & -\sum_x \sum_y \sum_z \Pi_{xyz} \Phi_{yz} + (\sum_x \sum_y \sum_z U_{xz} \Pi_{xyz} - w)\alpha \\
 &+ \sum_x \sum_y (\sum_z \Pi_{xyz} - P_{xy} \sum_y \sum_z \Pi_{xyz}) \beta_{xy} + (\sum_x \sum_y \sum_z \Pi_{xyz} -1)\gamma \\
@@ -586,12 +615,13 @@ $$
 &+ \sum_x \sum_y \sum_z \Pi_{xyz} \beta_{xy} - \sum_x \sum_y (P_{xy} \sum_y \sum_z \Pi_{xyz}) \beta_{xy} + \sum_x \sum_y \sum_z \Pi_{xyz} \gamma - \gamma \\
 &+ \sum_x \sum_{x^*} (\sum_y \sum_z U_{xz}\Pi_{xyz})\delta_{xx^*} - \sum_x \sum_{x^*} (\sum_y \sum_z U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \Pi_{x,y,z}) \delta_{xx^*}  - \sum_x \sum_{x^*} s_{xx^*} \delta_{xx^*}\\
 &-  \sum_x \sum_{x^*} \lambda_{xx^*} s_{xx^*} - \sum_x \sum_y \sum_z \mu_{xyz} \Pi_{xyz}
-\end{align}
+\end{aligned}
 $$
 
-Let's simplify several terms of $L$:
+Let's simplify several terms of $L$ as follows
+
 $$
-\begin{align}
+\begin{aligned}
 & \sum_x \sum_y (P_{xy} \sum_y \sum_z \Pi_{xyz}) \beta_{xy} \\
 = & \sum_x \sum_y (\beta_{xy} P_{xy}) \cdot (\sum_y \sum_z \Pi_{xyz}) \\
 = & \sum_x (\sum_y \sum_z \Pi_{xyz}) \sum_y (\beta_{xy} P_{xy}) \\
@@ -607,19 +637,23 @@ $$
 = & \sum_x (\sum_y \sum_z \sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \Pi_{x,y,z} \delta_{xx^*}) \\
 = & \sum_x (\sum_y \sum_z \Pi_{x,y,z} \cdot (\sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*})) \\
 = & \sum_x \sum_y \sum_z \Pi_{x,y,z} \cdot (\sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*}) \\
-\end{align}
+\end{aligned}
 $$
 
 Substuting these three euqations into $L$:
+
 $$
-\begin{align}
+\begin{aligned}
 L = & \sum_x \sum_y \sum_z \Pi_{xyz} (-\Phi_{yz} + \alpha U_{xz} + \beta_{xy} - \sum_y \beta_{xy} P_{xy} + \gamma + \sum_{x^*} U_{xz} \delta_{xx^*} - \sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*} - \mu_{xyz})\\
 &+ \sum_x \sum_{x^*} s_{xx^*} (-\delta_{xx^*} - \lambda_{xx^*})\\
 &- \alpha w - \gamma \\
-\end{align}
+\end{aligned}
 $$
 
-Let $C = -\Phi_{yz} + \alpha U_{xz} + \beta_{xy} - \sum_y \beta_{xy} P_{xy} + \gamma + \sum_{x^*} U_{xz} \delta_{xx^*} - \sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*} - \mu_{xyz}$, then the dual function is:
+Let $C = -\Phi_{yz} + \alpha U_{xz} + \beta_{xy} - \sum_y \beta_{xy} P_{xy} + \gamma + \sum_{x^*} U_{xz} \delta_{xx^*} - \sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*} - \mu_{xyz}$.
+
+Then the dual function is:
+
 $$
 g(\alpha,\beta,\gamma,\delta) 
 = \inf_{\Pi,s}L 
@@ -630,9 +664,14 @@ g(\alpha,\beta,\gamma,\delta)
 $$
 
 The dual problem is:
+
+
 $$
-\min_{\alpha,\beta,\gamma,\delta} \alpha w + \gamma\\
-s.t. -\Phi_{yz} + \alpha U_{xz} + \beta_{xy} - \sum_y \beta_{xy} P_{xy} + \gamma + \sum_{x^*} U_{xz} \delta_{xx^*} - \sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*} \ge 0, \forall x,y,z \\
+\min_{\alpha,\beta,\gamma,\delta} \alpha w + \gamma
+$$
+
+subject to 
+$$ -\Phi_{yz} + \alpha U_{xz} + \beta_{xy} - \sum_y \beta_{xy} P_{xy} + \gamma + \sum_{x^*} U_{xz} \delta_{xx^*} - \sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*} \ge 0, \forall x,y,z \\
 \delta_{xx^*} \le 0, \forall x,x^*
 $$
 
