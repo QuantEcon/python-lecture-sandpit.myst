@@ -25,17 +25,20 @@ import math
 
 +++
 
-Randomized response surveys are designed  to protect  respondents' privacy. 
+Randomized response surveys in the tradition of Warner {cite}`warner1965randomized` are designed  to protect  respondents' privacy. 
 
 +++
 
-Lars Ljungqvist(1993) proposed  a **utilitarian approach**  that describes how a respondent's decision to answer truthfully or to lie depends on an expected utility calculation. 
+Lars Ljungqvist {cite}`ljungqvist1993unified`  proposed  a **utilitarian approach**  to analyze how a respondent's decision to answer truthfully or to lie depends on an expected utility calculation. 
 
 +++
 
 This notebook describes Ljungqvist's analysis and uses it to design an optimal survey. 
 
-The notebook uses Ljungqvist's framework to shed light on several earlier randomized response survey techniques.
+The notebook uses Ljungqvist's framework to shed light on earlier randomized response survey techniques
+proposed, for example, by {cite}`lanke1975choice`, {cite}`lanke1976degree`, {cite}`leysieffer1976respondent`,
+{cite}`anderson1976estimation`, {cite}`fligner1977comparison`, {cite}`greenberg1977respondent`,
+{cite}`greenberg1969unrelated`.
 
 +++
 

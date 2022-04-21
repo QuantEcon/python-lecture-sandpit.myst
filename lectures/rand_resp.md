@@ -13,10 +13,25 @@ kernelspec:
 
 # Randomized Response Surveys
 
-```{code-cell} ipython3
-import numpy as np
-import pandas as pd
-```
+Social stigmas sometimes set up incentives for people to avoid telling what they really think.
+
+To illustrate how social scientists might confront this situation, this lecture follows in the footsteps of S. L. Warner 
+Warner {cite}`warner1965randomized`.
+
+We   put elementary  probability to work with the aim of constructing ways to protect the privacy  of **individual** respondents to surveys while still  accurately  estimating  the fraction of a **collection** of individuals   who think that they have a socially stichmatized characteristic, or who know that they engage in a a socially stimatized activity.  
+
+The idea is to design a survey that assures the respondent that survey taker cannot observe his answer.
+
+{cite}`warner1965randomized` showed how this can be accomplished by injecting **noise** between the respondent's answer and the **signal** about that answer received by the survey taker.  
+
+Statistical properties of the  noise injection produre can be designed in a way that assures a respondent
+of **plausible deniability**.   
+
+This idea is the central to the design of modern **differential privacy** systems.
+
+(See https://en.wikipedia.org/wiki/Differential_privacy)
+
+
 
 ## Part I: Background Introduction
 
@@ -24,19 +39,28 @@ During a sample survey, individuals can be reluctant to participate.
 
 And  if they do participate, they might choose to provide incorrect answers to  sensitive questions.
 
-The **selection**  biases caused by these difficulties are hard to assess.
+These problems induce  **selection**  biases that are difficult to quantify.
 
 
-Faced with such kinds of problems, Warner(1965) recommended an  interviewing technique designed to preserve subjects'   privacy while also providing information sought by the interviewer.
+To confront such problems, {cite}`warner1965randomized` recommended an  interviewing technique designed to preserve subjects'   privacy while also providing information sought by the interviewer.
 
 It  uses  **randomized responses** to assure subjects **plausible deniability**.
 
-The idea is to inject noise into the answers from the point of view of the surveyer.
+The idea is to inject noise into respondents' answers from the point of view of the surveyer.
 
 +++
 
 Here is an example of random-response method's application to  estimated population proportions of people who engage in some
-personally dangerous or embarrasing activity.
+personally dangerous or embarrassing activity.
+
+
+As usual, let's bring in the Python modules we'll be using.
+
+
+```{code-cell} ipython3
+import numpy as np
+import pandas as pd
+```
 
 +++
 
@@ -178,7 +202,7 @@ $$
 
 +++
 
-Equations (5) and (6)  that $\hat{\pi}$ is an **unbiased estimator** of $\pi$.
+Equations (5) indicates  that $\hat{\pi}$ is an **unbiased estimator** of $\pi$ while equation (6) tell us the variance of the estimator.
 
 To compute a  confidence intervals, first  rewrite (6) as:
 
