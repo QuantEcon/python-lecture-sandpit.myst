@@ -8,4 +8,8 @@ sections:
 - file: markov_switching_lss
 - file: phelan-townsend-static-smit-v4
 - file: PT_dynamic
+- file: rand_resp0
+- file: util_rand_resp0
+- file: rand_resp
+- file: util_rand_resp
 - file: zreferences
