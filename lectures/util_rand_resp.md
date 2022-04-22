@@ -18,13 +18,13 @@ from sympy import *
 import math
 ```
 
-# Utilitarian Random Response Models
+# Utilitarian Analysis of Random Response Surveys
 
 
 Randomized response surveys in the tradition of Warner {cite}`warner1965randomized` are designed  to protect  respondents' privacy. 
 
 
-Lars Ljungqvist {cite}`ljungqvist1993unified`  proposed  a **utilitarian approach**  to analyze how a respondent's decision to answer truthfully or to lie depends on an expected utility calculation. 
+Lars Ljungqvist {cite}`ljungqvist1993unified`  presented    an analysis of how a respondent's decision about whether to answer truthfully depends on  **expected utility**. 
 
 This notebook describes Ljungqvist's analysis and uses it to design an optimal survey. 
 
@@ -973,7 +973,7 @@ The utilitarian approach, on the other hand, provides the **rigorous framework**
 
 +++
 
-### Achievements of Optimal Model Design
+### Achievements of Optimal Survey Design
 
 +++
 
