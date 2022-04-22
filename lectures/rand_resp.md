@@ -13,33 +13,32 @@ kernelspec:
 
 # Randomized Response Surveys
 
-Social stigmas sometimes set up incentives for people to avoid telling what they really think.
+Social stigmas can make  people prefer to tell the truth when asked about potentially embarrassing activities or opinions. 
 
-To illustrate how social scientists might confront this situation, this lecture follows in the footsteps of S. L. Warner 
+To illustrate how social scientists have thought about learning about such embarrassing activities and opinions,this lecture describes a classic approach  of S. L.  
 Warner {cite}`warner1965randomized`.
 
-We   put elementary  probability to work with the aim of constructing ways to protect the privacy  of **individual** respondents to surveys while still  accurately  estimating  the fraction of a **collection** of individuals   who think that they have a socially stichmatized characteristic, or who know that they engage in a a socially stimatized activity.  
+Warner  put elementary  probability to work with the aim of constructing ways to protect the privacy  of **individual** respondents to surveys while still  accurately  estimating  the fraction of a **collection** of individuals   who think that they have a socially stichmatized characteristic, or who know that they engage in a a socially stimatized activity.  
 
 The idea is to design a survey that assures the respondent that survey taker cannot observe his answer.
 
-{cite}`warner1965randomized` showed how this can be accomplished by injecting **noise** between the respondent's answer and the **signal** about that answer received by the survey taker.  
+Warner's idea was to  add **noise** between the respondent's answer and the **signal** about that answer that the  survey taker ultimately receives.  
 
-Statistical properties of the  noise injection produre can be designed in a way that assures a respondent
-of **plausible deniability**.   
+Statistical properties of the  noise injection procedure can  assure a respondent
+ **plausible deniability**.   
 
 This idea is the central to the design of modern **differential privacy** systems.
 
 (See https://en.wikipedia.org/wiki/Differential_privacy)
 
 
+#### Strategy
 
-## Part I: Background Introduction
 
-During a sample survey, individuals can be reluctant to participate.
+Thus, when people are reluctant to participate a sample survey about personally  sensitive issues,
+they  might decline  to participate, and even if they do participate, they might choose to provide incorrect answers to  sensitive questions.
 
-And  if they do participate, they might choose to provide incorrect answers to  sensitive questions.
-
-These problems induce  **selection**  biases that are difficult to quantify.
+These problems induce  **selection**  biases that make it difficult to trust interpret the survey statistics.
 
 
 To confront such problems, {cite}`warner1965randomized` recommended an  interviewing technique designed to preserve subjects'   privacy while also providing information sought by the interviewer.
@@ -50,8 +49,6 @@ The idea is to inject noise into respondents' answers from the point of view of 
 
 +++
 
-Here is an example of random-response method's application to  estimated population proportions of people who engage in some
-personally dangerous or embarrassing activity.
 
 
 As usual, let's bring in the Python modules we'll be using.
@@ -62,39 +59,29 @@ import numpy as np
 import pandas as pd
 ```
 
-+++
 
-## Part II: Randomized Response Model
 
-+++
-
-### 2.1 Goal
-
-+++
+## The Randomized Response Model
 
 Suppose that every person in population either belongs to Group A or Group B. 
 
-We want to estimate the proportion $\pi$ who belong to Group A .
+We want to estimate the proportion $\pi$ who belong to Group A while protecting individual respondents' privacy.
 
-+++
 
-### 2.2 Random Response Method
-
-+++
+Warner {cite}`warner1965randomized` proposed and analyzed the following procedure.
 
 - A  random sample of $n$ people is drawn with replacement from the population and  each person is interviewed.
 - Draw $n$ random samples from the population with replacement and interview each person.
 - Prepare a **random spinner** that with $p$ probability points to the Letter A and with $(1-p)$ probability points to the Letter B.
-- In each interview, the interviewee spins a random spinner and sees an outcome (A or B)  thatthe interviewer  does **not observe**.
+- In each interview, the interviewee spins a random spinner and sees an outcome (A or B)  that the interviewer  does **not observe**.
 - The interviewee   answers whether he belongs to the group to which the spinner points.
 - If the spinner points to  the group that the spinner  belongs, the interviewee  reports “yes”; otherwise he reports “no”.
-- We assume that interviewee **reports truthfully**.
+- The  interviewee is assumed to  **report truthfully**.
 
-+++
 
-### 2.3 MLE Estimation
 
-+++
+Warner proceeds to construct a maximum  likelihood estimators of the proportion of the population in set A.
+
 
 Let
 
@@ -114,7 +101,7 @@ Let
 
 Index the sample set so that  the first $n_1$ report "yes", while the second $n-n_1$ report "no".
 
-The likelihood function of the sample set is 
+The likelihood function of a sample set is 
 
 +++
 
@@ -173,7 +160,7 @@ $$
 
 +++
 
-We compute the mean and variance of the MLE estimator $\hat \pi$ as:
+We compute the mean and variance of the MLE estimator $\hat \pi$ to be:
 
 +++
 
@@ -202,9 +189,9 @@ $$
 
 +++
 
-Equations (5) indicates  that $\hat{\pi}$ is an **unbiased estimator** of $\pi$ while equation (6) tell us the variance of the estimator.
+Equation (5) indicates  that $\hat{\pi}$ is an **unbiased estimator** of $\pi$ while equation (6) tell us the variance of the estimator.
 
-To compute a  confidence intervals, first  rewrite (6) as:
+To compute a  confidence interval, first  rewrite (6) as:
 
 +++
 
@@ -218,24 +205,20 @@ $$
 
 This equation indicates that the variance of $\hat{\pi}$ can be represented as a sum of the variance due to sampling plus the variance due to the random device.
 
-+++
 
-### 2.4 Analysis of MLE Estimation
-
-+++
 
 From the expressions above we can find that:
 
-- When $p$ is $\frac{1}{2}$, the expression (1) degenerates to a constant.
+- When $p$ is $\frac{1}{2}$, expression (1) degenerates to a constant.
 
 - When $p$ is $1$ or $0$, the randomized estimate degenerates to an estimator without randomized sampling.
 
 
 +++
 
-We shall analyze only discuss the situation when $p \in (\frac{1}{2},1)$
+We shall analyze only discuss the situation in which $p \in (\frac{1}{2},1)$
 
-(the situation when $p \in (0,\frac{1}{2})$ is symmetric).
+(the situation in which $p \in (0,\frac{1}{2})$ is symmetric).
 
 From expressions (5) and (7) we can deduce that: 
 
@@ -243,19 +226,13 @@ From expressions (5) and (7) we can deduce that:
 
 +++
 
-## Part III: Comparison between two methods
+## Comparing two survey designs 
+
+Let's compare the preceding randomized-response method with a stylized non-randomized response method.
 
 +++
 
-### 3.1 Conventional Method
-
-+++
-
-Let's compare a randomized-response method and  conventional non-randomized response method.
-
-+++
-
-In a non-randomized response method, suppose that:
+In our non-randomized response method, we suppose that:
 
 +++
 
@@ -294,15 +271,10 @@ Var(\hat{\pi})&=\frac{ \left[ \pi T_a + (1-\pi)(1-T_b)\right]  \left[1- \pi T_a 
 \end{align}
 $$
 
-+++
 
-### 3.2 Comparisons 
+It is useful to define a
 
-+++
 
-It is useful to define the
-
-+++
 
 $$
 \text{MSE Ratio}=\frac{\text{Mean Square Error Randomized}}{\text{Mean Square Error Regular}}
@@ -310,12 +282,12 @@ $$
 
 +++
 
-We can make compute  MSE Ratios for different surveys and survey designs associated with different parameter values.
+We can compute  MSE Ratios for different surveys and survey designs associated with different parameter values.
 
 +++
 
-The following Python code computes the objects we want for conducting comparisons
-under  different value of $\pi_A$ and $n$:
+The following Python code computes the objects we want to stare at in order to make comparisons
+under  different values of $\pi_A$ and $n$:
 
 ```{code-cell} ipython3
 class Comparison:
@@ -364,7 +336,7 @@ class Comparison:
         return df
 ```
 
-Let's put the code to work when
+Let's put the code to work for parameter values
 
 +++
 
@@ -373,9 +345,9 @@ Let's put the code to work when
 
 +++
 
-We can conduct a comparison by generating MSE Ratios theoretically using the above formulas.
+We can generate MSE Ratios theoretically using the above formulas.
 
-We can also perform a  Monte-Carlo simulation  of the MSE Ratio in this situation:
+We can also perform a  Monte-Carlo simulation  of the MSE Ratio.
 
 ```{code-cell} ipython3
 cp1 = Comparison(0.6,1000)
@@ -388,15 +360,17 @@ df1_mc = cp1.MCsimulation()
 df1_mc
 ```
 
-We can see that in many situations, especially when the bias is not small, the MSE of the randomized-samplijng  methods is smaller than that of the non-randomized sampling method. 
+The theoretical calculations  do a good job of predicting the Monte Carlo results.
 
-Such differences become larger as  $p$ increases.
+We see that in many situations, especially when the bias is not small, the MSE of the randomized-samplijng  methods is smaller than that of the non-randomized sampling method. 
+
+These differences become larger as  $p$ increases.
 
 +++
 
 By adjusting  parameters $\pi_A$ and $n$, we can study outcomes in different situations.
 
-For example, for another situation listed in the PAPER:
+For example, for another situation described in Warner {cite}`warner1965randomized`:
 
 +++
 
@@ -418,7 +392,7 @@ df2_mc = cp2.MCsimulation()
 df2_mc
 ```
 
-We can also revisit a calculation in the  Conclusion of the PAPER in which 
+We can also revisit a calculation in the  concluding section of Warner {cite}`warner1965randomized` in which 
 
 +++
 
@@ -444,36 +418,10 @@ Evidently, as $n$ increases, the randomized response method does  better perform
 
 +++
 
-## Part IV: Conclusion & Discussion
+## Concluding Remarks
 
-+++
+In  quantecon lecture XXXX, we shall describe some alternative randomized response surveys.
 
-### 4.1 Conclusion
+That lecture presents the utilitarian analysis of those alternatives conducted by Lars Ljungqvist
+{cite}`ljungqvist1993unified`.
 
-+++
-
-According to the previous analysis, especially the results of comparison in Part III, we can drow conclusion:
-
-+++
-
-- Randomized method is apt to out-perform the conventional method in many situations.
-
-+++
-
-- The potential advantages of randomizing are even larger for larger samples, especially when the bias is not negligible
-
-+++
-
-### 4.2 Further Discussion
-
-+++
-
-There are some other interesting topics about randomized response method. For example:
-
-+++
-
-- Changing the word the spinner spinning to (for example, "True" or "False" instead of "A" and "B") may generate a different model psychologically, although the statistic model is the same.
-
-+++
-
-- Randomized response models for more than 2 separate groups.

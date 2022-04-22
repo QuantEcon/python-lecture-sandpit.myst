@@ -21,17 +21,10 @@ import math
 # Utilitarian Random Response Models
 
 
-## Part I: Motivation
-
-+++
-
 Randomized response surveys in the tradition of Warner {cite}`warner1965randomized` are designed  to protect  respondents' privacy. 
 
-+++
 
 Lars Ljungqvist {cite}`ljungqvist1993unified`  proposed  a **utilitarian approach**  to analyze how a respondent's decision to answer truthfully or to lie depends on an expected utility calculation. 
-
-+++
 
 This notebook describes Ljungqvist's analysis and uses it to design an optimal survey. 
 
@@ -42,13 +35,17 @@ proposed, for example, by {cite}`lanke1975choice`, {cite}`lanke1976degree`, {cit
 
 +++
 
-## Part II: Proposed Privacy Measures
+## Proposed Privacy Measures
 
 +++
 
-We will introduce some privacy measures which are proposed previously. For simplicity, just consider randomized response models with two possible answers, "yes" and "no." Any such randomizing mechanism determines the probabilities
+Following  Ljungqvist {cite}`ljungqvist1993unified`, this   lecture  describes and analyzied a suite of privacy measures.
 
-+++
+For simplicity, we  consider randomized response models with only  two possible answers, "yes" and "no."
+
+Such a randomizing mechanism determines probabilities
+
+
 
 $$
 \begin{align}
@@ -57,11 +54,10 @@ $$
 \end{align}
 $$
 
-+++
 
 These design probabilities in turn can be used to compute the conditional probability of belonging to the sensitive group $A$ for a given response, say $r$:
 
-+++
+
 
 $$
 \begin{equation}
@@ -69,13 +65,13 @@ $$
 \end{equation}
 $$
 
+
+
+At this point we describe some concepts proposed by various researchers
+
 +++
 
-Then we start to introduce some previous measures:
-
-+++
-
-### 2.1 Leysieffer and Warner(1976)
+###  Leysieffer and Warner(1976) {cite}`leysieffer1976respondent`
 
 +++
 
@@ -157,13 +153,13 @@ $$\text{Pr}(A|\text{no})=0$$
 
 +++
 
-### 2.2 Lanke(1976)
+###  Lanke(1976) {cite}`lanke1976degree`
 
 +++
 
-Lanke(1975) argued that "it is membership in Group A that people may want to hide, not membership in the complementary Group A'."
+Lanke (1975) {cite}`lanke1975choice` argued that "it is membership in Group A that people may want to hide, not membership in the complementary Group A'."
 
-For that reason, Lanke(1976) argued  that ah appropriate measure of protection is to minimize
+For that reason, Lanke (1976) {cite}`lanke1976degree` argued  that ah appropriate measure of protection is to minimize
 
 +++
 
@@ -179,11 +175,11 @@ Holding this measure constant, he explained under what conditions the smallest v
 
 +++
 
-### 2.3 Fligner, Policello, and Singh(1977)
+### 2.3 Fligner, Policello, and Singh {cite}`fligner1977comparison`
 
 +++
 
-Fligner, Policello, and Singh reached similar conclusion as Lanke(1976).
+Fligner, Policello, and Singh reached similar conclusion as Lanke (1976).
 
 They measured "private protection" as
 
@@ -197,11 +193,11 @@ $$
 
 +++
 
-### 2.4 Greenberg, Kuebler, Abernathy, and Horvitz(1977)
+### 2.4 Greenberg, Kuebler, Abernathy, and Horvitz (1977) {cite}`greenberg1977respondent` 
 
 +++
 
-Greenberg, Kuebler, Abernathy, and Horvitz(1977) stressed the importance of examining the risk to respondents who do not belong to $A$ as well as the risk to those who do belong to the sensitive group. 
+Greenberg, Kuebler, Abernathy, and Horvitz (1977) stressed the importance of examining the risk to respondents who do not belong to $A$ as well as the risk to those who do belong to the sensitive group. 
 
 They defined the hazard for an individual in $A$ as the probability that he or she is perceived as belonging to $A$:
 
@@ -227,7 +223,7 @@ $$
 
 +++
 
-Greenberg et al.(1977) also considered an alternative related measure of hazard that "is likely to be closer to the actual concern felt by a respondent."
+Greenberg et al. (1977) also considered an alternative related measure of hazard that "is likely to be closer to the actual concern felt by a respondent."
 
 The "limited hazard" for an individual in $A$ and $A^{'}$ is
 
@@ -257,11 +253,11 @@ This measure is just the first term in $(7)$, i.e., the probability that an indi
 
 +++
 
-## Part III: Utilitarian View of a Respondent's Privacy
+## Utilitarian Analysis of  Respondent's Privacy
 
 +++
 
-### 3.1 Truth Border
+### Truth Border
 
 +++
 
@@ -408,7 +404,7 @@ The source of the positive relationship is:
 
 +++
 
-### 3.2 Drawing  Truth Border
+###  Drawing a  Truth Border
 
 +++
 
@@ -486,11 +482,11 @@ plt.legend(loc=0,fontsize='large')
 plt.title('Figure 1.2')
 ```
 
-## Part IV: Utilitarian View of Survey Design
+## Utilitarian View of Survey Design
 
 +++
 
-### 4.1 Iso-variance Curves
+### Iso-variance Curves
 
 +++
 
@@ -502,7 +498,7 @@ A statistician's objective is
 
 +++
 
-Given a design that ensures truthful answers by all respondents, Anderson(1976, Theorem 1) showed that the minimum variance estimate in the two-response model has the variance
+Given a design that ensures truthful answers by all respondents, Anderson(1976, Theorem 1) {cite}`anderson1976estimation` showed that the minimum variance estimate in the two-response model has variance
 
 +++
 
@@ -555,7 +551,7 @@ From expression $(13)$ and $(14)$ we can see that:
 
 +++
 
-### 4.2 Drawing  Iso-variance Curves
+### Drawing  Iso-variance Curves
 
 +++
 
@@ -632,7 +628,7 @@ var=Iso_Variance(pi=0.3,n=100)
 var.plotting_iso_variance_curve()
 ```
 
-### 4.3 Optimal Survey Design
+### Optimal Survey Design
 
 +++
 
@@ -686,21 +682,21 @@ Here are some comments about the model design:
 
 +++
 
-## Part V: Utilitarian Criticism of Proposed Privacy Measures
+## Utilitarian Criticism of Proposed Privacy Measures
 
 +++
 
-We will use a utilitarian approach to analyze some  privacy measures. 
+We can use a utilitarian approach to analyze some  privacy measures. 
 
 We'll enlist Python Code to help us.
 
 +++
 
-### 5.1 Analysis on the Method of Lanke's (1976)
+###  Analysis of Method of Lanke's (1976)
 
 +++
 
-Lanke(1976) recommends a privacy  protection criterion that minimizes:
+Lanke (1976) recommends a privacy  protection criterion that minimizes:
 
 +++
 
@@ -754,7 +750,7 @@ plt.legend(loc=0,fontsize='large')
 plt.title('Figure 3')
 ```
 
-### 5.2 Method of Leysieffer and Warner (1976)
+### Method of Leysieffer and Warner (1976)
 
 +++
 
@@ -778,11 +774,11 @@ This is  not an optimal  choice under a utilitarian approach.
 
 +++
 
-### 5.3 Analysis on the Method of Chaudhuri and Mukerjee's(1988)
+### Analysis on the Method of Chaudhuri and Mukerjee's (1988) {cite}`Chadhuri_Mukerjee_88`
 
 +++
 
-Chaudhuri and Mukerjee(1988) argued that the individual may find that since "yes" may sometimes relate to the sensitive group A, a clever respondent may falsely but safely always be inclined to respond "no". In this situation, the truth border is such that individuals choose to lie whenever the truthful answer is "yes" and 
+Chaudhuri and Mukerjee (1988) argued that the individual may find that since "yes" may sometimes relate to the sensitive group A, a clever respondent may falsely but safely always be inclined to respond "no". In this situation, the truth border is such that individuals choose to lie whenever the truthful answer is "yes" and 
 
 +++
 
@@ -861,11 +857,11 @@ plt.legend(loc=0,fontsize='large')
 plt.title('Figure 4')
 ```
 
-### 5.4 Method of Greenberg et al. (1977)
+### 5.4 Method of Greenberg et al. (1977) {cite}`greenberg1977respondent`
 
 +++
 
-Greenberg et al.(1977) defined the hazard for an individual in $A$ as the probability that he or she is perceived as belonging to $A$:
+Greenberg et al. (1977) defined the hazard for an individual in $A$ as the probability that he or she is perceived as belonging to $A$:
 
 +++
 
@@ -951,11 +947,11 @@ It ignores the fact that respondents retain the option of lying until they have 
 
 +++
 
-## Part VI: Conclusion
+## Concluding Remarks
 
 +++
 
-### 6.1 Buildup of Utilitarian Approach
+### Utilitarian Approach
 
 +++
 
@@ -977,11 +973,11 @@ The utilitarian approach, on the other hand, provides the **rigorous framework**
 
 +++
 
-### 6.2 Achievement of Optimal Model Design
+### Achievements of Optimal Model Design
 
 +++
 
-Under the utilitarian analysis:
+Under a utilitarian analysis:
 
 +++
 
@@ -991,4 +987,4 @@ Under the utilitarian analysis:
 
 +++
 
-The practical implication of our analysis is that uncertainty about respondents' demands for privacy should be handled by **choosing $\text{Pr}(A|\text{yes})$ and $\text{Pr}(A|\text{no})$ sufficiently close to each other**.
+A practical implication of the  analysis of {cite}`ljungqvist1993unified` is that uncertainty about respondents' demands for privacy should be handled by **choosing $\text{Pr}(A|\text{yes})$ and $\text{Pr}(A|\text{no})$ sufficiently close to each other**.
