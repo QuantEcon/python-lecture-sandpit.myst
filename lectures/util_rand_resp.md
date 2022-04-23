@@ -18,7 +18,10 @@ from sympy import *
 import math
 ```
 
-# Utilitarian Analysis of Random Response Surveys
+# Random Responses and Expected Utilities
+
+
+## Overview
 
 
 Randomized response surveys in the tradition of Warner {cite}`warner1965randomized` are designed  to protect  respondents' privacy. 
@@ -33,9 +36,9 @@ proposed, for example, by {cite}`lanke1975choice`, {cite}`lanke1976degree`, {cit
 {cite}`anderson1976estimation`, {cite}`fligner1977comparison`, {cite}`greenberg1977respondent`,
 {cite}`greenberg1969unrelated`.
 
-+++
 
-## Proposed Privacy Measures
+
+## Privacy Measures
 
 +++
 
@@ -66,6 +69,7 @@ $$
 $$
 
 
+## Zoo of Concepts
 
 At this point we describe some concepts proposed by various researchers
 
@@ -282,13 +286,13 @@ Given $r_i$ and complete privacy,  the individual's utility  is higher if $r_i$ 
 
 +++
 
-In terms of a respondent's well-being as a function of $ \text{Pr}(A|r_i)$ and $r_i$ 
+In terms of a respondent's expected utility as a function of $ \text{Pr}(A|r_i)$ and $r_i$ 
 
 +++
 
-- The higher is $ \text{Pr}(A|r_i)$, the lower individual $i$'s is well-being.
+- The higher is $ \text{Pr}(A|r_i)$, the lower isindividual $i$'s  expected utility.
 
-- Well-being is higher if $r_i$ represents a truthful answer rather than a lie
+- expected utility is higher if $r_i$ represents a truthful answer rather than a lie
 
 +++
 
@@ -298,7 +302,7 @@ Define:
 
 - $\phi_i \in \left\{\text{truth},\text{lie}\right\}$, a dichotomous variable that indicates whether or not $r_i$ is a truthful statement.
 
-- $U_i\left(\text{Pr}(A|r_i),\phi_i\right)$, a utility function that is differentiable in its first argument, summarizes individual $i$'s well-being.
+- $U_i\left(\text{Pr}(A|r_i),\phi_i\right)$, a utility function that is differentiable in its first argument, summarizes individual $i$'s expected utility.
 
 +++
 
@@ -674,7 +678,7 @@ Here are some comments about the model design:
 
 +++
 
-- If  respondents experience a large enough increase in well-being from telling the truth, then there is no need to use a randomized response model. The smallest possible variance of the estimate is then obtained at $\text{ Pr}(A|\text{yes})=1$ and $\text{ Pr}(A|\text{no})=0$ ; that is, when respondents answer truthfully to direct questioning.
+- If  respondents experience a large enough increase in expected utility from telling the truth, then there is no need to use a randomized response model. The smallest possible variance of the estimate is then obtained at $\text{ Pr}(A|\text{yes})=1$ and $\text{ Pr}(A|\text{no})=0$ ; that is, when respondents answer truthfully to direct questioning.
 
 +++
 
@@ -969,7 +973,7 @@ The underlying rationale for the randomized response procedure is that
 
 If the privacy measure is not completely consistent with the rational behavior of the respondents, all efforts to derive an optimal model design will be in vain. 
 
-The utilitarian approach, on the other hand, provides the **rigorous framework** for analyzing respondents' behavior under the assumption that they maximize their well-being.
+The utilitarian approach, on the other hand, provides the **rigorous framework** for analyzing respondents' behavior under the assumption that they maximize their expected utilities.
 
 +++
 

@@ -13,38 +13,31 @@ kernelspec:
 
 # Randomized Response Surveys
 
-Social stigmas can prevent people from confessing   potentially embarrassing activities or opinions. 
 
-To illustrate how social scientists have thought about ferreting out information the prevalence of such embarrassing activities and opinions, this lecture describes a classic approach  of S. L. Warner {cite}`warner1965randomized`.
+## Overview
 
-Warner  put elementary  probability to work with the aim of constructing ways to protect the privacy  of **individual** respondents to surveys while still  accurately  estimating  the fraction of a **collection** of individuals   who think that they have a socially stichmatized characteristic, or who know that they engage in a a socially stimatized activity.  
+Social stigmas can inhibit people from confessing   potentially embarrassing activities or opinions. 
 
-The idea is to design a survey that assures the respondent that survey taker cannot observe his answer.
+When people are reluctant to participate a sample survey about personally  sensitive issues, they  might decline  to participate, and even if they do participate, they might choose to provide incorrect answers to  sensitive questions.
 
-Warner's idea was to  add **noise** between the respondent's answer and the **signal** about that answer that the  survey taker ultimately receives.  
+These problems induce  **selection**  biases that present challenges to interpreting and designing surveys.
 
-Statistical properties of the  noise injection procedure can  assure a respondent  **plausible deniability**.   
+To illustrate how social scientists have thought about estimating the prevalence of such embarrassing activities and opinions, this lecture describes a classic approach  of S. L. Warner {cite}`warner1965randomized`.
 
-This idea is the central to the design of modern **differential privacy** systems.
+Warner  used elementary  probability to construct a  way to protect the privacy  of **individual** respondents to surveys while still    estimating  the fraction of a **collection** of individuals   who have a socially stichmatized characteristic or who engage in  a socially stimatized activity.  
+
+Warner's idea was to  add **noise** between the respondent's answer and the **signal** about that answer that the  survey taker ultimately receives. 
+
+Knowing about the structure of the noise assures the respondent that survey taker does not observe his answer.
+
+Statistical properties of the  noise injection procedure provide the a respondent  **plausible deniability**.   
+
+Related ideas underlie  modern **differential privacy** systems.
 
 (See https://en.wikipedia.org/wiki/Differential_privacy)
 
 
-#### Strategy
-
-
-Thus, when people are reluctant to participate a sample survey about personally  sensitive issues, they  might decline  to participate, and even if they do participate, they might choose to provide incorrect answers to  sensitive questions.
-
-These problems induce  **selection**  biases that make it difficult to trust interpret the survey statistics.
-
-
-To confront such problems, {cite}`warner1965randomized` recommended an  interviewing technique designed to preserve subjects'   privacy while also providing information sought by the interviewer.
-
-It  uses  **randomized responses** to assure subjects **plausible deniability**.
-
-The idea is to inject noise into respondents' answers from the point of view of the surveyer.
-
-+++
+## Warner's Strategy
 
 
 
@@ -55,10 +48,6 @@ As usual, let's bring in the Python modules we'll be using.
 import numpy as np
 import pandas as pd
 ```
-
-
-
-## The Randomized Response Model
 
 Suppose that every person in population either belongs to Group A or Group B. 
 
@@ -71,13 +60,12 @@ Warner {cite}`warner1965randomized` proposed and analyzed the following procedur
 - Draw $n$ random samples from the population with replacement and interview each person.
 - Prepare a **random spinner** that with $p$ probability points to the Letter A and with $(1-p)$ probability points to the Letter B.
 - Each subject spins a random spinner and sees an outcome (A or B)  that the interviewer  does **not observe**.
-- The subject   answers whether he belongs to the group to which the spinner points.
+- The subject   states whether he belongs to the group to which the spinner points.
 - If the spinner points to  the group that the spinner  belongs, the subject   reports “yes”; otherwise he reports “no”.
-- The  subject  is assumed to  **report truthfully**.
+- The  subject answers the question truthfully. 
 
 
-
-Warner proceeds to construct a maximum  likelihood estimators of the proportion of the population in set A.
+Warner constructed a maximum  likelihood estimators of the proportion of the population in set A.
 
 
 Let
@@ -92,7 +80,7 @@ Let
 
 +++
 
-- $X_{i}=\begin{cases}1,\text{ if the } i\text{th} \text{subject  says yes}\\0,\text{ if the } i\text{th} \text{ subject  says no}\end{cases}$
+- $X_{i}=\begin{cases}1,\text{ if the } i\text{th} \ \text{ subject  says yes}\\0,\text{ if the } i\text{th} \ \text{  subject  says no}\end{cases}$
 
 +++
 
@@ -223,7 +211,7 @@ From expressions (5) and (7) we can deduce that:
 
 +++
 
-## Comparing two survey designs 
+## Comparing Two Survey Designs 
 
 Let's compare the preceding randomized-response method with a stylized non-randomized response method.
 
