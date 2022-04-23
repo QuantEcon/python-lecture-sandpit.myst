@@ -18,7 +18,7 @@ from sympy import *
 import math
 ```
 
-# Random Responses and Expected Utilities
+# Expected Utilities of Random Responses 
 
 
 ## Overview
@@ -27,11 +27,11 @@ import math
 Randomized response surveys in the tradition of Warner {cite}`warner1965randomized` are designed  to protect  respondents' privacy. 
 
 
-Lars Ljungqvist {cite}`ljungqvist1993unified`  presented    an analysis of how a respondent's decision about whether to answer truthfully depends on  **expected utility**. 
+Lars Ljungqvist {cite}`ljungqvist1993unified`  analyzed how a respondent's decision about whether to answer truthfully depends on  **expected utility**. 
 
-This notebook describes Ljungqvist's analysis and uses it to design an optimal survey. 
+ 
 
-The notebook uses Ljungqvist's framework to shed light on earlier randomized response survey techniques
+The notebook tells how Ljungqvist  used his  framework to shed light on various randomized response survey techniques
 proposed, for example, by {cite}`lanke1975choice`, {cite}`lanke1976degree`, {cite}`leysieffer1976respondent`,
 {cite}`anderson1976estimation`, {cite}`fligner1977comparison`, {cite}`greenberg1977respondent`,
 {cite}`greenberg1969unrelated`.
@@ -42,11 +42,9 @@ proposed, for example, by {cite}`lanke1975choice`, {cite}`lanke1976degree`, {cit
 
 +++
 
-Following  Ljungqvist {cite}`ljungqvist1993unified`, this   lecture  describes and analyzied a suite of privacy measures.
+We  consider randomized response models with only  two possible answers, "yes" and "no."
 
-For simplicity, we  consider randomized response models with only  two possible answers, "yes" and "no."
-
-Such a randomizing mechanism determines probabilities
+The  design determines probabilities
 
 
 
@@ -257,7 +255,7 @@ This measure is just the first term in $(7)$, i.e., the probability that an indi
 
 +++
 
-## Utilitarian Analysis of  Respondent's Privacy
+##  Respondent's Expected Utility
 
 +++
 
@@ -632,7 +630,7 @@ var=Iso_Variance(pi=0.3,n=100)
 var.plotting_iso_variance_curve()
 ```
 
-### Optimal Survey Design
+### Optimal Survey 
 
 +++
 
@@ -686,7 +684,7 @@ Here are some comments about the model design:
 
 +++
 
-## Utilitarian Criticism of Proposed Privacy Measures
+## Criticisms of Proposed Privacy Measures
 
 +++
 
@@ -861,7 +859,7 @@ plt.legend(loc=0,fontsize='large')
 plt.title('Figure 4')
 ```
 
-### 5.4 Method of Greenberg et al. (1977) {cite}`greenberg1977respondent`
+### Method of Greenberg et al. (1977) {cite}`greenberg1977respondent`
 
 +++
 
@@ -953,13 +951,8 @@ It ignores the fact that respondents retain the option of lying until they have 
 
 ## Concluding Remarks
 
-+++
 
-### Utilitarian Approach
-
-+++
-
-The underlying rationale for the randomized response procedure is that
+The justifications for a randomized response procedure are that
 
 +++
 
@@ -971,24 +964,19 @@ The underlying rationale for the randomized response procedure is that
 
 +++
 
-If the privacy measure is not completely consistent with the rational behavior of the respondents, all efforts to derive an optimal model design will be in vain. 
+If a privacy measure is not completely consistent with the rational behavior of the respondents, all efforts to derive an optimal model design are futile. 
 
-The utilitarian approach, on the other hand, provides the **rigorous framework** for analyzing respondents' behavior under the assumption that they maximize their expected utilities.
+A utilitarian approach provides a systematic way to model respondents' behavior under the assumption that they maximize their expected utilities.
 
-+++
 
-### Achievements of Optimal Survey Design
-
-+++
-
-Under a utilitarian analysis:
+In  a utilitarian analysis:
 
 +++
 
-- Truth border divides the space of conditional probabilities of being perceived as belonging to the sensitive group, $\text{Pr}(A|\text{yes})$ and $\text{Pr}(A|\text{no})$, into the truth-telling region and the lying region.
+- A truth border divides the space of conditional probabilities of being perceived as belonging to the sensitive group, $\text{Pr}(A|\text{yes})$ and $\text{Pr}(A|\text{no})$, into the truth-telling region and the lying region.
 
 - The optimal model design is obtained at the point where the truth border touches the lowest possible iso-variance curve.
 
 +++
 
-A practical implication of the  analysis of {cite}`ljungqvist1993unified` is that uncertainty about respondents' demands for privacy should be handled by **choosing $\text{Pr}(A|\text{yes})$ and $\text{Pr}(A|\text{no})$ sufficiently close to each other**.
+A practical implication of the  analysis of {cite}`ljungqvist1993unified` is that uncertainty about respondents' demands for privacy can be acknowledged by **choosing $\text{Pr}(A|\text{yes})$ and $\text{Pr}(A|\text{no})$ sufficiently close to each other**.

@@ -695,7 +695,7 @@ plt.title(r'$\left\Vert \left(T+1\right)^{-1}\sum_{t=0}^{T+1}\Sigma_{t,x}-T^{-1}
           fontsize=22);
 ```
 
-# Plot simulated time paths
+## Simulated time paths
 
 ```{code-cell} ipython3
 import matplotlib.pyplot as plt
@@ -756,11 +756,11 @@ ax[2, 1].plot(Σ_z);
 ax[2, 1].set_title(r'Time path of $\Sigma_{z}$');
 ```
 
-# Least Squares Regressions
+## Least Squares Regressions
 
 +++
 
-## Regression of $y_t$ on $x_t$
+### Regression of $y_t$ on $x_t$
 
 ```{code-cell} ipython3
 from statsmodels.regression.linear_model import OLS

@@ -32,7 +32,7 @@ set_matplotlib_formats('retina')
 from warnings import filterwarnings
 ```
 
-# 1 The Full-Information Economy
+# 1 Static Version of Phelan-Townsend (1991)
 
 ## 1.1 Setting And Formulation
 
@@ -387,7 +387,9 @@ print(time_tb)
 
 ## 1.3 Solve The Dual Problem
 
-### 1.3.1 `scipy.linprog`
+### 1.3.1 
+
+Let's use the program `scipy.linprog`
 
 ```{code-cell} ipython3
 # Solve the dual problem
@@ -404,7 +406,9 @@ print("nu_2:", round(res_d.x[3], 2))
 print("Time taken(s):", scipy_time)
 ```
 
-### 1.3.2 CVXPY
+### 1.3.2 
+
+Let' use CVXPY
 
 First, let implement the "compact version".
 
@@ -517,7 +521,7 @@ for lib_name, time_val in time_comparison:
 print(time_tb)
 ```
 
-# 2 The Static Unobserved-Action Economy
+## 2 The Static Unobserved-Action Economy
 
 ## 2.1 Setting And Formulation
     
@@ -671,6 +675,7 @@ $$
 $$
 
 subject to 
+
 $$ -\Phi_{yz} + \alpha U_{xz} + \beta_{xy} - \sum_y \beta_{xy} P_{xy} + \gamma + \sum_{x^*} U_{xz} \delta_{xx^*} - \sum_{x^*} U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \delta_{xx^*} \ge 0, \forall x,y,z \\
 \delta_{xx^*} \le 0, \forall x,x^*
 $$
@@ -894,7 +899,7 @@ plt.title("Figure 4\n Full Information Consumption", y=-0.2)
 plt.show()
 ```
 
-# 3 The Static Unobserved-Action Economy(Based on Another Formlation)
+## The Static Unobserved-Action Economy(Based on Another Formlation)
 
 
 ## 3.1 Another Formulation 

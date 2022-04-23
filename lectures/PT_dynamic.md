@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# Section IV
+# Dynamic Version of Phelan-Townsend (1991)
 
 +++
 
