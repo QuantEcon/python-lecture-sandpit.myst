@@ -32,11 +32,15 @@ set_matplotlib_formats('retina')
 from warnings import filterwarnings
 ```
 
-# 1 Static Version of Phelan-Townsend (1991)
+# Static Version of Phelan-Townsend (1991)
 
-## 1.1 Setting And Formulation
+## 
 
-In this section, we consider the social planning problem for an economy with a continuum of identical agents each having an identical but independent production technology taking in an agent's own labour and producing the single consumption good as a function of this labour and an independent shock. 
+This notebook uses several linear programming algorithms to solve the one-period version
+of the Phelan and
+Townsend (1991)  model.  
+
+This version appears in section 1 of {cite}`Phelan_Townsend_91`.
     
 **Setting:**
 
@@ -57,10 +61,11 @@ In this section, we consider the social planning problem for an economy with a c
 - Contract: Such function $\Pi^{w}$ for given $w\in\mathbf{W}$ satisfying certain constraints
 - Allocation: a collection of contracts for each $w$ in the support $d_{0}(w)$ for a given distribution $d_{0}$
 - **Full Information Problem (FIP)**: 
+- 
 $$
 \begin{aligned}
  & \max_{\Pi^w(a,q,c)} s(w)=\sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{C}}(q-c)\Pi^{w}(a, q, c) \\
-s.t. \text{C1:} & w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{C}}U(a,c)\Pi^{w}(a,q,c) \\
+& \textrm{subject to } \\ \text{C1:} & w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{C}}U(a,c)\Pi^{w}(a,q,c) \\
 &\text{(discounted expected utility)} \\ 
 \text{C2:} & \sum_{\mathbf{C}} \Pi^{w}(\bar{a}, \bar{q}, c)=P(\bar{q} \mid \bar{a}) \sum_{\mathbf{Q} \times \mathbf{C}} \Pi^{w}(\bar{a}, q, c), \forall (\bar{a},\bar{q})\in\mathbf{A}\times\mathbf{Q} \\
 & \text{(coincide conditional probability with nature)} \\
@@ -92,15 +97,17 @@ $\Phi = \left( \begin{matrix} \underline{q}-0 & \underline{q}-1 & \underline{q}-
 $u = (0^{0.5},1^{0.5},4^{0.5},5^{0.5})'$.
 
 Then FIP can be written as:
+
 $$
 \begin{aligned}
 & \max_{\Pi_{xy} \ge 0} \ \sum_{xy} \Pi_{xy} \Phi_{xy} \\
-s.t. \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
+& \textrm{subject to} \\ \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
 \text{C2:} & \ \sum_{y=1}^M \Pi_{1 y} = P(\underline{q}|a=0) \sum_{xy}\Pi_{xy} \\
 & \ \sum_{y=1}^M \Pi_{2 y} = P(\overline{q}|a=0) \sum_{xy}\Pi_{xy} \\
 \text{C3:} & \  \sum_{xy}\Pi_{xy} = 1 \\
 \end{aligned}
 $$
+
 where, $N=2,M=4$.
 
 This is equivalent to:
@@ -108,7 +115,7 @@ This is equivalent to:
 $$
 \begin{aligned}
 & \max_{\Pi_{xy} \ge 0} \ \sum_{xy} \Pi_{xy} \Phi_{xy} \\
-s.t. \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
+& \textrm{subject to } \\  \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
 \text{C2:} & \ \sum_{y=1}^M \Pi_{1 y} = P(\underline{q}|a=0) \cdot 1 = \frac{1}{2} \\
 & \ \sum_{y=1}^M \Pi_{2 y} = P(\overline{q}|a=0) \cdot 1 = \frac{1}{2}\\
 \text{C3:} & \  \sum_{xy}\Pi_{xy} = 1 \\
@@ -122,7 +129,7 @@ We can rewrite this in the compact matrix form as follow:
 $$
 \begin{aligned}
 & \max_{\Pi_{xy} \ge 0} \ Tr (\Pi' \Phi)\\
-s.t. \text{C1:} & \ \mathbf{1}_2' \cdot \Pi \cdot u = w \\
+& \textrm{subject to} \\ \text{C1:} & \ \mathbf{1}_2' \cdot \Pi \cdot u = w \\
 \text{C2:} & \ \Pi \cdot \mathbf{1}_4 = p \\
 \text{C3:} & \ \mathbf{1}_2' \cdot \Pi \cdot \mathbf{1}_4 = 1 \\
 \end{aligned}
@@ -134,8 +141,9 @@ Using vectorizing and Kronecker product, FIP can be formulated as:
 
 $$
 \begin{aligned}
-\max_{z \ge 0} & \ vec(\Phi)' z\\
-s.t. \text{C1:} & \ (u' \otimes \mathbf{1}_2') \cdot z = w \\
+\max_{z \ge 0} & \ vec(\Phi)' z\\ 
+& \textrm{subject  to}\\ 
+\text{C1:} & \ (u' \otimes \mathbf{1}_2') \cdot z = w \\
 \text{C2:} & \ (\mathbf{1}_4' \otimes \mathbf{I}_2) \cdot z = p \\
 \text{C3:} & \ (\mathbf{1}_4' \otimes \mathbf{1}_2) \cdot z = 1 \\
 \end{aligned}
@@ -595,7 +603,7 @@ As for the dual problem, although formulating three formulations' dual problems 
 $$
 \begin{aligned}
 & \min_{\Pi_{xyz}} \ -\sum_x \sum_y \sum_z \Pi_{xyz} \Phi_{yz} \\
-s.t. \text{C1:} & \ \sum_x \sum_y \sum_z  U_{xz} \Pi_{xyz} = w\\
+& \textrm{subject to} \\  \text{C1:} & \ \sum_x \sum_y \sum_z  U_{xz} \Pi_{xyz} = w\\
 \text{C2:} & \ \sum_z \Pi_{xyz} - P_{xy} \sum_y \sum_z \Pi_{xyz} = 0, \forall x,y \\
 \text{C3:} & \ \sum_x \sum_y \sum_z \Pi_{xyz} = 1 \\
 \text{C4:} & \ \sum_y \sum_z U_{xz}\Pi_{xyz} = \sum_y \sum_z U_{x^* z} \frac{P_{x^* y}}{P_{xy}} \Pi_{x,y,z} + s_{xx^*}, \forall x, x^* \\
@@ -910,8 +918,9 @@ $$
 \max_{\Pi^{w}} & \sum_{\{0,0.2,0.4,0.6\}\times\{1,2\}\times\{0.028125n, n=0,1,\cdots,80\}} (q-c)\Pi^{w}(a,q,c) \\
 \end{aligned}
 $$
-    
-s.t.
+
+subject to    
+
 $$
 \begin{aligned}
 C1: \quad& w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{C}}U(a,c)\Pi^{w}(a,q,c) \\
@@ -950,7 +959,7 @@ Then the  problem is:
 $$
 \begin{aligned}
 \max_{\Pi \geq 0} \quad & \mathbf{1}_{l\times1}^{'}\Pi\Phi' \\
-\text{s.t.} \quad 
+& \textrm {subject to } \\  
 C1: \quad & \text{tr}(\Pi U') = w \\
 C2: \quad & \Pi(I_{m\times m}\otimes \mathbf{1}_{n\times 1}) = \tilde{\mathbf{P}}\times(\Pi\mathbf{1}_{(mn)\times 1}\mathbf{1}_{m\times1}^{'})\\
 C3: \quad & \mathbf{1}_{l\times 1}^{'}\Pi\mathbf{1}_{(mn)\times 1} = 1 \\

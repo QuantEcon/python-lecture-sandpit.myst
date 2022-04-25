@@ -11,34 +11,41 @@ kernelspec:
   name: python3
 ---
 
-# Mechanism Design with Lotteries
+# Repeated Moral Hazard
 
 ## Spear and Srivastava
 
-Spear and Srivastava (1987) {cite}`Spear_Srivastava_87` introduced the following
+Spear and Srivastava (1987) {cite}`Spear_Srivastava_87` presented the following
 recursive formulation of an infinitely repeated, discounted  repeated
 principal-agent problem.
 
 *  A **principal** owns a technology
-that produces output $q_t$ at time $t$, where $q_t$ is determined
-by a family of c.d.f.'s  $F(q_t\vert a_t)$
-*  $a_t$ is an action taken at the beginning of $t$ by an **agent** who
+that produces output $q_t$ at time $t$ according to a probability distribution $F$ that depends on the action $a_t$ of an **agent**.
+*  $q_t$ is determined by a family of c.d.f.'s  $F(q_t\vert a_t)$
+*  $a_t$ is an action taken at the beginning of $t$ by the **agent** who
 operates the technology.  
+*  The principal  does not observe $a_t$ but does observe $q_t$ at the end of period $t$, ane the principal remembers earlier $q_{t-j}$'s.
 *  The principal has access to an outside loan market with constant risk-free gross interest rate $\beta^{-1}$.
 *  The agent has preferences over consumption streams ordered by $E_0 \sum^\infty_{t=0} \beta^t u(c_t, a_t).$
 *  The principal is risk neutral and offers a contract to
-the agent designed to maximize $E_0 \sum^\infty_{t=0} \beta^t \{q_t - c_t\}$
+the agent  that the principal designs to maximize $E_0 \sum^\infty_{t=0} \beta^t \{q_t - c_t\}$
 where $c_t$ is the principal's payment to the agent at $t$.
+
+The principal designs a  contract that he offers to offer an agent.  
+
+A **contract**  $\sigma$ is a sequence of functions $\sigma_t$ whose $t$th component maps the history $q^{t-1} = q_{t-1}, q_{t-2}, \ldots , q_0$ of past outputs observed at time $t$ into a recommended time $t+1$ action $a_t$.  
+
+Spear and Srivastava (1987) {cite}`Spear_Srivastava_87` described a recursive formulation of an optimal contract.
+
 
 
 ### Timing
-Let $w$ denote the discounted utility promised to the agent
-at the beginning of the period.  
+Let $w$ denote the discounted present value of expected utility promised to the agent
+at the beginning of a period.  
 
-Given $w$, the principal
-selects three functions $a(w)$, $c(w,q)$, and $\tilde w(w,q)$ that 
-determie the current action $a_t=a(w_t)$,
-the current consumption $c_t=c(w_t, q_t)$, and a promised
+Given $w$, the principal designs three functions $a(w)$, $c(w,q)$, and $\tilde w(w,q)$ that 
+determine  current action $a_t=a(w_t)$,
+ current consumption $c_t=c(w_t, q_t)$, and a promised next period expected discounted 
 utility $w_{t+1} = \tilde w (w_t, q_t)$.
 
 The principal's choice of the three functions $a(w)$, $c(w,q)$, and $\tilde w (w,q)$
@@ -76,6 +83,11 @@ $$ (eq:eq3)
 
 where the maximization is over functions $a(w)$, $c(w,q)$, and $\tilde w(w,q)$
 and is subject to the constraints {eq}`eq:eq1` and {eq}`eq:eq2`.
+
+Notice that constraint {eq}`eq:eq1` itself takes the form of a Bellman equation.
+
+So a value function $w$ that satisfies a Bellman equation   is an argument of Bellman equation {eq}`eq:eq3`.
+
 This value function $v(w)$ and the associated optimum policy functions
 are to be solved by iterating on the Bellman equation {eq}`eq:eq3`.
 
@@ -86,7 +98,7 @@ constraints might make the constraint set fail to
 be convex. 
 
 Phelan and
-Townsend (1991) {cite}`Phelan_Townsend_91` circumvented this problem  by convexifying the constraint set through **randomization**.
+Townsend (1991) {cite}`Phelan_Townsend_91` circumvented this problem  by using **randomization** to  convexify the constraint set.
 
 Phelan and Townsend alter the problem by extending the
 principal's choice to a space of lotteries
@@ -95,7 +107,7 @@ over actions $a$ and outcomes $c,w'$.
 To introduce Phelan and Townsend's formulation, let $P(q\vert a)$ be
 a family of discrete conditional probability distributions
 over discrete spaces of outputs and actions $Q,A$, and
-suppose that consumption and values are also constrained to
+suppose that consumption and  continuation values are also both constrained to
 lie in discrete spaces $C,W$, respectively.
 
 Phelan and Townsend's principal 
