@@ -3,6 +3,7 @@ root: index
 options:
   numbered: true
 sections:
+- file: prob_matrix
 - file: PT_intro
 - file: PT_static
 - file: PT_dynamic
