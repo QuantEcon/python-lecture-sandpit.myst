@@ -3,6 +3,7 @@ root: index
 options:
   numbered: true
 sections:
+- file: ar1_turningpts
 - file: prob_matrix
 - file: PT_intro
 - file: PT_static
