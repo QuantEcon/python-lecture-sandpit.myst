@@ -146,7 +146,7 @@ $$
 
 whose elements are
 $$
-f_{ij}=Prob\{X=i,Y=j\}\ge0, \sum_{i}\sum_{j}f_{ij}=1
+f_{ij}=\textrm{Prob}\{X=i,Y=j\}\ge0, \sum_{i}\sum_{j}f_{ij}=1
 $$
 
 +++
@@ -156,10 +156,10 @@ $$
 The joint distribution can imply the marginal distribution for each random variable in the following way:
 
 $$
-Prob\{X=i\}= \sum_{j=0}^{J-1}f_{ij} = \mu_i, i=0,\ldots,I-1, $$
+\textrm{Prob}\{X=i\}= \sum_{j=0}^{J-1}f_{ij} = \mu_i, i=0,\ldots,I-1, $$
 
 $$
-Prob\{Y=j\}= \sum_{i=0}^{I-1}f_{ij} = \nu_i, i=0,\ldots,J-1$
+\textrm{Prob}\{Y=j\}= \sum_{i=0}^{I-1}f_{ij} = \nu_i, i=0,\ldots,J-1$
 $$
 
 **Remark:** If the two random variables $X,Y$ are continuous and admit joint density $f(x,y)$, then  marginal distributions can be computed by 
@@ -273,7 +273,7 @@ $$
 \end{aligned} 
 $$
 
-And for a continuous random variable (a random variable that admits a density, say $f_{X}(x)$), its mean and variance are given by
+For a continuous random variable (a random variable that admits a density, say $f_{X}(x)$), its mean and variance are given by
 
 $$
 \begin{aligned}
@@ -1015,7 +1015,7 @@ Let's approximate  the joint density by discretizing and mapping the approximati
 
 we can compute the discretized marginal density  by just using matrix algebra and  noting that 
 
-$$Prob\{X=i|Y=j\}=\frac{f_{ij}}{\sum_{i}f_{ij}}$$
+$$\textrm{Prob}\{X=i|Y=j\}=\frac{f_{ij}}{\sum_{i}f_{ij}}$$
 
 +++
 
@@ -1094,7 +1094,7 @@ Evidently, $Z$ takes values from $\bar{Z}$ defined below.
 $$
 \begin{aligned} \bar{X} & =\{0,1,\ldots,I-1\};\qquad f_i= \textrm{Prob} \{X=i\}\\
 \bar{Y} & =\{0,1,\ldots,J-1\};\qquad g_j= \textrm{Prob}\{Y=j\}\\
-Z& =\{0,1,\ldots,I+J-2\};\qquad h_k=  \textrm{Prob} \{X+Y=k\}
+\bar{Z}& =\{0,1,\ldots,I+J-2\};\qquad h_k=  \textrm{Prob} \{X+Y=k\}
 \end{aligned}
 $$
 
@@ -1107,14 +1107,20 @@ h_k& =f_0g_k+f_1g_{k-1}+\ldots+f_{k-1}g_1+f_kg_0 \qquad \text{for}\quad k=0,1,\l
 $$
 
 Thus, we have:
+
 $$ 
-h_k=\sum_{i=0}^{k} f_ig_{k-i} \equiv f*g \quad\textrm{ convolution of } f,g \textrm{ sequence}
+h_k=\sum_{i=0}^{k} f_ig_{k-i} \equiv f*g 
 $$
 
-Similarly, for any two random variables $X,Y$ that admit densities $f_{X}, g_{Y}$, the density of $Z=X+Y$ is given by
+where $f * g$ denotes the **convolution** of the  $f$ and $g$ sequences.
+
+Similarly, for any two random variables $X,Y$ that admit densities $f_{X}, g_{Y}$, the density of $Z=X+Y$ is 
+
 $$
 f_{Z}(z)=\int_{-\infty}^{\infty} f_{X}(x) f_{Y}(z-x) dx \equiv f_{X}*g_{Y}
 $$
+
+where $ f_{X}*g_{Y}$ denotes the **convolution** of the $f_X$ and $g_Y$ functions.
 
 
 +++
@@ -1290,38 +1296,49 @@ plt.hist(x_g, bins=150, density=True, alpha=0.6)
 plt.show()
 ```
 
-## What probility means? 
+## What Does Probility Mean? 
 
-UP to now, we e have been discussing fixed "population" probabilities. 
+Up to now, we  have been discussing fixed "population" probabilities. 
+
+These are purely mathematical objects.
+
+To appreciate how statisticians connect probabilities to data, the key is to understand the following concepts:
 
 To understand what "probability"  means, we next discuss the following concepts.
 
-**Concepts to discuss:**
-* Fixed probability distribution
-* Repeated independent and identically distributed (i.i.d.)  draws of "samples" or "realizations"
-* Statistic: function of sequence of samples
-* empirical distribution $\to$ relative frequence
-* population distribution $\to$ what we anticipate relative frequencies will be in a long sequence of i.i.d. draws
-* **Law of Large Numbers (LLN)**
-* **Central Limit Theorem (CLT)** and roles they play
 
+* A single random draw from a probability distribution
+* Repeated independent and identically distributed (i.i.d.)  draws of "samples" or "realizations" from the same probability distribution
+* A **statistic** defined as a  function of a sequence of samples
+* An **empirical distribution** or **histogram** (a binned empirical distribution) that records observed  **relative frequencies**
+* The idea that a  population probability  distribution is  what we anticipate **relative frequencies** will be in a long sequence of i.i.d. draws. Here the following mathematical machinery makes precise what is meant by **anticipated relative frequencies** 
+     - **Law of Large Numbers (LLN)**
+     -  **Central Limit Theorem (CLT)** 
 +++
 
-##### Scalar example:
-Consider the following discrete distribution.
+##### Scalar example
+
+
+Consider the following discrete distribution
+
 $$ 
 X  \sim \{{f_i}\}_{i=0}^{I-1},\quad f_i \geqslant 0, \quad \sum_i f_i = 1
 $$
 
 Draw a sample $x_0, x_1, \dots , x_{N-1}$, $N$ draws of $X$ from $\{f_i\}^I_{i=1}$.
-What does IID mean & imply?
-- "identical" means each draw is from the same distribution.
-- "independent" means the joint distribution is equal to the product of marginal distributions, i.e.,
 
-\begin{align}
+What do the "identical" and "independent" mean in   IID or iid ("identically and independently distributed)?
+
+- "identical" means that each draw is from the same distribution.
+- "independent" means that the joint distribution  equal tthe product of marginal distributions, i.e.,
+
+$$
+\begin{aligned}
 \textrm{Prob}\{x_0 = i_0, x_1 = i_1, \dots , x_{N-1} = i_{N-1}\} &= \textrm{Prob}\{x_0 = i_0\} \cdot \dots \cdot \textrm{Prob}\{x_{I-1} = i_{I-1}\}\\
 &= f_{i_0} f_{i_1} \cdot \dots \cdot f_{i_{N-1}}\\
-\end{align}
+\end{aligned}
+$$
+
 
 
 Consider the empirical distribution:
@@ -1332,33 +1349,39 @@ N & = \sum^{I-1}_{i=0} N_i \quad \text{total number of draws},\\
 \tilde {f_i} &  = \frac{N_i}{N} \sim \ \text{frequency of draws for which}\  X=i
 \end{align} 
 
-**LLN:** $\tilde {f_i} \to f_i \text{ as } N \to \infty$
+**LLN:** 
 
-**CLT:** describes a  **rate** at which $\tilde {f_i} \to f_i$
+  - A Law of Large Numbers (LLN) states that $\tilde {f_i} \to f_i \text{ as } N \to \infty$
+
+**CLT:** 
+
+   - A Central Limit Theorem (CLT) describes a  **rate** at which $\tilde {f_i} \to f_i$
 
 
-Remark: For "frequentist" statisticians, this is **all** probability means (relative frequencies).
+**Remark:** For "frequentist" statisticians, **anticipated relative frequency**  is **all** that a probability distribution means. But for a Bayesian it means something more or different.
 
 +++
 
 ## Transition Probability Matrix
 
-Consider the below joint probability with two scalars.
+Consider the following joint probability distribution of  two random variables.
 
 Let $X,Y$ be discrete random variables with joint distribution
+
 $$
 \textrm{Prob}\{X=i,Y=j\} = \rho_{ij}
 $$
-where $i = 0,\dots,I-1; j = 0,\dots,J-1$. And,
+where $i = 0,\dots,I-1; j = 0,\dots,J-1$ and 
 
 $$
 \sum_i\sum_j \rho_{ij} = 1, \quad \rho_{ij} \geqslant 0.
 $$
 
-Conditional distribution:
+An associated conditional distribution is 
+
 $$
 \textrm{Prob}\{Y=i\vert X=j\} = \frac{\rho_{ij}}{ \sum_{i}\rho_{ij}}
-= \frac{Prob\{Y=j, X=i\}}{Prob\{ X=i\}}
+= \frac{\textrm{Prob}\{Y=j, X=i\}}{\textrm{Prob}\{ X=i\}}
 $$
 
 +++
@@ -1370,6 +1393,8 @@ $$
 p_{ij}=\textrm{Prob}\{Y=j|X=i\}= \frac{\rho_{ij}}{ \sum_{j}\rho_{ij}}
 $$
 
+where 
+
 $$
 \left[
    \begin{matrix}
@@ -1378,24 +1403,32 @@ $$
   \end{matrix}
 \right]
 $$
+
 The first row is the probability of $Y=j, j=0,1$ conditional on $X=0$.
 
 The second row is the probability of $Y=j, j=0,1$ conditional on $X=1$.
 
-Note: 
-- $\sum_{j}\rho_{ij}= \frac{ \sum_{j}\rho_{ij}}{ \sum_{j}\rho_{ij}}=1$, so each row of $\rho$ is a probability distribution (not so for each column).
+Note that 
+- $\sum_{j}\rho_{ij}= \frac{ \sum_{j}\rho_{ij}}{ \sum_{j}\rho_{ij}}=1$, so each row of $\rho$ is a probability distribution (not so for each column.
 
 +++
 
 ## Coupling
-#### Joint distribution:
-\begin{align}
+
+
+Start with a joint distribution
+
+$$
+\begin{aligned}
 f_{ij} & =\textrm{Prob}\{X=i,Y=j\}\\
 i& =0,……，I-1\\
 j& =0,……，J-1\\
 & \text{stacked to an }I×J\text{ matrix}\\
 & e.g. \quad I=1, J=1
-\end{align}
+\end{aligned}
+$$
+
+where 
 
 $$
 \left[
@@ -1406,36 +1439,44 @@ $$
 \right]
 $$
 
-From the joint distribution, we can obtain **unique** marginal distributions as above. 
+From the joint distribution, we have shown above that we  obtain **unique** marginal distributions. 
 
-But from two marginal distributions, can we recover a joint distribution? - Yes, but not unique.
+Now we'll try to go in a reverse direction.
+
+We'll find that from two marginal distributions, can we usually construct more than one   joint distribution that verifies these marginals.
+
+Each of these joint distributions is called a **coupling** of the two martingal distributions.
 
 +++
 
-#### Marginal distributions:
-\begin{align}
-\textrm{Prob}\{X=i\} &=  \sum_{j}f_{ij}=\mu_{i}, i=0,……,I-1\\
-\textrm{Prob}\{Y=j\}&=  \sum_{j}f_{ij}=\nu_{j}, j=0,……,J-1
-\end{align}
+Let's start with marginal distributions
+
+$$
+\begin{aligned}
+\textrm{\textrm{Prob}}\{X=i\} &=  \sum_{j}f_{ij}=\mu_{i}, i=0,……,I-1\\
+\textrm{\textrm{Prob}}\{Y=j\}&=  \sum_{j}f_{ij}=\nu_{j}, j=0,……,J-1
+\end{aligned}
+$$
 
 Given two marginal distribution, $\mu$ for $X$ and $\nu$ for $Y$, a joint distribution $f_{ij}$ is said to be a **coupling** of $\mu$ and $\nu$.
 
 **Example:**
 
 Consider the following bivariate example.
+
 $$
-\begin{align}
-\textrm{Prob}\{X=0\}= & 1-q  =\mu_{0}\\
-\textrm{Prob}\{X=1\}=& q  =\mu_{1}\\
-\textrm{Prob}\{Y=0\}=& 1-r  =\nu_{0}\\
-\textrm{Prob}\{Y=1\}= & r  =\nu_{1}\\
+\begin{aligned}
+\textrm{\textrm{Prob}}\{X=0\}= & 1-q  =\mu_{0}\\
+\textrm{\textrm{Prob}}\{X=1\}=& q  =\mu_{1}\\
+\textrm{\textrm{Prob}}\{Y=0\}=& 1-r  =\nu_{0}\\
+\textrm{\textrm{Prob}}\{Y=1\}= & r  =\nu_{1}\\
 \textrm{where }0≤q<r≤1
-\end{align}
+\end{aligned}
 $$
 
 +++
 
-We can construct  two couplings.
+We'll now construct  two couplings.
 
 The first coupling if our two marginal distributions is the joint distribution
 
@@ -1449,20 +1490,24 @@ $$f_{ij}=
 $$
 
 To verify that it is a coupling, we check that 
-\begin{align}
+
+$$
+\begin{aligned}
 (1-q)(1-r)+(1-q)r+q(1-r)+qr &=1\\
 \mu_{0}= (1-q)(1-r)+(1-q)r & =1-q\\
 \mu_{1}= q(1-r)+qr & =q\\
 \nu_{0}= (1-q)(1-r)+(1-r)q& =1-r\\
 \mu_{1}= r(1-q)+qr& =r
-\end{align}
+\end{aligned}
+$$
 
 +++
 
 A second coupling of our two marginal distributions is the joint distribution
 
 
-$$f_{ij}=
+$$
+f_{ij}=
 \left[
    \begin{matrix}
 (1-r)&r-q\\
@@ -1471,15 +1516,17 @@ $$f_{ij}=
 \right]
 $$
 
-The verify this we check that
+The verify that this is a coupling, note that
 
-\begin{align}
+$$
+\begin{aligned}
 1-r+r-q+q &=1\\
 \mu_{0}& = 1-q\\
 \mu_{1}& = q\\
 \nu_{0}& = 1-r\\
 \nu_{1}& = r
-\end{align}
+\end{aligned}
+$$
 
 Thus, our two proposed joint distributions have the same marginal distributions.
 
@@ -1500,7 +1547,7 @@ Suppose that $X_1, X_2, \dots, X_n$ are $N$ random variables  and that
   
   * their joint distribution is $H(x_1,x_2,\dots,x_N)$
   
-Then there exists a **copula function** $C(\cdot)$  such that
+Then there exists a **copula function** $C(\cdot)$  that verifies
 
 $$
 H(x_1,x_2,\dots,x_N) = C(F_1(x_1), F_2(x_2),\dots,F_N(x_N)).
@@ -1518,21 +1565,26 @@ $F_1(x_1), F_2(x_2),\dots,F_N(x_N)$ and a copula function $C(\cdot)$, the functi
 Thus, for given marginal distributions, we can use  a copula function to determine a joint distribution when the associated univariate  random variables are not independent. 
 
 
-A copula function can be used to characterize the **dependence** of univariate random variables.
+Copula functions are often used to characterize **dependence** of  random variables.
 
 +++
 
 **Discrete marginal distribution**
 
+TOM -- REWRITE OR MAYBE DROP PARTS OF 
+
 If no copula function is given, there could be more than one copulings for two given mariginal distributions.
 
 For example, consider two  random variables $X, Y$ with distributions
-\begin{align}
-\textrm{Prob}(X = 0)& = 0.6,\\
-\textrm{Prob}(X = 1) &= 0.4,\\
-\textrm{Prob}(Y = 0)& = 0.3,\\
-\textrm{Prob}(Y = 1) &= 0.7,
-\end{align}
+
+$$
+\begin{aligned}
+\textrm{\textrm{Prob}}(X = 0)& = 0.6,\\
+\textrm{\textrm{Prob}}(X = 1) &= 0.4,\\
+\textrm{\textrm{Prob}}(Y = 0)& = 0.3,\\
+\textrm{\textrm{Prob}}(Y = 1) &= 0.7,
+\end{aligned}
+$$
 
 For these two random variables there can be more than one coupling.
 
@@ -1588,6 +1640,7 @@ $$
 $$
 
 where
+
 $$
 [f_{ij}] = \left[\begin{array}{cc}
 0.18 & 0.42\\
@@ -1757,7 +1810,7 @@ Suppose that
 
 $$
 \begin{align}
-\textrm{Prob}\{X(0)=i,X(1)=j\} &=f_{ij}≥0，i=0,……,I-1\\
+\textrm{\textrm{Prob}}\{X(0)=i,X(1)=j\} &=f_{ij}≥0，i=0,……,I-1\\
 \sum_{i}\sum_{j}f_{ij}&=1
 \end{align}
 $$
@@ -1766,7 +1819,7 @@ $f_{ij} $ is a joint distribution over $[X(0), X(1)]$.
 
 A conditional distribution is
 
-$$\textrm{Prob}\{X(1)=j|X(0)=i\}= \frac{f_{ij}}{ \sum_{j}f_{ij}}$$
+$$\textrm{\textrm{Prob}}\{X(1)=j|X(0)=i\}= \frac{f_{ij}}{ \sum_{j}f_{ij}}$$
 
-Remark: 
+**Remark:** 
 - This is a key formula for  a theory of optimally predict a time series.
