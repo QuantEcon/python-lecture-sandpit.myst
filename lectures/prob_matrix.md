@@ -13,11 +13,18 @@ kernelspec:
 
 # Elementary Probability with Matrices
 
-+++
+This lecture uses matrix algebra to describe some basic ideas about probability theory.
 
-## A Scalar Random variable
+After giving more or less informal definitions of the underlying objects, we'll use matrices and vectors to describe probability distributions.
 
 
+
+
+## Sketch of Basic Concepts
+
+We'll briefly define what we mean by a **probability space**, a **probability measure**, and a **random variable**. 
+
+For most of this lecture, we sweep these objects into the background, but they are there underlying the other objects that we'll mainly focus on.
 
 
 
@@ -28,31 +35,44 @@ Let $\Omega$ be a set of possible underlying outcomes and let $\omega \in \Omega
 
 Let $\mathcal{G} \subset \Omega$ be a subset of $\Omega$. 
 
-A **probability measure** $\mu$ maps a set of possible underlying outcomes  $\mathcal{G}$  into a scalar number between $0$ and $1$ - this is the "probability" that $X$ belongs to $A$, denoted by $ \textrm{Prob}\{X\in A\}$.
+Let $\mathcal{F}$ be a collection of such subsets  $\mathcal{G} \subset \Omega$. 
+
+The pair $\Omega,\mathcal{F}$  forms our probability space.  
+
+A **probability measure** $\mu$ maps a set of possible underlying outcomes  $\mathcal{G} \in \mathcal{F}$  into a scalar number between $0$ and $1$
+
+ - this is the "probability" that $X$ belongs to $A$, denoted by $ \textrm{Prob}\{X\in A\}$.
 
 A **random variable** $X(\omega)$ is a function of the underlying outcome $\omega \in \Omega$.
 
-Let's start by considering a **continuous** random variable.
 
-It  has a **probability distribution** that is induced by the underlying probability measure $\mu$ and the function
+The random variable $X(\omega)$  has a **probability distribution** that is induced by the underlying probability measure $\mu$ and the function
 $X(\omega)$:
 
 $$ 
-\textrm{Prob} (X \in A) = \int_{\mathcal{G}} \mu(\omega) d \omega 
+\textrm{Prob} (X \in A ) = \int_{\mathcal{G}} \mu(\omega) d \omega 
 $$
 
 where ${\mathcal G}$ is subset of $\Omega$ for which $X(\omega) \in A$.
 
+We call this the induced probability distribution of random variable $X$.
+
+
+## Working Directly with Random Variables and Their Induced Probability Distributions
+
  
 
-The  probability distribution $\textrm{Prob} (X \in A)$ can  be described by its **cumulative distribution function (CDF)** defined as 
+A  probability distribution $\textrm{Prob} (X \in A)$ can  be described by its **cumulative distribution function (CDF)** defined as 
 
-$$F_{X}(x) = \textrm{Prob}\{X\leq x\}. $$
+$$
+F_{X}(x) = \textrm{Prob}\{X\leq x\}. 
+$$
 
 Sometimes, but not always, a random variable can also be described by  **density function** $f(x)$ 
 that is related to its CDF by
 
 $$ \textrm{Prob} \{X\in B\} = \int_{t\in B}f(t)dt$$
+
 $$F(x) = \int_{-\infty}^{x}f(t)dt$$
 
 Here $B$ is a set of possible $X$'s whose probability we want to compute.
@@ -76,6 +96,7 @@ In this case,
 
 
 ### Discrete random variable
+
 Let $X$ be a discrete random variable that takes possible values: $i=0,1,\ldots,I-1 = \bar{X}$. 
 
 Here, we choose  the maximum index $I-1$ because of how this aligns nicely with Python's index convention.
