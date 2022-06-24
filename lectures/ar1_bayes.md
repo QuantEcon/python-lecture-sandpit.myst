@@ -96,10 +96,7 @@ An example below shows how not conditioning on $y_0$ adversely shifts the poster
 ```{code-cell} ipython3
 :tags: [hide-output]
 
-%pip install arviz
-%pip install pymc
-%pip install numpyro
-%pip install jax
+!pip install arviz pymc numpyro jax
 ```
 
 ```{code-cell} ipython3
