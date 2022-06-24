@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-## Posterior Distributions for parameters of an AR(1) Model
+## Posterior Distributions for  AR(1) Parameters
 
 
 +++
