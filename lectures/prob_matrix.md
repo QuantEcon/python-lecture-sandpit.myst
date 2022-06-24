@@ -13,9 +13,24 @@ kernelspec:
 
 # Elementary Probability with Matrices
 
-This lecture uses matrix algebra to describe some basic ideas about probability theory.
+This lecture uses matrix algebra to illustrate some basic ideas about probability theory.
+
+
 
 After giving more or less informal definitions of the underlying objects, we'll use matrices and vectors to describe probability distributions.
+
+Concepts that we'll be using matrix algebra to illustrate include
+
+ - a joint probability distribution 
+ - marginal distributions associated with a given joint distribution
+ - conditional probability distributions
+ - statistical independence of two random variables
+ - joint distributions associated with a prescribed set of marginal distributions
+     - couplings
+     - copulas
+ - the probability distribution of a sum of two independent random variables as a convolution of two marginal distributions
+ - parameters that define a probability distribution
+ - sufficient statistics as data summaries
 
 
 
@@ -79,13 +94,18 @@ Here $B$ is a set of possible $X$'s whose probability we want to compute.
 
 When a probability density exists, a probability distribution can be characterized either by its CDF or by its  density.
 
-Let's now turn to a **discrete** random variable.  
-
-In this case, 
+For a **discrete-valued** random variable  
 
  * the number  of possible values of $X$ is finite or countably infinite 
  * we replace the **density** with a **probability mass function**, a non-negative sequence that sums to one 
  * we replace integration with summation in the formula that relates a CDF to a density 
+
+
+In this lecture, we mostly discuss discrete random variables.  
+
+Doing this enables us to confine our tool set basically to linear algebra.
+
+Occasionally, we'll briefly discuss how to approximate a continuous random variable with a discrete one.
  
 
 +++
@@ -103,8 +123,11 @@ Here, we choose  the maximum index $I-1$ because of how this aligns nicely with 
 
 Define $f_i \equiv \textrm{Prob}\{X=i\}$.
 
-Then,
-$$1\geq f_i\geq 0, \sum_{i=0}^{I-1}f_i=1$$
+Then
+
+$$
+1\geq f_i\geq 0, \sum_{i=0}^{I-1}f_i=1
+$$
 
 Proceeding in a reverse direction, consider any non-negative vector 
 
@@ -115,15 +138,39 @@ f_{1}\\
 \vdots\\
 f_{I-1}
 \end{array}\right]
-$$
+$$ (eq:discretedist)
 
 such that $f_{i} \in [0,1]$ for each $i$ and $\sum_{i=0}^{I-1}f_i=1$. 
 
 This vector defines a **probability mass function**.
 
-The distribution $f$ defined above is described by "parameters" $\{f_{i}\}_{i=0,1,...,I-2}$ since $f_{I-1} = 1-\sum_{i=0}^{I-2}f_{i}$.
+The distribution {eq}`eq:discretedist`
+has **parameters**  $\{f_{i}\}_{i=0,1,...,I-2}$ since $f_{I-1} = 1-\sum_{i=0}^{I-2}f_{i}$.
 
-However, a distribution can also be characterized by fewer parameters, and $I$ can be  infinity. 
+
+These parameters pin down the shape of the distribution.
+
+(Sometimes $I = \infty$.)
+
+Such ''non-parametric'' distributions have as many ``parameters'' as there are possible values of the random variable.
+
+
+We often work with special  distributions that  are  characterized by  a small number  parameters. 
+
+In these special distributions, 
+
+$$ 
+f_i = g(i; \theta)
+$$
+
+where $\theta $ is a vector of parameters that is of much smaller dimension than $I$.
+
+
+**Remark:**
+The concept of  **parameter** is intimately related to the notion of  **sufficient statistic**. A sufficient statistic   a device for summarizing a
+large data set with a smaller set of  statistics that are nonlinear functions of the data set.  Sufficient statistics are designed to  summarize all  information about the parameters that is contained in the big data set. (R. A. Fisher provided a sharp definition of **information** -- see <https://en.wikipedia.org/wiki/Fisher_information>)
+
+
  
 For example, a **geometric distribution** is described by
 
@@ -161,23 +208,26 @@ $X\in\{0,\ldots,J-1\},
 Y\in\{0,\ldots,J-1\}$
 
 Then their **joint distribution** is described by a matrix 
+
 $$
 F_{I\times J}=[f_{ij}]_{i\in\{0,\ldots,J-1\}, j\in\{0,\ldots,J-1\}}
 $$
 
 whose elements are
+
 $$
 f_{ij}=\textrm{Prob}\{X=i,Y=j\}\ge0, \sum_{i}\sum_{j}f_{ij}=1
 $$
 
 +++
 
-### Marginal distribution
+## Marginal distributions
 
 The joint distribution can imply the marginal distribution for each random variable in the following way:
 
 $$
-\textrm{Prob}\{X=i\}= \sum_{j=0}^{J-1}f_{ij} = \mu_i, i=0,\ldots,I-1, $$
+\textrm{Prob}\{X=i\}= \sum_{j=0}^{J-1}f_{ij} = \mu_i, i=0,\ldots,I-1,
+$$
 
 $$
 \textrm{Prob}\{Y=j\}= \sum_{i=0}^{I-1}f_{ij} = \nu_i, i=0,\ldots,J-1$
@@ -219,7 +269,7 @@ $$
 
 +++
 
-### Conditional distributions
+## Conditional Distributions
 
 Recall that
 
@@ -1317,7 +1367,7 @@ plt.hist(x_g, bins=150, density=True, alpha=0.6)
 plt.show()
 ```
 
-## What Does Probility Mean? 
+## What Does Probability Mean? 
 
 Up to now, we  have been discussing fixed "population" probabilities. 
 
@@ -1487,17 +1537,17 @@ Consider the following bivariate example.
 
 $$
 \begin{aligned}
-\textrm{\textrm{Prob}}\{X=0\}= & 1-q  =\mu_{0}\\
-\textrm{\textrm{Prob}}\{X=1\}=& q  =\mu_{1}\\
-\textrm{\textrm{Prob}}\{Y=0\}=& 1-r  =\nu_{0}\\
-\textrm{\textrm{Prob}}\{Y=1\}= & r  =\nu_{1}\\
+{\textrm{Prob}}\{X=0\}= & 1-q  =\mu_{0}\\
+{\textrm{Prob}}\{X=1\}=& q  =\mu_{1}\\
+{\textrm{Prob}}\{Y=0\}=& 1-r  =\nu_{0}\\
+{\textrm{Prob}}\{Y=1\}= & r  =\nu_{1}\\
 \textrm{where }0≤q<r≤1
 \end{aligned}
 $$
 
 +++
 
-We'll now construct  two couplings.
+We  construct  two couplings.
 
 The first coupling if our two marginal distributions is the joint distribution
 
@@ -1553,7 +1603,7 @@ Thus, our two proposed joint distributions have the same marginal distributions.
 
 But the joint distributions differ. 
 
-Tnus, multiple  joint distributions $[f_{ij}]$ can have  the same marginals.
+Thus, multiple  joint distributions $[f_{ij}]$ can have  the same marginals.
 
 **Remark:**
 - Couplings  are important in optimal transport problems and in Markov processes.
