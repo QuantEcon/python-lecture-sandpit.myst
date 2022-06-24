@@ -86,9 +86,13 @@ $$
 Sometimes, but not always, a random variable can also be described by  **density function** $f(x)$ 
 that is related to its CDF by
 
-$$ \textrm{Prob} \{X\in B\} = \int_{t\in B}f(t)dt$$
+$$ 
+\textrm{Prob} \{X\in B\} = \int_{t\in B}f(t)dt
+$$
 
-$$F(x) = \int_{-\infty}^{x}f(t)dt$$
+$$
+F(x) = \int_{-\infty}^{x}f(t)dt
+$$
 
 Here $B$ is a set of possible $X$'s whose probability we want to compute.
 
@@ -96,9 +100,15 @@ When a probability density exists, a probability distribution can be characteriz
 
 For a **discrete-valued** random variable  
 
+<<<<<<< HEAD
  * the number  of possible values of $X$ is finite or countably infinite 
  * we replace the **density** with a **probability mass function**, a non-negative sequence that sums to one 
  * we replace integration with summation in the formula that relates a CDF to a probability mass function 
+=======
+* the number  of possible values of $X$ is finite or countably infinite 
+* we replace the **density** with a **probability mass function**, a non-negative sequence that sums to one 
+* we replace integration with summation in the formula that relates a CDF to a density 
+>>>>>>> 4ebcd906ba7cb9825654c6e87291d176457ce7ec
 
 
 In this lecture, we mostly discuss discrete random variables.  
@@ -187,11 +197,15 @@ $$
 
 Let $X$ be a continous random variable that takes values $X \in \tilde{X}\equiv[X_U,X_L]$ whose distributions have parameters $\theta$.
 
-$$\textrm{Prob}\{X\in A\} = \int_{x\in A} f(x;\theta)\,dx;  \quad f(x;\theta)\ge0$$
+$$
+\textrm{Prob}\{X\in A\} = \int_{x\in A} f(x;\theta)\,dx;  \quad f(x;\theta)\ge0
+$$
   
 where $A$ is a subset of $\tilde{X}$ and 
   
-$$ \textrm{Prob}\{X\in \tilde{X}\} =1 $$
+$$ 
+\textrm{Prob}\{X\in \tilde{X}\} =1 
+$$
 
 +++
 
@@ -482,9 +496,10 @@ Let $X$ be a random variable that represents the number of failures before we ge
 
 Its distribution is 
 
-$$ \begin{align}
+$$ 
+\begin{aligned}
 X  & \sim NB(r,p) \\
-\textrm{Prob}(X=k;r,p) & = \begin{pmatrix}k+r-1 \\ r-1 \end{pmatrix}p^r(1-p)^{k} \end{align}
+\textrm{Prob}(X=k;r,p) & = \begin{pmatrix}k+r-1 \\ r-1 \end{pmatrix}p^r(1-p)^{k} \end{aligned}
 $$
 
 Here, we choose from among $k+r-1$ possible outcomes  because the last draw is by definition a success.
@@ -493,9 +508,10 @@ We compute the mean and variance to be
 
 
 $$
-\begin{align}
+\begin{aligned}
 \mathbb{E}(X) & = \frac{k(1-p)}{p} \\
-\mathbb{V}(X) & = \frac{k(1-p)}{p^2} \end{align}
+\mathbb{V}(X) & = \frac{k(1-p)}{p^2}
+\end{aligned}
 $$
 
 ```{code-cell} ipython3
@@ -549,17 +565,19 @@ print(σ-σ_hat < 1e-3)
 #### Uniform distribution
 
 $$
-\begin{align}
+\begin{aligned}
 X & \sim U[a,b] \\
 f(x)& = \begin{cases} \frac{1}{b-a}, & a \leq x \leq b \\ \quad0, & \text{otherwise}  \end{cases}
-\end{align}
+\end{aligned}
 $$
 
 The population mean and variance are
 
-$$ \begin{align}
+$$ 
+\begin{aligned}
 \mathbb{E}(X) & = \frac{a+b}{2} \\
-\mathbb{V}(X) & = \frac{(b-a)^2}{12} \end{align}
+\mathbb{V}(X) & = \frac{(b-a)^2}{12} 
+\end{aligned}
 $$
 
 ```{code-cell} ipython3
@@ -592,9 +610,17 @@ You have 5% chance to pass an interview and you know your salary will uniformly 
 
 We can describe your daily salary as  a discrete-continuous variable with the following probabilities:
 
-$$ P(X=0)=0.95 $$
-$$ P(300\le X \le 400)=\int_{300}^{400} f(x)\, dx=0.05 $$
-$$ f(x) = 0.0005 $$
+$$ 
+P(X=0)=0.95
+$$
+
+$$
+P(300\le X \le 400)=\int_{300}^{400} f(x)\, dx=0.05
+$$
+
+$$
+f(x) = 0.0005
+$$
 
 +++
 
@@ -1098,18 +1124,20 @@ plt.show()
 
 The population conditional distribution is
 
-$$ \begin{align} 
-   [X|Y & =y ]\sim \mathbb{N}\bigg[\mu_X+\rho\sigma_X\frac{y-\mu_Y}{\sigma_Y},\sigma_X^2(1-\rho^2)\bigg] \\
-  [Y|X= &x ]\sim \mathbb{N}\bigg[\mu_Y+\rho\sigma_Y\frac{x-\mu_X}{\sigma_X},\sigma_Y^2(1-\rho^2)\bigg] \end{align} 
+$$
+\begin{aligned} 
+[X|Y & =y ]\sim \mathbb{N}\bigg[\mu_X+\rho\sigma_X\frac{y-\mu_Y}{\sigma_Y},\sigma_X^2(1-\rho^2)\bigg] \\
+[Y|X= &x ]\sim \mathbb{N}\bigg[\mu_Y+\rho\sigma_Y\frac{x-\mu_X}{\sigma_X},\sigma_Y^2(1-\rho^2)\bigg] 
+\end{aligned} 
 $$
 
 Let's approximate  the joint density by discretizing and mapping the approximating joint density into a  matrix.
 
 we can compute the discretized marginal density  by just using matrix algebra and  noting that 
 
-$$\textrm{Prob}\{X=i|Y=j\}=\frac{f_{ij}}{\sum_{i}f_{ij}}$$
-
-+++
+$$
+\textrm{Prob}\{X=i|Y=j\}=\frac{f_{ij}}{\sum_{i}f_{ij}}
+$$
 
 Fix $y=0$.
 
@@ -1195,7 +1223,8 @@ Independence of $X$ and $ Y$ implies that
 $$
 \begin{aligned}
 h_k & =\textrm{Prob}\{X=0,Y=k\}+\textrm{Prob}\{X=1,Y=k-1\}+\ldots+\textrm{Prob}\{X=k,Y=0\}\\
-h_k& =f_0g_k+f_1g_{k-1}+\ldots+f_{k-1}g_1+f_kg_0 \qquad \text{for}\quad k=0,1,\ldots,I+J-2 \end{aligned}
+h_k& =f_0g_k+f_1g_{k-1}+\ldots+f_{k-1}g_1+f_kg_0 \qquad \text{for}\quad k=0,1,\ldots,I+J-2
+\end{aligned}
 $$
 
 Thus, we have:
@@ -1236,8 +1265,6 @@ Consider the special case where $F$ is continuous and bijective.
 
 Then its inverse function exists and is denoted by $F^{-1}$:
 
-
-
 $$
 \begin{aligned}
 F_{X}\left(x\right)	& =\textrm{Prob}\left\{ X\leq x\right\} \\
@@ -1251,8 +1278,6 @@ where the last equality is because $U$ is distributed uniformly on $[0,1]$ while
 
 We can check out the above results by implementing the following examples in `numpy`.
 
-+++
-
 ### Example: A continuous geometric (exponential) distribution
 
 Let $X$ follow a geometric distribution, with parameter $\lambda>0$.
@@ -1262,7 +1287,6 @@ Its density function is
 $$
 \quad f(x)=\lambda e^{-\lambda x}
 $$
-
 
 Its CDF is 
 
@@ -1277,13 +1301,14 @@ $X$ is a random variable such that $U=F(X)$.
 The distribution $X$ can be deduced from 
 
 $$ 
-\begin{align}
+\begin{aligned}
 U& =F(X)=1-e^{-\lambda X}\qquad\\
 \implies & \quad -U=e^{-\lambda X}\\
 \implies&  \quad \log(1-U)=-\lambda X\\
 \implies & \quad X=\frac{(1-U)}{-\lambda}
-\end{align}
+\end{aligned}
 $$
+
 Let's draw $u$ from $U[0,1]$ and calculate $x=\frac{log(1-U)}{-\lambda}$.
 
 
@@ -1314,11 +1339,14 @@ plt.show()
 ```
 
 ### Geometric distribution
+
 Let $X$ distributed geometrically, that is
 
-\begin{align} \textrm{Prob}(X=i) & =(1-\lambda)\lambda^i,\quad\lambda\in(0,1), \quad  i=0,1,\dots \\
+\begin{align} 
+\textrm{Prob}(X=i) & =(1-\lambda)\lambda^i,\quad\lambda\in(0,1), \quad  i=0,1,\dots \\
  & \sum_{i=0}^{\infty}\textrm{Prob}(X=i)=1\longleftrightarrow(1- \lambda)\sum_{i=0}^{\infty}\lambda^i=\frac{1-\lambda}{1-\lambda}=1
 \end{align}
+
 Its CDF is given by
 
 \begin{align}
@@ -1333,14 +1361,15 @@ Again, let $\tilde{U}$ follow a uniform distribution and we want to find $X$ suc
 Let's deduce the distribution of $X$ from
 
 $$
-\begin{align}
+\begin{aligned}
 \tilde{U} & =F(X)=1-\lambda^{x+1}\\
 1-\tilde{U} & =\lambda^{x+1}\\
 log(1-\tilde{U})& =(x+1)\log\lambda\\
 \frac{\log(1-\tilde{U})}{\log\lambda}& =x+1\\
 \frac{\log(1-\tilde{U})}{\log\lambda}-1 &=x
-\end{align}
+\end{aligned}
 $$
+
 However, $\tilde{U}=F^{-1}(X)$ may not be an integer for any $x\geq0$.
 
 So let

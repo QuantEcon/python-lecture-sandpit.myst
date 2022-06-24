@@ -18,7 +18,7 @@ This lecture is a sequel to the QuantEcon lecture: https://python.quantecon.org/
 That lecture illustrate a Bayesian interpretation of probability in a setting in which the likelihood function and the prior distribution
 over parameters just happened to form a **conjugate** pair in which
 
- -  application of Bayes' Law produces a posterior distribution that has the same functional form as the prior
+-  application of Bayes' Law produces a posterior distribution that has the same functional form as the prior
 
 Having a likelihood and prior that  are conjugate can simplify calculation of a posterior, often permitting analytical or nearly analytical formulations.
 
@@ -28,29 +28,25 @@ In these situations, computing a posterior can become very challenging.
 
 In this lecture, we illustrate how modern Bayesians confront the challenge by using  Monte Carlo techniques that involve 
 
-  - first  cleverly forming a Markov chain whose invariant distribution is the posterior distribution we want 
-  - simulating the Markov chain until it has converged and then sampling from the invariant distribution to approximate the posterior
+- first  cleverly forming a Markov chain whose invariant distribution is the posterior distribution we want 
+- simulating the Markov chain until it has converged and then sampling from the invariant distribution to approximate the posterior
 
 We shall illustrate the approach by deploying two powerful Python modules that implement this approach as well as another closely related one to
 be described below.  
 
 The two Python modules are
 
-  - `numpyro`
-  - `pymc4`
+- `numpyro`
+- `pymc4`
 
 As usual, we begin by importing some Python code.
 
 
-    
-
-
 ```{code-cell} ipython3
+:tags: [hide-output]
+
 # install dependencies
-%pip install numpyro
-%pip install pyro-ppl 
-%pip install torch
-%pip install jax
+!pip install numpyro pyro-ppl torch jax
 ```
 
 ```{code-cell} ipython3
@@ -88,12 +84,6 @@ from numpyro.optim import Adam as nAdam
 ```
 
 
-+++
-
-
-
-
-
 ## Unleashing on a  Binomial Likelihood
 
 This lecture begins with the binomial example in the QuantEcon lecture: https://python.quantecon.org/prob_meaning.html and finds or approximates the posterior
@@ -104,14 +94,15 @@ This lecture begins with the binomial example in the QuantEcon lecture: https://
 
 We use both the packages `pyro` and `numpyro` under `jax` to find the posterior distribution computationally from a set of alternative given prior distributions and compare them with the analytical results.
 
-+++
 
 ### Analytical Posterior
 Assume that the random variable $X\sim Binom\left(n,\theta\right)$. This defines the following likelihood function
+
 $$
 L\left(Y\vert\theta\right) = \textrm{Prob}(X =  k | \theta) = 
 \left(\frac{n!}{k! (n-k)!} \right) \theta^k (1-\theta)^{n-k}
 $$
+
 where $Y=k$ is the observed data.
 
 Here, consider $\theta$ to be a random variable for which we assign a prior distribution with density $f(x)$. We will try alternative priors later, but for now, suppose the prior is distributed as $\theta\sim Beta\left(\alpha,\beta\right)$, i.e.,  
@@ -305,17 +296,22 @@ class TruncatedvonMises(dist.Rejector):
 ### Variational Inference
 The gist of the variational inference method is that instead of directly sampling from the posterior, we approximate the unknown, usually intractable posterior distribution using a family of tractable distributions/densities and minimizes its distance to the true posterior. This way, we have made an inference problem a well-posed optimization problem.
 
-More specifically in our context, let the latent parameter/variable that we want to infer about be $\theta$, and with a given prior $p(\theta)$ and likelihood $p\left(Y\vert\theta\right)$, we would like to infer about $p\left(\theta\vert Y\right)$. Bayse's rule gives: 
+More specifically in our context, let the latent parameter/variable that we want to infer about be $\theta$, and with a given prior $p(\theta)$ and likelihood $p\left(Y\vert\theta\right)$, we would like to infer about $p\left(\theta\vert Y\right)$. Bayse's rule gives:
+
 $$
 p\left(\theta\vert Y\right)=\frac{p\left(Y,\theta\right)}{p\left(Y\right)}=\frac{p\left(Y\vert\theta\right)p\left(\theta\right)}{p\left(Y\right)}
 $$
+
 where $p\left(Y\right)=\int d\theta p\left(Y\mid\theta\right)p\left(Y\right)$ and the integral usually hard to evaluate.
 
 Consider a parameterized distribution $q_{\phi}(\theta)$ which we want to use to approximate the posterior. We would like to minimize its distance (K-L divergence) to the posterior, i.e., 
+
 $$
 \min_{\phi}\quad D_{KL}(q(\theta;\phi)\;\|\;p(\theta\mid Y))=-\int d\theta q(\theta;\phi)\log\frac{p(\theta\mid Y)}{q(\theta;\phi)}
 $$
+
 Note that
+
 $$
 \begin{aligned}D_{KL}(q(\theta;\phi)\;\|\;p(\theta\mid Y)) & =-\int d\theta q(\theta;\phi)\log\frac{P(\theta\mid Y)}{q(\theta;\phi)}\\
  & =-\int d\theta q(\theta)\log\frac{\frac{p(\theta,Y)}{p(Y)}}{q(\theta)}\\
@@ -328,9 +324,11 @@ $$
 $$
 
 For an observed data $Y$, $p(Y)$ is a constant, so minimizing K-L divergence is equivalent to maximizing
+
 $$
 ELBO\equiv\int d\theta q_{\phi}(\theta)\log\frac{p(\theta,Y)}{q_{\phi}(\theta)}=\mathbb{E}_{q_{\phi}(\theta)}\left[\log p(\theta,Y)-\log q_{\phi}(\theta)\right]
 $$
+
 which we call the evidence lower bound (ELBO). And optimization routines can directly be applied in search for the optimal $\phi$ in our parametrized distribution $q_{\phi}(\theta)$, which we also call variational distribution.
 
 Below, I implement Stochastic Variational Inference (SVI) in Pyro and Numpyro using the `Adam` gradient descent algorithm to approximate posterior.
@@ -338,8 +336,6 @@ Below, I implement Stochastic Variational Inference (SVI) in Pyro and Numpyro us
 In particular, I choose two sets of variational distributions: Beta and TruncatedNormal with support $[0,1]$. Learnable parameters for the Beta distribution are (alpha, beta), both being positive. And learnable parameters for the Truncated Normal distribution are (loc, scale).
 
 Moreover, <u> I restrict the truncated Normal paramter 'loc' to be on the interval $[0,1]$</u>. This can be easily lifted if we want.
-
-+++
 
 ## Implementation 
 
@@ -852,6 +848,7 @@ BayesianInferencePlot(true_theta, num_list, BETA_numpyro).SVI_plot(guide_dist='b
 Next, we examine results all other prior distributions.
 
 ### MCMC Results
+
 First, we implement and display the MCMC results. We first initialize the `BayesianInference` classes and then can directly call `BayesianInferencePlot` to plot both MCMC and SVI results.
 
 ```{code-cell} ipython3

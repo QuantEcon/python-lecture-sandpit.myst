@@ -6,15 +6,12 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.13.8
 kernelspec:
-  display_name: Python 3 (ipykernel)
+  display_name: Python 3
   language: python
   name: python3
 ---
 
 ## Posterior Distributions for  AR(1) Parameters
-
-
-+++
 
 This notebook uses Bayesian methods offered by [pymc](https://www.pymc.io/projects/docs/en/stable/) and [numpyro](https://num.pyro.ai/en/stable/) to make statistical inferencces about  two parameters of a univariate first-order autoregression 
 
@@ -26,16 +23,13 @@ consequences of alternative ways of modeling the distribution of the initial  $y
 - As a fixed number.
     
 - As a random variable drawn from the stationary distribution of the $\{y_t\}$ stochastic process
-    
-
-+++
-
-
 
 
 The statistical  model is
 
-$$ y_{t+1} = \rho y_t + \sigma_x \epsilon_{t+1}, \quad t \geq 0 $$
+$$ 
+y_{t+1} = \rho y_t + \sigma_x \epsilon_{t+1}, \quad t \geq 0 
+$$
 
 where the scalars $\rho$ and $\sigma_x$ satisfy $|\rho| < 1$ and $\sigma_x > 0$; 
 $\{\epsilon_{t+1}\}$ is a sequence of i.i.d. normal random variables with mean $0$ and variance $1$;
@@ -55,10 +49,10 @@ where we use $f$ to denote a generic probability density.
 Our  statistical model  implies 
 
 $$
-\begin{align*}
+\begin{aligned}
 f(y_t | y_{t-1})  & \sim {\mathcal N}(\rho y_{t-1}, \sigma_x^2) \\
         f(y_0)  & \sim {\mathcal N}(\mu_0, \sigma_0^2)
-\end{align*}
+\end{aligned}
 $$
 
 We want to study how inferences about the unknown parameters $(\rho, \sigma_x)$ depend on what is assumed about the parameters $\mu_0, \sigma_0$  of the distribution of $y_0$.
@@ -77,8 +71,6 @@ We have  **prior probability distributions** for them and want to compute a post
 
 The notebook uses `pymc4` and `numpyro`  to compute a posterior distribution of $\rho, \sigma_x$.
 
-+++
-
 **Note:** We do not treat $\mu_y,\sigma_y$ as parameters to be estimated.
 
 Instead,  we treat them either as
@@ -88,7 +80,6 @@ Instead,  we treat them either as
 - particular functions of $\rho, \sigma_x$.  
 
 We explore consequences of making these alternative assumptions about the distribution of $y_0$: 
-
 
 - A first procedure is to condition on whatever value of  $y_0$ is observed.  This amounts to assuming that the probability distribution of the random variable  $y_0$ is  a Dirac delta function that puts probability one  on the observed value of $y_0$.  It is as if we assume that $\mu_y = y_0, \sigma_y =0$.  
 
@@ -103,17 +94,13 @@ Basically, when $y_0$ happens to be  in a tail of the stationary distribution an
 An example below shows how not conditioning on $y_0$ adversely shifts the posterior probability distribution of $\rho$ toward larger values.
 
 ```{code-cell} ipython3
-%pip install arviz
-%pip install pymc
-%pip install numpyro
-%pip install jax
+:tags: [hide-output]
+
+!pip install arviz pymc numpyro jax
 ```
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
+
 import arviz as az
 import pymc as pmc
 import numpyro
@@ -140,10 +127,7 @@ How we select the initial value $y_0$ matters.
 To illustrate the issue, we'll begin by choosing an initial $y_0$ that is far out in a tail of the stationary distribution.
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
+
 def ar1_simulate(rho, sigma, y0, T):
 
     # Allocate space and draw epsilons
@@ -166,10 +150,6 @@ y = ar1_simulate(rho, sigma, 10, T)
 ```
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
 plt.plot(y)
 plt.tight_layout()
 ```
@@ -186,10 +166,7 @@ For a  normal distribution in `pymc`,
 $var = 1/\tau = \sigma^{2}$.
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
+
 AR1_model = pmc.Model()
 
 with AR1_model:
@@ -225,10 +202,6 @@ The Hurwicz bias is worse the  smaller is the sample.
 Be that as it may, here is more information about the posterior
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
 with AR1_model:
     summary = az.summary(trace, round_to=4)
     
@@ -240,7 +213,9 @@ Now we shall compute a posterior distribution after seeing the same data but ins
 
 This means that 
 
-$$y_0 \sim N \left(0, \frac{\sigma_x^{2}}{1 - \rho^{2}} \right)$$
+$$
+y_0 \sim N \left(0, \frac{\sigma_x^{2}}{1 - \rho^{2}} \right)
+$$
 
 We  alter the code as follows:
 
@@ -263,10 +238,6 @@ with AR1_model_y0:
 ```
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
 with AR1_model_y0:
     trace_y0 = pmc.sample(50000, tune=10000, return_inferencedata=True)
 
@@ -274,19 +245,11 @@ with AR1_model_y0:
 ```
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
 with AR1_model_y0:
     az.plot_trace(trace_y0, figsize=(17,6))
 ```
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: false
----
 with AR1_model:
     summary_y0 = az.summary(trace_y0, round_to=4)
     
@@ -302,8 +265,6 @@ Think about why this happens.
 that make observations more likely.
 
 We'll return to this issue after we use `numpyro` to compute posteriors under our two alternative assumptions about the distribution of $y_0$.
-
-+++
 
 We'll now repeat the calculations using  `numpyro`. 
 
@@ -372,7 +333,9 @@ mcmc.print_summary()
 
 Next,  we again compute the posterior under the assumption that $y_0$ is drawn from the stationary distribution, so that
 
-$$y_0 \sim N \left(0, \frac{\sigma_x^{2}}{1 - \rho^{2}} \right)$$
+$$
+y_0 \sim N \left(0, \frac{\sigma_x^{2}}{1 - \rho^{2}} \right)
+$$
 
 Here's the new code to achieve this.
 
@@ -418,11 +381,7 @@ Look what happened to the posterior!
 It has moved far from the true values of the parameters used to generate the data because of how Bayes Law (i.e., conditional probability)
 is telling `numpyro` to explain what it interprets as  "explosive" observations early in the sample 
 
- Bayes Law is able to generates a  plausible  likelihood for the first observation is by driving $\rho \rightarrow 1$ and $\sigma \uparrow$ in order to raise the variance of the stationary distribution.
+Bayes Law is able to generates a  plausible  likelihood for the first observation is by driving $\rho \rightarrow 1$ and $\sigma \uparrow$ in order to raise the variance of the stationary distribution.
 
 Our example illustrates  the importance of what you assume about  the distribution of initial conditions.
 
-
-```{code-cell} ipython3
-
-```
