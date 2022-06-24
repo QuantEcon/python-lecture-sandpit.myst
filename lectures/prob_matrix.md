@@ -73,11 +73,11 @@ where ${\mathcal G}$ is subset of $\Omega$ for which $X(\omega) \in A$.
 We call this the induced probability distribution of random variable $X$.
 
 
-## Working Directly with Random Variables and Their Induced Probability Distributions
+## Random Variables and Their Probability Distributions
 
  
 
-A  probability distribution $\textrm{Prob} (X \in A)$ can  be described by its **cumulative distribution function (CDF)** defined as 
+A  probability distribution $\textrm{Prob} (X \in A)$ can  be described by its **cumulative distribution function (CDF)**
 
 $$
 F_{X}(x) = \textrm{Prob}\{X\leq x\}. 
@@ -98,14 +98,14 @@ For a **discrete-valued** random variable
 
  * the number  of possible values of $X$ is finite or countably infinite 
  * we replace the **density** with a **probability mass function**, a non-negative sequence that sums to one 
- * we replace integration with summation in the formula that relates a CDF to a density 
+ * we replace integration with summation in the formula that relates a CDF to a probability mass function 
 
 
 In this lecture, we mostly discuss discrete random variables.  
 
 Doing this enables us to confine our tool set basically to linear algebra.
 
-Occasionally, we'll briefly discuss how to approximate a continuous random variable with a discrete one.
+Later we'll briefly discuss how to approximate a continuous random variable with a discrete one.
  
 
 +++
@@ -121,15 +121,8 @@ Let $X$ be a discrete random variable that takes possible values: $i=0,1,\ldots,
 
 Here, we choose  the maximum index $I-1$ because of how this aligns nicely with Python's index convention.
 
-Define $f_i \equiv \textrm{Prob}\{X=i\}$.
-
-Then
-
-$$
-1\geq f_i\geq 0, \sum_{i=0}^{I-1}f_i=1
-$$
-
-Proceeding in a reverse direction, consider any non-negative vector 
+Define $f_i \equiv \textrm{Prob}\{X=i\}$
+and assemble  the non-negative vector 
 
 $$ 
 f=\left[\begin{array}{c}
@@ -140,7 +133,7 @@ f_{I-1}
 \end{array}\right]
 $$ (eq:discretedist)
 
-such that $f_{i} \in [0,1]$ for each $i$ and $\sum_{i=0}^{I-1}f_i=1$. 
+for which  $f_{i} \in [0,1]$ for each $i$ and $\sum_{i=0}^{I-1}f_i=1$. 
 
 This vector defines a **probability mass function**.
 
@@ -152,7 +145,7 @@ These parameters pin down the shape of the distribution.
 
 (Sometimes $I = \infty$.)
 
-Such ''non-parametric'' distributions have as many ``parameters'' as there are possible values of the random variable.
+Such "non-parametric" distributions have as many "parameters" as there are possible values of the random variable.
 
 
 We often work with special  distributions that  are  characterized by  a small number  parameters. 
@@ -168,17 +161,19 @@ where $\theta $ is a vector of parameters that is of much smaller dimension than
 
 **Remark:**
 The concept of  **parameter** is intimately related to the notion of  **sufficient statistic**. A sufficient statistic   a device for summarizing a
-large data set with a smaller set of  statistics that are nonlinear functions of the data set.  Sufficient statistics are designed to  summarize all  information about the parameters that is contained in the big data set. (R. A. Fisher provided a sharp definition of **information** -- see <https://en.wikipedia.org/wiki/Fisher_information>)
+large data set with a smaller set of  statistics that are nonlinear functions of the data set.  Sufficient statistics are designed to  summarize all  **information** about the parameters that is contained in the big data set. (R. A. Fisher provided a sharp definition of **information** -- see <https://en.wikipedia.org/wiki/Fisher_information>)
 
 
  
-For example, a **geometric distribution** is described by
+An example of a parametric probability distribution is  a **geometric distribution**.
+
+It is described by
 
 $$ 
-f_{i} = \textrm{Prob}\{X=i\} = (1-\lambda)\lambda^{i},\quad \lambda \in [0,1]
+f_{i} = \textrm{Prob}\{X=i\} = (1-\lambda)\lambda^{i},\quad \lambda \in [0,1], \quad i = 0, 1, 2, \ldots
 $$ 
 
-We can verify that $\sum_{i=0}^{\infty}f_i=1$.
+Evidently,  $\sum_{i=0}^{\infty}f_i=1$.
 
 Let $\theta$ be a vector of parameters of the distribution described by $f$, then
 
@@ -190,22 +185,32 @@ $$
 
 ### Continuous random variable
 
-Let $X$ be a continous random variable that takes values: $X \in \tilde{X}\equiv[X_U,X_L]$ whose distributions have parameters $\theta$.
+Let $X$ be a continous random variable that takes values $X \in \tilde{X}\equiv[X_U,X_L]$ whose distributions have parameters $\theta$.
 
 $$\textrm{Prob}\{X\in A\} = \int_{x\in A} f(x;\theta)\,dx;  \quad f(x;\theta)\ge0$$
   
-where $A$ is a subset of X.
+where $A$ is a subset of $\tilde{X}$ and 
   
 $$ \textrm{Prob}\{X\in \tilde{X}\} =1 $$
 
 +++
 
-## Bivariate probability distribution
-### Joint distribution
-Restrict our attention to the discrete case.  
+## Bivariate Probability Distribution
+
+We'll now discuss a bivariate **joint distribution**.
+
+We'll start by restricing ourselves to two discrete random variables.
+
+ 
 Let $X,Y$ be two discrete random variables that take values:
-$X\in\{0,\ldots,J-1\}, 
-Y\in\{0,\ldots,J-1\}$
+
+$$
+X\in\{0,\ldots,J-1\} 
+$$
+
+$$
+Y\in\{0,\ldots,J-1\}
+$$
 
 Then their **joint distribution** is described by a matrix 
 
@@ -216,14 +221,19 @@ $$
 whose elements are
 
 $$
-f_{ij}=\textrm{Prob}\{X=i,Y=j\}\ge0, \sum_{i}\sum_{j}f_{ij}=1
+f_{ij}=\textrm{Prob}\{X=i,Y=j\} \geq 0
 $$
 
+where 
+
+$$
+\sum_{i}\sum_{j}f_{ij}=1
+$$
 +++
 
 ## Marginal distributions
 
-The joint distribution can imply the marginal distribution for each random variable in the following way:
+The joint distribution induce marginal distributions 
 
 $$
 \textrm{Prob}\{X=i\}= \sum_{j=0}^{J-1}f_{ij} = \mu_i, i=0,\ldots,I-1,
@@ -231,15 +241,6 @@ $$
 
 $$
 \textrm{Prob}\{Y=j\}= \sum_{i=0}^{I-1}f_{ij} = \nu_i, i=0,\ldots,J-1$
-$$
-
-**Remark:** If the two random variables $X,Y$ are continuous and admit joint density $f(x,y)$, then  marginal distributions can be computed by 
-
-$$
-\begin{aligned}
-f(x)& = \int_{\mathbb{R}} f(x,y) dy\\
-f(y)& = \int_{\mathbb{R}} f(x,y) dx
-\end{aligned}
 $$
 
 
@@ -253,7 +254,7 @@ F = \left[
    .15 & .5
   \end{matrix}
 \right]
-$$
+$$ (eq:example101discrete)
 
 
 Then marginal distributions are:
@@ -267,11 +268,22 @@ $$
 \end{align}
 $$
 
+
+
+**Digression:** If  two random variables $X,Y$ are continuous and have joint density $f(x,y)$, then  marginal distributions can be computed by 
+
+$$
+\begin{aligned}
+f(x)& = \int_{\mathbb{R}} f(x,y) dy\\
+f(y)& = \int_{\mathbb{R}} f(x,y) dx
+\end{aligned}
+$$
+
 +++
 
 ## Conditional Distributions
 
-Recall that
+Conditional probabilities are defined according to
 
 $$
 \textrm{Prob}\{A \mid B\}=\frac{\textrm{Prob}\{A \cap B\}}{\textrm{Prob}\{B\}}
@@ -279,10 +291,12 @@ $$
 
 where $A, B$ are two events. 
 
-In the discrete case, we can define the **conditional distribution** 
+For a pair of discrete random variables, we have  the **conditional distribution** 
 
-$\textrm{Prob}\{X=i|Y=j\}=\frac{f_{ij}}{\sum_{i}f_{ij}} 
-=\frac{\textrm{Prob} \{X=i, Y=j\} }{\textrm{Prob} \{Y=j\} }$
+$$
+\textrm{Prob}\{X=i|Y=j\}=\frac{f_{ij}}{\sum_{i}f_{ij}} 
+=\frac{\textrm{Prob} \{X=i, Y=j\} }{\textrm{Prob} \{Y=j\} }
+$$
 
 where $i=0, \ldots,I-1, \quad j=0,\ldots,J-1$.
 
@@ -299,7 +313,7 @@ $$
 \textrm{Prob}\{X=i|Y=j\}	=\frac{\textrm{Prob}\{X=i,Y=j\}}{\textrm{Prob}\{Y=j\}}=\frac{\textrm{Prob}\{Y=j|X=i\}\textrm{Prob}\{X=i\}}{\textrm{Prob}\{Y=j\}}
 $$
 
-For our little example above:
+For the joint distribution {eq}`eq:example101discrete`
 
 $$
 \textrm{Prob}\{X=0|Y=1\} =\frac{ .1}{.1+.5}=\frac{.1}{.6}
@@ -308,7 +322,13 @@ $$
 +++
 
 ## Independence
-Random variables X and Y are statistically **independent** if $\textrm{Prob}\{X=i,Y=j\}={f_ig_i}$
+
+Random variables X and Y are statistically **independent** if 
+
+$$ 
+\textrm{Prob}\{X=i,Y=j\}={f_ig_i}
+$$
+
 where 
 
 $$ 
@@ -318,7 +338,7 @@ $$
 \end{align}
 $$
 
-The conditional distributions are 
+Conditional distributions are 
 
 $$
 \begin{align}
@@ -344,7 +364,7 @@ $$
 \end{aligned} 
 $$
 
-For a continuous random variable (a random variable that admits a density, say $f_{X}(x)$), its mean and variance are given by
+For a continuous random variable having  density $f_{X}(x)$), its mean and variance are given by
 
 $$
 \begin{aligned}
@@ -372,6 +392,7 @@ set_matplotlib_formats('retina')
 ### Examples: discrete random variables
 
 #### Geometric distribution  
+
 $$ \textrm{Prob}(X=k)=(1-p)^{k-1}p,k=1,2, \ldots $$
 $\implies$
 
