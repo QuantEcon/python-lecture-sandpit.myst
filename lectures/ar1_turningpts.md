@@ -184,11 +184,8 @@ plot_initial_path(initial_path)
 As functions of forecast horizon, the coverage intervals have shapes like those described in 
 https://python.quantecon.org/perm_income_cons.html
 
-+++
 
----------------------------
 ## Predictive Distributions of Path Properties
-
 
 Wecker {cite}`wecker1979predicting` proposed using simulation techniques to characterize  predictive distribution of some statistics that are  non-linear functions of $y$. 
 
@@ -202,15 +199,19 @@ The first statistic that he studied was **time until the next turning point**
 
 To examine this statistic in more detail,  let $Z$ be an indicator process
 
-$$Z_t(Y(\omega)) := \left\{ 
+$$
+Z_t(Y(\omega)) := \left\{ 
 \begin{array} {c}
 \ 1 & \text{if } Y_t(\omega)< Y_{t-1}(\omega)< Y_{t-2}(\omega) \geq Y_{t-3}(\omega) \\
 0 & \text{otherwise}
-\end{array} \right.$$
+\end{array} \right.
+$$
 
 Then the random variable ** time until the next turning point**  is defined as the following **stopping time** with respect to $Z$:
 
-$$W_t(\omega):= \inf \{ k\geq 1 \mid Z_{t+k}(\omega) = 1\}$$
+$$
+W_t(\omega):= \inf \{ k\geq 1 \mid Z_{t+k}(\omega) = 1\}
+$$
 
 A second statistic that Wecker  {cite}`wecker1979predicting` studied was  **the minimum value of $Y$ over the next 8 quarters**.
 
@@ -220,27 +221,28 @@ $$
 M_t(\omega) := \min \{ Y_{t+1}(\omega); Y_{t+2}(\omega); \dots; Y_{t+8}(\omega)\}
 $$
 
-
-
 It is interesting to study yet another possible concept of a **turning point**.
-
 
 Thus, define
 
-$$T_t(Y(\omega)) := \left\{ 
+$$
+T_t(Y(\omega)) := \left\{ 
 \begin{array}{c}
 \ 1 & \text{if } Y_{t-2}(\omega)> Y_{t-1}(\omega) > Y_{t}(\omega) \ \text{and } \ Y_{t}(\omega) < Y_{t+1}(\omega) < Y_{t+2}(\omega) \\
 \  -1 & \text{if } Y_{t-2}(\omega)< Y_{t-1}(\omega) < Y_{t}(\omega) \ \text{and } \ Y_{t}(\omega) > Y_{t+1}(\omega) > Y_{t+2}(\omega) \\
 0 & \text{otherwise}
-\end{array} \right.$$
+\end{array} \right.
+$$
 
 Define a **positive turning point today or tomorrow** statistic as 
 
-$$P_t(\omega) := \left\{ 
+$$
+P_t(\omega) := \left\{ 
 \begin{array}{c}
 \ 1 & \text{if } T_t(\omega)=1 \ \text{or} \ T_{t+1}(\omega)=1 \\
 0 & \text{otherwise}
-\end{array} \right.$$
+\end{array} \right.
+$$
 
 This is designed to express the event: after one or two decrease(s), $Y$ will grow two consecutive quarters. 
 
@@ -265,16 +267,11 @@ $$
 $ as samples from the predictive distributions $f(W_{t+1} \mid \mathcal y_t, \dots)$, $f(W_{t+2} \mid y_t, y_{t-1}, \dots)$, $\dots$, $f(W_{t+N} \mid y_t, y_{t-1}, \dots)$.
 
 
-
-
-+++
-
 ## Using Simulations to Approximate a Posterior Distribution
 
 The next code cells use `pymc` to compute the time $t$ posterior distribution of $\rho, \sigma$.
 
 Note that in defining the likelihood function, we choose to condition on the initial value $y_0$.
-
 
 
 ```{code-cell} ipython3
