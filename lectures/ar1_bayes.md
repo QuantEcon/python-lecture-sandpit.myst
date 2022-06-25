@@ -183,6 +183,8 @@ with AR1_model:
 ```
 
 ```{code-cell} ipython3
+:tag: [hide-output]
+
 with AR1_model:
     trace = pmc.sample(50000, tune=10000, return_inferencedata=True)
 ```
@@ -238,6 +240,8 @@ with AR1_model_y0:
 ```
 
 ```{code-cell} ipython3
+:tag: [hide-output]
+
 with AR1_model_y0:
     trace_y0 = pmc.sample(50000, tune=10000, return_inferencedata=True)
 
@@ -271,6 +275,8 @@ We'll now repeat the calculations using  `numpyro`.
 ### `Numpyro` Implementation
 
 ```{code-cell} ipython3
+
+
 def plot_posterior(sample):
     """
     Plot trace and histogram
@@ -312,6 +318,8 @@ def AR1_model(data):
 ```
 
 ```{code-cell} ipython3
+:tag: [hide-output]
+
 # make jnp array
 y = jnp.array(y)
 
@@ -357,6 +365,8 @@ def AR1_model_y0(data):
 ```
 
 ```{code-cell} ipython3
+:tag: [hide-output]
+
 # make jnp array
 y = jnp.array(y)
 
