@@ -112,6 +112,12 @@ from jax import random
 import matplotlib.pyplot as plt
 
 %matplotlib inline
+
+import logging
+logging.basicConfig()
+logger = logging.getLogger('pymc')
+logger.setLevel(logging.CRITICAL)
+
 ```
 
 We begin by solving a **direct problem** of simulating an AR(1) process.
@@ -327,7 +333,7 @@ y = jnp.array(y)
 NUTS_kernel = numpyro.infer.NUTS(AR1_model)
 
 # run MCMC
-mcmc = numpyro.infer.MCMC(NUTS_kernel, num_samples=50000, num_warmup=10000)
+mcmc = numpyro.infer.MCMC(NUTS_kernel, num_samples=50000, num_warmup=10000, progress_bar=False)
 mcmc.run(rng_key=random.PRNGKey(1), data=y)
 ```
 
@@ -376,7 +382,7 @@ NUTS_kernel = numpyro.infer.NUTS(AR1_model_y0)
 # run MCMC
 
 
-mcmc2 = numpyro.infer.MCMC(NUTS_kernel, num_samples=50000, num_warmup=10000)
+mcmc2 = numpyro.infer.MCMC(NUTS_kernel, num_samples=50000, num_warmup=10000, progress_bar=False)
 mcmc2.run(rng_key=random.PRNGKey(1), data=y)
 ```
 

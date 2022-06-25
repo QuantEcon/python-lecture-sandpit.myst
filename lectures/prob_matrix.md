@@ -15,11 +15,9 @@ kernelspec:
 
 This lecture uses matrix algebra to illustrate some basic ideas about probability theory.
 
+After providing somewhat informal definitions of the underlying objects, we'll use matrices and vectors to describe probability distributions.
 
-
-After giving more or less informal definitions of the underlying objects, we'll use matrices and vectors to describe probability distributions.
-
-Concepts that we'll be using matrix algebra to illustrate include
+Among concepts that we'll be studying include
 
  - a joint probability distribution 
  - marginal distributions associated with a given joint distribution
@@ -28,11 +26,29 @@ Concepts that we'll be using matrix algebra to illustrate include
  - joint distributions associated with a prescribed set of marginal distributions
      - couplings
      - copulas
- - the probability distribution of a sum of two independent random variables as a convolution of two marginal distributions
+ - the probability distribution of a sum of two independent random variables 
+     - convolution of  marginal distributions
  - parameters that define a probability distribution
  - sufficient statistics as data summaries
+  
+We'll use a matrix to represent a bivariate probability distribution and a vector to represent a univariate probability distribution
 
 
+As usual, we'll start with some imports
+
+```{code-cell} ipython3
+# !pip install prettytable
+```
+
+```{code-cell} ipython3
+import numpy as np
+import matplotlib.pyplot as plt
+import prettytable as pt
+from mpl_toolkits.mplot3d import Axes3D
+from IPython.display import set_matplotlib_formats
+set_matplotlib_formats('retina')
+%matplotlib inline
+```
 
 
 ## Sketch of Basic Concepts
@@ -52,7 +68,7 @@ Let $\mathcal{G} \subset \Omega$ be a subset of $\Omega$.
 
 Let $\mathcal{F}$ be a collection of such subsets  $\mathcal{G} \subset \Omega$. 
 
-The pair $\Omega,\mathcal{F}$  forms our probability space.  
+The pair $\Omega,\mathcal{F}$  forms our **probability space** on which we want to put a probability measure. 
 
 A **probability measure** $\mu$ maps a set of possible underlying outcomes  $\mathcal{G} \in \mathcal{F}$  into a scalar number between $0$ and $1$
 
@@ -66,14 +82,92 @@ $X(\omega)$:
 
 $$ 
 \textrm{Prob} (X \in A ) = \int_{\mathcal{G}} \mu(\omega) d \omega 
-$$
+$$ (eq:CDFfromdensity)
 
-where ${\mathcal G}$ is subset of $\Omega$ for which $X(\omega) \in A$.
+where ${\mathcal G}$ is the subset of $\Omega$ for which $X(\omega) \in A$.
 
 We call this the induced probability distribution of random variable $X$.
 
 
-## Random Variables and Their Probability Distributions
+
+
+## Digression: What Does Probability Mean? 
+
+Before diving in, we'll say a few words about what probability theory means and how it connects to statistics.
+
+These are topics that are also touched on in these quantecon lectures :XXXXX TOM ADD
+
+For much of this lecture we'll be discussing  fixed "population" probabilities. 
+
+These are purely mathematical objects.
+
+To appreciate how statisticians connect probabilities to data, the key is to understand the following concepts:
+
+
+* A single draw from a probability distribution
+* Repeated independently  and identically distributed (i.i.d.)  draws of "samples" or "realizations" from the same probability distribution
+* A **statistic** defined as a  function of a sequence of samples
+* An **empirical distribution** or **histogram** (a binned empirical distribution) that records observed  **relative frequencies**
+* The idea that a  population probability  distribution is  what we anticipate **relative frequencies** will be in a long sequence of i.i.d. draws. Here the following mathematical machinery makes precise what is meant by **anticipated relative frequencies** 
+     - **Law of Large Numbers (LLN)**
+     -  **Central Limit Theorem (CLT)** 
++++
+
+**Scalar example**
+
+
+Consider the following discrete distribution
+
+$$ 
+X  \sim \{{f_i}\}_{i=0}^{I-1},\quad f_i \geqslant 0, \quad \sum_i f_i = 1
+$$
+
+Draw a sample $x_0, x_1, \dots , x_{N-1}$, $N$ draws of $X$ from $\{f_i\}^I_{i=1}$.
+
+What do the "identical" and "independent" mean in   IID or iid ("identically and independently distributed)?
+
+- "identical" means that each draw is from the same distribution.
+- "independent" means that the joint distribution  equal tthe product of marginal distributions, i.e.,
+
+$$
+\begin{aligned}
+\textrm{Prob}\{x_0 = i_0, x_1 = i_1, \dots , x_{N-1} = i_{N-1}\} &= \textrm{Prob}\{x_0 = i_0\} \cdot \dots \cdot \textrm{Prob}\{x_{I-1} = i_{I-1}\}\\
+&= f_{i_0} f_{i_1} \cdot \dots \cdot f_{i_{N-1}}\\
+\end{aligned}
+$$
+
+
+
+Consider the **empirical distribution**:
+
+\begin{align}
+i & = 0,\dots,I-1,\\
+N_i & = \text{number of times} \ X = i,\\
+N & = \sum^{I-1}_{i=0} N_i \quad \text{total number of draws},\\
+\tilde {f_i} &  = \frac{N_i}{N} \sim \ \text{frequency of draws for which}\  X=i
+\end{align} 
+
+
+Key ideas that  justify connecting probability theory with statistics are laws of large numbers and central limit theorems
+
+**LLN:** 
+
+  - A Law of Large Numbers (LLN) states that $\tilde {f_i} \to f_i \text{ as } N \to \infty$
+
+**CLT:** 
+
+   - A Central Limit Theorem (CLT) describes a  **rate** at which $\tilde {f_i} \to f_i$
+
+
+**Remarks** 
+
+ - For "frequentist" statisticians, **anticipated relative frequency**  is **all** that a probability distribution means. 
+
+ - But for a Bayesian it means something more or different.
+
+
+
+## Representing  Probability Distributions
 
  
 
@@ -100,29 +194,24 @@ When a probability density exists, a probability distribution can be characteriz
 
 For a **discrete-valued** random variable  
 
-<<<<<<< HEAD
  * the number  of possible values of $X$ is finite or countably infinite 
- * we replace the **density** with a **probability mass function**, a non-negative sequence that sums to one 
- * we replace integration with summation in the formula that relates a CDF to a probability mass function 
-=======
-* the number  of possible values of $X$ is finite or countably infinite 
-* we replace the **density** with a **probability mass function**, a non-negative sequence that sums to one 
-* we replace integration with summation in the formula that relates a CDF to a density 
->>>>>>> 4ebcd906ba7cb9825654c6e87291d176457ce7ec
+ * we replace a  **density** with a **probability mass function**, a non-negative sequence that sums to one 
+ * we replace integration with summation in the formula like {eq}`eq:CDFfromdensity` that relates a CDF to a probability mass function 
 
 
 In this lecture, we mostly discuss discrete random variables.  
 
 Doing this enables us to confine our tool set basically to linear algebra.
 
-Later we'll briefly discuss how to approximate a continuous random variable with a discrete one.
+Later we'll briefly discuss how to approximate a continuous random variable with a discrete random variable.
  
 
 +++
 
-## Univariate probability distribution
+## Univariate Probability Distributions
 
-+++
+We'll devote most of this lecture to discrete-valued random variables, but we'll say a few things
+about continuous-valued random variables.
 
 
 ### Discrete random variable
@@ -155,12 +244,12 @@ These parameters pin down the shape of the distribution.
 
 (Sometimes $I = \infty$.)
 
-Such "non-parametric" distributions have as many "parameters" as there are possible values of the random variable.
+Such a "non-parametric" distribution has as many "parameters" as there are possible values of the random variable.
 
 
 We often work with special  distributions that  are  characterized by  a small number  parameters. 
 
-In these special distributions, 
+In these special parametric  distributions, 
 
 $$ 
 f_i = g(i; \theta)
@@ -169,9 +258,12 @@ $$
 where $\theta $ is a vector of parameters that is of much smaller dimension than $I$.
 
 
-**Remark:**
-The concept of  **parameter** is intimately related to the notion of  **sufficient statistic**. A sufficient statistic   a device for summarizing a
-large data set with a smaller set of  statistics that are nonlinear functions of the data set.  Sufficient statistics are designed to  summarize all  **information** about the parameters that is contained in the big data set. (R. A. Fisher provided a sharp definition of **information** -- see <https://en.wikipedia.org/wiki/Fisher_information>)
+**Remarks:**
+ - The concept of  **parameter** is intimately related to the notion of  **sufficient statistic**.
+ -  Sufficient statistic are  nonlinear function of a data set.
+ -  Sufficient statistics are designed to  summarize all  **information** about the parameters that is contained in the big data set. 
+ -  They are important tools that AI uses to reduce the size of a **big data** set
+ -  R. A. Fisher provided a sharp definition of **information** -- see <https://en.wikipedia.org/wiki/Fisher_information>
 
 
  
@@ -209,11 +301,11 @@ $$
 
 +++
 
-## Bivariate Probability Distribution
+## Bivariate Probability Distributions
 
 We'll now discuss a bivariate **joint distribution**.
 
-We'll start by restricing ourselves to two discrete random variables.
+To begin, we restrict ourselves to two discrete random variables.
 
  
 Let $X,Y$ be two discrete random variables that take values:
@@ -245,7 +337,7 @@ $$
 $$
 +++
 
-## Marginal distributions
+## Marginal Probability Distributions
 
 The joint distribution induce marginal distributions 
 
@@ -254,7 +346,7 @@ $$
 $$
 
 $$
-\textrm{Prob}\{Y=j\}= \sum_{i=0}^{I-1}f_{ij} = \nu_i, i=0,\ldots,J-1$
+\textrm{Prob}\{Y=j\}= \sum_{i=0}^{I-1}f_{ij} = \nu_i, i=0,\ldots,J-1 
 $$
 
 
@@ -275,11 +367,11 @@ Then marginal distributions are:
 
 
 $$ 
-\begin{align} \textrm{Prob} \{X=0\}&=.25+.1=.35\\
+\begin{aligned} \textrm{Prob} \{X=0\}&=.25+.1=.35\\
 \textrm{Prob}\{X=1\}& =.15+.5=.65\\
 \textrm{Prob}\{Y=0\}&=.25+.15=.4\\
 \textrm{Prob}\{Y=1\}&=.1+.5=.6
-\end{align}
+\end{aligned}
 $$
 
 
@@ -295,7 +387,7 @@ $$
 
 +++
 
-## Conditional Distributions
+## Conditional Probability  Distributions
 
 Conditional probabilities are defined according to
 
@@ -335,7 +427,7 @@ $$
 
 +++
 
-## Independence
+## Statistical Independence
 
 Random variables X and Y are statistically **independent** if 
 
@@ -363,12 +455,12 @@ $$
 
 +++
 
-## Examples of univariate random variable
+## Means and Variances
 
 +++
 
-We will show how to compute the mean and variance in univariate random variables.
-For a discrete random variable, its mean and variance are given by
+
+The  mean and variance of a discrete random variable $X$  are
 
 $$
 \begin{aligned}
@@ -378,7 +470,7 @@ $$
 \end{aligned} 
 $$
 
-For a continuous random variable having  density $f_{X}(x)$), its mean and variance are given by
+A continuous random variable having  density $f_{X}(x)$) has  mean and variance 
 
 $$
 \begin{aligned}
@@ -387,25 +479,229 @@ $$
 \end{aligned}
 $$
 
-Next, we give examples of various univariate distribution and compute their mean and variance.
+
+
+
+
+
+## Classic Trick for Generating Random Numbers
+
+Suppose we have at our disposal a pseudo random number that draws a uniform random variable, i.e., one with probability distribution
+
+$$
+\textrm{Prob}\{\tilde{X}=i\}=\frac{1}{I},\quad i=0,\ldots,I-1
+$$
+
+How can we transform $\tilde{X}$ to get a random variable $X$ for which $\textrm{Prob}\{X=i\}=f_i,\quad i=0,\ldots,I-1$,
+ where $f_i$ is an arbitary discrete probability distribution on $i=0,1,\dots,I-1$?
+
+The key tool is the inverse of a cumulative distribution function (CDF). 
+
+Observe that the CDF of a distribution is monotone and non-decreasing, taking values between $0$ and $1$.
+
+We can draw a sample of a random variable $X$ with a known CDF as follows:
+
+- draw a random variable  $u$ from a uniform distribution on $[0,1]$
+- pass the sample value of $u$ into the **"inverse"** target  CDF for $X$
+- $X$ has the target CDF
+
+
+Thus, knowing the **"inverse"** CDF of a distribution is enough to simulate from this distribution.
+
+**NOTE**: The "inverse" CDF needs to exist for this method to work.
+
+The inverse CDF is 
+
+$$
+F^{-1}(u)\equiv\inf \{x\in \mathbb{R}: F(x) \geq u\} \quad(0<u<1)
+$$
+
+Here  we use infimum because a CDF is a non-decreasing and right-continuous function. 
+
+Thus, suppose that 
+
+-  $U$ is a uniform random variable $U\in[0,1]$ 
+-  We want to sample a random variable $X$ whose  CDF is  $F$.
+
+It turns out that if we use draw uniform random numbers $U$ and then compute  $X$ from 
+
+$$
+X=F^{-1}(U)$,
+$$
+
+then $X$ ia a random variable  with CDF $F_X(x)=F(x)=\textrm{Prob}\{X\le x\}$.
+
+We'll verify this in  the special case in which  $F$ is continuous and bijective so that its inverse function exists and  
+can be  denoted by $F^{-1}$.
+
+Note that 
+
+$$
+\begin{aligned}
+F_{X}\left(x\right)	& =\textrm{Prob}\left\{ X\leq x\right\} \\
+	& =\textrm{Prob}\left\{ F^{-1}\left(U\right)\leq x\right\} \\
+	& =\textrm{Prob}\left\{ U\leq F\left(x\right)\right\} \\
+	& =F\left(x\right) 
+\end{aligned}
+$$
+
+where the last equality occurs  because $U$ is distributed uniformly on $[0,1]$ while $F(x)$ is a constant given $x$ that also lies on $[0,1]$.
+
+Let's use  `numpy` to compute some examples.
+
+**Example: A continuous geometric (exponential) distribution**
+
+Let $X$ follow a geometric distribution, with parameter $\lambda>0$.
+
+Its density function is 
+
+$$
+\quad f(x)=\lambda e^{-\lambda x}
+$$
+
+Its CDF is 
+
+$$
+F(x)=\int_{0}^{\infty}\lambda e^{-\lambda x}=1-e^{-\lambda x}
+$$
+
+Let $U$ follow a uniform distribution on $[0,1]$. 
+
+$X$ is a random variable such that $U=F(X)$. 
+
+The distribution $X$ can be deduced from 
+
+$$ 
+\begin{aligned}
+U& =F(X)=1-e^{-\lambda X}\qquad\\
+\implies & \quad -U=e^{-\lambda X}\\
+\implies&  \quad \log(1-U)=-\lambda X\\
+\implies & \quad X=\frac{(1-U)}{-\lambda}
+\end{aligned}
+$$
+
+Let's draw $u$ from $U[0,1]$ and calculate $x=\frac{log(1-U)}{-\lambda}$.
+
+
+We'll check whether  $X$  seems to follow a **continuous geometric** (exponential) distribution.
+
+Let's check with `numpy`.
 
 ```{code-cell} ipython3
-# !pip install prettytable
+n, λ = 1_000_000, 0.3
+
+# draw uniform numbers
+u = np.random.rand(n)
+
+# transform
+x = -np.log(1-u)/λ
+
+# draw geometric distributions
+x_g = np.random.exponential(1 / λ, n)
+
+# plot and compare
+plt.hist(x, bins=100, density=True)
+plt.show()
 ```
 
 ```{code-cell} ipython3
-import numpy as np
-import matplotlib.pyplot as plt
-import prettytable as pt
-from mpl_toolkits.mplot3d import Axes3D
-from IPython.display import set_matplotlib_formats
-set_matplotlib_formats('retina')
-%matplotlib inline
+plt.hist(x_g, bins=100, density=True, alpha=0.6)
+plt.show()
 ```
 
-### Examples: discrete random variables
+**Geometric distribution**
 
-#### Geometric distribution  
+Let $X$ distributed geometrically, that is
+
+\begin{align} 
+\textrm{Prob}(X=i) & =(1-\lambda)\lambda^i,\quad\lambda\in(0,1), \quad  i=0,1,\dots \\
+ & \sum_{i=0}^{\infty}\textrm{Prob}(X=i)=1\longleftrightarrow(1- \lambda)\sum_{i=0}^{\infty}\lambda^i=\frac{1-\lambda}{1-\lambda}=1
+\end{align}
+
+Its CDF is given by
+
+\begin{align}
+\textrm{Prob}(X\le i)& =(1-\lambda)\sum_{j=0}^{i}\lambda^i\\
+& =(1-\lambda)[\frac{1-\lambda^{i+1}}{1-\lambda}]\\
+& =1-\lambda^{i+1}\\
+& =F(X)=F_i \quad 
+\end{align}
+
+Again, let $\tilde{U}$ follow a uniform distribution and we want to find $X$ such that $F(X)=\tilde{U}$.
+
+Let's deduce the distribution of $X$ from
+
+$$
+\begin{aligned}
+\tilde{U} & =F(X)=1-\lambda^{x+1}\\
+1-\tilde{U} & =\lambda^{x+1}\\
+log(1-\tilde{U})& =(x+1)\log\lambda\\
+\frac{\log(1-\tilde{U})}{\log\lambda}& =x+1\\
+\frac{\log(1-\tilde{U})}{\log\lambda}-1 &=x
+\end{aligned}
+$$
+
+However, $\tilde{U}=F^{-1}(X)$ may not be an integer for any $x\geq0$.
+
+So let
+
+$$
+x=\lceil\frac{\log(1-\tilde{U})}{\log\lambda}-1\rceil
+$$
+
+where $\lceil . \rceil$ is the ceiling function.
+
+Thus $x$ is the smallest integer such that the discrete geometric CDF is greater than or equal to $\tilde{U}$.
+
+We can verify that $x$ is indeed geometrically distributed by the following `numpy` program.
+
+**Note:** The exponential distribution is the continuous analog of geometric distribution.
+
+
+```{code-cell} ipython3
+n, λ = 1_000_000, 0.8
+
+# draw uniform numbers
+u = np.random.rand(n)
+
+# transform
+x = np.ceil(np.log(1-u)/np.log(λ) - 1)
+
+# draw geometric distributions
+x_g = np.random.geometric(1-λ, n)
+
+# plot and compare
+plt.hist(x, bins=150, density=True)
+plt.show()
+```
+
+```{code-cell} ipython3
+np.random.geometric(1-λ, n).max()
+```
+
+```{code-cell} ipython3
+np.log(0.4)/np.log(0.3)
+```
+
+```{code-cell} ipython3
+plt.hist(x_g, bins=150, density=True, alpha=0.6)
+plt.show()
+```
+
+
+
+## Some  Discrete Probability Distributions
+
+
+Let's write some Python code to compute   means and variances of soem  univariate random variables.
+
+We'll use our code to 
+
+- compute population means and variances from the probability distribution
+- generate  a sample  of $N$ independently and identically distributed draws and compute sample means and variances
+- compare population and sample means and variances
+
+## Geometric distribution  
 
 $$ \textrm{Prob}(X=k)=(1-p)^{k-1}p,k=1,2, \ldots $$
 $\implies$
@@ -433,12 +729,14 @@ print("\nThe population mean is: ", 1/p)
 print("The population variance is: ", (1-p)/(p**2))
 ```
 
-#### Newcomb–Benford distribution
+### Newcomb–Benford distribution
 
-The **Newcomb–Benford law** fits an observation that in many data sets, e.g., reports of incomes to tax authorities,
-the leading digit is likely to be small. 
+The **Newcomb–Benford law** fits  many data sets, e.g., reports of incomes to tax authorities, in which 
+the leading digit is more likely to be small than large. 
 
-A distribution that approximates such outcomes is:
+See <https://en.wikipedia.org/wiki/Benford%27s_law>
+
+A Benford probability distribution is
 
 $$
 \textrm{Prob}\{X=d\}=\log _{10}(d+1)-\log _{10}(d)=\log _{10}\left(1+\frac{1}{d}\right)
@@ -446,7 +744,7 @@ $$
 
 where $d\in\{1,2,...,9\}$ can be thought of as a **first digit** in a sequence of digits.
 
-This is a well defined discrete distribution, since
+This is a well defined discrete distribution since we can verify that probabilities are nonnegative and sum to $1$.
 
 $$
 \log_{10}\left(1+\frac{1}{d}\right)\geq0,\quad\sum_{d=1}^{9}\log_{10}\left(1+\frac{1}{d}\right)=1
@@ -486,7 +784,7 @@ plt.title('Benford\'s distribution')
 plt.show()
 ```
 
-#### Pascal (negative binomial) distribution 
+### Pascal (negative binomial) distribution 
 
 Consider a sequence of independent Bernoulli trials.
 
@@ -530,10 +828,18 @@ print("\nThe population mean is: ", r*(1-p)/p)
 print("The population variance is: ", r*(1-p)/p**2)
 ```
 
-### Some continuous random variables
+## Continuous Random Variables
 
-#### Univariate Gaussian distribution
-$$ X \sim N(\mu,\sigma^2)$$
+### Univariate Gaussian distribution
+
+We write 
+
+$$ 
+X \sim N(\mu,\sigma^2)
+$$
+
+to indicate the probability distribution
+
 $$f(x|u,\sigma^2)=\frac{1}{\sqrt{2\pi \sigma^2}}e^{[-\frac{1}{2\sigma^2}(x-u)^2]} $$ 
 
 In the below example, we set $\mu = 0, \sigma = 0.1$.
@@ -562,7 +868,7 @@ print(μ-μ_hat < 1e-3)
 print(σ-σ_hat < 1e-3)
 ```
 
-#### Uniform distribution
+### Uniform Distribution
 
 $$
 \begin{aligned}
@@ -599,14 +905,14 @@ print("\nThe population mean is: ", (a+b)/2)
 print("The population variance is: ", (b-a)**2/12)
 ```
 
-###  A mixed discrete-continuous distribution
+##  A Mixed Discrete-Continuous Distribution
 
-We'll motivate this example by a little story.
+We'll motivate this example with  a little story.
 
 
 Suppose that  to apply for a job  you take an interview and either pass or fail it.
 
-You have 5% chance to pass an interview and you know your salary will uniformly distributed in the interval 300~400 a day only if you pass. 
+You have $5\%$ chance to pass an interview and you know your salary will uniformly distributed in the interval 300~400 a day only if you pass. 
 
 We can describe your daily salary as  a discrete-continuous variable with the following probabilities:
 
@@ -663,7 +969,11 @@ print("mean: ", mean)
 print("variance: ", var)
 ```
 
-## Bivariate distributions
+
+
+
+
+## Matrix Representation of Some Bivariate Distributions
 
 +++
 
@@ -671,9 +981,8 @@ Let's use matrices to represent a joint distribution, conditional distribution, 
 
 +++
 
-### Example: discrete distribution
 
-The table below illustrates  probability distribution  for a bivariate random variable. 
+The table below illustrates a  probability distribution  for a bivariate random variable. 
 
 $$
 F=[f_{ij}]=\left[\begin{array}{cc}
@@ -682,39 +991,14 @@ F=[f_{ij}]=\left[\begin{array}{cc}
 \end{array}\right]
 $$
 
+Marginal distributions are
+
 $$ \textrm{Prob}(X=i)=\sum_j{f_{ij}}=u_i  $$
 $$ \textrm{Prob}(Y=j)=\sum_i{f_{ij}}=v_j $$
 
-Knowing the distribution, we want to draw from a sample of size $n$ from the above distribution and compute the empirical sample mean and variance, and compare them with the theoretical values. 
-
-How do we generate a random variable knowing its distribution? 
-
-The key tool is the inverse of a cumulative distribution function (CDF). 
-
-Observe that the CDF of a distribution is monotone and non-decreasing, taking values between $0$ and $1$.
-
-We can draw a sample of a random variable $X$ with a known CDF as follows:
-
-- draw a random variable  $u$ from a uniform distribution on $[0,1]$
-- pass the sample value of $u$ into the **"inverse"** target  CDF for $X$
-- $X$ has the target CDF
 
 
-Thus, knowing the **"inverse"** CDF of a distribution is enough to simulate from this distribution.
-
-**NOTE**: The "inverse" CDF needs to exist for this method to work.
-
-The inverse CDF is 
-
-$$
-F^{-1}(u)\equiv\inf \{x\in \mathbb{R}: F(x) \geq u\} \quad(0<u<1)
-$$
-
-Here  we use infimum because a CDF is a non-decreasing and right-continuous function. 
-
-A subsequent  section  provides some  examples.
-
-Below we draw samples using our techniques and confirm that the "sampling" distribution agrees well  with the "population" distribution.
+Below we draw some samples  confirm that the "sampling" distribution agrees well  with the "population" distribution.
 
 +++
 
@@ -794,9 +1078,7 @@ yctb.add_row([xs[1], yc2p, 1-yc2p])
 print(yctb)
 ```
 
-#### Theoretical results
-
-The marginal and conditional distributions can be easily computed.
+Let's  calculate population  marginal and conditional probabilities  using matrix algebra.
 
 $$
 \left[\begin{array}{cccccc}
@@ -965,6 +1247,8 @@ class discrete_bijoint:
         self.xyp = ycp
 ```
 
+Let's apply our code to some examples.
+
 **Example 1**
 
 ```{code-cell} ipython3
@@ -1006,12 +1290,10 @@ d_new.cond_dist()
 
 +++
 
-### A continuous bivariate random vector 
+## A Continuous Bivariate Random Vector 
 
 
-Consider a two-dimensional Gaussian distribution. 
-
-Its joint density is given by
+A two-dimensional Gaussian distribution has  joint density 
 
 $$ 
 f(x,y) =(2\pi\sigma_1\sigma_2\sqrt{1-\rho^2})^{-1}\exp\left[-\frac{1}{2(1-\rho^2)}\left(\frac{(x-\mu_1)^2}{\sigma_1^2}-\frac{2\rho(x-\mu_1)(y-\mu_2)}{\sigma_1\sigma_2}+\frac{(y-\mu_2)^2}{\sigma_2^2}\right)\right] 
@@ -1062,9 +1344,9 @@ y = np.linspace(-10, 10, 1_000)
 x_mesh, y_mesh = np.meshgrid(x, y, indexing="ij")
 ```
 
-#### Joint Distribution
+**Joint Distribution**
 
-We can  plot the analytical joint density.
+Let's  plot the **population** joint density.
 
 ```{code-cell} ipython3
 # %matplotlib notebook
@@ -1089,7 +1371,7 @@ ax.set_xticks([])
 plt.show()
 ```
 
-Next  we can simulate from  a built-in `numpy` function  and calculate the sample marginal distribution from the sample mean and variance.
+Next  we can simulate from  a built-in `numpy` function  and calculate a **sample** marginal distribution from the sample mean and variance.
 
 ```{code-cell} ipython3
 μ= np.array([0, 5])
@@ -1100,7 +1382,7 @@ x = data[:, 0]
 y = data[:, 1]
 ```
 
-#### Marginal distribution
+**Marginal distribution**
 
 ```{code-cell} ipython3
 plt.hist(x, bins=1_000, alpha=0.6)
@@ -1120,7 +1402,7 @@ plt.hist(y_sim, bins=1_000, density=True, alpha=0.4, histtype="step")
 plt.show()
 ```
 
-#### Conditional distribution
+**Conditional distribution**
 
 The population conditional distribution is
 
@@ -1133,7 +1415,7 @@ $$
 
 Let's approximate  the joint density by discretizing and mapping the approximating joint density into a  matrix.
 
-we can compute the discretized marginal density  by just using matrix algebra and  noting that 
+We can compute the discretized marginal density  by just using matrix algebra and  noting that 
 
 $$
 \textrm{Prob}\{X=i|Y=j\}=\frac{f_{ij}}{\sum_{i}f_{ij}}
@@ -1203,13 +1485,13 @@ print(μy, σy)
 print(μ2 + ρ * σ2 * (1 - μ1) / σ1, np.sqrt(σ2**2 * (1 - ρ**2)))
 ```
 
-## Distribution of sum of two independent random variables
+## Sum of Two Independently Distributed Random Variables
 
-Let $X, Y$ be two independent discrete random variables that take values in $\bar{X}, \bar{Y}$ respectively.
+Let $X, Y$ be two independent discrete random variables that take values in $\bar{X}, \bar{Y}$, respectively.
 
 Define a new random variable $Z=X+Y$. 
 
-Evidently, $Z$ takes values from $\bar{Z}$ defined below.
+Evidently, $Z$ takes values from $\bar{Z}$ defined as follows:
 
 $$
 \begin{aligned} \bar{X} & =\{0,1,\ldots,I-1\};\qquad f_i= \textrm{Prob} \{X=i\}\\
@@ -1235,7 +1517,7 @@ $$
 
 where $f * g$ denotes the **convolution** of the  $f$ and $g$ sequences.
 
-Similarly, for any two random variables $X,Y$ that admit densities $f_{X}, g_{Y}$, the density of $Z=X+Y$ is 
+Similarly, for  two random variables $X,Y$ with  densities $f_{X}, g_{Y}$, the density of $Z=X+Y$ is 
 
 $$
 f_{Z}(z)=\int_{-\infty}^{\infty} f_{X}(x) f_{Y}(z-x) dx \equiv f_{X}*g_{Y}
@@ -1246,242 +1528,6 @@ where $ f_{X}*g_{Y}$ denotes the **convolution** of the $f_X$ and $g_Y$ function
 
 +++
 
-## Classic problem (von Neumann):
-Suppose we have at our disposal a pseudo random number generated from drawing a uniform random variable 
-
-$$
-\textrm{Prob}\{\tilde{X}=i\}=\frac{1}{I},\quad i=0,\ldots,I-1
-$$
-
-How can we transform $\tilde{X}$ to get a random variable $X$ for which $\textrm{Prob}\{X=i\}=f_i,\quad i=0,\ldots,I-1$, where $f_i$ is an arbitary discrete probability distribution on $i=0,1,\dots,I-1$?
-
-**Answer**: use the inverse CDF:
-
-Let $U$ be a uniform random variable $U\in[0,1]$ with CDF $F$.
-
-We can show that if $X=F^{-1}(U)$, then $X$ ia a r.v. with CDF $F_X(x)=F(x)=\textrm{Prob}\{X\le x\}$.
-
-Consider the special case where $F$ is continuous and bijective. 
-
-Then its inverse function exists and is denoted by $F^{-1}$:
-
-$$
-\begin{aligned}
-F_{X}\left(x\right)	& =\textrm{Prob}\left\{ X\leq x\right\} \\
-	& =\textrm{Prob}\left\{ F^{-1}\left(U\right)\leq x\right\} \\
-	& =\textrm{Prob}\left\{ U\leq F\left(x\right)\right\} \\
-	& =F\left(x\right) 
-\end{aligned}
-$$
-
-where the last equality is because $U$ is distributed uniformly on $[0,1]$ while $F(x)$ is a constant given $x$ that also lies on $[0,1]$.
-
-We can check out the above results by implementing the following examples in `numpy`.
-
-### Example: A continuous geometric (exponential) distribution
-
-Let $X$ follow a geometric distribution, with parameter $\lambda>0$.
-
-Its density function is 
-
-$$
-\quad f(x)=\lambda e^{-\lambda x}
-$$
-
-Its CDF is 
-
-$$
-F(x)=\int_{0}^{\infty}\lambda e^{-\lambda x}=1-e^{-\lambda x}
-$$
-
-Let $U$ follow a uniform distribution on $[0,1]$. 
-
-$X$ is a random variable such that $U=F(X)$. 
-
-The distribution $X$ can be deduced from 
-
-$$ 
-\begin{aligned}
-U& =F(X)=1-e^{-\lambda X}\qquad\\
-\implies & \quad -U=e^{-\lambda X}\\
-\implies&  \quad \log(1-U)=-\lambda X\\
-\implies & \quad X=\frac{(1-U)}{-\lambda}
-\end{aligned}
-$$
-
-Let's draw $u$ from $U[0,1]$ and calculate $x=\frac{log(1-U)}{-\lambda}$.
-
-
-We'll check whether  $X$  seems to follow a **continuous geometric** (exponential) distribution.
-
-Let's check with `numpy`.
-
-```{code-cell} ipython3
-n, λ = 1_000_000, 0.3
-
-# draw uniform numbers
-u = np.random.rand(n)
-
-# transform
-x = -np.log(1-u)/λ
-
-# draw geometric distributions
-x_g = np.random.exponential(1 / λ, n)
-
-# plot and compare
-plt.hist(x, bins=100, density=True)
-plt.show()
-```
-
-```{code-cell} ipython3
-plt.hist(x_g, bins=100, density=True, alpha=0.6)
-plt.show()
-```
-
-### Geometric distribution
-
-Let $X$ distributed geometrically, that is
-
-\begin{align} 
-\textrm{Prob}(X=i) & =(1-\lambda)\lambda^i,\quad\lambda\in(0,1), \quad  i=0,1,\dots \\
- & \sum_{i=0}^{\infty}\textrm{Prob}(X=i)=1\longleftrightarrow(1- \lambda)\sum_{i=0}^{\infty}\lambda^i=\frac{1-\lambda}{1-\lambda}=1
-\end{align}
-
-Its CDF is given by
-
-\begin{align}
-\textrm{Prob}(X\le i)& =(1-\lambda)\sum_{j=0}^{i}\lambda^i\\
-& =(1-\lambda)[\frac{1-\lambda^{i+1}}{1-\lambda}]\\
-& =1-\lambda^{i+1}\\
-& =F(X)=F_i \quad 
-\end{align}
-
-Again, let $\tilde{U}$ follow a uniform distribution and we want to find $X$ such that $F(X)=\tilde{U}$.
-
-Let's deduce the distribution of $X$ from
-
-$$
-\begin{aligned}
-\tilde{U} & =F(X)=1-\lambda^{x+1}\\
-1-\tilde{U} & =\lambda^{x+1}\\
-log(1-\tilde{U})& =(x+1)\log\lambda\\
-\frac{\log(1-\tilde{U})}{\log\lambda}& =x+1\\
-\frac{\log(1-\tilde{U})}{\log\lambda}-1 &=x
-\end{aligned}
-$$
-
-However, $\tilde{U}=F^{-1}(X)$ may not be an integer for any $x\geq0$.
-
-So let
-
-$$
-x=\lceil\frac{\log(1-\tilde{U})}{\log\lambda}-1\rceil
-$$
-
-where $\lceil . \rceil$ is the ceiling function.
-
-Thus $x$ is the smallest integer such that the discrete geometric CDF is greater than or equal to $\tilde{U}$.
-
-We can verify that $x$ is indeed geometrically distributed by the following `numpy` program.
-
-**Note:** The exponential distribution is the continuous analog of geometric distribution.
-
-
-```{code-cell} ipython3
-n, λ = 1_000_000, 0.8
-
-# draw uniform numbers
-u = np.random.rand(n)
-
-# transform
-x = np.ceil(np.log(1-u)/np.log(λ) - 1)
-
-# draw geometric distributions
-x_g = np.random.geometric(1-λ, n)
-
-# plot and compare
-plt.hist(x, bins=150, density=True)
-plt.show()
-```
-
-```{code-cell} ipython3
-np.random.geometric(1-λ, n).max()
-```
-
-```{code-cell} ipython3
-np.log(0.4)/np.log(0.3)
-```
-
-```{code-cell} ipython3
-plt.hist(x_g, bins=150, density=True, alpha=0.6)
-plt.show()
-```
-
-## What Does Probability Mean? 
-
-Up to now, we  have been discussing fixed "population" probabilities. 
-
-These are purely mathematical objects.
-
-To appreciate how statisticians connect probabilities to data, the key is to understand the following concepts:
-
-To understand what "probability"  means, we next discuss the following concepts.
-
-
-* A single random draw from a probability distribution
-* Repeated independent and identically distributed (i.i.d.)  draws of "samples" or "realizations" from the same probability distribution
-* A **statistic** defined as a  function of a sequence of samples
-* An **empirical distribution** or **histogram** (a binned empirical distribution) that records observed  **relative frequencies**
-* The idea that a  population probability  distribution is  what we anticipate **relative frequencies** will be in a long sequence of i.i.d. draws. Here the following mathematical machinery makes precise what is meant by **anticipated relative frequencies** 
-     - **Law of Large Numbers (LLN)**
-     -  **Central Limit Theorem (CLT)** 
-+++
-
-##### Scalar example
-
-
-Consider the following discrete distribution
-
-$$ 
-X  \sim \{{f_i}\}_{i=0}^{I-1},\quad f_i \geqslant 0, \quad \sum_i f_i = 1
-$$
-
-Draw a sample $x_0, x_1, \dots , x_{N-1}$, $N$ draws of $X$ from $\{f_i\}^I_{i=1}$.
-
-What do the "identical" and "independent" mean in   IID or iid ("identically and independently distributed)?
-
-- "identical" means that each draw is from the same distribution.
-- "independent" means that the joint distribution  equal tthe product of marginal distributions, i.e.,
-
-$$
-\begin{aligned}
-\textrm{Prob}\{x_0 = i_0, x_1 = i_1, \dots , x_{N-1} = i_{N-1}\} &= \textrm{Prob}\{x_0 = i_0\} \cdot \dots \cdot \textrm{Prob}\{x_{I-1} = i_{I-1}\}\\
-&= f_{i_0} f_{i_1} \cdot \dots \cdot f_{i_{N-1}}\\
-\end{aligned}
-$$
-
-
-
-Consider the empirical distribution:
-\begin{align}
-i & = 0,\dots,I-1,\\
-N_i & = \text{number of times} \ X = i,\\
-N & = \sum^{I-1}_{i=0} N_i \quad \text{total number of draws},\\
-\tilde {f_i} &  = \frac{N_i}{N} \sim \ \text{frequency of draws for which}\  X=i
-\end{align} 
-
-**LLN:** 
-
-  - A Law of Large Numbers (LLN) states that $\tilde {f_i} \to f_i \text{ as } N \to \infty$
-
-**CLT:** 
-
-   - A Central Limit Theorem (CLT) describes a  **rate** at which $\tilde {f_i} \to f_i$
-
-
-**Remark:** For "frequentist" statisticians, **anticipated relative frequency**  is **all** that a probability distribution means. But for a Bayesian it means something more or different.
-
-+++
 
 ## Transition Probability Matrix
 
@@ -1660,7 +1706,7 @@ Thus, multiple  joint distributions $[f_{ij}]$ can have  the same marginals.
 
 +++
 
-### Copula function
+## Copula Functions
 
 Suppose that $X_1, X_2, \dots, X_n$ are $N$ random variables  and that 
 
@@ -1857,7 +1903,7 @@ draws2 = 1_000_000
 # generate draws from uniform distribution
 p = np.random.rand(draws2)
 
-# generate draws of first copuling via uniform distributiony
+# generate draws of first coupling via uniform distribution
 c2 = np.vstack([np.ones(draws2), np.ones(draws2)])
 # X=0, Y=0
 c2[0, p <= f2_cum[0]] = 0
@@ -1918,7 +1964,7 @@ So they are both couplings of $X$ and $Y$.
 
 +++
 
-## Time series analysis
+## Time Series 
 
 Suppose that there are two time periods.
 

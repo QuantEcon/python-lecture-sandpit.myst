@@ -44,6 +44,12 @@ import seaborn as sns
 
 sns.set_style('white')
 colors = sns.color_palette()
+
+
+import logging
+logging.basicConfig()
+logger = logging.getLogger('pymc')
+logger.setLevel(logging.CRITICAL)
 ```
 
 ## A Univariate First-Order  Autoregressive   Process

@@ -294,6 +294,7 @@ class TruncatedvonMises(dist.Rejector):
 ```
 
 ### Variational Inference
+
 The gist of the variational inference method is that instead of directly sampling from the posterior, we approximate the unknown, usually intractable posterior distribution using a family of tractable distributions/densities and minimizes its distance to the true posterior. This way, we have made an inference problem a well-posed optimization problem.
 
 More specifically in our context, let the latent parameter/variable that we want to infer about be $\theta$, and with a given prior $p(\theta)$ and likelihood $p\left(Y\vert\theta\right)$, we would like to infer about $p\left(\theta\vert Y\right)$. Bayse's rule gives:
@@ -336,6 +337,7 @@ Below, I implement Stochastic Variational Inference (SVI) in Pyro and Numpyro us
 In particular, I choose two sets of variational distributions: Beta and TruncatedNormal with support $[0,1]$. Learnable parameters for the Beta distribution are (alpha, beta), both being positive. And learnable parameters for the Truncated Normal distribution are (loc, scale).
 
 Moreover, <u> I restrict the truncated Normal paramter 'loc' to be on the interval $[0,1]$</u>. This can be easily lifted if we want.
+
 
 ## Implementation 
 
@@ -501,14 +503,14 @@ class BayesianInference:
         if self.solver=='pyro':
             
             nuts_kernel = NUTS(self.model)
-            mcmc = MCMC(nuts_kernel, num_samples=num_samples, warmup_steps=num_warmup)
+            mcmc = MCMC(nuts_kernel, num_samples=num_samples, warmup_steps=num_warmup, disable_progbar=True)
             mcmc.run(data)
 
         # use numpyro
         elif self.solver=='numpyro':
 
             nuts_kernel = nNUTS(self.model)
-            mcmc = nMCMC(nuts_kernel, num_samples=num_samples, num_warmup=num_warmup)
+            mcmc = nMCMC(nuts_kernel, num_samples=num_samples, num_warmup=num_warmup, progress_bar=False)
             mcmc.run(self.rng_key, data=data)
 
         # collect samples
@@ -610,7 +612,7 @@ class BayesianInference:
                 }
 
         elif self.solver=='numpyro':
-            result = svi.run(self.rng_key, n_steps, data)
+            result = svi.run(self.rng_key, n_steps, data, progress_bar=False)
             params = dict(
                 (key, np.asarray(value)) for key, value in result.params.items()
                 )
@@ -803,15 +805,9 @@ true_theta = 0.8
 First, we examine the Beta prior and posteriors both computed analytically and through MCMC and VI computed using `Pyro` and `Numpyro`.
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # First examine Beta priors
 BETA_pyro = BayesianInference(param=(5,5), name_dist='beta', solver='pyro')
 BETA_numpyro = BayesianInference(param=(5,5), name_dist='beta', solver='numpyro')
-```
-
-
-```{code-cell} ipython3
 
 BETA_pyro_plot = BayesianInferencePlot(true_theta, num_list, BETA_pyro)
 BETA_numpyro_plot = BayesianInferencePlot(true_theta, num_list, BETA_numpyro)
@@ -848,20 +844,15 @@ Notice above that even for using beta distribution as our guide, the resulting a
 If we allow for a larger number of steps (from 5000 to 10000) as below, we can observe that the resulting posteriors look very like the true posteriors. However, with this step size, the optimization takes around 6 minutes (on my computer) to run.
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 BayesianInferencePlot(true_theta, num_list, BETA_numpyro).SVI_plot(guide_dist='beta', n_steps=100000)
 ```
 
 Next, we examine results all other prior distributions.
 
 ### MCMC Results
-
 First, we implement and display the MCMC results. We first initialize the `BayesianInference` classes and then can directly call `BayesianInferencePlot` to plot both MCMC and SVI results.
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Initialize BayesianInference classes
 # try uniform
 STD_UNIFORM_pyro = BayesianInference(param=(0,1), name_dist='uniform', solver='pyro')
@@ -928,8 +919,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).MCMC_plot(num_samples
 #### Variational Inference Results - Truncated Normal Guide
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Uniform
 example_CLASS = BayesianInference(param=(0,1), name_dist='uniform', solver='numpyro')
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
@@ -941,8 +930,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='
 ```
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Log Normal
 example_CLASS = LOGNORMAL_numpyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
@@ -950,8 +937,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='
 ```
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Von Mises
 example_CLASS = VONMISES_numpyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
@@ -960,8 +945,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='
 ```
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Laplace
 example_CLASS = LAPLACE_numpyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
@@ -971,8 +954,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='
 #### Variational Inference Results - Beta Guide
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Uniform
 example_CLASS = STD_UNIFORM_pyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
@@ -984,8 +965,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='
 ```
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Log Normal
 example_CLASS = LOGNORMAL_numpyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
@@ -997,8 +976,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='
 ```
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Von Mises
 example_CLASS = VONMISES_numpyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
@@ -1012,8 +989,6 @@ BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='
 ```
 
 ```{code-cell} ipython3
-:tag: [hide-output]
-
 # Laplace
 example_CLASS = LAPLACE_numpyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
