@@ -15,18 +15,20 @@ kernelspec:
 
 This lecture is a sequel to the QuantEcon lecture: https://python.quantecon.org/prob_meaning.html
 
-That lecture illustrate a Bayesian interpretation of probability in a setting in which the likelihood function and the prior distribution
+That lecture offers a Bayesian interpretation of probability in a setting in which the likelihood function and the prior distribution
 over parameters just happened to form a **conjugate** pair in which
 
 -  application of Bayes' Law produces a posterior distribution that has the same functional form as the prior
 
-Having a likelihood and prior that  are conjugate can simplify calculation of a posterior, often permitting analytical or nearly analytical formulations.
+Having a likelihood and prior that  are conjugate can simplify calculation of a posterior, faciltating  analytical or nearly analytical calculations.
 
-But in many situations in which a person's prior is, after all, his or her own business, the likelihood and prior need not form a conjugate pair.
+But in many situations  the likelihood and prior need not form a conjugate pair.
+
+ - after all, a person's prior is his or her own business and would take a form conjugate to a likelihood only by remote coincidence
 
 In these situations, computing a posterior can become very challenging.  
 
-In this lecture, we illustrate how modern Bayesians confront the challenge by using  Monte Carlo techniques that involve 
+In this lecture, we illustrate how modern Bayesians confront non-conjugate priors  by using  Monte Carlo techniques that involve 
 
 - first  cleverly forming a Markov chain whose invariant distribution is the posterior distribution we want 
 - simulating the Markov chain until it has converged and then sampling from the invariant distribution to approximate the posterior
@@ -84,36 +86,50 @@ from numpyro.optim import Adam as nAdam
 ```
 
 
-## Unleashing on a  Binomial Likelihood
+## Unleashing MCMC on a  Binomial Likelihood
 
-This lecture begins with the binomial example in the QuantEcon lecture: https://python.quantecon.org/prob_meaning.html and finds or approximates the posterior
+This lecture begins with the binomial example in the QuantEcon lecture https://python.quantecon.org/prob_meaning.html 
+
+That lecture computed a posterior 
 
 - analytically via choosing the conjugate priors,
+
+This lecture instead computes posteriors
+
 - numerically by sampling from the posterior distribution through MCMC methods, and 
 - using a variational inference (VI) approximation.
 
-We use both the packages `pyro` and `numpyro` under `jax` to find the posterior distribution computationally from a set of alternative given prior distributions and compare them with the analytical results.
+We use both the packages `pyro` and `numpyro` with assistance from  `jax` to approximate a  posterior distribution
+
+We use several alternative prior distributions
+
+We  compare computed posteriors  with ones associated with a conjugate prior as described in  QuantEcon lecture https://python.quantecon.org/prob_meaning.html 
 
 
 ### Analytical Posterior
-Assume that the random variable $X\sim Binom\left(n,\theta\right)$. This defines the following likelihood function
+
+Assume that the random variable $X\sim Binom\left(n,\theta\right)$. 
+
+This defines a likelihood function
 
 $$
 L\left(Y\vert\theta\right) = \textrm{Prob}(X =  k | \theta) = 
 \left(\frac{n!}{k! (n-k)!} \right) \theta^k (1-\theta)^{n-k}
 $$
 
-where $Y=k$ is the observed data.
+where $Y=k$ is an observed data point.
 
-Here, consider $\theta$ to be a random variable for which we assign a prior distribution with density $f(x)$. We will try alternative priors later, but for now, suppose the prior is distributed as $\theta\sim Beta\left(\alpha,\beta\right)$, i.e.,  
+We view  $\theta$ as a random variable for which we assign a prior distribution having density $f(\theta)$.
+
+We will try alternative priors later, but for now, suppose the prior is distributed as $\theta\sim Beta\left(\alpha,\beta\right)$, i.e.,  
 
 $$
 f(\theta) = \textrm{Prob}(\theta) = \frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)}
 $$
 
-since we know that the usual conjugate prior for the binomial likelihood function is a beta distribution.
+We choose this as our prior for now because  we know that a conjugate prior for the binomial likelihood function is a beta distribution.
 
-We can derive the posterior distribution for $ \theta $ analytically  via
+The posterior distribution for $ \theta $ is then
 
 $$
 \textrm{Prob}(\theta|k) = \frac{\textrm{Prob}(\theta,k)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\int_0^1 \textrm{Prob}(k|\theta)*\textrm{Prob}(\theta) d\theta}
@@ -127,7 +143,10 @@ $$
 =\frac{(1 -\theta)^{\beta+N-k-1}* \theta^{\alpha+k-1}}{\int_0^1 (1 - \theta)^{\beta+N-k-1}* \theta^{\alpha+k-1} d\theta}
 $$
 
-where we update with $N$ observations with $k$ successes. So we have
+where we have observed $k$ successes among $N$ sample observations. 
+
+So we have
+
 $$
 \textrm{Prob}(\theta|k) \sim {Beta}(\alpha + k, \beta+N-k)
 $$
@@ -166,16 +185,32 @@ def analytical_beta_posterior(data, alpha0, beta0):
     return st.beta(alpha0 + up_num, beta0 + down_num)
 ```
 
-### Two Approaches for Approximating Posteriors
+### Two Ways to Approximate Posteriors
 
-Next, assuming that we don't have any knowledge of the conjugate priors, we use computational tools to approximate the posterior distribution for a set of alternative prior distributions using both `Pyro` and `Numpyro` packages in Python for the above statistical model. 
+Next, assuming that we don't have any knowledge of the conjugate priors, we use computational tools to approximate the posterior distribution for a set of alternative prior distributions using both `Pyro` and `Numpyro` packages in Python. 
 
-I first use the **Markov Chain Monte Carlo** (MCMC) algorithm and implement the NUTS sampler to sample from the posterior and obtain a sampling distribution that approximates the true posterior.
+We first use the **Markov Chain Monte Carlo** (MCMC) algorithm .
 
-Then, I take the **Variational Inference** (VI) method and implement Stochastic Variational Inference (SVI) machinery in both `Pyro` and `Numpyro`. 
+We implement the NUTS sampler to sample from the posterior.
 
-MCMC algorithm is asymptotically exact since it directly samples from the posterior distribution but can be computationally expensive especially when dimension is large. VI approach is faster, although it does not gaurantee convergence to the target distribution.
-By restricting attentions to a particular family of candidate parametrized distributions (variational distributions), the problem of approximating posteriors is transformed to an well-posed optimization problem in finding the optimal parameters that minimizes the K-L divergence between true posterior and candidate distribution, or equivalently, maximizes the **Evidence Lower Bound** (ELBO). This will be shown below.
+In that way we construct a sampling distribution that approximates the true posterior.
+
+After doing that we deply another procedure called  **Variational Inference** (VI).  
+
+In particular, we implement Stochastic Variational Inference (SVI) machinery in both `Pyro` and `Numpyro`. 
+
+The MCMC algorithm  supposedly generates a more accurate approximation since in principle it directly samples from the posterior distribution.
+
+But it  can be computationally expensive, especially when dimension is large.
+
+A VI approach is cheaper, but it is likely to produce an inferior approximation to the posterior, for the simple reason that it requires guessing a functional form for the posterior,
+a guess that is likely to be wrong. 
+
+By paying the cost of restricting the putative posterior to have a restricted functional form, 
+the problem of approximating a posteriors is transformed to a well-posed optimization problem that seeks parameters of the putative posterior  that minimize
+a Kullback-Leibler (KL) divergence between true posterior and the putatitive posterior  distribution.
+
+  - minimizing the KL divergence is  equivalent with  maximizing a criterion called  the **Evidence Lower Bound** (ELBO), as we shall verify soon.
 
 #### Prior Distributions
 
