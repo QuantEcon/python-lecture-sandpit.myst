@@ -27,7 +27,9 @@ We consider two sorts of statistics:
 
 - sample path properties that are defined as non-linear functions of future values $\{y_{t+j}\}_{j\geq 1}$ at time $t$.
 
-To investigate sample path properties we'll use a simulation procedure recommend by Wecker {cite}`wecker1979predicting`.
+**Sample path properties** are things like "time to next turning point" or "time to next recession"
+
+To investigate sample path properties we'll use a simulation procedure recommended by Wecker {cite}`wecker1979predicting`.
 
 To acknowledge uncertainty about parameters, we'll deploy `pymc` to construct a Bayesian joint posterior distribution for unknown parameters.
 
@@ -81,34 +83,33 @@ f(y_{t+j} | y_{t}; \rho, \sigma) \sim {\mathcal N}\left(\rho^j y_{t}, \sigma^2 \
 $$ (eq3)
 
 
-In addition to the predictive distribution {eq}`eq3` that assumes that the parameters $\rho, \sigma$ are known
-by conditioning on them, we want to compute a corresponding predictive distribution 
-that we form by integrating {eq}`eq3` with respect to a joint posterior distribution $\pi_t(\rho,\sigma | y^t )$ 
+The predictive distribution {eq}`eq3` that assumes that the parameters $\rho, \sigma$ are known, which we express
+by conditioning on them.
+
+We also want to compute a  predictive distribution that does not condition on $\rho,\sigma$ but instead takes account of our uncertainty about them.
+
+We form this predictive distribution by integrating {eq}`eq3` with respect to a joint posterior distribution $\pi_t(\rho,\sigma | y^t )$ 
 that conditions on an observed history $y^t = \{y_s\}_{s=0}^t$:
 
 $$ 
-f(y_{t+j} | y_t)  = \int f(y_{t+j} | y_{t}; \rho, \sigma) \pi_t(\rho,\sigma | y^t ) d \rho d \sigma
+f(y_{t+j} | y^t)  = \int f(y_{t+j} | y_{t}; \rho, \sigma) \pi_t(\rho,\sigma | y^t ) d \rho d \sigma
 $$ (eq4)
 
 
 
-We also  want  to compute some  predictive distributions of "sample path statistics", for example, including
+Predictive distribution {eq}`eq3` assumes that parameters $(\rho,\sigma)$ are known.
+
+Predictive distribution {eq}`eq4` assumes that parameters $(\rho,\sigma)$ are uncertain, but have known probability distribution $\pi_t(\rho,\sigma | y^t )$.
+
+We also  want  to compute some  predictive distributions of "sample path statistics" that might  include, for example
 
 - the time until the next "recession",
 - the minimum value of $Y$ over the next 8 periods,
 - "severe recession", and
 - the time until the next turning point (positive or negative)
 
+To accomplish that for situations in which we are uncertain about parameter values, we shall extend the approach Wecker {cite}`wecker1979predicting` in the following way.
 
-
-
-We shall extend the apprach of Wecker {cite}`wecker1979predicting` in the following way.
-
-We acknowledge  to add uncertainty about the parameter values $\rho, \sigma$ and watch how they affect predictive distributions. 
-
-We  eventually want to compare the predictive distribution outcomes in the case where we infer about the true parameters by drawing from the Bayesian posterior ("extended Wecker method") with the  a case in which we correctly pretend to know parameters ("original Wecker method").
-
-To do this, we
 - first simulate an initial path of length $T_0$;
 - for a given prior, draw a sample of size $N$ from the posterior joint distribution of parameters $\left(\rho,\sigma\right)$ after observing the initial path;
 - for each draw $n=0,1,...,N$, simulate a "future path" of length $T_1$ with parameters $\left(\rho_n,\sigma_n\right)$ and compute our three "sample path statistics";
@@ -197,13 +198,13 @@ Wecker {cite}`wecker1979predicting` proposed using simulation techniques to char
 
 He called these functions "path properties" to contrast them with properties of single data points.
 
-In particular, he studied   two prospective path properties of a given series $y$ 
+He studied   two special  prospective path properties of a given series $\{y_t\}$. 
 
-The first statistic that he studied was **time until the next turning point**
+The first  was **time until the next turning point**
 
    * he defined a **"turning point"** to be the date of the  second of two successive declines in  $y$. 
 
-To examine this statistic in more detail,  let $Z$ be an indicator process
+To examine this statistic,  let $Z$ be an indicator process
 
 $$
 Z_t(Y(\omega)) := \left\{ 
@@ -213,15 +214,14 @@ Z_t(Y(\omega)) := \left\{
 \end{array} \right.
 $$
 
-Then the random variable ** time until the next turning point**  is defined as the following **stopping time** with respect to $Z$:
+Then the random variable **time until the next turning point**  is defined as the following **stopping time** with respect to $Z$:
 
 $$
 W_t(\omega):= \inf \{ k\geq 1 \mid Z_{t+k}(\omega) = 1\}
 $$
 
-A second statistic that Wecker  {cite}`wecker1979predicting` studied was  **the minimum value of $Y$ over the next 8 quarters**.
-
-This statistic can be defined formally  as the random variable 
+Wecker  {cite}`wecker1979predicting`  also studied   **the minimum value of $Y$ over the next 8 quarters**
+which can be defined   as the random variable 
 
 $$ 
 M_t(\omega) := \min \{ Y_{t+1}(\omega); Y_{t+2}(\omega); \dots; Y_{t+8}(\omega)\}
@@ -229,7 +229,7 @@ $$
 
 It is interesting to study yet another possible concept of a **turning point**.
 
-Thus, define
+Thus, let
 
 $$
 T_t(Y(\omega)) := \left\{ 
@@ -250,20 +250,24 @@ P_t(\omega) := \left\{
 \end{array} \right.
 $$
 
-This is designed to express the event: after one or two decrease(s), $Y$ will grow two consecutive quarters. 
+This is designed to express the event
+
+ - ``after one or two decrease(s), $Y$ will grow for two consecutive quarters'' 
 
 
-Following {cite}`wecker1979predicting`, we can calculate  probabilities of $P_t$ and $N_t$ for each period $t$ by simulations. 
+Following {cite}`wecker1979predicting`, we can use simulations to calculate  probabilities of $P_t$ and $N_t$ for each period $t$. 
 
 ## A Wecker-Like Algorithm
 
 
 The procedure consists of the following steps: 
 
+* index a sample path by $\omega_i$ 
+
 * for a given date $t$, simulate $I$ sample paths of length $N$ 
 
 $$
-\left\{ Y_{t+1}(\omega_i), Y_{t+2}(\omega_i), \dots, Y_{t+N}(\omega_i)\right\}_{i=1}^I
+Y(\omega_i) = \left\{ Y_{t+1}(\omega_i), Y_{t+2}(\omega_i), \dots, Y_{t+N}(\omega_i)\right\}_{i=1}^I
 $$
 
 *  for each path $\omega_i$, compute the associated value of $W_t(\omega_i), W_{t+1}(\omega_i), \dots$
@@ -448,7 +452,7 @@ plot_Wecker(initial_path, 1000, ax)
 plt.show()
 ```
 
-## Our Extended Wecker Method
+## Extended Wecker Method
 
 Now we apply we apply our  "extended" Wecker method based on  predictive densities of $y$ defined by
 {eq}`eq4` that acknowledge posterior uncertainty in the parameters $\rho, \sigma$.

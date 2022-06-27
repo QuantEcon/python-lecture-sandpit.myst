@@ -13,7 +13,7 @@ kernelspec:
 
 # Non-Conjugate Priors
 
-This lecture is a sequel to the QuantEcon lecture: https://python.quantecon.org/prob_meaning.html
+This lecture is a sequel to the QuantEcon lecture <https://python.quantecon.org/prob_meaning.html>
 
 That lecture offers a Bayesian interpretation of probability in a setting in which the likelihood function and the prior distribution
 over parameters just happened to form a **conjugate** pair in which
@@ -88,7 +88,7 @@ from numpyro.optim import Adam as nAdam
 
 ## Unleashing MCMC on a  Binomial Likelihood
 
-This lecture begins with the binomial example in the QuantEcon lecture https://python.quantecon.org/prob_meaning.html 
+This lecture begins with the binomial example in the QuantEcon lecture <https://python.quantecon.org/prob_meaning.html>
 
 That lecture computed a posterior 
 
@@ -129,29 +129,30 @@ $$
 
 We choose this as our prior for now because  we know that a conjugate prior for the binomial likelihood function is a beta distribution.
 
-The posterior distribution for $ \theta $ is then
+
+After observing  $k$ successes among $N$ sample observations, the posterior  probability distributionof  $ \theta $ is
 
 $$
-\textrm{Prob}(\theta|k) = \frac{\textrm{Prob}(\theta,k)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)*\textrm{Prob}(\theta)}{\int_0^1 \textrm{Prob}(k|\theta)*\textrm{Prob}(\theta) d\theta}
-$$
-
-$$
-=\frac{{N \choose k} (1 - \theta)^{N-k} \theta^k*\frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)}}{\int_0^1 {N \choose k} (1 - \theta)^{N-k} \theta^k*\frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)} d\theta}
+\textrm{Prob}(\theta|k) = \frac{\textrm{Prob}(\theta,k)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta)\textrm{Prob}(\theta)}{\textrm{Prob}(k)}=\frac{\textrm{Prob}(k|\theta) \textrm{Prob}(\theta)}{\int_0^1 \textrm{Prob}(k|\theta)\textrm{Prob}(\theta) d\theta}
 $$
 
 $$
-=\frac{(1 -\theta)^{\beta+N-k-1}* \theta^{\alpha+k-1}}{\int_0^1 (1 - \theta)^{\beta+N-k-1}* \theta^{\alpha+k-1} d\theta}
+=\frac{{N \choose k} (1 - \theta)^{N-k} \theta^k \frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)}}{\int_0^1 {N \choose k} (1 - \theta)^{N-k} \theta^k\frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)} d\theta}
 $$
 
-where we have observed $k$ successes among $N$ sample observations. 
+$$
+=\frac{(1 -\theta)^{\beta+N-k-1} \theta^{\alpha+k-1}}{\int_0^1 (1 - \theta)^{\beta+N-k-1} \theta^{\alpha+k-1} d\theta} .
+$$
 
-So we have
+
+
+Thus, 
 
 $$
 \textrm{Prob}(\theta|k) \sim {Beta}(\alpha + k, \beta+N-k)
 $$
 
-The analytical posterior for a given conjugate beta prior is coded in the below Python functions.
+The analytical posterior for a given conjugate beta prior is coded in the following Python code.
 
 ```{code-cell} ipython3
 def simulate_draw(theta, n):
@@ -187,13 +188,17 @@ def analytical_beta_posterior(data, alpha0, beta0):
 
 ### Two Ways to Approximate Posteriors
 
-Next, assuming that we don't have any knowledge of the conjugate priors, we use computational tools to approximate the posterior distribution for a set of alternative prior distributions using both `Pyro` and `Numpyro` packages in Python. 
+Suppose that we don't have a conjugate prior.
+
+Then  we  can't compute posteriors analytically.
+
+Instead,  we use computational tools to approximate the posterior distribution for a set of alternative prior distributions using both `Pyro` and `Numpyro` packages in Python. 
 
 We first use the **Markov Chain Monte Carlo** (MCMC) algorithm .
 
 We implement the NUTS sampler to sample from the posterior.
 
-In that way we construct a sampling distribution that approximates the true posterior.
+In that way we construct a sampling distribution that approximates the  posterior.
 
 After doing that we deply another procedure called  **Variational Inference** (VI).  
 
@@ -203,8 +208,9 @@ The MCMC algorithm  supposedly generates a more accurate approximation since in 
 
 But it  can be computationally expensive, especially when dimension is large.
 
-A VI approach is cheaper, but it is likely to produce an inferior approximation to the posterior, for the simple reason that it requires guessing a functional form for the posterior,
-a guess that is likely to be wrong. 
+A VI approach can be  cheaper, but it is likely to produce an inferior approximation to the posterior, for the simple reason that it requires guessing a parametric **guide functional form** that we use to approximate a posterior.
+
+This guide function is likely  at best to be an imperfect approximation. 
 
 By paying the cost of restricting the putative posterior to have a restricted functional form, 
 the problem of approximating a posteriors is transformed to a well-posed optimization problem that seeks parameters of the putative posterior  that minimize
@@ -212,49 +218,42 @@ a Kullback-Leibler (KL) divergence between true posterior and the putatitive pos
 
   - minimizing the KL divergence is  equivalent with  maximizing a criterion called  the **Evidence Lower Bound** (ELBO), as we shall verify soon.
 
-#### Prior Distributions
+## Prior Distributions
 
-`Pyro` and `Numpyro` has some specific requirements for a distribution class so that they are applicable to MCMC sampling and VI. In particular, they need to be such that:
-- we can directly sample from it;
-- we can compute the pointwise log pdf;
-- the pdf is differentiable w.r.t. the parameters.
+In order to be able to apply MCMC sampling or VI, `Pyro` and `Numpyro` require  that a prior distribution satisfy special properties:
 
-Moreover, we need to define the distribution `class` by imposing a unique structure such that each method is callable.
+- we must be able sample from it;
+- we must be able to  compute the log pdf  pointwise;
+- the pdf must be  differentiable with respect to the parameters.
 
-I will investigate the following priors:
--  a uniform distribution on $[\underline \theta, \overline \theta]$, where $0 \leq \underline \theta < \overline \theta \leq 1$. In particular, evaluate $Uniform(0,1)$.
+We'll want to define a distribution `class`.
 
+We  will use the following priors:
+
+-  a uniform distribution on $[\underline \theta, \overline \theta]$, where $0 \leq \underline \theta < \overline \theta \leq 1$. 
+  
 - a truncated log-normal distribution with support on $[0,1]$ with parameters $(\mu,\sigma)$. 
 
-    - To implement this, let $Z\sim Normal(\mu,\sigma)$ and $\tilde{Z}$ be truncated normal with support $[\log(0),\log(1)]$, then $\exp(Z)$ has a log normal distribution with bounded support $[0,1]$. This can be easily coded since `Numpyro` has built-in truncated normal distribution, and `Torch` provides a `TransformedDistribution` class that includes the exponential transformation.
+    - To implement this, let $Z\sim Normal(\mu,\sigma)$ and $\tilde{Z}$ be truncated normal with support $[\log(0),\log(1)]$, then $\exp(Z)$ has a log normal distribution with bounded support $[0,1]$. This can be easily coded since `Numpyro` has a built-in truncated normal distribution, and `Torch` provides a `TransformedDistribution` class that includes an exponential transformation.
     
-    - Alternatively, we can use a rejection sampling strategy by assigning the probability rate to $0$ outside the bounds and rescale the admitted samples, i.e., realizations that are within the bounds, by the total probability computed via CDF of the original distribution. This can be implemented by defining a truncated distribution class with `pyro`'s `dist.Rejector` class.
+    - Alternatively, we can use a rejection sampling strategy by assigning the probability rate to $0$ outside the bounds and rescaling accepted samples, i.e., realizations that are within the bounds, by the total probability computed via CDF of the original distribution. This can be implemented by defining a truncated distribution class with `pyro`'s `dist.Rejector` class.
 
-    - I will implement both methods in the below section and verify that they indeed produce the same results.
+    - We implement both methods in the below section and verify that they  produce the same result.
 
 - a shifted von Mises distribution that has support confined to $[0,1]$ with parameter $(\mu,\kappa)$. 
 
-    - Let $X\sim vonMises(0,\kappa)$. We know that $X$ has bounded support $[-\pi, \pi]$ We can define a shifted von Mises random variable $\tilde{X}=a+bX$ where $a=0.5, b=1/(2 \pi)$ so that $\tilde{X}$ is supported on $[0,1]$.
+    - Let $X\sim vonMises(0,\kappa)$. We know that $X$ has bounded support $[-\pi, \pi]$. We can define a shifted von Mises random variable $\tilde{X}=a+bX$ where $a=0.5, b=1/(2 \pi)$ so that $\tilde{X}$ is supported on $[0,1]$.
 
-    - This can again be implemented using `Torch`'s `TransformedDistribution` class that with `AffineTransform` method.
+    - This can be implemented using `Torch`'s `TransformedDistribution` class  with its `AffineTransform` method.
 
-    - If instead, we want the prior to be von-Mises distributed with center $\mu=0.5$, we can choose a high concentration level $\kappa$ so that most mass is located between $0$ and $1$. Then, we can safely truncate the distribution using the above strategy. This can be again implemented using  `pyro`'s `dist.Rejector` class. We choose $\kappa > 40$ in this case.
+    - If instead, we want the prior to be von-Mises distributed with center $\mu=0.5$, we can choose a high concentration level $\kappa$ so that most mass is located between $0$ and $1$. Then we can truncate the distribution using the above strategy. This can be implemented using  `pyro`'s `dist.Rejector` class. We choose $\kappa > 40$ in this case.
 
 - a truncated Laplace distribution.
 
-    - I also considered a truncated Laplace distribution as its density comes in a piece-wise non-smooth form and has a distinctive "spike" shape. 
+    - We also considered a truncated Laplace distribution because its density comes in a piece-wise non-smooth form and has a distinctive spiked shape. 
     
     - The truncated Laplace can be created using `Numpyro`'s `TruncatedDistribution` class.
 
-
-- a tent distribution (TO BE IMPLEMENTED)
-
-    - I consider a piece-wise linear density with a kink between $0$ and $1$ such that the mass under the density integrates up to $1$ - this simply requires the peak of the density to be exactly $2$.
-    
-    - Since there is no ready tent distribution like the built-in `st.triang` distribution in `scipy`, I will need to build the distribution class myself. I will implement this later.   
-
-
-- maybe a multimodel distribution (TO BE IMPLEMENTED)
 
 ```{code-cell} ipython3
 # used by Numpyro
@@ -330,20 +329,44 @@ class TruncatedvonMises(dist.Rejector):
 
 ### Variational Inference
 
-The gist of the variational inference method is that instead of directly sampling from the posterior, we approximate the unknown, usually intractable posterior distribution using a family of tractable distributions/densities and minimizes its distance to the true posterior. This way, we have made an inference problem a well-posed optimization problem.
+Instead of directly sampling from the posterior,  the **variational inference**  methodw approximates an unknown posterior distribution with  a family of tractable distributions/densities.
 
-More specifically in our context, let the latent parameter/variable that we want to infer about be $\theta$, and with a given prior $p(\theta)$ and likelihood $p\left(Y\vert\theta\right)$, we would like to infer about $p\left(\theta\vert Y\right)$. Bayse's rule gives:
+It then seeks to minimizes a measure of statistical discrepancy between the approximating and  true posteriors. 
+
+Thus variational inference (VI)  approximates a posterior by solving  a  minimization problem.
+
+Let the latent parameter/variable that we want to infer  be $\theta$.
+
+Let the  prior be  $p(\theta)$ and the likelihood be $p\left(Y\vert\theta\right)$.
+
+We want  $p\left(\theta\vert Y\right)$.
+
+Bayes' rule implies
 
 $$
 p\left(\theta\vert Y\right)=\frac{p\left(Y,\theta\right)}{p\left(Y\right)}=\frac{p\left(Y\vert\theta\right)p\left(\theta\right)}{p\left(Y\right)}
 $$
 
-where $p\left(Y\right)=\int d\theta p\left(Y\mid\theta\right)p\left(Y\right)$ and the integral usually hard to evaluate.
-
-Consider a parameterized distribution $q_{\phi}(\theta)$ which we want to use to approximate the posterior. We would like to minimize its distance (K-L divergence) to the posterior, i.e., 
+where 
 
 $$
-\min_{\phi}\quad D_{KL}(q(\theta;\phi)\;\|\;p(\theta\mid Y))=-\int d\theta q(\theta;\phi)\log\frac{p(\theta\mid Y)}{q(\theta;\phi)}
+p\left(Y\right)=\int d\theta p\left(Y\mid\theta\right)p\left(Y\right). 
+$$ (eq:intchallenge)
+
+The integral on the right side of {eq}`eq:intchallenge`  is typically difficult to compute.
+
+Consider a  **guide distribution** $q_{\phi}(\theta)$ parameterized by $\phi$ that we'll use to approximate the posterior.
+
+We choose  parameters $\phi$ of the guide distribution to minimize a Kullback-Leibler (KL)  divergence between the approximate posterior $q_{\phi}(\theta)$ and  the posterior:
+
+$$
+ D_{KL}(q(\theta;\phi)\;\|\;p(\theta\mid Y)) \equiv -\int d\theta q(\theta;\phi)\log\frac{p(\theta\mid Y)}{q(\theta;\phi)}
+$$
+
+Thus, we want a **variational distribution** $q$ that solves
+
+$$
+\min_{\phi}\quad D_{KL}(q(\theta;\phi)\;\|\;p(\theta\mid Y))
 $$
 
 Note that
@@ -359,24 +382,32 @@ $$
 \end{aligned}
 $$
 
-For an observed data $Y$, $p(Y)$ is a constant, so minimizing K-L divergence is equivalent to maximizing
+For  observed data $Y$, $p(\theta,Y)$ is a constant, so minimizing KL divergence is equivalent to maximizing
 
 $$
 ELBO\equiv\int d\theta q_{\phi}(\theta)\log\frac{p(\theta,Y)}{q_{\phi}(\theta)}=\mathbb{E}_{q_{\phi}(\theta)}\left[\log p(\theta,Y)-\log q_{\phi}(\theta)\right]
-$$
+$$ (eq:ELBO)
 
-which we call the evidence lower bound (ELBO). And optimization routines can directly be applied in search for the optimal $\phi$ in our parametrized distribution $q_{\phi}(\theta)$, which we also call variational distribution.
+Formula {eq}`eq:ELBO` is called  the evidence lower bound (ELBO).
 
-Below, I implement Stochastic Variational Inference (SVI) in Pyro and Numpyro using the `Adam` gradient descent algorithm to approximate posterior.
+A standard optimization routine can used to search for the optimal $\phi$ in our parametrized distribution $q_{\phi}(\theta)$.
 
-In particular, I choose two sets of variational distributions: Beta and TruncatedNormal with support $[0,1]$. Learnable parameters for the Beta distribution are (alpha, beta), both being positive. And learnable parameters for the Truncated Normal distribution are (loc, scale).
+The parameterized  distribution $q_{\phi}(\theta)$ is called the **variational distribution**.
 
-Moreover, <u> I restrict the truncated Normal paramter 'loc' to be on the interval $[0,1]$</u>. This can be easily lifted if we want.
+We can implement Stochastic Variational Inference (SVI) in Pyro and Numpyro using the `Adam` gradient descent algorithm to approximate posterior.
+
+We use  two sets of variational distributions: Beta and TruncatedNormal with support $[0,1]$
+
+  - Learnable parameters for the Beta distribution are (alpha, beta), both of which are positive. 
+  - Learnable parameters for the Truncated Normal distribution are (loc, scale).
+
+<u> We restrict the truncated Normal paramter 'loc' to be in the interval $[0,1]$</u>.
 
 
 ## Implementation 
 
-I build a Python class `BaysianInference`, which requires the following arguments to be initialized:
+We have constructed a Python class `BaysianInference` that requires the following arguments to be initialized:
+
 - `param`: a tuple/scalar of parameters dependent on distribution types
 - `name_dist`: a string that specifies distribution names
 
@@ -395,7 +426,7 @@ The (`param`, `name_dist`) pair includes:
 - ('laplace', loc, scale)
    - Note: This is the truncated Laplace
 
-The class `BaysianInference` has several key methods to be called upon:
+The class `BaysianInference` has several key methods :
 - `sample_prior`:   
    - This can be used to draw a single sample from the given prior distribution.
         
@@ -656,11 +687,16 @@ class BayesianInference:
         return params, losses
 ```
 
-#### Prior Distributions
+## Alternative Prior Distributions
 
-To examine the prior distributions and the truncated ones that we build, we plot the approximate prior distributions below by calling the `show_prior` methods.
+Let's see how well our sampling algorithm does in approximating
 
-And we can easily verify that the rejection sampling strategy under `Pyro` produces the same log normal distribution as the truncated normal transformation under `Numpyro`.
+- a log normal distribution
+- a uniform distribution
+
+To examine our alternative  prior distributions, we'll plot  approximate prior distributions below by calling the `show_prior` method.
+
+We verify that the rejection sampling strategy under `Pyro` produces the same log normal distribution as the truncated normal transformation under `Numpyro`.
 
 ```{code-cell} ipython3
 # truncated log normal
@@ -672,6 +708,11 @@ exampleUN = BayesianInference(param=(0.1,0.8), name_dist='uniform', solver='nump
 exampleUN.show_prior(size=100000,bins=20)
 ```
 
+The above graphs show that sampling seems to work well with both distributions.
+
+
+Now let's see how well things work with a couple of von Mises distributions.
+
 ```{code-cell} ipython3
 # shifted von Mises
 exampleVM = BayesianInference(param=10, name_dist='vonMises', solver='numpyro')
@@ -682,17 +723,25 @@ exampleVM_trunc = BayesianInference(param=20, name_dist='vonMises', solver='pyro
 exampleVM_trunc.show_prior(size=100000,bins=20)
 ```
 
+These graphs look good too.
+
+Now let's try with a Laplace distribution.
+
 ```{code-cell} ipython3
 # truncated Laplace
 exampleLP = BayesianInference(param=(0.5,0.05), name_dist='laplace', solver='numpyro')
 exampleLP.show_prior(size=100000,bins=40)
 ```
 
-### Results and Plots
+Having assured ourselves that our sampler seems to do a good job, let's put it to work in using MCMC to compute posterior probabilities.
 
-With the following class `BayesianInferencePlot`, I can easily implement MCMC or VI algorithms and plot multiple posteriors for different updating data size together with the initial prior of our choice. 
+## Posteriors Via MCMC and VI
 
-This class takes both the true data generating parameter 'theta', a list of updating data sizes for multiple posterior plotting, and a defined and parametrized `BayesianInference` class as an input. It has two key methods: 
+We construct a class  `BayesianInferencePlot` to implement MCMC or VI algorithms and plot multiple posteriors for different updating data sizes and different  possible prior. 
+
+This class takes as inputs the true data generating parameter 'theta', a list of updating data sizes for multiple posterior plotting, and a defined and parametrized `BayesianInference` class.
+
+It has two key methods: 
 
 - `BayesianInferencePlot.MCMC_plot()` takes wanted MCMC sample size as input and plot the output posteriors  together with the prior defined in `BayesianInference` class.
 
@@ -824,7 +873,11 @@ class BayesianInferencePlot:
         plt.show()
 ```
 
-Here, I define parameters that are used by all exercises below.
+Let's set some parameters that we'll use in all of the examples  below.
+
+To save computer time at first, notice that  we'll set `MCMC_num_samples = 2000` and `SVI_num_steps = 5000`.
+
+(Later, to increase accuracy of approximations, we'll want to increase these.)
 
 ```{code-cell} ipython3
 num_list = [5,10,50,100,1000]
@@ -837,7 +890,16 @@ true_theta = 0.8
 
 #### Beta Prior and Posteriors
 
-First, we examine the Beta prior and posteriors both computed analytically and through MCMC and VI computed using `Pyro` and `Numpyro`.
+Let's compare outcomes when we use a Beta prior.
+
+For the same Beta prior, we shall 
+
+* compute posteriors analytically
+* compute posteriors using MCMC  via  `Pyro` and `Numpyro`.
+* compute posteriors using  VI via  `Pyro` and `Numpyro`.
+
+Let's start with the analytical method that we described in this quantecon lecture <https://python.quantecon.org/prob_meaning.html>
+  
 
 ```{code-cell} ipython3
 # First examine Beta priors
@@ -869,23 +931,49 @@ plt.xlim(0, 1)
 plt.show()
 ```
 
+Now let's use MCMC while still using a beta prior.  
+
+We'll do this for both MCMC and VI.
+
 ```{code-cell} ipython3
 BayesianInferencePlot(true_theta, num_list, BETA_pyro).MCMC_plot(num_samples=MCMC_num_samples)
 BayesianInferencePlot(true_theta, num_list, BETA_numpyro).SVI_plot(guide_dist='beta', n_steps=SVI_num_steps)
 ```
 
-Notice above that even for using beta distribution as our guide, the resulting approximated posterior distribution **do not closely resemble the true priors**. Here, our initial parameter for Beta guide is (0.5, 0.5).
+Here the MCMC approximation looks good.
 
-If we allow for a larger number of steps (from 5000 to 10000) as below, we can observe that the resulting posteriors look very like the true posteriors. However, with this step size, the optimization takes around 6 minutes (on my computer) to run.
+But the VI approximation doesn't look so good.
+
+  * even though we use the  beta distribution as our guide, the VI approximated posterior distributions do not closely resemble the posteriors that we had just computed analytically. 
+
+(Here, our initial parameter for Beta guide is (0.5, 0.5).)
+
+
+But if we increase the number of  steps from 5000 to 10000 in VI as we now shall do, we'll get VI-approximated   posteriors
+will be  more accurate, as we shall see next. 
+
+(Increasing the step size increases computational time though).
+
 
 ```{code-cell} ipython3
 BayesianInferencePlot(true_theta, num_list, BETA_numpyro).SVI_plot(guide_dist='beta', n_steps=100000)
 ```
 
-Next, we examine results all other prior distributions.
 
-### MCMC Results
-First, we implement and display the MCMC results. We first initialize the `BayesianInference` classes and then can directly call `BayesianInferencePlot` to plot both MCMC and SVI results.
+
+
+## Non-conjugate Prior Distributions
+
+Having assured ourselves that our MCMC and VI methods can work well when we have  conjugate prior and so can also compute analytically, we 
+next proceed to situations in which our  prior  is not a beta distribution, so we don't have a conjugate prior.
+
+So we will have non-conjugate priors and are cast into situations in which we can't calculate posteriors analytically.
+
+### MCMC 
+
+First, we implement and display  MCMC. 
+
+We first initialize the `BayesianInference` classes and then can directly call `BayesianInferencePlot` to plot both MCMC and SVI approximating posteriors.
 
 ```{code-cell} ipython3
 # Initialize BayesianInference classes
@@ -918,7 +1006,11 @@ print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {exam
 BayesianInferencePlot(true_theta, num_list, example_CLASS).MCMC_plot(num_samples=MCMC_num_samples)
 ```
 
-Notably, since the $Uniform(\underline{\theta}, \overline{\theta})$ prior does not put any positive measure outside the bounded support, the posterior cannot extend positive probability above $\overline{\theta}$ or below $\underline{\theta}$. Moreover, since the true data-generating $\theta$ is located at $0.8$, naturally, when $n$ gets large, the posterior will concentrate on the upper bound, at $0.7$ in this case.
+In the situation depicted above, we have assumed a  $Uniform(\underline{\theta}, \overline{\theta})$ prior that puts zero probability   outside a bounded support that excludes the true value.
+
+Consequently,  the posterior cannot put positive probability above $\overline{\theta}$ or below $\underline{\theta}$.
+
+Note how when  the true data-generating $\theta$ is located at $0.8$ as it is here,  when $n$ gets large, the posterior  concentrate on the upper bound of the support of the prior,  $0.7$ here.
 
 ```{code-cell} ipython3
 # Log Normal
@@ -951,7 +1043,7 @@ print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {exam
 BayesianInferencePlot(true_theta, num_list, example_CLASS).MCMC_plot(num_samples=MCMC_num_samples)
 ```
 
-#### Variational Inference Results - Truncated Normal Guide
+#### VI with a  Truncated Normal Guide
 
 ```{code-cell} ipython3
 # Uniform
@@ -959,9 +1051,6 @@ example_CLASS = BayesianInference(param=(0,1), name_dist='uniform', solver='nump
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
 BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='normal', n_steps=SVI_num_steps)
 
-example_CLASS = UNIFORM_numpyro
-print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
-BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='normal', n_steps=SVI_num_steps)
 ```
 
 ```{code-cell} ipython3
@@ -986,15 +1075,11 @@ print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {exam
 BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='normal', n_steps=SVI_num_steps)
 ```
 
-#### Variational Inference Results - Beta Guide
+#### Variational Inference with a  Beta Guide Distribution
 
 ```{code-cell} ipython3
 # Uniform
 example_CLASS = STD_UNIFORM_pyro
-print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
-BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='beta', n_steps=SVI_num_steps)
-
-example_CLASS = UNIFORM_numpyro
 print(f'=======INFO=======\nParameters: {example_CLASS.param}\nPrior Dist: {example_CLASS.name_dist}\nSolver: {example_CLASS.solver}')
 BayesianInferencePlot(true_theta, num_list, example_CLASS).SVI_plot(guide_dist='beta', n_steps=SVI_num_steps)
 ```

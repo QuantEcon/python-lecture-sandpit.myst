@@ -45,7 +45,7 @@ logger.setLevel(logging.CRITICAL)
 
 ```
 
-This lecture. uses Bayesian methods offered by [pymc](https://www.pymc.io/projects/docs/en/stable/) and [numpyro](https://num.pyro.ai/en/stable/) to make statistical inferencces about  two parameters of a univariate first-order autoregression.
+This lecture. uses Bayesian methods offered by [pymc](https://www.pymc.io/projects/docs/en/stable/) and [numpyro](https://num.pyro.ai/en/stable/) to make statistical inferences about  two parameters of a univariate first-order autoregression.
 
 
 The model is a good laboratory for illustrating 
@@ -56,15 +56,24 @@ consequences of alternative ways of modeling the distribution of the initial  $y
 - As a random variable drawn from the stationary distribution of the $\{y_t\}$ stochastic process
 
 
-The statistical  model is
+The first component of statistical  model is
 
 $$ 
 y_{t+1} = \rho y_t + \sigma_x \epsilon_{t+1}, \quad t \geq 0 
 $$ (eq:themodel)
 
 where the scalars $\rho$ and $\sigma_x$ satisfy $|\rho| < 1$ and $\sigma_x > 0$; 
-$\{\epsilon_{t+1}\}$ is a sequence of i.i.d. normal random variables with mean $0$ and variance $1$;
-and $y_0 \sim {\cal N}(\mu_0, \sigma_0^2)$  
+$\{\epsilon_{t+1}\}$ is a sequence of i.i.d. normal random variables with mean $0$ and variance $1$.
+
+The second component of the statistical model is
+
+and 
+
+$$
+y_0 \sim {\cal N}(\mu_0, \sigma_0^2)
+$$ (eq:themodel_2) 
+
+
 
 Consider a sample $\{y_t\}_{t=0}^T$ governed by this statistical model.  
 
@@ -77,24 +86,26 @@ $$
 
 where we use $f$ to denote a generic probability density.  
 
-The  statistical model  implies 
+The  statistical model {eq}`eq:themodel`-{eq}`eq:themodel_2` implies 
 
 $$
 \begin{aligned}
 f(y_t | y_{t-1})  & \sim {\mathcal N}(\rho y_{t-1}, \sigma_x^2) \\
         f(y_0)  & \sim {\mathcal N}(\mu_0, \sigma_0^2)
-\end{aligned}
+\end{aligned} 
 $$
 
 We want to study how inferences about the unknown parameters $(\rho, \sigma_x)$ depend on what is assumed about the parameters $\mu_0, \sigma_0$  of the distribution of $y_0$.
 
-We pretend that the parameters $\mu_0, \sigma_0$ are known numbers that may or may not be  functions of $\rho, \sigma_x$.
+Below, we study  two widely used  alternative assumptions:
 
-Below, we compare two cases:
+-  $(\mu_0,\sigma_0) = (y_0, 0)$ which means  that $y_0$ is  drawn from the distribution ${\mathcal N}(y_0, 0)$; in effect, we are **conditioning on an observed initial value**.  
 
 -  $\mu_0,\sigma_0$ are functions of $\rho, \sigma_x$ because $y_0$ is drawn from the stationary distribution implied by $\rho, \sigma_x$.
  
--  $y_0$ is  drawn from the distribution ${\mathcal N}(y_0, 0)$, which means that we are **conditioning on an observed initial value**.  
+
+  
+**Note:** We do **not** treat a third possible case in which  $\mu_0,\sigma_0$ are free parameters to be estimated.
  
 Unknown parameters are $\rho, \sigma_x$. 
 
@@ -102,24 +113,17 @@ We have  independent **prior probability distributions** for $\rho, \sigma_x$ an
 
 The notebook uses `pymc4` and `numpyro`  to compute a posterior distribution of $\rho, \sigma_x$.
 
-**Note:** We do not treat $\mu_y,\sigma_y$ as parameters to be estimated.
 
-Instead,  we treat them either as
+Thus, we explore consequences of making these alternative assumptions about the distribution of $y_0$: 
 
-- fixed parameters, or
-
-- particular functions of $\rho, \sigma_x$.  
-
-We explore consequences of making these alternative assumptions about the distribution of $y_0$: 
-
-- A first procedure is to condition on whatever value of  $y_0$ is observed.  This amounts to assuming that the probability distribution of the random variable  $y_0$ is  a Dirac delta function that puts probability one  on the observed value of $y_0$.  It is as if we assume that $\mu_y = y_0, \sigma_y =0$.  
+- A first procedure is to condition on whatever value of  $y_0$ is observed.  This amounts to assuming that the probability distribution of the random variable  $y_0$ is  a Dirac delta function that puts probability one  on the observed value of $y_0$.    
 
 - A second procedure  assumes that $y_0$ is drawn from the stationary distribution of a process described by {eq}`eq:themodel` 
   so that  $y_0 \sim {\cal N} \left(0, {\sigma_x^2\over (1-\rho)^2} \right) $
 
 When the initial value $y_0$ is far out in a tail of the stationary distribution, conditioning on an initial value gives a posterior that is **more accurate** in a sense that we'll explain.   
 
-Basically, when $y_0$ happens to be  in a tail of the stationary distribution and   we **don't condition on $y_0$**,  the likelihood function for $\{y_t\}_{t=0}^T$ adjusts the posterior distribution of the parameter pair $\rho, \sigma_x $ to make the observed value of $y_0$ much more  likely than it really is under the stationary distribution, thereby adversely twisting the posterior in short samples.
+Basically, when $y_0$ happens to be  in a tail of the stationary distribution and   we **don't condition on $y_0$**,  the likelihood function for $\{y_t\}_{t=0}^T$ adjusts the posterior distribution of the parameter pair $\rho, \sigma_x $ to make the observed value of $y_0$  more  likely than it really is under the stationary distribution, thereby adversely twisting the posterior in short samples.
 
 An example below shows how not conditioning on $y_0$ adversely shifts the posterior probability distribution of $\rho$ toward larger values.
 
