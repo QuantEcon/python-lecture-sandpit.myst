@@ -159,7 +159,7 @@ w=\sum_{A\times Q\times C\times W}\ \{u(c,a) +\beta w^\prime\}\
 \Pi(a,q,c,w^\prime) . 
 $$ (eq:eq1prime)
 
-The counterpart to Spear-Srivastava's equation {eq}`eq:eq2`   for each
+A counterpart to Spear-Srivastava's incentive constraint  {eq}`eq:eq2`   for each
 $a,\hat a$ is
 
 
@@ -170,19 +170,19 @@ $$
 $$ (eq:eq2prime)
 
 
-Here $\Pi(c,w^\prime\vert q,a) P(q\vert \hat a)$ is the probability of $(c,w^\prime, q)$ 
+Here $\Pi(c,w^\prime\vert q,a) P(q\vert \hat a)$ is the probability attached to  $(c,w^\prime, q)$ 
 if the agent claims to be working $a$ but is actually working $\hat a$. 
 
 Write
 
 $$
-\begin{aligned}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a) & = \\
+\begin{aligned}\Pi(c,w^\prime\vert q,a) P(q\vert\hat a)  = 
 \Pi(c,w^\prime\vert q,a) P(q\vert a)\ \frac{P(q\vert\hat a)}{P(q\vert a)} & =
 \Pi(c,w^\prime,q\vert a)\ \cdot\ \frac{P(q\vert\hat a)}{P(q\vert a)}.
 \end{aligned}
 $$
 
-Write the incentive constraint as
+Write the incentive constraints as
 
 $$
 \begin{aligned} \sum_{Q\times C\times W}\ &\{u(c,a)  +\beta w^\prime\} \Pi(c,w^\prime, q\vert a)\cr & \geq
@@ -190,7 +190,7 @@ $$
 \end{aligned}
 $$
 
-Multiplying both sides by the unconditional probability $P(a)$ gives expression {eq}`eq:eq2`.
+Multiplying both sides by the unconditional probability $P(a)$ gives Phelan and Townsend's counterpart to Spear and Srivastava's  incentive constraint  {eq}`eq:eq2`.
 
 $$
 \begin{aligned} & \sum_{Q\times C\times W}\ \{u(c,a)+\beta w^\prime\}\
@@ -199,6 +199,9 @@ $$
 {P(q\vert\hat a)\over P(q\vert a)}\ \Pi (a,q,c,w^\prime)
 \end{aligned}
 $$
+
+## Linear Programming Formulation
+
 
 The value function  for the principal's problem satisfies the Bellman equation 
 
@@ -214,8 +217,7 @@ subject to equations {eq}`eq:town1a`, {eq}`eq:town1b`,  {eq}`eq:eq1prime`, and {
 This is a **linear
 programming** problem. 
 
-Think of each of $(a,q,c,w')$
-being constrained to a discrete grid of points.
+Each  $(a,q,c,w')$ is constrained to a discrete grid of points.
 
 The term $(q-c)+\beta v(w')$ on the right side of equation {eq}`eq:bell2` 
 can be represented as a *fixed* vector that multiplies a vectorized
@@ -227,11 +229,11 @@ constraints  {eq}`eq:town1a`, {eq}`eq:town1b`,  {eq}`eq:eq1prime`, and {eq}`eq:e
 as a linear inequality in the choice variables, namely,  the
 probabilities $\Pi$.  
 
-Phelan and Townsend compute solutions
-of these linear programs to
-iterate on the Bellman equation {eq}`eq:bell2`.  
+An associated **Bellman operator** is also a linear program.
 
-At each step of the iteration on the  Bellman equation,
+Phelan and Townsend iterated to convergence on this Bellman operator.  
+
+At each step of the iteration on the  Bellman operator,
 one linear program is to be solved for each point
 $w$ in the space of grid values for $W$.
 
