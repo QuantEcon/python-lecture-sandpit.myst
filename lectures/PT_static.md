@@ -37,10 +37,10 @@ from warnings import filterwarnings
 ## 
 
 This notebook uses several linear programming algorithms to solve the one-period version
-of the Phelan and
-Townsend (1991)  model.  
+of a model of  Phelan and
+Townsend {cite}`Phelan_Townsend_91`.  
 
-This version appears in section 1 of {cite}`Phelan_Townsend_91`.
+
     
 **Setting:**
 
@@ -50,17 +50,18 @@ This version appears in section 1 of {cite}`Phelan_Townsend_91`.
  - Utility $U(a,c): \mathbf{A}\times\mathbf{C} \to \mathbf{R}_{+}$ with assumptions:
    - $U(a,c)$ is strictly concave over changes in $c$ holding $a$ constant
    - Higher actions induce higher expected utilities
- - Ex ante utility level:
+ - {\em Ex ante} utility level:
    - Lowest ex ante utility level with certain highest labor assignment and lowest consumption receipt, $\underline{w}$
    - Highest ex ante utility level with certain lowest labor assignment and highest consumption receipt, $\overline{w}$
    - Arbitrary utility level in between, $w = \alpha\underline{w}+(1-\alpha)\overline{w}\in\mathbf{W}=[\underline{w},\overline{w}]$, $\alpha\in[0,1]$
  - $d_{0}(w)$ denotes the fraction of agent whose required utility is $w$
  - $\Pi^{w}(a,q,c)$: choice variable, the probability for an agent required to receive $w$ of taking action $a$, having output $q$ occur in his own production technology and receiving consumption amount $c$
     
-**Formulation:**
-- Contract: Such function $\Pi^{w}$ for given $w\in\mathbf{W}$ satisfying certain constraints
-- Allocation: a collection of contracts for each $w$ in the support $d_{0}(w)$ for a given distribution $d_{0}$
-- **Full Information Problem (FIP)**: 
+**Definitions:**
+- For each  $w\in\mathbf{W}$  a **contract:**  is a  function $\Pi^{w}$ mapping \textbf{XXXX}
+- an **allocation** is  a collection of contracts for each $w$ in the support of a probability mass function $d_{0}(w)$ 
+
+**Full Information Problem (FIP)**: 
 - 
 $$
 \begin{aligned}
