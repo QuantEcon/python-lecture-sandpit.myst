@@ -20,43 +20,43 @@ recursive formulation of an infinitely repeated, discounted  repeated
 principal-agent problem.
 
 *  A **principal** owns a technology
-that produces output $q_t$ at time $t$ according to a probability distribution $F$ that depends on the action $a_t$ of an **agent**.
+that produces output $q_t$ at time $t$ according to a probability distribution $F$ that depends on the action $a_t$ of a worker we'll can an **agent**.
 *  $q_t$ is determined by a family $F(q_t\vert a_t)$ of conditional c.d.f.'s  
-*  $a_t$ is an action taken at the beginning of $t$ by the **agent** who
-operates the technology.  
-*  The principal  does not observe $a_t$ but does observe $q_t$ at the end of period $t$
+*  $a_t$ is an action taken at the beginning of $t$ by the **agent**. 
+*  The principal  does not observe $a_t$.
+*  The principal  does observe $q_t$ at the end of period $t$.
 *  The principle   remembers earlier $q_{t-j}$'s and so at the end of period $t$ knows  history $\{q_s\}_{s=0}^t$.
-*  The principal has access to an outside loan market with constant risk-free gross interest rate $\beta^{-1}$.
-*  The agent has preferences over consumption streams ordered by $E_0 \sum^\infty_{t=0} \beta^t u(c_t, a_t)$ where $u$ is
-increasing in $c$ and decreasing in $a$.
+*  The principal is risk-neutral and  has access to an outside loan market with constant risk-free gross interest rate $\beta^{-1}$.
+*  The agent is averse to consumption risk and has preferences random streams of consumption ordered by $E_0 \sum^\infty_{t=0} \beta^t u(c_t, a_t)$ 
+*  $u$ is increasing in $c$ and decreasing in $a$.
 
 
 
-The principal designs a  contract that he offers to offer an agent. 
+The principal designs a  life-time contract. 
 
-A **contract**  $\sigma$ is a sequence of functions $\sigma_t$ whose $t$th component maps the history $q^{t-1} = q_{t-1}, q_{t-2}, \ldots , q_0$ of past outputs observed at time $t$ into a recommended time $t+1$ action $a_t$.  
-
-
-The principal is risk neutral and designs the contract  to maximize $E_0 \sum^\infty_{t=0} \beta^t \{q_t - c_t\}$
-where $c_t$ is the principal's payment to the agent at $t$.
+A **contract**  $\sigma$ is a sequence of functions  whose $t$th component $\sigma_t$ maps a history $q^{t-1} = q_{t-1}, q_{t-2}, \ldots , q_0$ of past outputs remembered at time $t$ into a time $t$ action $a_t$ that it asks the agent to perform and a time $t$  consumption $c_t$ that it pays the agent.  
 
 
-Spear and Srivastava (1987) {cite}`Spear_Srivastava_87` described a recursive formulation of an optimal contract.
+The risk-neutral principal  designs the contract  to maximize $E_0 \sum^\infty_{t=0} \beta^t \{q_t - c_t\}$.
 
 
 
-### Timing
-Let $w$ denote the  expected value of discounted utility promised to the agent
-at the beginning of a period.  
+Spear and Srivastava (1987) {cite}`Spear_Srivastava_87` described a recursive representation  of an optimal contract.
+
+
+## Recursive Contract
+
+Let $w$ denote the  expected value of discounted  continuation utilities that the principal had   promised to the agent.
+  
 
 Given $w$, the principal designs three functions:
 
-*  $a(w)$ determines a recommended action so that action $a_t=a(w_t)$
+*  $a(w)$ determines a requested  action so that the action at $t$ is $a_t=a(w_t)$
 *  $c(w,q)$ determines current consumption so that $c_t=c(w_t, q_t)$
 *  $\tilde w(w,q)$  determines a promised next period expected discounted 
 utility so that $w_{t+1} = \tilde w (w_t, q_t)$.
 
-The principal's choice of the three functions $a(w)$, $c(w,q)$, and $\tilde w (w,q)$
+The functions $a(w)$, $c(w,q)$, and $\tilde w (w,q)$
 must satisfy the following two sets of  constraints:
 
 $$
@@ -74,10 +74,10 @@ dF[q\vert a(w))\cr
 $$ (eq:eq2)
 
  * Equation {eq}`eq:eq1`  requires the contract to deliver the promised
-level of discounted expected utility. 
+discounted expected continuation utility. 
  * Equation {eq}`eq:eq2`  is the **incentive
-compatibility** constraint that requires that the agent choose to
-deliver the amount of effort called for in the
+compatibility** constraint that requires that the agent chooses to
+deliver the amount of effort called for by the
 contract. 
 
 Let $v(w)$ be the value to the principal associated with promising discounted utility $w$ to the agent. 
@@ -94,15 +94,15 @@ and is subject to the constraints {eq}`eq:eq1` and {eq}`eq:eq2`.
 
 Notice that constraint {eq}`eq:eq1` itself takes the form of a Bellman equation.
 
-So a value function $w$ that satisfies a Bellman equation   is an argument of Bellman equation {eq}`eq:eq3`.
+Thus,  a value function $w$ that satisfies a Bellman equation that describes the agent's continuation value    is an argument of Bellman equation {eq}`eq:eq3` that describes the principal's continuation value. 
 
 The value function $v(w)$ and the associated optimum policy functions
-are to be solved by iterating on the Bellman equation {eq}`eq:eq3`.
+are to be solved by iterating on the Bellman operator associated with Bellman equation {eq}`eq:eq3`.
 
 ## Lotteries
 
 A difficulty in problems like these is that   incentive
-constraints might can  the constraint set fail to
+constraints   the constraint set can  fail to
 be convex. 
 
 Phelan and
@@ -111,7 +111,7 @@ Townsend (1991) {cite}`Phelan_Townsend_91` circumvented this problem  by using *
 Phelan and Townsend restrict outputs $y$, consumption $c$, actions $a$, and continuation values $w$ each to be
 in its own  discrete and finite  set.
 
-The restrict the 
+They restrict the 
 principal's choice to a space of lotteries
 over actions $a$ and outcomes $c,w'$.
 
