@@ -401,6 +401,11 @@ So far, the algorithm is not fast enough. So, we relax our parameters as N=50 an
 You may skip this parts because it will take a long time to finish. We provide an improved algorithm in the following section.
 
 ```{code-cell} ipython3
+{
+    "tags": [
+        "hide-output"
+    ]
+}
 # Solve the static unobserved-actions problem
 w_l = u(A.min(), C.min())/(1-β)
 w_u = u(A.min(), C.max())/(1-β)

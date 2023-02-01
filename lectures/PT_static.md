@@ -36,7 +36,7 @@ from warnings import filterwarnings
 
 ## 
 
-This notebook uses several linear programming algorithms to solve the one-period version
+This lecture uses   several linear programming algorithms to solve the one-period version
 of a model of  Phelan and
 Townsend {cite}`Phelan_Townsend_91`.  
 
@@ -45,36 +45,42 @@ Townsend {cite}`Phelan_Townsend_91`.
 **Setting:**
 
  - Action $a$ from a finite set of possible actions $\mathbf{A} \subset \mathbf{R}_{+}$ 
- - Output $q \in \text{finite }\mathbf{Q} \subset \mathbf{R}_{+}$  determined by an exogenous probability $\mathbf{P}(q|a)>0$ for all $q$
- - Consumption $c \in \text{finite } \mathbf{C} \subset \mathbf{R}_{+}$ with mixed outcomes allowed
- - Utility $U(a,c): \mathbf{A}\times\mathbf{C} \to \mathbf{R}_{+}$ with assumptions:
+ - Output $q \in \text{finite }\mathbf{Q} \subset \mathbf{R}_{+}$  described by conditional probability $\mathbf{P}(q|a)>0$ for all $q$
+ - Consumption $c \in \text{finite } \mathbf{C} \subset \mathbf{R}_{+}$ 
+ - Utility $U(a,c): \mathbf{A}\times\mathbf{C} \to \mathbf{R}_{+}$ where 
    - $U(a,c)$ is strictly concave over changes in $c$ holding $a$ constant
    - Higher actions induce higher expected utilities
- - {\em Ex ante} utility level:
+ - **Ex ante** utility level:
    - Lowest ex ante utility level with certain highest labor assignment and lowest consumption receipt, $\underline{w}$
    - Highest ex ante utility level with certain lowest labor assignment and highest consumption receipt, $\overline{w}$
    - Arbitrary utility level in between, $w = \alpha\underline{w}+(1-\alpha)\overline{w}\in\mathbf{W}=[\underline{w},\overline{w}]$, $\alpha\in[0,1]$
- - $d_{0}(w)$ denotes the fraction of agent whose required utility is $w$
- - $\Pi^{w}(a,q,c)$: choice variable, the probability for an agent required to receive $w$ of taking action $a$, having output $q$ occur in his own production technology and receiving consumption amount $c$
+ - $d_{0}(w)$ denotes the fraction of agents  whose initial promised utility is $w$
+ - $\Pi^{w}(a,q,c)$ is the  probability  that an agent promised value   $w$ takes action $a$ receives  output $q$ and gets consumption  $c$  while running  his  own occur  production technology (and not the principal's technology) 
     
 **Definitions:**
-- For each  $w\in\mathbf{W}$  a **contract:**  is a  function $\Pi^{w}$ mapping \textbf{XXXX}
+-   a **contract** with promised value   $w\in\mathbf{W}$  is a function $\Pi^{w}(a,q,c)$ that maps $w$ into a probability mass function  over   $(a, q, c)$. 
 - an **allocation** is  a collection of contracts for each $w$ in the support of a probability mass function $d_{0}(w)$ 
 
 **Full Information Problem (FIP)**: 
 - 
 $$
-\begin{aligned}
- & \max_{\Pi^w(a,q,c)} s(w)=\sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{C}}(q-c)\Pi^{w}(a, q, c) \\
-& \textrm{subject to } \\ \text{C1:} & w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{C}}U(a,c)\Pi^{w}(a,q,c) \\
-&\text{(discounted expected utility)} \\ 
-\text{C2:} & \sum_{\mathbf{C}} \Pi^{w}(\bar{a}, \bar{q}, c)=P(\bar{q} \mid \bar{a}) \sum_{\mathbf{Q} \times \mathbf{C}} \Pi^{w}(\bar{a}, q, c), \forall (\bar{a},\bar{q})\in\mathbf{A}\times\mathbf{Q} \\
-& \text{(coincide conditional probability with nature)} \\
-\text{C3:} & \sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{C}} \Pi^{w}(a, q, c)=1 \\
-& \Pi^{w}(a, q, c) \geqq 0, \forall (a, q, c) \in \mathbf{A} \times \mathbf{Q} \times \mathbf{C} \\
-& \text{(probability measure)} \\
+  \max_{\Pi^w(a,q,c)} s(w)=\sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{C}}(q-c)\Pi^{w}(a, q, c) 
+$$
+
+subject to
+
+$$
+\begin{aligned} \text{C1:} \quad & w = \sum_{\mathbf{A}\times\mathbf{Q}\times\mathbf{C}}U(a,c)\Pi^{w}(a,q,c) \\
+\text{C2:} \quad & \sum_{\mathbf{C}} \Pi^{w}(\bar{a}, \bar{q}, c)=P(\bar{q} \mid \bar{a}) \sum_{\mathbf{Q} \times \mathbf{C}} \Pi^{w}(\bar{a}, q, c), \forall (\bar{a},\bar{q})\in\mathbf{A}\times\mathbf{Q} \\
+\text{C3:} \quad  & \sum_{\mathbf{A} \times \mathbf{Q} \times \mathbf{C}} \Pi^{w}(a, q, c)=1 , \quad 
+ \Pi^{w}(a, q, c) \geqq 0, \forall (a, q, c) \in \mathbf{A} \times \mathbf{Q} \times \mathbf{C} \\
 \end{aligned}
 $$
+
+where 
+* constraint C1 defines discounted expected utility
+* constraint C restricts conditional probabilities
+* constraint C3  resticts a probability measure
     
 **Solution:**
 - Total social surplus for initial distribution $d_{0}$: $S^{*}(d_{0})\equiv \sum_{\mathbf{W}}s^{*}(w)d_{0}(w) \geqq 0$ for feasibility
@@ -102,10 +108,9 @@ Then FIP can be written as:
 $$
 \begin{aligned}
 & \max_{\Pi_{xy} \ge 0} \ \sum_{xy} \Pi_{xy} \Phi_{xy} \\
-& \textrm{subject to} \\ \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
+&  \\ \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
 \text{C2:} & \ \sum_{y=1}^M \Pi_{1 y} = P(\underline{q}|a=0) \sum_{xy}\Pi_{xy} \\
-& \ \sum_{y=1}^M \Pi_{2 y} = P(\overline{q}|a=0) \sum_{xy}\Pi_{xy} \\
-\text{C3:} & \  \sum_{xy}\Pi_{xy} = 1 \\
+&  \text{C3:} & \sum_{y=1}^M \Pi_{2 y} = P(\overline{q}|a=0) \sum_{xy}\Pi_{xy}, \quad  \sum_{xy}\Pi_{xy} = 1 \\
 \end{aligned}
 $$
 
