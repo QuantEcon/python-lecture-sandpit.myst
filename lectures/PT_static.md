@@ -82,11 +82,26 @@ where
 * constraint C restricts conditional probabilities
 * constraint C3  resticts a probability measure
     
-**Solution:**
-- Total social surplus for initial distribution $d_{0}$: $S^{*}(d_{0})\equiv \sum_{\mathbf{W}}s^{*}(w)d_{0}(w) \geqq 0$ for feasibility
-- **Pareto Optima**: An initial distribution of utilities $d_{0}$ and its associated surplus maximizing plans $\{\Pi^{w*}\}^{w\in\mathbf{W}}$ represent a Pareto optimum if the support of $d_{0}$ lies within the non-increasing portion of s*(w).
+The total social surplus associated with  initial distribution $d_{0}$
+is
+
+$$
+S^{*}(d_{0})\equiv \sum_{\mathbf{W}}s^{*}(w)d_{0}(w)
+$$
+
+We require that 
+
+$$
+S^{*}(d_{0}) \geq 0 
+$$
+
+
+
+**Definition;**: An initial distribution of utilities $d_{0}$ and an associated surplus-maximizing plan $\{\Pi^{w*}\}^{w^*\in\mathbf{W}}$ constitute a Pareto optimum if the support of $d_{0}$ lies within the non-increasing portion of s*(w).
 </font>
     
+Now we'll do an example.
+
 **Parameterization:**
 - $\mathbf{A} = \{0\}$
 - $\mathbf{C} = \{0,1,4,5\}$
@@ -109,12 +124,12 @@ $$
 \begin{aligned}
 & \max_{\Pi_{xy} \ge 0} \ \sum_{xy} \Pi_{xy} \Phi_{xy} \\
 &  \\ \text{C1:} & \ \sum_{x=1}^N \sum_{y=1}^M \Pi_{xy} \cdot u_y = w = 1.5\\
-\text{C2:} & \ \sum_{y=1}^M \Pi_{1 y} = P(\underline{q}|a=0) \sum_{xy}\Pi_{xy} \\
-&  \text{C3:} & \sum_{y=1}^M \Pi_{2 y} = P(\overline{q}|a=0) \sum_{xy}\Pi_{xy}, \quad  \sum_{xy}\Pi_{xy} = 1 \\
+\text{C2:}  & \ \sum_{y=1}^M \Pi_{1 y} = P(\underline{q}|a=0) \sum_{xy}\Pi_{xy} \\
+\text{C3:} & \sum_{y=1}^M \Pi_{2 y} = P(\overline{q}|a=0) \sum_{xy}\Pi_{xy}, \quad  \sum_{xy}\Pi_{xy} = 1 \\
 \end{aligned}
 $$
 
-where, $N=2,M=4$.
+where $N=2,M=4$.
 
 This is equivalent to:
 
