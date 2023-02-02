@@ -9,7 +9,7 @@ sections:
 # - file: ar1_turningpts
 # - file: prob_matrix
 - file: PT_intro
-- file: PT_static
+#- file: PT_static
 - file: PT_dynamic
-- file: markov_switching_lss
+# - file: markov_switching_lss
 - file: zreferences
