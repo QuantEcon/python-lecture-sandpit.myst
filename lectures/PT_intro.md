@@ -69,8 +69,7 @@ and
 $$
 \begin{aligned} & \int \left\{ u[c(w,q), a(w)] + \beta\tilde w (w,q)\right\}\
 dF[q\vert a(w))\cr
-&\geq \int \{u [c(w,q),\hat a] + \beta\tilde w
-(w,q)\} dF(q\vert\hat a)\,, \hskip.5cm \forall\; \hat a \in A.
+ (w,q)\} dF(q\vert\hat a)\,, \hskip.5cm \forall\; \hat a \in A.
 \end{aligned}
 $$ (eq:eq2)
 
@@ -525,36 +524,7 @@ Y = list(range(M))
 
 ##  The Primal Problem
 
-### 1.2.1 SciPy
 
-
-The three methods from `scipy.linprog` give different solutions.
-
-```{code-cell} ipython3
-# Different methods available in scipy
-method = ['revised simplex', 'simplex', 'interior-point']
-n = len(method)
-
-soln_tb_scipy = pt.PrettyTable()
-soln_tb_scipy.field_names = ["Method", "Optimal Value", 
-                             "# of Iterations", "Success", "Solutions", "Time(s)"]
-
-print("Summary of Solutions under Different Methods with SCIPY")
-scipy_times = [] # stores time taken for each execution
-for i in range(n):
-    # Solve the FIP
-    command = "res = linprog(-Phi_vec, A_eq=A, b_eq=b, bounds=bounds, method = '" + method[i] + "')"
-    in_time = time.time()
-    exec(command)
-    out_time = time.time()
-    # Add the results to the table
-    scipy_times.append(round(out_time-in_time, 3))
-    soln_tb_scipy.add_row(["", "", "", "", "", ""])
-    soln_tb_scipy.add_row([method[i], round(-res.fun, 2), res.nit, res.success, np.round(res.x, 2),
-                           scipy_times[-1]])
-
-print(soln_tb_scipy)
-```
 
 ### CVXPY
 
@@ -600,93 +570,11 @@ for i in range(n):
 print(soln_tb_cv)
 ```
 
-### PuLP
-
-```{code-cell} ipython3
-# Create the model to contain the problem data
-pulp_primal = LpProblem("pulp_primal", LpMaximize)
-
-# Define variable Pi
-Pi_index = [(x,y) for x in X for y in Y]
-Pi = LpVariable.dicts("Pi", Pi_index, 0, None)
-
-# Add objective function
-pulp_primal += lpSum([Pi[x,y]*Phi[x,y] for x in X for y in Y]), "Objective Function"
-
-# Add constraints
-pulp_primal += lpSum([Pi[x,y]*u[y] for y in Y for x in X]) == w, "C1"
-for x in X:
-    pulp_primal += lpSum([Pi[x,y] for y in Y]) == p[x,0], "C2_%i"%x
-pulp_primal += lpSum([Pi[x,y] for y in Y for x in X]) == 1, "C3"
-
-# Solve the primal problem
-in_time = time.time()
-pulp_primal.solve()
-out_time = time.time()
-
-pulp_times = [round(out_time-in_time, 3)] # stores time taken for execution
-
-# Print results
-print("status:", LpStatus[pulp_primal.status])
-print("Time taken(s):", pulp_times[0])
-print("fun:", round(value(pulp_primal.objective), 3))
-print("Pi:")
-for x in X:
-      print([round(Pi[x,y].varValue,3) for y in Y])
-```
-
-### QuantEcon
-
-We use quantecon's `linprog_simplex` .
-
-```{code-cell} ipython3
-in_time = time.time()
-result_qe = linprog_simplex(Phi_vec.flatten(), A_eq=A, b_eq=b.flatten())
-out_time = time.time()
-
-qe_times = [round(out_time-in_time, 3)] # stores time taken for execution
-# Print results
-print("success:", result_qe.success)
-print("Time taken(s):", qe_times[0])
-print("Optimal value:", round(result_qe.fun, 2))
-print("solution:", [round(val, 2) for val in result_qe.x])
-```
-
-###  Time Comparison
-
-```{code-cell} ipython3
-time_tb = pt.PrettyTable()
-time_tb.field_names = ['Library', 'Best Time(seconds)']
-time_comparison = [('scipy', scipy_times), ('cvxpy', cvxpy_times), ('pulp', pulp_times), ('quantecon', qe_times)]
-
-print('Table showing best time taken by each library to solve the primal problem')
-for lib_name, time_vals in time_comparison:
-    time_tb.add_row(['', ''])
-    time_tb.add_row([lib_name, min(time_vals)])
-
-print(time_tb)
-```
 
 ## The Dual Problem
 
  
 
-Let's use the program `scipy.linprog`
-
-```{code-cell} ipython3
-# Solve the dual problem
-# Please note the bounds of \lambda since it is unrestricted and scipy by default uses [0, infinity) as bounds
-in_time = time.time()
-res_d = linprog(b, A_ub = -A.transpose(), b_ub = -Phi_vec, bounds=[(None, None)]*b.shape[0])
-out_time = time.time()
-scipy_time = round(out_time - in_time, 3)
-print("success:", res_d.success)
-print("fun:", round(res_d.fun, 2))
-print("nu_1:", round(res_d.x[0], 2))
-print("mu:", np.round([res_d.x[i] for i in [1, 2]], 2))
-print("nu_2:", round(res_d.x[3], 2))
-print("Time taken(s):", scipy_time)
-```
 
 
 
@@ -752,55 +640,6 @@ print("nu_1:", np.round(nu_1.value, 2))
 print("mu:", np.round(mu.value, 2))
 print("nu_2:", np.round(nu_1.value, 2))
 print("Time taken(s):", cvxpy_time)
-```
-
-###  PuLP
-
-```{code-cell} ipython3
-# Create the model to contain the problem data
-pulp_dual = LpProblem("pulp_dual", LpMinimize)
-
-# Define variable u and v
-nu_1 = LpVariable("nu_1", None, None)
-mu = LpVariable.dicts("mu", [0,1], None, None)
-nu_2 = LpVariable("nu_2", None, None)
-
-# Add objective function
-pulp_dual += w * nu_1 + p[0] * mu[0] + p[1] * mu[1] + nu_2,"Objective Function"
-
-# Add constraints
-for x in X:
-    for y in Y:
-        pulp_dual += u[y,0] * nu_1 + mu[x] + nu_2 >= Phi[x,y],"Constraint%i_%i"%(x,y)
-
-in_time = time.time()
-# Solve the dual problem
-pulp_dual.solve()
-out_time = time.time()
-pulp_time = round(out_time - in_time, 3)
-
-# Print results
-print("status:", LpStatus[pulp_primal.status])
-print("fun:", round(value(pulp_primal.objective), 2))
-print("nu_1:", round(nu_1.varValue, 2))
-print("mu:", [round(mu[x].varValue, 3) for x in range(2)])
-print("nu_2:", round(nu_2.varValue, 2))
-print("Time taken(s):", pulp_time)
-```
-
-###  Time Comparison
-
-```{code-cell} ipython3
-time_tb = pt.PrettyTable()
-time_tb.field_names = ['Library', 'Time Taken(seconds)']
-time_comparison = [('scipy', scipy_time), ('cvxpy', cvxpy_time), ('pulp', pulp_time)]
-
-print('Table showing the time taken by each library to solve the dual problem')
-for lib_name, time_val in time_comparison:
-    time_tb.add_row(['', ''])
-    time_tb.add_row([lib_name, time_val])
-
-print(time_tb)
 ```
 
 ##  Static Unobserved-Action Economy
@@ -1507,18 +1346,6 @@ plt.show()
 ```
 
 
----
-jupytext:
-  text_representation:
-    extension: .md
-    format_name: myst
-    format_version: 0.13
-    jupytext_version: 1.13.8
-kernelspec:
-  display_name: Python 3
-  language: python
-  name: python3
----
 
 # Dynamic Version of Phelan-Townsend (1991)
 
