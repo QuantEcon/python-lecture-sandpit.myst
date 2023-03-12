@@ -68,15 +68,16 @@ and
 
 $$
 \begin{aligned} & \int \left\{ u[c(w,q), a(w)] + \beta\tilde w (w,q)\right\}\
-dF[q\vert a(w))\cr
- (w,q)\} dF(q\vert\hat a)\,, \hskip.5cm \forall\; \hat a \in A.
+dF[q\vert a(w)]\cr
+  & \geq \int \left\{ u[c(w,q), \hat a] + \beta\tilde w (w,q)\right\}\
+\} dF[q\vert\hat a]\,, \hskip.5cm \forall\; \hat a \in A.
 \end{aligned}
 $$ (eq:eq2)
 
  * Equation {eq}`eq:eq1`  requires the contract to deliver the promised
 discounted expected continuation utility. 
  * Equation {eq}`eq:eq2`  is the **incentive
-compatibility** constraint that requires that the agent chooses to
+compatibility** constraint that requires that the agent choose to
 deliver the amount of effort called for by the
 contract. 
 
@@ -92,9 +93,9 @@ $$ (eq:eq3)
 where maximization is over functions $a(w)$, $c(w,q)$, and $\tilde w(w,q)$
 and is subject to the constraints {eq}`eq:eq1` and {eq}`eq:eq2`.
 
-Notice that constraint {eq}`eq:eq1` itself takes the form of a Bellman equation.
+Notice that constraint {eq}`eq:eq1`  takes the form of a Bellman equation.
 
-Thus,  a value function $w$ that satisfies a Bellman equation that describes the agent's continuation value    is an argument of Bellman equation {eq}`eq:eq3` that describes the principal's continuation value. 
+Thus,   the agent's continuation value $w$, which  itself satisfies a Bellman equation,   is an argument of Bellman equation {eq}`eq:eq3` that describes the principal's continuation value. 
 
 The value function $v(w)$ and the associated optimum policy functions
 are to be solved by iterating on the Bellman operator associated with Bellman equation {eq}`eq:eq3`.
@@ -200,7 +201,7 @@ $$
 \end{aligned}
 $$
 
-## Linear Programming Formulation
+## Linear Program
 
 
 The value function  for the principal's problem satisfies the Bellman equation 
@@ -406,6 +407,7 @@ $$
 where, $p=(P(\underline{q}|a=0),P(\overline{q}|a=0))=(\frac{1}{2},\frac{1}{2})$.
 
 Using vectorizing and Kronecker product, we can formulate the problem as 
+
 $$
 \begin{aligned}
 \max_{z \ge 0} & \ vec(\Phi)' z\\ 
@@ -426,7 +428,7 @@ $$
 
 subject to
 
-$$. 
+$$ 
 Az = 
 \left( \begin{array}\
 u' \otimes \mathbf{1}_2' \\
@@ -453,16 +455,18 @@ We can  implement the "elemnentary version" by CVXPY and PuLP and the "compact v
 
 Later,   we will use Scipy.linprog to implement the "compact version" and CVXPY and PuLP to implement "elementary version".
 
-**Dual Problem:**
+**Dual**
     
-The dual of FIP is:
+The dual of the FIP is:
 
 $$
 \min_{\nu_1, \mu, \nu_2} w\nu_1 + \sum_{x=1}^N p_x \mu_x + \nu_2
 $$
 
 subject to 
-$$  u_y \nu_1 + \mu_x + \nu_2 \ge \Phi_{xy}, \forall x,y; 
+
+$$ 
+ u_y \nu_1 + \mu_x + \nu_2 \ge \Phi_{xy}, \forall x,y; 
 \nu_1, \mu, \nu_2 \ \textrm{unrestricted}
 $$
 
@@ -659,7 +663,7 @@ Now we'll move on to replicate the static private information economy of section
     - $\implies \sum_{\mathbf{Q} \times \mathbf{C}} U[a, c] \Pi^{w}(a, q, c) \geqq \sum_{\mathbf{Q} \times \mathbf{C}} U[\hat{a}, c] \frac{P(q \mid \hat{a})}{P(q \mid a)} \Pi^{w}(a, q, c) \qquad \text{ (C4)}$ 
     - The ratio $\frac{P(q \mid \hat{a})}{P(q \mid a)}$ gives how many more times likely it is that output $q$ will occur given deviation action $\hat{a}$ as opposed to recommended action $a$, and thus updates the joint probability of observing recommended action $a$, output $q$, and consumption $c$.
     
-**Dynamic Program**
+**Linear Program**
 
 $$
 \begin{aligned}
