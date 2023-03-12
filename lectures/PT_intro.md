@@ -4,7 +4,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.4
+    jupytext_version: 1.14.4
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -251,19 +251,10 @@ Let's import some Python tools.
 # Importing the required libraries
 import numpy as np
 import cvxpy as cp
-from scipy.optimize import linprog
-from pulp import *
-
-import cvxopt
-import cylp
-
-from quantecon.optimize import linprog_simplex
 
 import prettytable as pt
 import matplotlib.pyplot as plt
 import time
-from IPython.display import set_matplotlib_formats
-set_matplotlib_formats('retina')
 
 from warnings import filterwarnings
 ```
@@ -493,17 +484,20 @@ where, $\lambda$ is the dual variable vector with $\lambda_1 = \nu_1$, $\left( \
 
 Furthermore, by rewriting the "elementary version" of the dual problem, we can derive the same "compact version" of the dual problem as shown above.
 
-Again, we can use CVXPY and Scipy.linprog to solve the "compact version" of the dual problem and CVXPY and PuLP to the "elementary version" of the dual problem.
+Again, we will use CVXPY to solve both the  "compact version" and the "elementary version" of the dual problem.
 
-Later   we will use Scipy.linprog and CVXPY to implement the "compact version" and CVXPY and PuLP to implement "elementary version".
+Let's define some parameters.
 
 ```{code-cell} ipython3
 # Define parameters
+
 N = 2
 M = 4
 ql = 1   # an arbitrary value for ql
 qu = 10  # an arbitrary value for qu
-Phi = np.array([[ql-0, ql-1, ql-4, ql-5], [qu-0, qu-1, qu-4, qu-5]])
+Phi = np.array([[ql-0, ql-1, ql-4, ql-5],
+                [qu-0, qu-1, qu-4, qu-5]])
+
 u = np.reshape(np.array([0**0.5, 1**0.5, 4**0.5, 5**0.5]), (4, 1))
 w = 1.5
 p = np.reshape(np.array([1/2, 1/2]), (2, 1))
@@ -528,9 +522,7 @@ Y = list(range(M))
 
 ##  The Primal Problem
 
-
-
-### CVXPY
+Let's solve the primal problem using CVXPY.
 
 ```{code-cell} ipython3
 # Define variable Pi
@@ -547,44 +539,51 @@ constraints = [cp.sum(Pi@u) == w, cp.sum(Pi, axis=1) == np.reshape(p, 2), cp.sum
 cvxpy_primal = cp.Problem(obj,constraints)
 ```
 
+We will solve the primal using different [solvers](https://www.cvxpy.org/tutorial/advanced/index.html#choosing-a-solver) available in CVXPY and compare the results.
+
 ```{code-cell} ipython3
 # Different solvers available in cvxpy
+
 solver = ["cp.ECOS", "cp.OSQP", "cp.SCS"]
 
 n = len(solver)
 
 soln_tb_cv = pt.PrettyTable()
-soln_tb_cv.field_names = ['Solver', 'DCP', 'Status', 'Optimal Value', 'Solution to Primal', 'Solution to Dual',
+soln_tb_cv.field_names = ['Solver', 'Status',
+                          'Solution to Primal', 'Solution to Dual',
                           'Time(s)']
+```
 
+```{code-cell} ipython3
 cvxpy_times = [] # stores time taken for each execution
+
 print("Summary of Solutions under Different Solvers with CVXPY")
 for i in range(n):
     command = "cvxpy_primal.solve(solver=" + solver[i] + ")"
     in_time = time.time()
     exec(command)
     out_time = time.time()
-    cvxpy_times.append(round(out_time-in_time, 3))
-    soln_tb_cv.add_row(['', '', '', '', '', '', ''])
-    soln_tb_cv.add_row([solver[i][3:], cvxpy_primal.is_dcp(), cvxpy_primal.status, 
-                     round(cvxpy_primal.value, 2), tuple(np.round(np.hstack(Pi.value), 2)), 
-                     tuple(np.round(np.hstack([constraints[i].dual_value for i in range(3)]),2)),
-                       cvxpy_times[-1]])
+    cvxpy_times.append(round(out_time - in_time, 3))
+    soln_tb_cv.add_row(['', '', '', '', ''])
+    soln_tb_cv.add_row(
+        [solver[i][3:], cvxpy_primal.status, 
+        tuple(np.round(np.hstack(Pi.value), 2)), 
+        tuple(np.round(np.hstack([constraints[i].dual_value for i in range(3)]), 2)),
+              cvxpy_times[-1]]
+    )
+
+print("Optimal Value:", round(cvxpy_primal.value, 2))
 
 print(soln_tb_cv)
 ```
-
 
 ## The Dual Problem
 
  
 
+First, let us solve  the "compact version".
 
-
-
-Now let's use CVXPY
-
-First,  the "compact version".
+Let us define the objective function.
 
 ```{code-cell} ipython3
 # Define variable _lambda
@@ -593,19 +592,25 @@ _lambda = cp.Variable((4,1))
 # Define objective function
 obj_expr_d = b.transpose() @ _lambda
 obj_d = cp.Minimize(obj_expr_d)
+```
 
+Now, define the constraints and create the model.
+
+```{code-cell} ipython3
 # Define constraints
 constraints_d = [A.transpose() @ _lambda >= Phi_vec]
 
 # Create the model
 cvxpy_dual = cp.Problem(obj_d, constraints_d)
+```
 
+```{code-cell} ipython3
 # Solve the dual problem
 cvxpy_dual.solve()
 
-#print the result
-print("status:", cvxpy_dual.status)
-print("fun:", np.round(obj_expr_d.value,2))
+# Print the result
+print("Status:", cvxpy_dual.status)
+print("Function value:", np.round(obj_expr_d.value,2))
 print("nu_1:", np.round(_lambda.value[0],2))
 print("mu:", np.round([_lambda.value[1]],2), np.round([_lambda.value[2]],2))
 print("nu_2:", np.round(_lambda.value[3],2))
@@ -614,6 +619,8 @@ print("nu_2:", np.round(_lambda.value[3],2))
 Evidently, outcomes agree with those from  the primal problems.
 
 Next, let's implement the "elementary version" of the dual problem.
+
+Let's start by defining the variable and objective function
 
 ```{code-cell} ipython3
 # Define variable
@@ -624,13 +631,19 @@ nu_2 = cp.Variable()
 # Define objective function
 obj_expr_d = w * nu_1 + p.transpose() @ mu + nu_2
 obj_d = cp.Minimize(obj_expr_d)
+```
 
+Define constraints and create the model
+
+```{code-cell} ipython3
 # Define constraints
 constraints_d = [(u[y] * nu_1 + mu[x] + nu_2 >= Phi[x, y]) for x in X for y in Y]
 
 # Create the model
 cvxpy_dual = cp.Problem(obj_d,constraints_d)
+```
 
+```{code-cell} ipython3
 in_time = time.time()
 # Solve the dual problem
 cvxpy_dual.solve()
@@ -828,7 +841,9 @@ $$ -\Phi_{yz} + \alpha U_{xz} + \beta_{xy} - \sum_y \beta_{xy} P_{xy} + \gamma +
 \delta_{xx^*} \le 0, \forall x,x^*
 $$
 
-We use CVXPY to solve the   dual problem.
+Let's solve the primal problem.
+
+Start by defining some parameters.
 
 ```{code-cell} ipython3
 # Define function U[a,c]
@@ -848,14 +863,22 @@ X = list(range(l))
 Y = list(range(m))
 Z = list(range(n))
 
-Phi = np.array([[Q[y]-C[z] for z in Z] for y in Y])
-U = np.array([[u(A[x],C[z]) for z in Z] for x in X])
-P = np.array([[0.9, 0.1], [0.6, 0.4], [0.4, 0.6], [0.25, 0.75]])
+Phi = np.array([[Q[y] - C[z] for z in Z]
+                for y in Y])
+U = np.array([[u(A[x], C[z]) for z in Z]
+              for x in X])
+
+P = np.array([[0.9, 0.1],
+              [0.6, 0.4],
+              [0.4, 0.6],
+              [0.25, 0.75]])
 
 w = cp.Parameter()
 ```
 
 ## Solving The Primal Problem
+
+Define the variables and objective function.
 
 ```{code-cell} ipython3
 # Define variable Pi_x
@@ -865,16 +888,29 @@ for x in X:
 # Define objective function
 obj_expr = cp.sum([cp.sum(cp.multiply(eval("Pi_%i"%x), Phi)) for x in X])
 obj = cp.Maximize(obj_expr)
+```
 
+Set the constraints and create the model
+
+```{code-cell} ipython3
 # Define constraints
-C1 = [cp.sum([cp.sum([cp.sum(cp.multiply(eval("Pi_%i"%x)[y,:], U[x,:])) for x in X]) for y in Y]) == w]
-C2 = [(cp.sum(eval("Pi_%i"%x),axis = 1)[y] == P[x,y]*cp.sum(eval("Pi_%i"%x))) for x in X for y in Y]
-C3 = [cp.sum([cp.sum(eval("Pi_%i"%x)) for x in X]) == 1] + [(eval("Pi_%i"%x) >= 0) for x in X]
-C4 = [(cp.sum([cp.sum(cp.multiply(eval("Pi_%i"%x)[y,:],U[x,:])) for y in Y]) >= 
-     cp.sum([cp.sum(cp.multiply(eval("Pi_%i"%x)[y,:],U[x_star,:]))*P[x_star,y]/P[x,y] for y in Y])) for x in X for x_star in X]
+C1 = [cp.sum([cp.sum([cp.sum(cp.multiply(eval("Pi_%i"%x)[y, :], U[x, :]))
+                      for x in X]) for y in Y]) == w]
+
+C2 = [(cp.sum(eval("Pi_%i"%x), axis=1)[y] == P[x, y]*cp.sum(eval("Pi_%i"%x)))
+      for x in X for y in Y]
+
+C3 = [cp.sum([cp.sum(eval("Pi_%i"%x))
+              for x in X]) == 1] + [(eval("Pi_%i"%x) >= 0) for x in X]
+
+
+C4 = [(cp.sum([cp.sum(cp.multiply(eval("Pi_%i"%x)[y, :], U[x, :]))
+               for y in Y]) >= cp.sum([cp.sum(cp.multiply(eval("Pi_%i"%x)[y, :],
+                           U[x_star, :]))*P[x_star, y]/P[x, y] for y in Y]))
+                              for x in X for x_star in X]
 
 # Create the model
-cvxpy_primal = cp.Problem(obj,C1+C2+C3+C4)
+cvxpy_primal = cp.Problem(obj, C1 + C2 + C3 + C4)
 ```
 
 ```{code-cell} ipython3
@@ -888,12 +924,14 @@ out_time = time.time()
 
 cvxpy_time = round(out_time - in_time, 3)
 # Print results
-print("status:", cvxpy_primal.status)
-print("fun:", round(obj_expr.value, 8))
+print("Status:", cvxpy_primal.status)
+print("Function value:", round(obj_expr.value, 8))
 print("Time taken(s):", cvxpy_time)
 ```
 
 ## Solving the Dual Problem
+
+Define the variables and objective function.
 
 ```{code-cell} ipython3
 # Define dual variables
@@ -905,12 +943,19 @@ delta = cp.Variable((4, 4))
 # Define objective function
 obj_expr_d = alpha * w + gamma
 obj_d = cp.Minimize(obj_expr_d)
+```
 
+Define the constraints and create the model.
+
+```{code-cell} ipython3
 # Define constraints
-constraints_d = [(-Phi[y,z] + alpha * U[x,z] + beta[x,y] - cp.sum([beta[x,y]*P[x,y] for y in Y]) + gamma 
-               + cp.sum([U[x,z]*delta[x,x_star] for x_star in X]) 
-               - cp.sum([U[x_star,z]*P[x_star,y]/P[x,y]*delta[x,x_star] for x_star in X])
-               >= 0) for x in X for y in Y for z in Z] + [delta[x,x_star] <= 0 for x in X for x_star in X]
+constraints_d = [(-Phi[y, z] + alpha * U[x, z] + beta[x, y]
+                  - cp.sum([beta[x, y] * P[x, y] for y in Y]) + gamma
+                  + cp.sum([U[x, z] * delta[x, x_star] for x_star in X]) 
+                  - cp.sum([U[x_star, z] * P[x_star, y]/P[x, y] * delta[x, x_star]
+                            for x_star in X])
+                  >= 0) for x in X for y in Y for z in Z] + \
+                  [delta[x, x_star] <= 0 for x in X for x_star in X]
 
 # Create the model
 cvxpy_dual = cp.Problem(obj_d, constraints_d)
@@ -922,14 +967,14 @@ w.value = 3
 
 # Solve the dual problem
 in_time = time.time()
-cvxpy_dual.solve(solver = cp.CBC)
+cvxpy_dual.solve(solver=cp.CBC)
 out_time = time.time()
 
 cvxpy_time = round(out_time - in_time, 3)
 
 # Print results
-print("status:", cvxpy_dual.status)
-print("fun:", round(obj_expr_d.value, 8))
+print("Status:", cvxpy_dual.status)
+print("Function value:", round(obj_expr_d.value, 8))
 print("Time taken(s):", cvxpy_time)
 ```
 
@@ -939,15 +984,17 @@ In section 2.2, we solve the primal problem setting $w = 3$. In this section, fo
     
 **Notice:** When plotting figure 3 and 4, only cp.CBC solver can derive the same figures as presented in Phelan & Townsend, 1991.
 
+Let's initialize the variables and set some parameters.
+
 ```{code-cell} ipython3
 num_points = 100
 
 # Set dynamic values for w
-w_values = np.linspace(1,5,num_points)
+w_values = np.linspace(1, 5, num_points)
 
 # Create models of Full Information and Unobserved Action
-cvxpy_full = cp.Problem(obj,C1+C2+C3)
-cvxpy_unobs = cp.Problem(obj,C1+C2+C3+C4)
+cvxpy_full = cp.Problem(obj, C1 + C2 + C3)
+cvxpy_unobs = cp.Problem(obj, C1 + C2 + C3 + C4)
 
 # Initialize variables
 sw_full = np.ones(num_points)
@@ -956,26 +1003,34 @@ Ea_full = np.ones(num_points) * float("-inf")
 Ea_unobs = np.ones(num_points) * float("-inf")
 Ec_full = np.ones((num_points,l,m)) * float("-inf")
 Ec_unobs = np.ones((num_points,l,m)) * float("-inf")
+```
 
+```{code-cell} ipython3
 # Compute results corresponding to different values of w
 for i in range(num_points):
     w.value = w_values[i]
     
     # Solve the Full Information model and save results into vatiables
-    cvxpy_full.solve(solver = cp.CBC)  
+    cvxpy_full.solve(solver=cp.CBC)  
     sw_full[i] = obj_expr.value             
     if cvxpy_full.status == "optimal":
-        Ea_full[i] = np.sum([A[x]*eval("Pi_%i"%x).value[y,z] for x in X for y in Y for z in Z])
-        Ec_full[i,:,:] = [[(np.sum([C[z]*eval("Pi_%i"%x).value[y,z] for z in Z])/np.sum([eval("Pi_%i"%x).value[y,z] for z in Z]))
+        Ea_full[i] = np.sum([A[x]*eval("Pi_%i"%x).value[y, z]
+                             for x in X for y in Y for z in Z])
+        Ec_full[i,:,:] = [[(np.sum([C[z]*eval("Pi_%i"%x).value[y, z]
+                                    for z in Z])/np.sum([eval("Pi_%i"%x).value[y, z]
+                                                         for z in Z]))
                            for y in Y] for x in X]
     
     
     # Solve the Unobserved Action model and save results into variables
-    cvxpy_unobs.solve(solver = cp.CBC)
+    cvxpy_unobs.solve(solver=cp.CBC)
     sw_unobs[i] = obj_expr.value
     if cvxpy_unobs.status == "optimal":
-        Ea_unobs[i] = np.sum([A[x]*eval("Pi_%i"%x).value[y,z] for x in X for y in Y for z in Z])
-        Ec_unobs[i,:,:] = [[np.sum([C[z]*eval("Pi_%i"%x).value[y,z] for z in Z])/np.sum([eval("Pi_%i"%x).value[y,z] for z in Z])
+        Ea_unobs[i] = np.sum([A[x]*eval("Pi_%i"%x).value[y, z]
+                              for x in X for y in Y for z in Z])
+        Ec_unobs[i,:,:] = [[np.sum([C[z]*eval("Pi_%i"%x).value[y, z]
+                                    for z in Z])/np.sum([eval("Pi_%i"%x).value[y, z]
+                                                         for z in Z])
                            for y in Y] for x in X]
 ```
 
@@ -1015,22 +1070,29 @@ plt.show()
 plt.figure(figsize=(6.5, 6.5))
 for x in X:
     for y in Y:
-        plt.plot(w_values, Ec_unobs[:,x,y])
+        plt.plot(w_values, Ec_unobs[:, x, y])
 
 plt.xlabel("w")
 plt.ylabel("E(c) given a, q, w")
 plt.xlim([1.0, 5.0])
 plt.ylim([0.0, 2.25])
 plt.title("Figure 3\n Unobserved Action Consumption", y=-0.3)
-plt.annotate("a=.4, q=2", xy=(2.5, 0.5), xytext=(1.3, 0.7), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=2", xy=(3.7, 1.5), xytext=(2.2, 1.65), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=0, q=(1,2)", xy=(4.8, 2.05), xytext=(3.0, 2.15), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2,\nq=2", xy=(2.0, 0.15), xytext=(1.3, 0.24), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.4, q=1", xy=(3.0, 0.10), xytext=(3.6, 0.2), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2,\nq=1", xy=(4.0, 0.9), xytext=(4.3, 0.75), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=0, q=(1,2)\na=.2, q=1", xy=(2.1, 0), xytext=(1.8, -0.3), arrowprops={"arrowstyle":"-"})
-plt.annotate(r"$\{$",fontsize=25, xy=(2.1, 0), xytext=(1.6, -0.3))
-plt.annotate(r"$\}$",fontsize=25, xy=(2.1, 0), xytext=(2.5, -0.3))
+plt.annotate("a=.4, q=2", xy=(2.5, 0.5), xytext=(1.3, 0.7),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=2", xy=(3.7, 1.5), xytext=(2.2, 1.65),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=0, q=(1,2)", xy=(4.8, 2.05), xytext=(3.0, 2.15),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2,\nq=2", xy=(2.0, 0.15), xytext=(1.3, 0.24),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=1", xy=(3.0, 0.10), xytext=(3.6, 0.2),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2,\nq=1", xy=(4.0, 0.9), xytext=(4.3, 0.75),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=0, q=(1,2)\na=.2, q=1", xy=(2.1, 0), xytext=(1.8, -0.3),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate(r"$\{$", fontsize=25, xy=(2.1, 0), xytext=(1.6, -0.3))
+plt.annotate(r"$\}$", fontsize=25, xy=(2.1, 0), xytext=(2.5, -0.3))
 plt.show()
 ```
 
@@ -1038,7 +1100,7 @@ plt.show()
 plt.figure(figsize=(6.5, 6.5))
 for x in X:
     for y in Y:
-        plt.plot(w_values, Ec_full[:,x,y])
+        plt.plot(w_values, Ec_full[:, x, y])
 plt.xlabel("w")
 plt.ylabel("E{c(w)}")
 plt.xlim([1.0, 5.0])
@@ -1111,6 +1173,8 @@ where "$\times$" denotes elementwise multiplication or the Hadamard product.
 
 ## Solve The Primal Problem
 
+Let's define the parameters.
+
 ```{code-cell} ipython3
 # Setting the variables
 w = 3.0
@@ -1132,16 +1196,22 @@ E2 = np.ones((l, 1))
 I = np.eye(m)
 E3 = np.ones((n, 1))
 E4 = np.ones((m, 1))
+```
 
+Set the constraints and objective function.
+
+```{code-cell} ipython3
 Π = cp.Variable((l, m*n))
-obj = cp.Maximize(E2.T@Π@Φ.T)
-cons = [cp.trace(Π@U.T) == w, 
-       Π@np.kron(I, E3) == cp.multiply(P_tilde, Π@E1@E4.T),
-        E2.T@Π@E1 == 1,
+obj = cp.Maximize(E2.T @ Π @ Φ.T)
+_lhs = cp.multiply(U, Π) @ E1 @ E2.T
+_rhs = cp.multiply(Π, 1/np.kron(P_tilde, E3.T))
+_rhs = _rhs @ cp.multiply(U, np.kron(P_tilde, E3.T)).T
+cons = [cp.trace(Π @ U.T) == w, 
+        Π @ np.kron(I, E3) == cp.multiply(P_tilde, Π @ E1 @ E4.T),
+        E2.T @ Π @ E1 == 1,
         Π >= np.zeros((l, m*n)),
         Π <= np.ones((l, m*n)),
-        cp.multiply(U, Π)@E1@E2.T >= cp.multiply(Π, 1/np.kron(P_tilde, E3.T))@cp.multiply(U, np.kron(P_tilde, E3.T)).T]
-
+        _lhs >= _rhs]
 ```
 
 ```{code-cell} ipython3
@@ -1157,7 +1227,6 @@ print("DCP: ", prob.is_dcp())
 print("status: ", prob.status)
 print("The optimal value is ", prob.value)
 print("The dual solution is ", cons[0].dual_value, cons[1].dual_value, cons[2].dual_value, cons[3].dual_value)
-
 ```
 
 ## 3.3 Figures
@@ -1173,11 +1242,11 @@ def u(x, y):
 def LP(w, A, Q, C, P_tilde, u):
     
     l, m, n = len(A), len(Q), len(C)
-    Φ = (Q.reshape((m,1)) - C.reshape((1,n))).flatten().reshape((1, m*n))
-    U = np.kron(np.ones((1,2)), np.array([u(C[j], A[i]) 
+    Φ = (Q.reshape((m, 1)) - C.reshape((1, n))).flatten().reshape((1, m*n))
+    U = np.kron(np.ones((1, 2)), np.array([u(C[j], A[i]) 
                                           for i in range(l) 
                                           for j in range(n)]
-                                        ).reshape((l,n)))
+                                        ).reshape((l, n)))
     P = P_tilde.flatten().reshape((1, l*m))
     
     E1 = np.ones((m*n, 1))
@@ -1187,41 +1256,45 @@ def LP(w, A, Q, C, P_tilde, u):
     E4 = np.ones((m, 1))
     
     Π = cp.Variable((l, m*n))
-    obj = cp.Maximize(E2.T@Π@Φ.T)
-    cons = [cp.trace(Π@U.T) == w, 
-           Π@np.kron(I, E3) == cp.multiply(P_tilde, Π@E1@E4.T),
-            E2.T@Π@E1 == 1,
+    obj = cp.Maximize(E2.T @ Π @ Φ.T)
+    _lhs = cp.multiply(U, Π) @ E1 @ E2.T
+    _rhs = cp.multiply(Π, 1/np.kron(P_tilde, E3.T))
+    _rhs = _rhs @ cp.multiply(U, np.kron(P_tilde, E3.T)).T
+    cons = [cp.trace(Π @ U.T) == w, 
+            Π @ np.kron(I, E3) == cp.multiply(P_tilde, Π @ E1 @ E4.T),
+            E2.T @ Π @ E1 == 1,
             Π >= np.zeros((l, m*n)),
             Π <= np.ones((l, m*n)),
-            cp.multiply(U, Π)@E1@E2.T >= cp.multiply(Π, 1/np.kron(P_tilde, E3.T))@cp.multiply(U, np.kron(P_tilde, E3.T)).T]
+            _lhs >= _rhs]
     
-    prob_full = cp.Problem(obj, cons[0:-1])
+    prob_full = cp.Problem(obj, cons[0: -1])
     prob_full.solve(solver=cp.CBC)
     if prob_full.status == "optimal":
         Π_full = Π.value
-        dist_full = np.sum(Π_full,1)
-        Ea_full = float(A.reshape((1,4))@dist_full.reshape((4,1)))
-        Ec_full = Π_full@np.kron(I, C.reshape((n,1))) / (Π_full@np.kron(I, E3))
+        dist_full = np.sum(Π_full, 1)
+        Ea_full = float(A.reshape((1, 4)) @ dist_full.reshape((4, 1)))
+        Ec_full = Π_full @ np.kron(I, C.reshape((n, 1)))
+        Ec_full /= (Π_full @ np.kron(I, E3))
     else:
         Ea_full = float("-inf") 
-        Ec_full = float("-inf")*np.ones((l,m))
+        Ec_full = float("-inf")*np.ones((l, m))
     
     prob_unobs = cp.Problem(obj, cons) 
     prob_unobs.solve(solver=cp.CBC)
     if prob_unobs.status == "optimal":
         Π_unobs = Π.value
-        dist_unobs = np.sum(Π_unobs,1)
-        Ea_unobs = float(A.reshape((1,4))@dist_unobs.reshape((4,1)))
-        Ec_unobs = Π_unobs@np.kron(I, C.reshape((n,1))) / (Π_unobs@np.kron(I, E3))
+        dist_unobs = np.sum(Π_unobs, 1)
+        Ea_unobs = float(A.reshape((1, 4))@dist_unobs.reshape((4, 1)))
+        Ec_unobs = Π_unobs @ np.kron(I, C.reshape((n, 1)))
+        Ec_unobs /= (Π_unobs @ np.kron(I, E3))
     else:
         Ea_unobs = float("-inf")
-        Ec_unobs = float("-inf")*np.ones((l,m))
+        Ec_unobs = float("-inf")*np.ones((l, m))
     
     optimal_value = np.array([prob_full.value, prob_unobs.value])
     Ea = np.array([Ea_full, Ea_unobs])
    
     return optimal_value, Ea, list(Ec_full), list(Ec_unobs)
-
 ```
 
 ## Plot Replication
@@ -1233,7 +1306,7 @@ w = np.linspace(1, 5, 100)
 ```{code-cell} ipython3
 filterwarnings("ignore")
 def LP_fig12(w):
-    return LP(w, A, Q, C, P_tilde, u)[0:2]
+    return LP(w, A, Q, C, P_tilde, u)[0: 2]
 rev_fig12 = np.array(list(map(LP_fig12, w)))
 ```
 
@@ -1274,22 +1347,29 @@ plt.show()
 plt.figure(figsize=(6.5, 6.5))
 
 plt.plot(w, rev_fig12[:, 1][:, 0])
-plt.plot(w[rev_fig12[:, 1][:, 0] == 0.6], rev_fig12[:, 1][:, 0][rev_fig12[:, 1][:, 0] == 0.6], marker="v")
+plt.plot(w[rev_fig12[:, 1][:, 0] == 0.6],
+         rev_fig12[:, 1][:, 0][rev_fig12[:, 1][:, 0] == 0.6], marker="v")
 plt.plot(w[(rev_fig12[:, 1][:, 0] < 0.6) * (rev_fig12[:, 1][:, 0] > 0.4)], 
          rev_fig12[:, 1][:, 0][(rev_fig12[:, 1][:, 0] < 0.6) * (rev_fig12[:, 1][:, 0] > 0.4)], marker="^")
-plt.plot(w[rev_fig12[:, 1][:, 0] == 0.4], rev_fig12[:, 1][:, 0][rev_fig12[:, 1][:, 0] == 0.4], marker="v")
+plt.plot(w[rev_fig12[:, 1][:, 0] == 0.4],
+         rev_fig12[:, 1][:, 0][rev_fig12[:, 1][:, 0] == 0.4], marker="v")
 plt.plot(w[(rev_fig12[:, 1][:, 0] < 0.4) * (rev_fig12[:, 1][:, 0] > 0.2)], 
          rev_fig12[:, 1][:, 0][(rev_fig12[:, 1][:, 0] < 0.4) * (rev_fig12[:, 1][:, 0] > 0.2)], marker="^")
-plt.plot(w[rev_fig12[:, 1][:, 0] == 0.2], rev_fig12[:, 1][:, 0][rev_fig12[:, 1][:, 0] == 0.2], marker="v")
+plt.plot(w[rev_fig12[:, 1][:, 0] == 0.2],
+         rev_fig12[:, 1][:, 0][rev_fig12[:, 1][:, 0] == 0.2], marker="v")
 plt.plot(w[(rev_fig12[:, 1][:, 0] < 0.2) * (rev_fig12[:, 1][:, 0] > 0)], 
          rev_fig12[:, 1][:, 0][(rev_fig12[:, 1][:, 0] < 0.2) * (rev_fig12[:, 1][:, 0] > 0)], marker="^")
 plt.plot(w[rev_fig12[:, 1][:, 0] == 0], rev_fig12[:, 1][:, 0][rev_fig12[:, 1][:, 0] == 0], marker="v")
 
 plt.plot(w, rev_fig12[:, 1][:, 1])
-plt.plot(w[rev_fig12[:, 1][:, 1] == 0.4], rev_fig12[:, 1][:, 1][rev_fig12[:, 1][:, 1] == 0.4], "k-")
-plt.plot(w[rev_fig12[:, 1][:, 1] == 0.2], rev_fig12[:, 1][:, 1][rev_fig12[:, 1][:, 1] == 0.2], "k-")
-plt.plot(w[rev_fig12[:, 1][:, 1] == 0], rev_fig12[:, 1][:, 1][rev_fig12[:, 1][:, 1] == 0], "k-")
-plt.plot(w[(rev_fig12[:, 1][:, 1] < 0.4) * (w<2.3)], rev_fig12[:, 1][:, 1][(rev_fig12[:, 1][:, 1] < 0.4) * (w<2.3)], "o")
+plt.plot(w[rev_fig12[:, 1][:, 1] == 0.4],
+         rev_fig12[:, 1][:, 1][rev_fig12[:, 1][:, 1] == 0.4], "k-")
+plt.plot(w[rev_fig12[:, 1][:, 1] == 0.2],
+         rev_fig12[:, 1][:, 1][rev_fig12[:, 1][:, 1] == 0.2], "k-")
+plt.plot(w[rev_fig12[:, 1][:, 1] == 0],
+         rev_fig12[:, 1][:, 1][rev_fig12[:, 1][:, 1] == 0], "k-")
+plt.plot(w[(rev_fig12[:, 1][:, 1] < 0.4) * (w<2.3)],
+         rev_fig12[:, 1][:, 1][(rev_fig12[:, 1][:, 1] < 0.4) * (w<2.3)], "o")
 plt.plot(w[(rev_fig12[:, 1][:, 1] < 0.4) * (rev_fig12[:, 1][:, 1] > 0.2) * (w>2.7) * (w<4.0)], 
          rev_fig12[:, 1][:, 1][(rev_fig12[:, 1][:, 1] < 0.4) * (rev_fig12[:, 1][:, 1] > 0.2) * (w>2.7) * (w<4.0)], "o")
 plt.plot(w[(rev_fig12[:, 1][:, 1] < 0.2) * (rev_fig12[:, 1][:, 1] > 0) * (w>4.3)], 
@@ -1324,13 +1404,20 @@ plt.ylabel("E(c) given a, q, w")
 plt.xlim([1.0, 5.0])
 plt.ylim([0.0, 2.25])
 plt.title("Figure 3\n Unobserved Action Consumption", y=-0.3)
-plt.annotate("a=.4, q=2", xy=(2.5, 0.5), xytext=(1.3, 0.7), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=2", xy=(3.7, 1.5), xytext=(2.2, 1.65), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=0, q=(1,2)", xy=(4.8, 2.05), xytext=(3.0, 2.15), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2,\nq=2", xy=(2.0, 0.15), xytext=(1.3, 0.24), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.4, q=1", xy=(3.0, 0.10), xytext=(3.6, 0.2), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2,\nq=1", xy=(4.0, 0.9), xytext=(4.3, 0.75), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=0, q=(1,2)\na=.2, q=1", xy=(2.1, 0), xytext=(1.8, -0.3), arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=2", xy=(2.5, 0.5), xytext=(1.3, 0.7),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=2", xy=(3.7, 1.5), xytext=(2.2, 1.65),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=0, q=(1,2)", xy=(4.8, 2.05), xytext=(3.0, 2.15),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2,\nq=2", xy=(2.0, 0.15), xytext=(1.3, 0.24),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=1", xy=(3.0, 0.10), xytext=(3.6, 0.2),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2,\nq=1", xy=(4.0, 0.9), xytext=(4.3, 0.75),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=0, q=(1,2)\na=.2, q=1", xy=(2.1, 0),
+             xytext=(1.8, -0.3), arrowprops={"arrowstyle":"-"})
 plt.annotate(r"$\{$",fontsize=25, xy=(2.1, 0), xytext=(1.6, -0.3))
 plt.annotate(r"$\}$",fontsize=25, xy=(2.1, 0), xytext=(2.5, -0.3))
 plt.show()
@@ -1348,8 +1435,6 @@ plt.ylim([0.0, 2.25])
 plt.title("Figure 4\n Full Information Consumption", y=-0.2)
 plt.show()
 ```
-
-
 
 # Dynamic Version of Phelan-Townsend (1991)
 
@@ -1381,12 +1466,9 @@ Let's begin with some imports!
 ```{code-cell} ipython3
 import numpy as np
 import cvxpy as cp
-import cylp
 
 from time import time
 import matplotlib.pyplot as plt
-from IPython.display import set_matplotlib_formats
-set_matplotlib_formats('retina')
 ```
 
 ## 2 Solve the repeated problem
@@ -1403,9 +1485,17 @@ We treated the three-dimensional decision variables as a list of two-dimensional
 
 By calling "solve_repeated_problem" at each iteration, we then define a function "solve_multi_period_economy" that solves the multi-period economy with either finite periods or infinite periods.
 
+Let's define the function that solves the static problem.
+
 ```{code-cell} ipython3
 # Define the function that solves the static problem
-def solve_static_problem(W=None, u=None, A=None, Q=None, C=None, P=None, problem_type=None):
+def solve_static_problem(W=None,
+                         u=None,
+                         A=None,
+                         Q=None,
+                         C=None,
+                         P=None,
+                         problem_type=None):
     '''
     Function: Solve the static problem
     
@@ -1450,22 +1540,27 @@ def solve_static_problem(W=None, u=None, A=None, Q=None, C=None, P=None, problem
         Pi_list[a_ind] = cp.Variable((n_Q, n_C))
 
     # Define objective function
-    obj_expr = cp.sum([cp.sum(cp.multiply(Pi_list[a_ind], Phi)) for a_ind in A_ind])
+    obj_expr = cp.sum([cp.sum(cp.multiply(Pi_list[a_ind], Phi))
+                       for a_ind in A_ind])
     obj = cp.Maximize(obj_expr)
     
     # Define constraints
-    C1 = [cp.sum([cp.sum([cp.sum(cp.multiply(Pi_list[a_ind][q_ind, :], U[a_ind, :])) for a_ind in A_ind]) 
+    C1 = [cp.sum([cp.sum([cp.sum(cp.multiply(Pi_list[a_ind][q_ind, :],
+                                             U[a_ind, :])) for a_ind in A_ind]) 
                   for q_ind in Q_ind]) == w]
-    C2 = [(cp.sum(Pi_list[a_ind], axis = 1)[q_ind] == P[a_ind, q_ind]*cp.sum(Pi_list[a_ind])) 
+    C2 = [(cp.sum(Pi_list[a_ind], axis=1)[q_ind] == P[a_ind, q_ind] * cp.sum(Pi_list[a_ind])) 
           for a_ind in A_ind for q_ind in Q_ind]
-    C3 = [cp.sum([cp.sum(Pi_list[a_ind]) for a_ind in A_ind]) == 1] + [(Pi_list[a_ind] >= 0) for a_ind in A_ind]
+    C3 = [cp.sum([cp.sum(Pi_list[a_ind]) for a_ind in A_ind]) == 1] + \
+            [(Pi_list[a_ind] >= 0) for a_ind in A_ind]
         
     problem_type = problem_type.lower()
     if problem_type == "full information":
         constraints = C1 + C2 + C3
     else:
-        C4 = [(cp.sum([cp.sum(cp.multiply(Pi_list[a_ind][q_ind, :],U[a_ind, :])) for q_ind in Q_ind]) >= 
-               cp.sum([cp.sum(cp.multiply(Pi_list[a_ind][q_ind, :],U[a_ind_hat, :]))*P[a_ind_hat, q_ind]/P[a_ind, q_ind] 
+        C4 = [(cp.sum([cp.sum(cp.multiply(Pi_list[a_ind][q_ind, :], U[a_ind, :]))
+                       for q_ind in Q_ind]) >= 
+               cp.sum([cp.sum(cp.multiply(Pi_list[a_ind][q_ind, :],
+                                          U[a_ind_hat, :])) * P[a_ind_hat, q_ind]/P[a_ind, q_ind] 
                        for q_ind in Q_ind])) 
               for a_ind in A_ind for a_ind_hat in A_ind]
         constraints = C1 + C2 + C3 + C4
@@ -1488,10 +1583,19 @@ def solve_static_problem(W=None, u=None, A=None, Q=None, C=None, P=None, problem
     return s_W, Pi
 ```
 
+Define the function that solves the dynamic problem at one iteration
+
 ```{code-cell} ipython3
-# Define the function that solves the dynamic problem at one iteration
-def solve_repeated_problem(W=None, u=None, A=None, Q=None, C=None, W_prime=None, s_W_prime=None, P=None,
-                           problem_type=None, β=0.8):
+def solve_repeated_problem(W=None,
+                           u=None,
+                           A=None,
+                           Q=None,
+                           C=None,
+                           W_prime=None,
+                           s_W_prime=None,
+                           P=None,
+                           problem_type=None,
+                           β=0.8):
     '''
     Function: Solve the dynamic problem at one iteration
     
@@ -1531,8 +1635,10 @@ def solve_repeated_problem(W=None, u=None, A=None, Q=None, C=None, W_prime=None,
     A_ind, Q_ind, C_ind, W_prime_ind = range(n_A), range(n_Q), range(n_C), range(n_W_prime)
     
     U = np.array([[u(a, c) for c in C] for a in A])
-    Phi = np.array([[[q-c+β*s_w_prime for s_w_prime in s_W_prime] for c in C] for q in Q])
-    U_disc = np.array([[[u(a, c)+β*w_prime for w_prime in W_prime] for c in C] for a in A])
+    Phi = np.array([[[q - c + β * s_w_prime for s_w_prime in s_W_prime]
+                     for c in C] for q in Q])
+    U_disc = np.array([[[u(a, c) + β * w_prime for w_prime in W_prime]
+                        for c in C] for a in A])
     
     w = cp.Parameter()
         
@@ -1544,24 +1650,32 @@ def solve_repeated_problem(W=None, u=None, A=None, Q=None, C=None, W_prime=None,
             Pi_list[a_ind][q_ind] = cp.Variable((n_C, n_W_prime))
 
     # Define the objective function
-    obj_expr = cp.sum([cp.sum(cp.multiply(Phi[q_ind, :, :], Pi_list[a_ind][q_ind])) for a_ind in A_ind for q_ind in Q_ind])
+    obj_expr = cp.sum([cp.sum(cp.multiply(Phi[q_ind, :, :], Pi_list[a_ind][q_ind]))
+                       for a_ind in A_ind for q_ind in Q_ind])
     obj = cp.Maximize(obj_expr)
     
     # Define constraints
     C5 = [cp.sum([cp.sum(cp.multiply(U_disc[a_ind, :, :], Pi_list[a_ind][q_ind])) 
                   for a_ind in A_ind for q_ind in Q_ind]) == w]
     C6 = [(cp.sum(Pi_list[a_ind][q_ind]) == 
-           P[a_ind, q_ind]*cp.sum([cp.sum(Pi_list[a_ind][q_ind_1]) for q_ind_1 in Q_ind])) 
+           P[a_ind, q_ind]*cp.sum([cp.sum(Pi_list[a_ind][q_ind_1])
+                                   for q_ind_1 in Q_ind])) 
           for a_ind in A_ind for q_ind in Q_ind]
-    C7 = [cp.sum([cp.sum(Pi_list[a_ind][q_ind]) for a_ind in A_ind for q_ind in Q_ind]) == 1]
-    C7 = C7 + [(Pi_list[a_ind][q_ind] >= 0) for a_ind in A_ind for q_ind in Q_ind]
+    C7 = [cp.sum([cp.sum(Pi_list[a_ind][q_ind])
+                  for a_ind in A_ind for q_ind in Q_ind]) == 1]
+    C7 = C7 + [(Pi_list[a_ind][q_ind] >= 0)
+               for a_ind in A_ind for q_ind in Q_ind]
    
     problem_type = problem_type.lower()
     if problem_type == "full information":
         constraints = C5 + C6 + C7
     else:
-        C8 = [(cp.sum([cp.sum(cp.multiply(U_disc[a_ind, :, :], Pi_list[a_ind][q_ind])) for q_ind in Q_ind]) >= 
-               cp.sum([cp.sum(cp.multiply(U_disc[a_ind_hat, :, :], Pi_list[a_ind][q_ind]))*P[a_ind_hat, q_ind]/P[a_ind, q_ind] 
+        C8 = [(cp.sum([cp.sum(cp.multiply(U_disc[a_ind, :, :],
+                                          Pi_list[a_ind][q_ind]))
+                       for q_ind in Q_ind]) >= 
+               cp.sum([cp.sum(
+                   cp.multiply(U_disc[a_ind_hat, :, :],
+                                Pi_list[a_ind][q_ind]))*P[a_ind_hat, q_ind]/P[a_ind, q_ind] 
                        for q_ind in Q_ind]))
               for a_ind in A_ind for a_ind_hat in A_ind] 
         constraints = C5 + C6 + C7 + C8
@@ -1576,7 +1690,7 @@ def solve_repeated_problem(W=None, u=None, A=None, Q=None, C=None, W_prime=None,
     # Solve the problem
     for i in range(len(W)):
         w.value = W[i]
-        problem.solve(solver = cp.CBC)
+        problem.solve(solver=cp.CBC)
         s_W[i] = obj_expr.value
         for a_ind in A_ind:
             for q_ind in Q_ind:
@@ -1585,10 +1699,20 @@ def solve_repeated_problem(W=None, u=None, A=None, Q=None, C=None, W_prime=None,
     return s_W, Pi
 ```
 
+Define the function that solve the infinite-period or finite-period economy.
+
 ```{code-cell} ipython3
-# Define the function that solve the infinite-period or finite-period economy
-def solve_multi_period_economy(u=None, A=None, Q=None, C=None, P=None, problem_type=None, T=None, β=0.8, N=100, 
-                               s_W_0=None, tol=1e-8):
+def solve_multi_period_economy(u=None,
+                               A=None,
+                               Q=None,
+                               C=None,
+                               P=None,
+                               problem_type=None,
+                               T=None,
+                               β=0.8,
+                               N=100, 
+                               s_W_0=None,
+                               tol=1e-8):
     '''
     Function: Solve the multi-period problem, either infinite-period or finite-period
     
@@ -1634,11 +1758,11 @@ def solve_multi_period_economy(u=None, A=None, Q=None, C=None, P=None, problem_t
         # Discretize the parameter space W
         problem_type = problem_type.lower()
         if problem_type == "full information":
-            w_l = u(A.max(), C.min())/(1-β)
-            w_u = u(A.min(), C.max())/(1-β)
+            w_l = u(A.max(), C.min()) / (1 - β)
+            w_u = u(A.min(), C.max()) / (1 - β)
         else:
-            w_l = u(A.min(), C.min())/(1-β)
-            w_u = u(A.min(), C.max())/(1-β)
+            w_l = u(A.min(), C.min()) / (1 - β)
+            w_u = u(A.min(), C.max()) / (1 - β)
         W = np.linspace(w_l, w_u, N)
 
         # Assign initial value for s_W
@@ -1653,10 +1777,15 @@ def solve_multi_period_economy(u=None, A=None, Q=None, C=None, P=None, problem_t
         while not optimal:
             print('Iteration %i in process'%iteration)
             start_time = time()
-            s_W, Pi = solve_repeated_problem(W=W, u=u, A=A, Q=Q, C=C, W_prime=W, s_W_prime=s_W_prime, P=P,
-                                                     problem_type=problem_type, β=β)
+            s_W, Pi = solve_repeated_problem(W=W, u=u, A=A, Q=Q,
+                                             C=C, W_prime=W,
+                                             s_W_prime=s_W_prime,
+                                             P=P,
+                                             problem_type=problem_type,
+                                             β=β)
             end_time = time()
-            print('Iteration %i finished in:'%iteration, round(end_time-start_time, 2), 's')
+            print('Iteration %i finished in:'%iteration,
+                  round(end_time-start_time, 2), 's')
             print('---------')
             if np.max(np.abs(s_W-s_W_prime)) <= tol:
                 optimal = True
@@ -1676,21 +1805,26 @@ def solve_multi_period_economy(u=None, A=None, Q=None, C=None, P=None, problem_t
         else:
             w_l = u(A.min(), C.min())
             w_u = u(A.min(), C.max())
-        W_mat = np.cumsum(np.logspace(0, T-1, T, base=β).reshape(T, 1)*np.linspace(w_l, w_u, N).reshape(1, N), 
-                          axis=0)
+        W_mat = np.cumsum(
+            np.logspace(0, T-1, T, base=β).reshape(T, 1) * \
+            np.linspace(w_l, w_u, N).reshape(1, N), 
+                        axis=0)
         
         # Solve the 1-period economy
         print('Solving the 1-period economy')
         print('-------')
-        s_W, Pi = solve_static_problem(W=W_mat[0, :], u=u, A=A, Q=Q, C=C, P=P, problem_type=problem_type)
+        s_W, Pi = solve_static_problem(W=W_mat[0, :], u=u, A=A, Q=Q,
+                                       C=C, P=P, problem_type=problem_type)
         
         if T != 1:
             for t in range(2, T+1):
                 print('Solving the %i-period economy'%t)
                 print('-------')
                 s_W_prime = np.copy(s_W)
-                s_W, Pi = solve_repeated_problem(W=W_mat[t-1,:], u=u, A=A, Q=Q, C=C, W_prime=W_mat[t-2,:], 
-                                                 s_W_prime=s_W_prime, P=P, problem_type=problem_type, β=β)
+                s_W, Pi = solve_repeated_problem(W=W_mat[t-1,:], u=u, A=A, Q=Q,
+                                                 C=C, W_prime=W_mat[t-2,:], 
+                                                 s_W_prime=s_W_prime, P=P,
+                                                 problem_type=problem_type, β=β)
     return s_W, Pi
 ```
 
@@ -1717,14 +1851,20 @@ N = 50
 
 ```{code-cell} ipython3
 # Solve the finite-period economy
-%time s_W_T, Pi_T = solve_multi_period_economy(u, A, Q, C, P, "unobserved-actions", T=3, N=N)
+in_time = time()
+s_W_T, Pi_T = solve_multi_period_economy(u, A, Q, C,
+                                         P, "unobserved-actions", T=3, N=N)
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
 T = 3
 w_l = u(A.min(), C.min())
 w_u = u(A.min(), C.max())
-W_mat = np.cumsum(np.logspace(0, T-1, T, base=β).reshape(T, 1)*np.linspace(w_l, w_u, N).reshape(1, N), axis=0)
+W_mat = np.cumsum(np.logspace(0, T-1, T, base=β).reshape(T, 1) * \
+                  np.linspace(w_l, w_u, N).reshape(1, N), axis=0)
 W = W_mat[2, :]
 
 plt.figure(figsize=(6.5, 6.5))
@@ -1747,7 +1887,13 @@ So, we relax our parameters as N=50 and tol=1e-5.
 w_l = u(A.min(), C.min())/(1-β)
 w_u = u(A.min(), C.max())/(1-β)
 W = np.linspace(w_l, w_u, N)
-%time s_W_0, Pi_0 = solve_static_problem(W*(1-β), u, A, Q, C, P, "unobserved-actions")
+
+in_time = time()
+s_W_0, Pi_0 = solve_static_problem(W*(1-β), u, A,
+                                   Q, C, P, "unobserved-actions")
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
@@ -1757,7 +1903,16 @@ W = np.linspace(w_l, w_u, N)
     ]
 }
 # Solve the infinite-period unobserved-actions economy
-%time s_W, Pi = solve_multi_period_economy(u, A, Q, C, P, "unobserved-actions", N=N, s_W_0=s_W_0/(1-β), tol=1e-5)
+in_time = time()
+s_W, Pi = solve_multi_period_economy(u, A, Q,
+                                     C, P,
+                                     "unobserved-actions",
+                                     N=N,
+                                     s_W_0=s_W_0/(1-β),
+                                     tol=1e-5)
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
@@ -1776,19 +1931,19 @@ plt.show()
 
 +++
 
-Actually, each iteration of the algorithm takes about 12 seconds and the whole process takes about ten minutes. 
+Actually, each iteration of the algorithm takes about $12$ seconds and the whole process takes about ten minutes. 
 
 Maybe that does not  seem not too bad.
 
-But we have set N as 50 and the tolerance as 1e-5.
+But we have set $N$ as $50$ and the tolerance as $10^{-5}$.
 
-This  N is not large enough to draw perfect pictures.
+This $N$ is not large enough to draw perfect pictures.
 
-And the tolerance as 1e-5 is also not ideal. 
+And the tolerance as  $10^{-5}$ is also not ideal. 
 
-If we set N as 100 and tolerance as 1e-8, each iteration would take about 65 seconds and the process needs 81 iterations to convergence. 
+If we set $N$ as $100$ and tolerance as $10^{-8}$, each iteration would take about $65$ seconds and the process needs $81$ iterations to convergence. 
 
-The algorithm would take  one and a half hours to finish. 
+The algorithm would take one and a half hours to finish. 
 
 So  inspired by the ection VI of {cite}`Phelan_Townsend_91`, we construc  afunction "solve_repeated_problem_v2" that  implements an algorithm that divides one period into two sub-periods with two sub-linear-programming problems. 
 
@@ -1850,8 +2005,16 @@ Then we solve the step 1 problem for   $s(w)$ and $\Pi^{w}(a, q, w^m) = Pr(a, q,
 
 ```{code-cell} ipython3
 # Define the function that solves the dynamic problem at one iteration
-def solve_repeated_problem_2(W=None, W_m=None, A=None, Q=None, C=None, W_prime=None, s_W_prime=None, P=None,
-                             problem_type=None, β=0.8):
+def solve_repeated_problem_2(W=None,
+                             W_m=None,
+                             A=None,
+                             Q=None,
+                             C=None,
+                             W_prime=None,
+                             s_W_prime=None,
+                             P=None,
+                             problem_type=None,
+                             β=0.8):
     '''
     Function: Solve the dynamic problem at one iteration
     
@@ -1886,14 +2049,17 @@ def solve_repeated_problem_2(W=None, W_m=None, A=None, Q=None, C=None, W_prime=N
         The probility of (c, w_prime) given w_m.
     '''
     
-    n_A, n_Q, n_C, n_W, n_W_m, n_W_prime = len(A), len(Q), len(C), len(W), len(W_m), len(W_prime)
-    A_ind, Q_ind, C_ind, W_ind, W_m_ind, W_prime_ind = range(n_A), range(n_Q), range(n_C), range(n_W), range(n_W_m), range(n_W_prime)
+    n_A, n_Q, n_C, n_W = len(A), len(Q), len(C), len(W) 
+    n_W_m, n_W_prime = len(W_m), len(W_prime)
+    A_ind, Q_ind, C_ind = range(n_A), range(n_Q), range(n_C)
+    W_ind, W_m_ind, W_prime_ind = range(n_W), range(n_W_m), range(n_W_prime)
     
     # Problem of step 2
     
     # Define parameters
-    Phi_s2 = np.array([[β*s_w_prime - c for s_w_prime in s_W_prime] for c in C])
-    U_disc_s2 = np.array([[2*c**0.5+β*w_prime for w_prime in W_prime] for c in C])
+    Phi_s2 = np.array([[β * s_w_prime - c for s_w_prime in s_W_prime] for c in C])
+    U_disc_s2 = np.array([[2 * c**0.5 + β * w_prime
+                           for w_prime in W_prime] for c in C])
     
     w_m_para = cp.Parameter()
     
@@ -1925,9 +2091,12 @@ def solve_repeated_problem_2(W=None, W_m=None, A=None, Q=None, C=None, W_prime=N
     
     # Define parameters
     Phi_s1 = np.array([[(q+s_w_m) for s_w_m in s_W_m] for q in Q])
-    U_disc_s1 = np.array([[[2*(1-a)**0.5+w_m for w_m in W_m] for q in Q] for a in A])
-    U_disc_hat_s1 = np.array([[[[(2*(1-A[a_hat_ind])**0.5+W_m[w_m_ind])*P[a_hat_ind, q_ind]/P[a_ind, q_ind] 
-                                 for w_m_ind in W_m_ind] for q_ind in Q_ind] for a_ind in A_ind] 
+    U_disc_s1 = np.array([[[2 * (1 - a)**0.5 + w_m
+                            for w_m in W_m] for q in Q] for a in A])
+    U_disc_hat_s1 = np.array([[[[(2 * (1 - A[a_hat_ind])**0.5 + W_m[w_m_ind]) *\
+                                 P[a_hat_ind, q_ind]/P[a_ind, q_ind] 
+                                 for w_m_ind in W_m_ind] for q_ind in Q_ind]
+                               for a_ind in A_ind] 
                               for a_hat_ind in A_ind])
     
     w_para = cp.Parameter()
@@ -1938,12 +2107,16 @@ def solve_repeated_problem_2(W=None, W_m=None, A=None, Q=None, C=None, W_prime=N
         Pi_w_list[a_ind] = cp.Variable((n_Q, n_W_m))
     
     # Define the objective function
-    obj_expr_s1 = cp.sum([cp.sum(cp.multiply(Phi_s1, Pi_w_list[a_ind])) for a_ind in A_ind])
+    obj_expr_s1 = cp.sum([cp.sum(cp.multiply(Phi_s1, Pi_w_list[a_ind]))
+                          for a_ind in A_ind])
     obj_s1 = cp.Maximize(obj_expr_s1)
                                        
     # Define constraints
-    C5_s1 = [cp.sum([cp.sum(cp.multiply(U_disc_s1[a_ind, :, :], Pi_w_list[a_ind])) for a_ind in A_ind]) == w_para]
-    C6_s1 = [(cp.sum(Pi_w_list[a_ind][q_ind, :]) == P[a_ind, q_ind] * cp.sum(Pi_w_list[a_ind])) 
+    C5_s1 = [cp.sum([cp.sum(cp.multiply(U_disc_s1[a_ind, :, :],
+                                        Pi_w_list[a_ind]))
+                     for a_ind in A_ind]) == w_para]
+    C6_s1 = [(cp.sum(Pi_w_list[a_ind][q_ind, :]) == P[a_ind, q_ind] *\
+              cp.sum(Pi_w_list[a_ind])) 
              for q_ind in Q_ind for a_ind in A_ind]
     C7_s1 = [cp.sum([cp.sum(Pi_w_list[a_ind]) for a_ind in A_ind]) == 1]
     C7_s1 = C7_s1 + [(Pi_w_list[a_ind] >= 0) for a_ind in A_ind]
@@ -1952,8 +2125,10 @@ def solve_repeated_problem_2(W=None, W_m=None, A=None, Q=None, C=None, W_prime=N
     if problem_type == "full information":
         constraints_s1 = C5_s1 + C6_s1 + C7_s1
     else:
-        C8_s1 = [(cp.sum(cp.multiply(U_disc_s1[a_ind, :, :], Pi_w_list[a_ind])) >= 
-                 cp.sum(cp.multiply(U_disc_hat_s1[a_hat_ind, a_ind, :, :], Pi_w_list[a_ind]))) 
+        C8_s1 = [(cp.sum(cp.multiply(U_disc_s1[a_ind, :, :],
+                                     Pi_w_list[a_ind])) >= 
+                 cp.sum(cp.multiply(U_disc_hat_s1[a_hat_ind, a_ind, :, :],
+                                    Pi_w_list[a_ind]))) 
                  for a_ind in A_ind for a_hat_ind in A_ind] 
         constraints_s1 = C5_s1 + C6_s1 + C7_s1 + C8_s1
     
@@ -1991,33 +2166,44 @@ P = np.array([[0.9, 0.1],
 N = 100
 N_m = 100
 
-W_l = u(A.min(), C.min())/(1-β)
-W_u = u(A.min(), C.max())/(1-β)
+W_l = u(A.min(), C.min())/(1 - β)
+W_u = u(A.min(), C.max())/(1 - β)
 W = np.linspace(W_l, W_u, N)
 
-W_m_l = β*W_l + 2*C.min()**0.5
-W_m_u = β*W_u + 2*C.max()**0.5
+W_m_l = β * W_l + 2 * C.min()**0.5
+W_m_u = β * W_u + 2 * C.max()**0.5
 W_m = np.linspace(W_m_l, W_m_u, N_m)
 
-%time s_W_0, Pi_0 = solve_static_problem(W*(1-β), u, A, Q, C, P, "unobserved-actions")
+in_time = time()
+s_W_0, Pi_0 = solve_static_problem(W*(1-β), u,
+                                   A, Q, C, P,
+                                   "unobserved-actions")
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
 # The new function
 start_time = time()
-s_W_2, _, _ = solve_repeated_problem_2(W=W, W_m=W_m, A=A, Q=Q, C=C, W_prime=W, s_W_prime=s_W_0, P=P, 
-                                       problem_type="unobserved-actions", β=0.8)
+s_W_2, _, _ = solve_repeated_problem_2(W=W, W_m=W_m, A=A,
+                                       Q=Q, C=C, W_prime=W,
+                                       s_W_prime=s_W_0, P=P, 
+                                       problem_type="unobserved-actions",
+                                       β=0.8)
 end_time = time()
-print("The process finished in:", end_time-start_time, "s")
+print("The process finished in:", end_time - start_time, "s")
 ```
 
 ```{code-cell} ipython3
 # The previous function
 start_time = time()
-s_W_1, _ = solve_repeated_problem(W=W, u=u, A=A, Q=Q, C=C, W_prime=W, s_W_prime=s_W_0, P=P, 
-                                     problem_type="unobserved-actions", β=0.8)
+s_W_1, _ = solve_repeated_problem(W=W, u=u,
+                                  A=A, Q=Q, C=C, W_prime=W,
+                                  s_W_prime=s_W_0, P=P, 
+                                  problem_type="unobserved-actions", β=0.8)
 end_time = time()
-print("The process finished in:", end_time-start_time, "s")
+print("The process finished in:", end_time - start_time, "s")
 ```
 
 ```{code-cell} ipython3
@@ -2040,15 +2226,23 @@ $W_m = [2\sqrt{c_{min}} + w'_{min}, \ 2\sqrt{c_{max}} + w'_{max}]$, which is sup
 However, taking $W[6]$ as an example, which has the largest error, we can show that the error goes smaller as $N_m$ goes larger.
 
 ```{code-cell} ipython3
-s_W6_1, _ = solve_repeated_problem(W=[W[6]], u=u, A=A, Q=Q, C=C, W_prime=W, s_W_prime=s_W_0, P=P, 
-                                   problem_type="unobserved-actions", β=0.8)
+s_W6_1, _ = solve_repeated_problem(W=[W[6]], u=u, A=A, Q=Q,
+                                   C=C, W_prime=W,
+                                   s_W_prime=s_W_0, P=P, 
+                                   problem_type="unobserved-actions",
+                                   β=0.8)
 
 N_m_space = [100, 200, 300, 400, 500]
 err = np.ones(len(N_m_space))
 for i in range(len(N_m_space)):
     W_m = np.linspace(W_m_l, W_m_u, N_m_space[i])
-    s_W6_2, _, _ = solve_repeated_problem_2(W=[W[6]], W_m=W_m, A=A, Q=Q, C=C, W_prime=W, s_W_prime=s_W_0, P=P, 
-                                            problem_type="unobserved-actions", β=0.8)
+    s_W6_2, _, _ = solve_repeated_problem_2(W=[W[6]], W_m=W_m,
+                                            A=A, Q=Q, C=C,
+                                            W_prime=W,
+                                            s_W_prime=s_W_0,
+                                            P=P, 
+                                            problem_type="unobserved-actions",
+                                            β=0.8)
     err[i] = abs(s_W6_2[0] - s_W6_1[0])
 
 plt.plot(err)
@@ -2056,12 +2250,21 @@ plt.show()
 print("Error:", err)
 ```
 
-Now, let's solve the multi-period economy using the function "solve_repeated_problem_2". The new function "solve_multi_period_economy_2" is almost same as the previous one.
+Now, let's solve the multi-period economy using the function `solve_repeated_problem_2`. The new function `solve_multi_period_economy_2` is almost same as the previous one.
 
 ```{code-cell} ipython3
 # Define the function that solve the infinite-period or finite-period economy
-def solve_multi_period_economy_2(A=None, Q=None, C=None, P=None, problem_type=None, T=None, β=0.8, N=100, N_m=100, 
-                                 s_W_0=None, tol=1e-8):
+def solve_multi_period_economy_2(A=None,
+                                 Q=None,
+                                 C=None,
+                                 P=None,
+                                 problem_type=None,
+                                 T=None,
+                                 β=0.8,
+                                 N=100,
+                                 N_m=100, 
+                                 s_W_0=None,
+                                 tol=1e-8):
     '''
     Function: Solve the multi-period problem, either infinite-period or finite-period
     
@@ -2112,15 +2315,15 @@ def solve_multi_period_economy_2(A=None, Q=None, C=None, P=None, problem_type=No
         # Discretize the parameter space W and W_m
         problem_type = problem_type.lower()
         if problem_type == "full information":
-            w_l = u(A.max(), C.min())/(1-β)
-            w_u = u(A.min(), C.max())/(1-β)
+            w_l = u(A.max(), C.min())/(1 - β)
+            w_u = u(A.min(), C.max())/(1 - β)
         else:
-            w_l = u(A.min(), C.min())/(1-β)
-            w_u = u(A.min(), C.max())/(1-β)
+            w_l = u(A.min(), C.min())/(1 - β)
+            w_u = u(A.min(), C.max())/(1 - β)
         W = np.linspace(w_l, w_u, N)
         
-        W_m_l = β*W_l + 2*C.min()**0.5
-        W_m_u = β*W_u + 2*C.max()**0.5
+        W_m_l = β * W_l + 2 * C.min()**0.5
+        W_m_u = β * W_u + 2 * C.max()**0.5
         W_m = np.linspace(W_m_l, W_m_u, N_m)
 
         # Assign initial value for s_W
@@ -2135,14 +2338,19 @@ def solve_multi_period_economy_2(A=None, Q=None, C=None, P=None, problem_type=No
         while not optimal:
             print('Iteration %i in process'%iteration)
             start_time = time()
-            s_W, Pi_W_s1, Pi_W_m_s2 = solve_repeated_problem_2(W=W, W_m=W_m, A=A, Q=Q, C=C, W_prime=W, 
-                                                               s_W_prime=s_W_prime, P=P, 
-                                                               problem_type=problem_type, β=β)
+            s_W, Pi_W_s1, Pi_W_m_s2 = solve_repeated_problem_2(W=W, W_m=W_m,
+                                                               A=A, Q=Q,
+                                                               C=C, W_prime=W, 
+                                                               s_W_prime=s_W_prime,
+                                                               P=P, 
+                                                               problem_type=problem_type,
+                                                               β=β)
             end_time = time()
-            print('Iteration %i finished in:'%iteration, round(end_time-start_time, 2), 's')
+            print('Iteration %i finished in:'%iteration,
+                  round(end_time-start_time, 3), 's')
             print('---------')
             
-            if np.max(np.abs(s_W-s_W_prime)) <= tol:
+            if np.max(np.abs(s_W - s_W_prime)) <= tol:
                 optimal = True
             else:
                 s_W_prime = s_W
@@ -2160,13 +2368,16 @@ def solve_multi_period_economy_2(A=None, Q=None, C=None, P=None, problem_type=No
         else:
             w_l = u(A.min(), C.min())
             w_u = u(A.min(), C.max())
-        W_mat = np.cumsum(np.logspace(0, T-1, T, base=β).reshape(T, 1)*np.linspace(w_l, w_u, N).reshape(1, N), 
+        W_mat = np.cumsum(np.logspace(0, T-1, T, base=β).reshape(T, 1) *\
+                          np.linspace(w_l, w_u, N).reshape(1, N), 
                           axis=0)
         
         # Solve the 1-period economy
         print('Solving the 1-period economy')
         print('-------')
-        s_W, Pi = solve_static_problem(W=W_mat[0, :], u=u, A=A, Q=Q, C=C, P=P, problem_type=problem_type)
+        s_W, Pi = solve_static_problem(W=W_mat[0, :], u=u,
+                                       A=A, Q=Q, C=C, P=P,
+                                       problem_type=problem_type)
         
         if T != 1:
             for t in range(2, T+1):
@@ -2176,9 +2387,14 @@ def solve_multi_period_economy_2(A=None, Q=None, C=None, P=None, problem_type=No
                 W_m_l = β*W_mat[t-2,:].min() + 2*C.min()**0.5
                 W_m_u = β*W_mat[t-2,:].max() + 2*C.max()**0.5
                 W_m = np.linspace(W_m_l, W_m_u, N_m)
-                s_W, Pi_W_s1, Pi_W_m_s2 = solve_repeated_problem_2(W=W_mat[t-1,:], W_m=W_m, A=A, Q=Q, C=C, 
-                                                                 W_prime=W_mat[t-2,:], s_W_prime=s_W_prime, P=P, 
-                                                                 problem_type=problem_type, β=β)
+                s_W, Pi_W_s1, Pi_W_m_s2 = solve_repeated_problem_2(W=W_mat[t-1,:],
+                                                                   W_m=W_m, A=A,
+                                                                   Q=Q, C=C, 
+                                                                   W_prime=W_mat[t-2,:],
+                                                                   s_W_prime=s_W_prime,
+                                                                   P=P, 
+                                                                   problem_type=problem_type,
+                                                                   β=β)
     return s_W, Pi_W_s1, Pi_W_m_s2
 ```
 
@@ -2200,14 +2416,23 @@ N_m = 100
 
 ```{code-cell} ipython3
 # Solve the finite-period economy
-%time s_W_T, Pi_W_s1_T, Pi_W_m_s2_T = solve_multi_period_economy_2(A, Q, C, P, "unobserved-actions", T=3, N=N, N_m=N_m)
+in_time = time()
+s_W_T, Pi_W_s1_T, Pi_W_m_s2_T = solve_multi_period_economy_2(A, Q,
+                                                             C, P,
+                                                             "unobserved-actions",
+                                                             T=3, N=N,
+                                                             N_m=N_m)
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
 T = 3
 w_l = u(A.min(), C.min())
 w_u = u(A.min(), C.max())
-W_mat = np.cumsum(np.logspace(0, T-1, T, base=β).reshape(T, 1)*np.linspace(w_l, w_u, N).reshape(1, N), axis=0)
+W_mat = np.cumsum(np.logspace(0, T-1, T, base=β).reshape(T, 1) * \
+                  np.linspace(w_l, w_u, N).reshape(1, N), axis=0)
 W = W_mat[2, :]
 
 plt.figure(figsize=(6.5, 6.5))
@@ -2222,7 +2447,13 @@ plt.show()
 w_l = u(A.min(), C.min())/(1-β)
 w_u = u(A.min(), C.max())/(1-β)
 W = np.linspace(w_l, w_u, N)
-%time s_W_0, Pi_0 = solve_static_problem(W*(1-β), u, A, Q, C, P, "unobserved-actions")
+
+in_time = time()
+s_W_0, Pi_0 = solve_static_problem(W*(1-β), u, A, Q,
+                                   C, P, "unobserved-actions")
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
@@ -2232,9 +2463,16 @@ W = np.linspace(w_l, w_u, N)
     ]
 }
 # Solve the infinite-period unobserved-actions economy
-%time
-s_W, Pi_W_s1, Pi_W_m_s2 = solve_multi_period_economy_2(A, Q, C, P, "unobserved-actions", N=N, N_m=N_m, 
-                                                       s_W_0=s_W_0/(1-β), tol=1e-8)
+in_time = time()
+s_W, Pi_W_s1, Pi_W_m_s2 = solve_multi_period_economy_2(A, Q, C,
+                                                       P,
+                                                       "unobserved-actions",
+                                                       N=N, N_m=N_m, 
+                                                       s_W_0=s_W_0/(1-β),
+                                                       tol=1e-8)
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
@@ -2268,10 +2506,11 @@ $$
 
 ```{code-cell} ipython3
 n_A, n_Q, n_C, n_W, n_W_prime = 4, 2, 81, N, N
-A_ind, Q_ind, C_ind, W_ind, W_prime_ind = range(n_A), range(n_Q), range(n_C), range(n_W), range(n_W_prime)
-
-Pi = np.array([[[[[Pi_W_s1[w_ind, a_ind, q_ind, :]@Pi_W_m_s2[:, c_ind, w_prime_ind] 
-                   for w_prime_ind in W_prime_ind] for c_ind in C_ind] for q_ind in Q_ind] 
+A_ind, Q_ind, C_ind = range(n_A), range(n_Q), range(n_C)
+W_ind, W_prime_ind = range(n_W), range(n_W_prime)
+Pi = np.array([[[[[Pi_W_s1[w_ind, a_ind, q_ind, :] @ Pi_W_m_s2[:, c_ind, w_prime_ind] 
+                   for w_prime_ind in W_prime_ind]
+                  for c_ind in C_ind] for q_ind in Q_ind] 
                 for a_ind in A_ind] for w_ind in W_ind])  
 ```
 
@@ -2280,14 +2519,20 @@ Pi = np.array([[[[[Pi_W_s1[w_ind, a_ind, q_ind, :]@Pi_W_m_s2[:, c_ind, w_prime_i
 ```{code-cell} ipython3
 # Solve the static full information
 W_full = np.linspace(5, 25, N)
-%time s_W_1, Pi_1 = solve_static_problem(W_full*(1-β), u, A, Q, C, P, "full information")
+
+in_time = time()
+s_W_1, Pi_1 = solve_static_problem(W_full*(1-β), u, A,
+                                   Q, C, P, "full information")
+out_time = time()
+
+print("Time(s):", round(out_time - in_time, 3))
 ```
 
 ```{code-cell} ipython3
 plt.figure(figsize=(6.5, 6.5))
 plt.plot(W, s_W, "k-.")
-plt.plot(W, s_W_0/(1-β), "yellow")
-plt.plot(W_full, s_W_1/(1-β), "red")
+plt.plot(W, s_W_0/(1 - β), "yellow")
+plt.plot(W_full, s_W_1/(1 - β), "red")
 plt.xlim([5.0, 25.0])
 plt.ylim([-7.5, 10.0])
 plt.hlines(0, 5.0, 25.0, linestyle="dashed")
@@ -2305,7 +2550,8 @@ plt.show()
 ```{code-cell} ipython3
 # Calculate expected efforts
 # T=1 Unobserved Action
-X, Y, Z, N = list(range(len(A))), list(range(len(Q))), list(range(len(C))), list(range(len(W)))
+X, Y = list(range(len(A))), list(range(len(Q)))
+Z, N = list(range(len(C))), list(range(len(W)))
 Ea_1 = np.array([np.sum([A[x]*Pi_0[i,x,:,:] for x in X]) for i in N])
 
 # T=infinity unobserved Action
@@ -2329,8 +2575,9 @@ plt.show()
 
 ```{code-cell} ipython3
 def ex_con(Pi, A, Q, C, W, type="infinity"):
-    X, Y, Z, N = list(range(len(A))), list(range(len(Q))), list(range(len(C))), list(range(len(W)))
-    Ec = np.zeros((len(N),len(X),len(Y)))
+    X, Y = list(range(len(A))), list(range(len(Q)))
+    Z, N = list(range(len(C))), list(range(len(W)))
+    Ec = np.zeros((len(N), len(X), len(Y)))
     for i in N:
         for x in X:
             for y in Y:
@@ -2339,42 +2586,53 @@ def ex_con(Pi, A, Q, C, W, type="infinity"):
                     if total_prob <= 1e-9:
                         Ec[i,x,y] = float("-inf")
                     else:
-                        Ec[i,x,y] = np.sum([np.sum(C[z]*Pi[i,x,y,z,:]) for z in Z])/total_prob
+                        Ec[i,x,y] = np.sum([np.sum(C[z] * Pi[i, x, y, z, :])
+                                            for z in Z])/total_prob
                 elif type == "one":
                     total_prob = np.sum(Pi[i,x,y,:])
                     if total_prob <= 1e-9:
                         Ec[i,x,y] = float("-inf")
                     else:
-                        Ec[i,x,y] = np.sum([C[z]*Pi[i,x,y,:] for z in Z])/total_prob                   
+                        Ec[i,x,y] = np.sum([C[z] * Pi[i, x, y, :]
+                                            for z in Z])/total_prob                   
     return Ec
 ```
 
 ```{code-cell} ipython3
 Ec_inf = ex_con(Pi, A, Q, C, W)
 
-# %matplotlib inline
-# %matplotlib notebook
 # Plot expected consumption
 plt.figure(figsize=(10.5, 10.5))
 for x in X:
     for y in Y:
-        plt.plot(W, Ec_inf[:,x,y])
+        plt.plot(W, Ec_inf[:, x, y])
 plt.xlabel("w")
 plt.ylabel("E(c) given a, q, w")
 plt.xlim([5.0, 25.0])
 plt.ylim([0.0, 2.25])
 plt.title("Figure 7\n Unobserved Action Consumption", y=-0.3)
-plt.annotate("a=.4, q=2", xy=(13.5, 0.5), xytext=(10.5, 0.7), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=2", xy=(20.0, 1.3), xytext=(15.5, 1.65), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=0, q=(1,2)", xy=(24, 2.15), xytext=(15.0, 2.15), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=2", xy=(10.1, 0.01), xytext=(7.5, 0.03), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.4, q=2", xy=(10.5, 0.10), xytext=(7.5, 0.15), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.6, q=2", xy=(11.5, 0.25), xytext=(8.5, 0.30), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.6, q=1", xy=(12.5, 0.05), xytext=(14.5, 0.10), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.4, q=1", xy=(15.0, 0.35), xytext=(18, 0.2), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=1", xy=(20.0, 1.1), xytext=(21.5, 0.75), arrowprops={"arrowstyle":"-"})
-plt.annotate("", xy=(10.0, 0), xytext=(11.5, -0.1), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=0, q=(1,2)\na={.2,.4}, q=1", fontsize=15, xy=(10.5, 0), xytext=(5.5, -0.3))
+plt.annotate("a=.4, q=2", xy=(13.5, 0.5), xytext=(10.5, 0.7),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=2", xy=(20.0, 1.3), xytext=(15.5, 1.65),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=0, q=(1,2)", xy=(24, 2.15), xytext=(15.0, 2.15),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=2", xy=(10.1, 0.01), xytext=(7.5, 0.03),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=2", xy=(10.5, 0.10), xytext=(7.5, 0.15),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.6, q=2", xy=(11.5, 0.25), xytext=(8.5, 0.30),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.6, q=1", xy=(12.5, 0.05), xytext=(14.5, 0.10),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=1", xy=(15.0, 0.35), xytext=(18, 0.2),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=1", xy=(20.0, 1.1), xytext=(21.5, 0.75),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("", xy=(10.0, 0), xytext=(11.5, -0.1),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=0, q=(1,2)\na={.2,.4}, q=1", fontsize=15, xy=(10.5, 0),
+             xytext=(5.5, -0.3))
 plt.annotate(r"$\{$",fontsize=35, xy=(10.5, 0), xytext=(4.5, -0.3))
 plt.annotate(r"$\}$",fontsize=35, xy=(10.5, 0), xytext=(9.5, -0.3))
 plt.show()
@@ -2384,24 +2642,25 @@ plt.show()
 
 ```{code-cell} ipython3
 def ex_ut(Pi, A, Q, C, W):
-    X, Y, Z, N = list(range(len(A))), list(range(len(Q))), list(range(len(C))), list(range(len(W)))
+    X, Y = list(range(len(A))), list(range(len(Q)))
+    Z, N = list(range(len(C))), list(range(len(W)))
     Ew = np.zeros((len(N),len(X),len(Y)))
     for i in N:
         for x in X:
             for y in Y:
-                total_prob = np.sum(Pi[i,x,y,:,:])
+                total_prob = np.sum(Pi[i, x, y, :, :])
                 if total_prob <= 1e-9:
                     Ew[i,x,y] = float("-inf")
                 else:
-                    Ew[i,x,y] = np.sum([np.sum(W[w]*Pi[i,x,y,:,w]) for w in N])/total_prob
+                    Ew[i,x,y] = np.sum([np.sum(W[w] * Pi[i, x, y, :, w])
+                                        for w in N])/total_prob
     return Ew
 ```
 
 ```{code-cell} ipython3
 Ew_inf = ex_ut(Pi, A, Q, C, W)
 
-# %matplotlib inline
-# %matplotlib notebook
+
 # Plot expected consumption
 plt.figure(figsize=(7.5, 7.5))
 marker = [["o","v"],[">","<"],["x","1"],["2","3"]]
@@ -2414,16 +2673,26 @@ plt.ylabel("E(w') given a, q, w")
 plt.xlim([10.0, 25.0])
 plt.ylim([10.0, 25.0])
 plt.title("Figure 8\n Future Utility", y=-0.2)
-plt.annotate("a=.4, q=2", xy=(14.0, 15.0), xytext=(10.5, 17.0), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=2", xy=(19.5, 20.0), xytext=(15.0, 23.0), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=0, q=(1,2)", xy=(24.5, 24.5), xytext=(18.0, 24.5), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=2", xy=(10.0, 10.7), xytext=(7.5, 10.7), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.4, q=2", xy=(10.3, 11.2), xytext=(7.5, 11.2), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.6, q=2", xy=(11.5, 12.2), xytext=(10.1, 14.0), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.6, q=1", xy=(11.7, 10.7), xytext=(13.5, 10.7), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.4, q=1", xy=(15.0, 14.0), xytext=(16.5, 12.5), arrowprops={"arrowstyle":"-"})
-plt.annotate("a=.2, q=1", xy=(20.0, 19.5), xytext=(21.0, 18.0), arrowprops={"arrowstyle":"-"})
-plt.annotate("", xy=(10.1, 10.1), xytext=(12.0, 9.2), arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=2", xy=(14.0, 15.0), xytext=(10.5, 17.0),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=2", xy=(19.5, 20.0), xytext=(15.0, 23.0),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=0, q=(1,2)", xy=(24.5, 24.5), xytext=(18.0, 24.5),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=2", xy=(10.0, 10.7), xytext=(7.5, 10.7),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=2", xy=(10.3, 11.2), xytext=(7.5, 11.2),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.6, q=2", xy=(11.5, 12.2), xytext=(10.1, 14.0),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.6, q=1", xy=(11.7, 10.7), xytext=(13.5, 10.7),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.4, q=1", xy=(15.0, 14.0), xytext=(16.5, 12.5),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("a=.2, q=1", xy=(20.0, 19.5), xytext=(21.0, 18.0),
+             arrowprops={"arrowstyle":"-"})
+plt.annotate("", xy=(10.1, 10.1), xytext=(12.0, 9.2),
+             arrowprops={"arrowstyle":"-"})
 plt.annotate("a=0, q=(1,2)\na={.2,.4}, q=1", xy=(10.1, 10.1), xytext=(9.5, 8.5))
 plt.annotate(r"$\{$",fontsize=25, xy=(10.1, 10.1), xytext=(8.5, 8.5))
 plt.annotate(r"$\}$",fontsize=25, xy=(10.1, 10.1), xytext=(12.5, 8.5))
