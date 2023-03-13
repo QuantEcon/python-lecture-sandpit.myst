@@ -2765,7 +2765,7 @@ def simulation(W, C, s_W, T, Pi, Ew, seed=12345):
     
     # set seed for random number
     np.random.seed(seed)
-    randn = np.random.rand(T,8)
+    randn = np.random.rand(T, 8)
     
     w_index1, w_index2 = w_index, w_index
     w_series = w0*np.ones(T+1)
@@ -2777,37 +2777,45 @@ def simulation(W, C, s_W, T, Pi, Ew, seed=12345):
         
         w_index_temp1 = w_index1
         
-        Pi_temp_a = Pi[w_index_temp1, :, :, :, :].sum(axis=1).sum(axis=1).sum(axis=1)
-        Pi_temp_a_cum = np.cumsum(Pi_temp_a/np.sum(Pi_temp_a))
-        a_index = np.sum(randn[i,0] >= Pi_temp_a_cum)
-        Pi_temp_q = Pi[w_index_temp1, a_index, :, :, :].sum(axis=1).sum(axis=1)
-        Pi_temp_q_cum = np.cumsum(Pi_temp_q/np.sum(Pi_temp_q))
-        q_index = np.sum(randn[i,1] >= Pi_temp_q_cum)
+        Pi_temp_a = Pi[w_index_temp1, :, :, :, :].sum(
+                                            axis=1).sum(
+                                            axis=1).sum(
+                                            axis=1)
+        Pi_temp_a_cum = np.cumsum(Pi_temp_a / np.sum(Pi_temp_a))
+        a_index = np.sum(randn[i, 0] >= Pi_temp_a_cum)
+        Pi_temp_q = Pi[w_index_temp1, a_index, :, :, :].sum(
+                                            axis=1).sum(
+                                            axis=1)
+        Pi_temp_q_cum = np.cumsum(Pi_temp_q / np.sum(Pi_temp_q))
+        q_index = np.sum(randn[i, 1] >= Pi_temp_q_cum)
         
-        Pi_temp_w = Pi[w_index_temp1, a_index, q_index, :, :].sum(axis=0)
+        Pi_temp_w = Pi[w_index_temp1, a_index, q_index, :, :].sum(
+                                                            axis=0)
         Pi_temp_w_cum = np.cumsum(Pi_temp_w/np.sum(Pi_temp_w))
-        w_index1 = np.sum(randn[i,2] >= Pi_temp_w_cum)
+        w_index1 = np.sum(randn[i, 2] >= Pi_temp_w_cum)
         
         # simulation for consumption as well as its distribution
         Pi_c[i] = Pi[w_index_temp1, a_index, q_index, :, w_index1]
         Pi_c[i] /= np.sum(Pi_c[i])
         Pi_temp_c_cum = np.cumsum(Pi_c[i])
-        c_index = np.sum(randn[i,3] >= Pi_temp_c_cum)
+        c_index = np.sum(randn[i, 3] >= Pi_temp_c_cum)
         c_series[i] = C[c_index]
         
         # simulation for expected utility
         w_series[i+1] = Ew[w_index_temp1, a_index, q_index]
         
         # simulation for distribution over future utility
-        Pi_temp_a = Pi[w_index2, :, :, :, :].sum(axis=1).sum(axis=1).sum(axis=1)
-        Pi_temp_a_cum = np.cumsum(Pi_temp_a/np.sum(Pi_temp_a))
-        a_index = np.sum(randn[i,4] >= Pi_temp_a_cum)
-        Pi_temp_q = Pi[w_index2, a_index, :, :, :].sum(axis=1).sum(axis=1)
-        Pi_temp_q_cum = np.cumsum(Pi_temp_q/np.sum(Pi_temp_q))
-        q_index = np.sum(randn[i,5] >= Pi_temp_q_cum)
+        Pi_temp_a = Pi[w_index2, :, :, :, :].sum(axis=1).sum(
+                                                axis=1).sum(axis=1)
+        Pi_temp_a_cum = np.cumsum(Pi_temp_a / np.sum(Pi_temp_a))
+        a_index = np.sum(randn[i, 4] >= Pi_temp_a_cum)
+        Pi_temp_q = Pi[w_index2, a_index, :, :, :].sum(
+                                                axis=1).sum(axis=1)
+        Pi_temp_q_cum = np.cumsum(Pi_temp_q / np.sum(Pi_temp_q))
+        q_index = np.sum(randn[i, 5] >= Pi_temp_q_cum)
         Pi_temp_c = Pi[w_index2, a_index, q_index, :, :].sum(axis=1)
         Pi_temp_c_cum = np.cumsum(Pi_temp_c/np.sum(Pi_temp_c))
-        c_index = np.sum(randn[i,6] >= Pi_temp_c_cum)
+        c_index = np.sum(randn[i, 6] >= Pi_temp_c_cum)
         Pi_w[i] = Pi[w_index2, a_index, q_index, c_index, :]
         Pi_w[i] /= np.sum(Pi_w[i])
         w_index2 = np.sum(randn[i,7] >= np.cumsum(Pi_w[i]))
@@ -2819,19 +2827,23 @@ def simulation(W, C, s_W, T, Pi, Ew, seed=12345):
 c_series = np.zeros((80,4))
 w_series = np.zeros((81,4))
 for i in range(4):
-    c_series[:,i], w_series[:,i], _, _ = simulation(W, C, s_W_new, 80, Pi_new, Ew_beta, seed=(12345+i))
+    c_series[:,i], w_series[:,i], _, _ = simulation(W, C,
+                                                    s_W_new,
+                                                    80, Pi_new,
+                                                    Ew_beta,
+                                                    seed=(12345+i))
 ```
 
 #### Figure 9
 
 ```{code-cell} ipython3
 # Plot consumption simulation
-date_c = np.arange(80)+1
+date_c = np.arange(80) + 1
 plt.figure(figsize=(6.5, 6.5))
-plt.plot(date_c, c_series[:,0])
-plt.plot(date_c, c_series[:,1])
-plt.plot(date_c, c_series[:,2])
-plt.plot(date_c, c_series[:,3])
+plt.plot(date_c, c_series[:, 0])
+plt.plot(date_c, c_series[:, 1])
+plt.plot(date_c, c_series[:, 2])
+plt.plot(date_c, c_series[:, 3])
 plt.xlabel("date")
 plt.ylabel("consumption")
 plt.xlim([0, 80])
@@ -2846,10 +2858,10 @@ plt.show()
 # Plot expected utility simulation
 date_w = np.arange(81)
 plt.figure(figsize=(6.5, 6.5))
-plt.plot(date_w, w_series[:,0])
-plt.plot(date_w, w_series[:,1])
-plt.plot(date_w, w_series[:,2])
-plt.plot(date_w, w_series[:,3])
+plt.plot(date_w, w_series[:, 0])
+plt.plot(date_w, w_series[:, 1])
+plt.plot(date_w, w_series[:, 2])
+plt.plot(date_w, w_series[:, 3])
 plt.xlabel("date")
 plt.ylabel("expected utility")
 plt.title("Figure 10\n Individual Utilities", y=-0.2)
@@ -2866,17 +2878,19 @@ plt.show()
 # Plotting distribution for consumption
 %matplotlib inline
 
-date_mat_c = np.reshape(np.arange(80)+1,(80,1))*np.ones((1,len(C)))
-c_mat = np.ones((80,1))@np.reshape(C,(1,len(C)))
+date_mat_c = np.reshape(np.arange(80) + 1, (80, 1)) * \
+             np.ones((1, len(C)))
+c_mat = np.ones((80, 1)) @ np.reshape(C, (1, len(C)))
 
-fig = plt.figure()
+fig = plt.figure(figsize=(8, 5))
 ax = fig.add_subplot(projection='3d')
-plt.title("Figure 11 \n Consumptions over time",y=-0.3)
+plt.title("Figure 11 \n Consumptions over time", y=-0.3)
 plt.xlabel('date')
 plt.ylabel('consumption')
 ax.set_zlabel('percentage')
 
-surf = ax.plot_surface(date_mat_c,c_mat,np.array(Pi_c),cmap='viridis')
+surf = ax.plot_surface(date_mat_c, c_mat, np.array(Pi_c),
+                       cmap='viridis')
 plt.show()
 ```
 
@@ -2885,16 +2899,18 @@ plt.show()
 ```{code-cell} ipython3
 # Plotting distribution for future utilities
 %matplotlib inline
-date_mat_w = np.reshape(np.arange(80)+1,(80,1))*np.ones((1,len(W)))
-W_mat = np.ones((80,1))@np.reshape(W,(1,len(W)))
+date_mat_w = np.reshape(np.arange(80) + 1, (80, 1)) * \
+                np.ones((1, len(W)))
+W_mat = np.ones((80, 1)) @ np.reshape(W, (1, len(W)))
 
-fig = plt.figure()
+fig = plt.figure(figsize=(8, 5))
 ax = fig.add_subplot(projection='3d')
 plt.title("Figure 12 \n Utilities over time",y=-0.3)
 plt.xlabel('date')
 plt.ylabel('w')
 ax.set_zlabel('percentage')
 
-surf = ax.plot_surface(date_mat_w,W_mat,np.array(Pi_w),cmap='viridis')
+surf = ax.plot_surface(date_mat_w, W_mat, np.array(Pi_w),
+                       cmap='viridis')
 plt.show()
 ```
