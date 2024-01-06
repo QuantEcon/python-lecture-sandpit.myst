@@ -31,7 +31,9 @@ from quantecon.optimize import brent_max
 
 
 
-This notebook demonstrates how to solve for transition paths of the two-period life cycle OLG economy that we studied in the class.
+This lecture computes  transition paths of the two-period life cycle OLG economy described in chapter 2 of Auerback and 
+Kotlikoff (1987)
+{cite}`auerbach1987dynamic`.
 
 
 
@@ -41,7 +43,77 @@ We will first solve for equilibrium paths using the closed form solution that we
 
 ## Closed form dynamics
 
+Auerback and 
+Kotlikoff (1987)
+{cite}`auerbach1987dynamic` construct a 
+a two-period model
+in which both the utility and production functions are Cobb-Douglas, so that 
 
+
+$$
+U_t  = C_{yt}^\beta C_{o,t+1}^{1-\beta}, \quad \beta \in (0,1)
+$$ (eq:utilfn)
+
+$$
+Y_t  = K_t^\alpha L_t^{1-\alpha}, \quad \alpha \in (0,1)
+$$ (eq:prodfn)
+
+
+
+Equation Auerback and 
+Kotlikoff (1987)
+{cite}`auerbach1987dynamic`  expresses the lifetime utility of a member of generation
+as a function of consumption when young, $C_y$, and consumption when
+old, $C_o$. Production function {eq}`eq:prodfn` relates output per young
+worker, $Y$,, to capital per young worker, $K$, and labor per young worker,
+$L$. $L$ is exogenously supplied by each young worker and is measured in
+units such that $L = 1$. 
+The lifetime budget constraint
+of an individual who is young at time $t$ is
+
+$$ 
+C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}} = W_t
+$$ (eq:lifebudget)
+
+where $W$ is the wage earned in period $t$  and $r_{t+1}$  is the net  return
+on savings between $t$ and $t+1$. Equation {eq}`eq:lifebudget` states that the present value of consumption
+equals the present value of labor earnings. It can also be expressed as
+
+
+
+$$ 
+C_{ot+1} = A_{t+1} (1 + r_{t+1}) 
+$$ (eq:lifbudget2)
+
+where  $A_{t+1}$ owned by old people at time $t+1$   equals their savings $W_t - C_{yt}$ t when they were young. 
+ Maximization of  utility function {eq}`eq:utilfn` subject to budget constraint {eq}`eq:lifebudget` yields
+ 
+ $$ 
+ C_{yt} = \beta W_t 
+ $$ 
+ 
+and savings 
+
+$$
+A_{t+1} = (1-\beta) W_t.
+$$
+
+Profit maximization by representative firms in the economy implies the
+that the real wage $W_t$ and the return on capital $r_t$ satisfy
+
+\begin{align}
+W_t & = (1-\alpha) K_t^\alpha \\
+r_t & = \alpha K_t^{\alpha -1}
+\end{align}
+
+
+The condition for equilibrium in the market for capital is given by
+
+$$
+K_t = A_t.
+$$
+
+## Zejin Start
 
 In this simple two period life cycle model, we have a closed form solution for the transition dynamics of the aggregate capital level
 
