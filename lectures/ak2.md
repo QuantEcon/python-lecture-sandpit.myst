@@ -60,24 +60,30 @@ $$ (eq:prodfn)
 
 
 
-Equation Auerback and 
-Kotlikoff (1987)
-{cite}`auerbach1987dynamic`  expresses the lifetime utility of a member of generation
-as a function of consumption when young, $C_y$, and consumption when
-old, $C_o$. Production function {eq}`eq:prodfn` relates output per young
-worker, $Y$,, to capital per young worker, $K$, and labor per young worker,
-$L$. $L$ is exogenously supplied by each young worker and is measured in
-units such that $L = 1$. 
+Equation {eq}`eq:utilfn`  expresses the lifetime utility of a person who is young at time $t$ 
+as a function of consumption  $C_{yt} $ when young and consumption $C_{o,t+1}$ when
+old.  
+
+
+Production function {eq}`eq:prodfn` relates output $Y_t$ per young
+worker  to capital  $K_t$ per young worker and labor $L$ per young worker; 
+ $L$ is  supplied  inelasticallly by each young worker and is measured in
+units that make  $L = 1$. 
+
 The lifetime budget constraint
-of an individual who is young at time $t$ is
+of a young person at time $t$ is
 
 $$ 
 C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}} = W_t
 $$ (eq:lifebudget)
 
-where $W$ is the wage earned in period $t$  and $r_{t+1}$  is the net  return
-on savings between $t$ and $t+1$. Equation {eq}`eq:lifebudget` states that the present value of consumption
-equals the present value of labor earnings. It can also be expressed as
+where $W_t$ is the wage rate at time  $t$  and $r_{t+1}$  is the net  return
+on savings between $t$ and $t+1$. 
+
+Equation {eq}`eq:lifebudget` states that the present value of consumption
+equals the present value of labor earnings.
+
+Another way to write the lifetime budget constraint at equality is  
 
 
 
@@ -85,18 +91,23 @@ $$
 C_{ot+1} = A_{t+1} (1 + r_{t+1}) 
 $$ (eq:lifbudget2)
 
-where  $A_{t+1}$ owned by old people at time $t+1$   equals their savings $W_t - C_{yt}$ t when they were young. 
- Maximization of  utility function {eq}`eq:utilfn` subject to budget constraint {eq}`eq:lifebudget` yields
+where assets $A_{t+1}$ accumulated by old people at the beginning of time $t+1$   equals their savings $W_t - C_{yt}$ at time $t$  when they were young. 
+
+
+Maximization of  utility function {eq}`eq:utilfn` subject to budget constraint {eq}`eq:lifebudget` implies that consumption when young is
  
  $$ 
  C_{yt} = \beta W_t 
  $$ 
  
-and savings 
+and that savings when young are  
 
 $$
 A_{t+1} = (1-\beta) W_t.
 $$
+
+
+The young consumer allocates his/her savings are  entirely to physical capital. 
 
 Profit maximization by representative firms in the economy implies the
 that the real wage $W_t$ and the return on capital $r_t$ satisfy
