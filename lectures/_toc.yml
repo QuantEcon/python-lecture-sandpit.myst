@@ -9,7 +9,8 @@ sections:
 # - file: ar1_turningpts
 # - file: prob_matrix
 - file: PT_intro
-- file: ak2
+- file: ak2_tom
+- file: ak2_zejin 
 # - file: PT_static
 # - file: PT_dynamic
 # - file: markov_switching_lss
