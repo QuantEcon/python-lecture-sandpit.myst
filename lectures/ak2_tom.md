@@ -38,7 +38,15 @@ Kotlikoff (1987) {cite}`auerbach1987dynamic`.
 
 ## Cast of characters
 
-As part of the government:
+Initial conditions set from outside the model at time $t=0$ are
+
+* $K_0$ -- initial capital stock  brought into time $t=0$ by a representative  initial old person
+* $D_0$ government debt falling due at $t=0$ and owned by a representative old person at time $t=0$
+  
+$K_0$ and $D_0$ are both measured in units of time $0$ goods.
+
+A government **policy** is a collection of sequences $\{G_t, D_t \tau_t, \delta_o, \delta_y,\}_{t=0}^\infty $
+where  
 
  * $\tau_t$ -- flat rate tax on wages and earning from capital and bonds
  * $\delta_y$ -- lump sum tax on each young person
@@ -46,26 +54,146 @@ As part of the government:
  * $D_t$ -- one-period government bond principal due at time $t$, per capita
  * $G_t$ -- government purchases of goods (`thrown into ocean'), per capita
   
-Output and factors of production
+An **allocation** is a collection of sequences $\{c_{yt}, c_{o,t}, K_{t+1}, Y_t, G_t\}_{t=0}^\infty $ where constituents
+of the sequence include output and factors of production
 
  * $K_t$ -- physical capital per capita
  * $L_t$ -- labor per capita
  * $Y_t$ -- output per capita
 
-Consumption and physical  investment
+and also consumption and physical  investment
 
 * $C_{yt}$ -- consumption of young person at time $t \geq 0$
 * $C_{ot}$ -- consumption of old person at time $t \geq 0$
-* $K_{t+1} - K_t$ -- investment in physical capital at time $t \geq 0$
-* $K_0$ -- initial capital stock (at time $t=0$)
+* $K_{t+1} - K_t \equiv I_t $ -- investment in physical capital at time $t \geq 0$
+
+The national income and product accounts for the economy are described by the sequence of equalities
+
 * $Y_t = C_{yt} + C_{ot} + (K_{t+1} - K_t) + G_t$, distribution of GDP at $t \geq 0$ 
+
+
+
+
+## Production
+
+There are two factors of production, capital and labor.  
+
+Capital does not depreciate.  
+
+The initial capital stock $K_0$ is owned by the initial old person, who rents it to the firm at time $0$.
+
+The economy's net investment rate $I_t$ at time $t$ is defined as
+
+$$
+I_t = K_{t+1} - K_t
+$$
+
+The economy's capital stock at time $t$ emerges from cumulating past rates of investment:
+
+$$
+K_t = K_0 + \sum_{s=0}^{t-1} I_s 
+$$
+
+There is  a Cobb-Douglas technology that  converts physical capital $K_t$ and labor services $L_t$ into 
+output $Y_t$:
+
+$$
+Y_t  = K_t^\alpha L_t^{1-\alpha}, \quad \alpha \in (0,1)
+$$ (eq:prodfn)
+
+
+## Government
+
+The government at time  $t-1$   issues one-period risk-free debt promising to pay $D_t$ time $t$  goods per capita at time $t$.
+
+Young people at time $t$ purchase government debt $D_{t+1}$ maturing at time $t+1$. 
+
+The government budget constraint at time $t \geq 0$ is
+
+$$
+D_{t+1} - D_t = r_t D_t + G_t - T_t
+$$
+
+or 
+
+$$
+D_{t+1} = (1 + r_t)  D_t - T_t 
+$$ 
+
+where total tax collections net of transfers are given by $T_t$ satisfying
+
+$$
+T_t = \tau_t Y_t + \delta_y + \delta_o
+$$
+
+or
+
+$$
+T_t = \tau_t W + \tau_t (D_t + K_t) + \delta_y + \delta_o
+$$
+
+**Note to Zejin and Tom: I have assume that the goverment taxes interest on government debt. Do AK also assume that -- we can do
+what we want here**
+
+
+
+## Households' Activities in Factor Markets
+
+At time $t \geq 0$, an old person brings $K_t$ into the period, rents it to a representative  firm for $r_{t+1} K_t$, collects these rents, pays a lump sum tax or receives 
+receives a lump sum subsidy from the government, then sells whatever is left over to a young person.  
+
+At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays taxes to the goverment, then divides the remainder between acquiring assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and government bonds $D_{t+1}$  maturiting at $t+1$.
+
+
+
+
+## Representative firm's problem 
+
+The firm hires labor services from  young households and capital from old  households at competitive rental rates,
+$W_t$ for labor service, $r_t$ for capital. 
+
+The units of these rental rates are:
+
+* for $W_t$, output at time $t$ per unit of labor at time $t$  
+* for $r_t$,  output at time $t$  per unit of capitalat time $t$ 
+
+
+We take output at time $t$ as *numeraire*, so the price of output at time $t$ is one.
+
+The firm's profits at time $t$ are thus
+
+$$
+K_t^\alpha L_t^{1-\alpha} - r_t K_t - W_t L_t . 
+$$
+
+To maximize profits the firms equates marginal products to rental rates:
+
+$$
+\begin{align}
+W_t & = (1-\alpha) K_t^\alpha L_t^{-\alpha} \\
+r_t & = \alpha K_t^\alpha L_t^{1-\alpha}
+\end{align}
+$$  (eq:firmfonc)
+
+Output can either be consumed by old or young households, taken by the government for its own uses (e.g., throwing into the ocean),
+or used to augment the capital stock.  
+
+
+The firm  sells output to old households, young households, and the government.
+
+
+
+
+
+
+
 
 
 ## Households' problems
 
-### Initial old
+### Initial old household 
 
-At time $t=0$, the representative initial old household is endowed with $(1 - \tau_0) (1 - r_0) A_0$ in initial assets, and must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
+At time $t=0$, a representative initial old household is endowed with $(1 - \tau_0) (1 - r_0) A_0$ in initial assets, and must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
 $\delta_o$ the government.  The   households' budget constraint is
 
 $$
@@ -75,7 +203,12 @@ $$ (eq:hbudgetold)
 An initial old household's utility function is $C_{o0}$, so the household's optimal consumption plan
 is provided by equation {eq}`eq:hbudgetold`.
 
-### Young households
+### Young household
+
+At each $t \geq 0$, a  young household inelastically supplies one unit of labor and in return
+receives pre-tax labor earnings of $W_t$ units of output.  
+
+A young-household's post-tax-and-transfer earnings are $W_t (1 - \tau_t) - \delta_y$.  
 
 At each $t \geq 0$, a young household chooses a consumption plan  $C_{yt}, C_{ot+1}$ 
 to maximize
@@ -127,12 +260,19 @@ $$ (eq:optsavingsplan)
 
 
 
+## Equilbrium 
+
+
+**Tom's part stops, Zejin's part starts here.**
+
 
 We will first solve for equilibrium paths using the closed form solution that we derived in the class. And then, let's pretend that we don't know the closed form solution, and solve for the transitions paths by iterating over the guesses of price sequences and tax rate sequence. The equilibrium paths will be found as a fixed point.
 
 
 
-## Closed form dynamics
+## Material below is legacy 
+
+View most of following just as storage shed for some equations
 
 Auerback and 
 Kotlikoff (1987)
