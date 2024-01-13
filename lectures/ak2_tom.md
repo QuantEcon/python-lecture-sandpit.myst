@@ -32,8 +32,99 @@ from quantecon.optimize import brent_max
 This lecture is under construction by Zejin and Tom.
 
 This lecture computes  transition paths of the two-period life cycle OLG economy described in chapter 2 of Auerback and 
-Kotlikoff (1987)
-{cite}`auerbach1987dynamic`.
+Kotlikoff (1987) {cite}`auerbach1987dynamic`.
+
+
+
+## Cast of characters
+
+As part of the government:
+
+ * $\tau_t$ -- flat rate tax on wages and earning from capital and bonds
+ * $\delta_y$ -- lump sum tax on each young person
+ * $\delta_o$ -- lump sum tax on each old person
+ * $D_t$ -- one-period government bond principal due at time $t$, per capita
+ * $G_t$ -- government purchases of goods (`thrown into ocean'), per capita
+  
+Output and factors of production
+
+ * $K_t$ -- physical capital per capita
+ * $L_t$ -- labor per capita
+ * $Y_t$ -- output per capita
+
+Consumption and physical  investment
+
+* $C_{yt}$ -- consumption of young person at time $t \geq 0$
+* $C_{ot}$ -- consumption of old person at time $t \geq 0$
+* $K_{t+1} - K_t$ -- investment in physical capital at time $t \geq 0$
+* $K_0$ -- initial capital stock (at time $t=0$)
+* $Y_t = C_{yt} + C_{ot} + (K_{t+1} - K_t) + G_t$, distribution of GDP at $t \geq 0$ 
+
+
+## Households' problems
+
+### Initial old
+
+At time $t=0$, the representative initial old household is endowed with $(1 - \tau_0) (1 - r_0) A_0$ in initial assets, and must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
+$\delta_o$ the government.  The   households' budget constraint is
+
+$$
+C_{o0} = (1 - \tau_0) (1 - r_0) A_0 - \delta_o .
+$$ (eq:hbudgetold)
+
+An initial old household's utility function is $C_{o0}$, so the household's optimal consumption plan
+is provided by equation {eq}`eq:hbudgetold`.
+
+### Young households
+
+At each $t \geq 0$, a young household chooses a consumption plan  $C_{yt}, C_{ot+1}$ 
+to maximize
+
+$$
+U_t  = C_{yt}^\beta C_{o,t+1}^{1-\beta}, \quad \beta \in (0,1)
+$$ (eq:utilfn)
+
+subject to the budget constraints
+
+$$
+\begin{align}
+C_{yt} + A_{t+1} & =  W_t (1 - \tau_t) - \delta_y \\
+C_{ot+1} & = (1+ r_{t+1})A_{t+1} - \delta_o
+\end{align}
+$$ (eq:twobudgetc)
+
+Solving the second equation of {eq}`eq:twobudgetc` for savings  $A_{t+1}$ and substituting it into the first equation implies the present value budget constraint
+
+$$
+C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} = W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}
+$$ (eq:onebudgetc)
+
+Form the Lagrangian 
+
+$$ 
+\begin{align}
+L  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_y + \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr]
+\end{align}
+$$ (eq:lagC)
+
+
+After several lines of algebra, first-order conditions for maximizing $L$ with respect to $C_{yt}, C_{ot+1}$ 
+imply that an optimal consumption plan satisfies
+
+$$
+\begin{align}
+C_{yt} & = \beta \Bigl[ W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] \\
+\frac{C_{0t+1}}{1 + r_{t+1}(1-\tau_{t+1})  } & = (1-\beta)   \Bigl[ W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] 
+\end{align}
+$$ (eq:optconsplan)
+
+Minimizing Lagrangian {eq}`eq:lagC` with respect to the Lagrange multipler $\lambda$ recovers the budget constraint {eq}`eq:onebudgetc`,
+which, using {eq}`eq:optconsplan` gives the optimal savings plan
+
+$$
+A_{t+1} = (1-\beta) [ (1- \tau_t) W_t - \delta_y] + \beta \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})} 
+$$ (eq:optsavingsplan)
+
 
 
 
@@ -50,9 +141,6 @@ a two-period model
 in which both the utility and production functions are Cobb-Douglas, so that 
 
 
-$$
-U_t  = C_{yt}^\beta C_{o,t+1}^{1-\beta}, \quad \beta \in (0,1)
-$$ (eq:utilfn)
 
 $$
 Y_t  = K_t^\alpha L_t^{1-\alpha}, \quad \alpha \in (0,1)
