@@ -29,14 +29,48 @@ from quantecon.optimize import brent_max
 
 # Introduction
 
-This lecture is under construction by Zejin and Tom.
-
-This lecture computes  transition paths of the two-period life cycle OLG economy described in chapter 2 of Auerback and 
+This lecture is presents the life cycle model consisting of overlapping generations of two-period lived people proposed  by Peter Diamond
+{cite}`diamond1965national` and  analyzed  in chapter 2 of Auerbach and 
 Kotlikoff (1987) {cite}`auerbach1987dynamic`.
 
+Auerbach and 
+Kotlikoff (1987) use the two period model as a warm-up for their analysis of  overlapping generation models of long-lived people that is the main topic of their book.
+
+Their model of two-period lived overlapping generations is a useful warmup because 
+
+* it sets forth the structure of interactions between generations of different agents who are alive at a given date
+* it activates key forces and tradeoffs confronting the government and successive generations of people
+* interesting experiments involving transitions from one steady state to another can be computed by hand
+ ```{note}
+Auerbach and Kotlikoff use computer code to calculate transition paths for their models with long-lived people.
+``` 
+
+ 
 
 
-## Cast of characters
+
+
+
+## Setting
+
+Time is discrete and is indexed by $t=0, 1, 2, \ldots$.  
+
+The economy lives forever, but the people living in it do not.  
+
+At each time $t, t \geq 0$ a representative old person and a representative young person are alive.
+
+Thus, at time $t$ a representative old person coexists with a representative young person who will become an old person at time $t+1$. 
+
+A young person works, saves, and consumes.
+
+An old person dissaves and consumes but does not work, 
+
+There is a government that lives forever, i.e., at $t=0, 1, 2, \ldots $.
+
+Each period $t \geq 0$, the government taxes, spends, transfers, and borrows.  
+
+
+
 
 Initial conditions set from outside the model at time $t=0$ are
 
@@ -45,16 +79,16 @@ Initial conditions set from outside the model at time $t=0$ are
   
 $K_0$ and $D_0$ are both measured in units of time $0$ goods.
 
-A government **policy** is a collection of sequences $\{G_t, D_t \tau_t, \delta_o, \delta_y,\}_{t=0}^\infty $
+A government **policy** is a collection of sequences $\{G_t, D_t \tau_t, \delta_o, \delta_y,\}_{t=0}^\infty $,
 where  
 
- * $\tau_t$ -- flat rate tax on wages and earning from capital and bonds
+ * $\tau_t$ -- flat rate tax on wages and earnings from capital and government bonds
  * $\delta_y$ -- lump sum tax on each young person
  * $\delta_o$ -- lump sum tax on each old person
  * $D_t$ -- one-period government bond principal due at time $t$, per capita
  * $G_t$ -- government purchases of goods (`thrown into ocean'), per capita
   
-An **allocation** is a collection of sequences $\{c_{yt}, c_{o,t}, K_{t+1}, Y_t, G_t\}_{t=0}^\infty $ where constituents
+An **allocation** is a collection of sequences $\{c_{yt}, c_{o,t}, K_{t+1}, Y_t, G_t\}_{t=0}^\infty $, where constituents
 of the sequence include output and factors of production
 
  * $K_t$ -- physical capital per capita
@@ -67,22 +101,25 @@ and also consumption and physical  investment
 * $C_{ot}$ -- consumption of old person at time $t \geq 0$
 * $K_{t+1} - K_t \equiv I_t $ -- investment in physical capital at time $t \geq 0$
 
-The national income and product accounts for the economy are described by the sequence of equalities
+The national income and product accounts for the economy are described by a sequence of equalities
 
-* $Y_t = C_{yt} + C_{ot} + (K_{t+1} - K_t) + G_t$, distribution of GDP at $t \geq 0$ 
+* $Y_t = C_{yt} + C_{ot} + (K_{t+1} - K_t) + G_t, \quad t \geq 0$ 
 
+A **price system** is a pair of sequences $\{W_t, r_t\}_{t=0}^\infty$, where constituents of the sequence include rental rates for the factors of production
 
+* $W_t$ -- rental rate for labor at time $t \geq 0$
+* $r_t$ -- rental rate for capital at time $t \geq 0$
 
 
 ## Production
 
-There are two factors of production, capital and labor.  
+There are two factors of production, physical capital $K_t$ and labor $L_t$.  
 
 Capital does not depreciate.  
 
 The initial capital stock $K_0$ is owned by the initial old person, who rents it to the firm at time $0$.
 
-The economy's net investment rate $I_t$ at time $t$ is defined as
+The economy's net investment rate $I_t$ at time $t$ is 
 
 $$
 I_t = K_{t+1} - K_t
@@ -95,7 +132,7 @@ K_t = K_0 + \sum_{s=0}^{t-1} I_s
 $$
 
 There is  a Cobb-Douglas technology that  converts physical capital $K_t$ and labor services $L_t$ into 
-output $Y_t$:
+output $Y_t$
 
 $$
 Y_t  = K_t^\alpha L_t^{1-\alpha}, \quad \alpha \in (0,1)
@@ -132,7 +169,7 @@ $$
 T_t = \tau_t W + \tau_t (D_t + K_t) + \delta_y + \delta_o
 $$
 
-**Note to Zejin and Tom: I have assume that the goverment taxes interest on government debt. Do AK also assume that -- we can do
+**Note to Zejin and Tom: I have assumed that the goverment taxes interest on government debt. Do AK also assume that -- we can do
 what we want here**
 
 
@@ -232,13 +269,15 @@ $$
 C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} = W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}
 $$ (eq:onebudgetc)
 
-Form the Lagrangian 
+Form a Lagrangian 
 
 $$ 
 \begin{align}
-L  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_y + \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr]
+L  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_y + \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr],
 \end{align}
 $$ (eq:lagC)
+
+where $\lambda$ is a Lagrange multiplier on the intertemporal budget constraint {eq}`eq:onebudgetc`.
 
 
 After several lines of algebra, first-order conditions for maximizing $L$ with respect to $C_{yt}, C_{ot+1}$ 
@@ -251,7 +290,7 @@ C_{yt} & = \beta \Bigl[ W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1
 \end{align}
 $$ (eq:optconsplan)
 
-Minimizing Lagrangian {eq}`eq:lagC` with respect to the Lagrange multipler $\lambda$ recovers the budget constraint {eq}`eq:onebudgetc`,
+The first-order condition for minimizing Lagrangian {eq}`eq:lagC` with respect to the Lagrange multipler $\lambda$ recovers the budget constraint {eq}`eq:onebudgetc`,
 which, using {eq}`eq:optconsplan` gives the optimal savings plan
 
 $$
@@ -262,95 +301,18 @@ $$ (eq:optsavingsplan)
 
 ## Equilbrium 
 
+**Definition:** An equilibrium is an allocation,  a government policy, and a price system with the properties that
+* given the price system and the government policy, the allocation solves
+    * represenative firms' problems for $t \geq 0$
+    * households problems for $t \geq 0$
+* given the price system and the allocation, the government budget constraint is satisfies for all $t \geq 0$.
+
 
 **Tom's part stops, Zejin's part starts here.**
 
 
 We will first solve for equilibrium paths using the closed form solution that we derived in the class. And then, let's pretend that we don't know the closed form solution, and solve for the transitions paths by iterating over the guesses of price sequences and tax rate sequence. The equilibrium paths will be found as a fixed point.
 
-
-
-## Material below is legacy 
-
-View most of following just as storage shed for some equations
-
-Auerback and 
-Kotlikoff (1987)
-{cite}`auerbach1987dynamic` construct a 
-a two-period model
-in which both the utility and production functions are Cobb-Douglas, so that 
-
-
-
-$$
-Y_t  = K_t^\alpha L_t^{1-\alpha}, \quad \alpha \in (0,1)
-$$ (eq:prodfn)
-
-
-
-Equation {eq}`eq:utilfn`  expresses the lifetime utility of a person who is young at time $t$ 
-as a function of consumption  $C_{yt} $ when young and consumption $C_{o,t+1}$ when
-old.  
-
-
-Production function {eq}`eq:prodfn` relates output $Y_t$ per young
-worker  to capital  $K_t$ per young worker and labor $L$ per young worker; 
- $L$ is  supplied  inelasticallly by each young worker and is measured in
-units that make  $L = 1$. 
-
-The lifetime budget constraint
-of a young person at time $t$ is
-
-$$ 
-C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}} = W_t
-$$ (eq:lifebudget)
-
-where $W_t$ is the wage rate at time  $t$  and $r_{t+1}$  is the net  return
-on savings between $t$ and $t+1$. 
-
-Equation {eq}`eq:lifebudget` states that the present value of consumption
-equals the present value of labor earnings.
-
-Another way to write the lifetime budget constraint at equality is  
-
-
-
-$$ 
-C_{ot+1} = A_{t+1} (1 + r_{t+1}) 
-$$ (eq:lifbudget2)
-
-where assets $A_{t+1}$ accumulated by old people at the beginning of time $t+1$   equals their savings $W_t - C_{yt}$ at time $t$  when they were young. 
-
-
-Maximization of  utility function {eq}`eq:utilfn` subject to budget constraint {eq}`eq:lifebudget` implies that consumption when young is
- 
- $$ 
- C_{yt} = \beta W_t 
- $$ 
- 
-and that savings when young are  
-
-$$
-A_{t+1} = (1-\beta) W_t.
-$$
-
-
-The young consumer allocates his/her savings are  entirely to physical capital. 
-
-Profit maximization by representative firms in the economy implies the
-that the real wage $W_t$ and the return on capital $r_t$ satisfy
-
-\begin{align}
-W_t & = (1-\alpha) K_t^\alpha \\
-r_t & = \alpha K_t^{\alpha -1}
-\end{align}
-
-
-The condition for equilibrium in the market for capital is given by
-
-$$
-K_t = A_t.
-$$
 
 ## Zejin Start
 

@@ -31,7 +31,7 @@ from quantecon.optimize import brent_max
 
 This lecture is under construction by Zejin and Tom.
 
-This lecture computes  transition paths of the two-period life cycle OLG economy described in chapter 2 of Auerback and 
+This lecture computes  transition paths of the two-period life cycle OLG economy described in chapter 2 of Auerbach and 
 Kotlikoff (1987)
 {cite}`auerbach1987dynamic`.
 
