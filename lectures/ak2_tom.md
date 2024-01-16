@@ -153,11 +153,8 @@ $$
 
 or 
 
-$$
-D_{t+1} = (1 + r_t)  D_t - T_t 
-$$ 
 
-<font color='red'>Zejin: should it be</font>
+
 
 $$
 D_{t+1} = (1 + r_t)  D_t + G_t - T_t 
@@ -165,29 +162,12 @@ $$
 
 where total tax collections net of transfers are given by $T_t$ satisfying
 
-$$
-T_t = \tau_t Y_t + \delta_y + \delta_o
-$$
-
-or
 
 $$
-T_t = \tau_t W + \tau_t (D_t + K_t) + \delta_y + \delta_o
+T_t = \tau_t W_t L_t + \tau_t r_t (D_t + K_t) + \delta_y + \delta_o
 $$
 
-<font color='red'>Zejin: should it be</font>
-
-$$
-T_t = \tau_t Y_t + \tau_t r_t D_t + \delta_y + \delta_o
-$$
-
-<font color='red'>and</font>
-
-$$
-T_t = \tau_t W + \tau_t r_t (D_t + K_t) + \delta_y + \delta_o
-$$
-
-<font color='red'>Zejin: Also, by writing $\tau_t W_t$ instead of $\tau_t W_t L_t$, we are implicitly using the fact that $L_t = 1$. We need to mention somewhere above that the population size of the young worker is 1, and that each young worker supply one unit of labor inelastically. Alternatively, we can keep $L_t$ here.</font>
+<font color='red'>Tom's answer to Zejin: You are completely correct.  I will remember to write  somewhere above that the population size of the young worker is 1, and that each young worker supply one unit of labor inelastically. </font>
 
 **Note to Zejin and Tom: I have assumed that the goverment taxes interest on government debt. Do AK also assume that -- we can do
 what we want here**
@@ -250,14 +230,10 @@ The firm  sells output to old households, young households, and the government.
 
 ### Initial old household 
 
-At time $t=0$, a representative initial old household is endowed with $(1 - \tau_0) (1 - r_0) A_0$ (<font color='red'>Zejin: should this be $(1 + r_0(1 - \tau_0)) A_0$</font>?) in initial assets, and must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
+At time $t=0$, a representative initial old household is endowed with  $(1 + r_0(1 - \tau_0)) A_0$ in initial assets, and must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
 $\delta_o$ the government.  The   households' budget constraint is
 
-$$
-C_{o0} = (1 - \tau_0) (1 - r_0) A_0 - \delta_o .
-$$ (eq:hbudgetold)
 
-<font color='red'>Zejin: and accordingly, this will be</font>
 
 $$
 C_{o0} = (1 + r_0 (1 - \tau_0)) A_0 - \delta_o .
@@ -285,17 +261,10 @@ subject to the budget constraints
 $$
 \begin{align}
 C_{yt} + A_{t+1} & =  W_t (1 - \tau_t) - \delta_y \\
-C_{ot+1} & = (1+ r_{t+1})A_{t+1} - \delta_o
+C_{ot+1} & = (1+ r_{t+1} (1 - \tau_{t+1}))A_{t+1} - \delta_o
 \end{align}
 $$ (eq:twobudgetc)
 
-<font color='red'>Zejin: the capital return for the representative old will be taxed</font>
-
-$$
-\begin{align}
-C_{ot+1} & = (1+ r_{t+1} (1 - \tau_{t+1}))A_{t+1} - \delta_o
-\end{align}
-$$
 
 Solving the second equation of {eq}`eq:twobudgetc` for savings  $A_{t+1}$ and substituting it into the first equation implies the present value budget constraint
 
