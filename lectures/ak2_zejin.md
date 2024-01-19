@@ -29,100 +29,293 @@ from quantecon.optimize import brent_max
 
 # Introduction
 
-This lecture is under construction by Zejin and Tom.
+This lecture is presents the life cycle model consisting of overlapping generations of two-period lived people proposed  by Peter Diamond
+{cite}`diamond1965national` and  analyzed  in chapter 2 of Auerbach and 
+Kotlikoff (1987) {cite}`auerbach1987dynamic`.
 
-This lecture computes  transition paths of the two-period life cycle OLG economy described in chapter 2 of Auerback and 
-Kotlikoff (1987)
-{cite}`auerbach1987dynamic`.
+Auerbach and 
+Kotlikoff (1987) use the two period model as a warm-up for their analysis of  overlapping generation models of long-lived people that is the main topic of their book.
+
+Their model of two-period lived overlapping generations is a useful warmup because 
+
+* it sets forth the structure of interactions between generations of different agents who are alive at a given date
+* it activates key forces and tradeoffs confronting the government and successive generations of people
+* interesting experiments involving transitions from one steady state to another can be computed by hand
+ ```{note}
+Auerbach and Kotlikoff use computer code to calculate transition paths for their models with long-lived people.
+``` 
+
+ 
 
 
 
-We will first solve for equilibrium paths using the closed form solution that we derived in the class. And then, let's pretend that we don't know the closed form solution, and solve for the transitions paths by iterating over the guesses of price sequences and tax rate sequence. The equilibrium paths will be found as a fixed point.
+
+
+## Setting
+
+Time is discrete and is indexed by $t=0, 1, 2, \ldots$.  
+
+The economy lives forever, but the people living in it do not.  
+
+At each time $t, t \geq 0$ a representative old person and a representative young person are alive.
+
+Thus, at time $t$ a representative old person coexists with a representative young person who will become an old person at time $t+1$. 
+
+A young person works, saves, and consumes.
+
+An old person dissaves and consumes but does not work, 
+
+There is a government that lives forever, i.e., at $t=0, 1, 2, \ldots $.
+
+Each period $t \geq 0$, the government taxes, spends, transfers, and borrows.  
 
 
 
-## Closed form dynamics
 
-Auerback and 
-Kotlikoff (1987)
-{cite}`auerbach1987dynamic` construct a 
-a two-period model
-in which both the utility and production functions are Cobb-Douglas, so that 
+Initial conditions set from outside the model at time $t=0$ are
 
+* $K_0$ -- initial capital stock  brought into time $t=0$ by a representative  initial old person
+* $D_0$ government debt falling due at $t=0$ and owned by a representative old person at time $t=0$
+  
+$K_0$ and $D_0$ are both measured in units of time $0$ goods.
+
+A government **policy** is a collection of sequences $\{G_t, D_t, \tau_t, \delta_o, \delta_y,\}_{t=0}^\infty $,
+where  
+
+ * $\tau_t$ -- flat rate tax on wages and earnings from capital and government bonds
+ * $\delta_y$ -- lump sum tax on each young person
+ * $\delta_o$ -- lump sum tax on each old person
+ * $D_t$ -- one-period government bond principal due at time $t$, per capita
+ * $G_t$ -- government purchases of goods (`thrown into ocean'), per capita
+  
+An **allocation** is a collection of sequences $\{C_{yt}, C_{ot}, K_{t+1}, Y_t, G_t\}_{t=0}^\infty $, where constituents
+of the sequence include output and factors of production
+
+ * $K_t$ -- physical capital per capita
+ * $L_t$ -- labor per capita
+ * $Y_t$ -- output per capita
+
+and also consumption and physical  investment
+
+* $C_{yt}$ -- consumption of young person at time $t \geq 0$
+* $C_{ot}$ -- consumption of old person at time $t \geq 0$
+* $K_{t+1} - K_t \equiv I_t $ -- investment in physical capital at time $t \geq 0$
+
+The national income and product accounts for the economy are described by a sequence of equalities
+
+* $Y_t = C_{yt} + C_{ot} + (K_{t+1} - K_t) + G_t, \quad t \geq 0$ 
+
+A **price system** is a pair of sequences $\{W_t, r_t\}_{t=0}^\infty$, where constituents of the sequence include rental rates for the factors of production
+
+* $W_t$ -- rental rate for labor at time $t \geq 0$
+* $r_t$ -- rental rate for capital at time $t \geq 0$
+
+
+## Production
+
+There are two factors of production, physical capital $K_t$ and labor $L_t$.  
+
+Capital does not depreciate.  
+
+The initial capital stock $K_0$ is owned by the initial old person, who rents it to the firm at time $0$.
+
+The economy's net investment rate $I_t$ at time $t$ is 
 
 $$
-U_t  = C_{yt}^\beta C_{o,t+1}^{1-\beta}, \quad \beta \in (0,1)
-$$ (eq:utilfn)
+I_t = K_{t+1} - K_t
+$$
+
+The economy's capital stock at time $t$ emerges from cumulating past rates of investment:
+
+$$
+K_t = K_0 + \sum_{s=0}^{t-1} I_s 
+$$
+
+There is  a Cobb-Douglas technology that  converts physical capital $K_t$ and labor services $L_t$ into 
+output $Y_t$
 
 $$
 Y_t  = K_t^\alpha L_t^{1-\alpha}, \quad \alpha \in (0,1)
 $$ (eq:prodfn)
 
 
+## Government
 
-Equation {eq}`eq:utilfn`  expresses the lifetime utility of a person who is young at time $t$ 
-as a function of consumption  $C_{yt} $ when young and consumption $C_{o,t+1}$ when
-old.  
+The government at time  $t-1$   issues one-period risk-free debt promising to pay $D_t$ time $t$  goods per capita at time $t$.
 
+Young people at time $t$ purchase government debt $D_{t+1}$ maturing at time $t+1$. 
 
-Production function {eq}`eq:prodfn` relates output $Y_t$ per young
-worker  to capital  $K_t$ per young worker and labor $L$ per young worker; 
- $L$ is  supplied  inelasticallly by each young worker and is measured in
-units that make  $L = 1$. 
-
-The lifetime budget constraint
-of a young person at time $t$ is
-
-$$ 
-C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}} = W_t
-$$ (eq:lifebudget)
-
-where $W_t$ is the wage rate at time  $t$  and $r_{t+1}$  is the net  return
-on savings between $t$ and $t+1$. 
-
-Equation {eq}`eq:lifebudget` states that the present value of consumption
-equals the present value of labor earnings.
-
-Another way to write the lifetime budget constraint at equality is  
-
-
-
-$$ 
-C_{ot+1} = A_{t+1} (1 + r_{t+1}) 
-$$ (eq:lifbudget2)
-
-where assets $A_{t+1}$ accumulated by old people at the beginning of time $t+1$   equals their savings $W_t - C_{yt}$ at time $t$  when they were young. 
-
-
-Maximization of  utility function {eq}`eq:utilfn` subject to budget constraint {eq}`eq:lifebudget` implies that consumption when young is
- 
- $$ 
- C_{yt} = \beta W_t 
- $$ 
- 
-and that savings when young are  
+The government budget constraint at time $t \geq 0$ is
 
 $$
-A_{t+1} = (1-\beta) W_t.
+D_{t+1} - D_t = r_t D_t + G_t - T_t
 $$
 
+or 
 
-The young consumer allocates his/her savings are  entirely to physical capital. 
 
-Profit maximization by representative firms in the economy implies the
-that the real wage $W_t$ and the return on capital $r_t$ satisfy
 
+
+$$
+D_{t+1} = (1 + r_t)  D_t + G_t - T_t 
+$$ 
+
+where total tax collections net of transfers are given by $T_t$ satisfying
+
+
+$$
+T_t = \tau_t W_t L_t + \tau_t r_t (D_t + K_t) + \delta_y + \delta_o
+$$
+
+<font color='red'>Tom's answer to Zejin: You are completely correct.  I will remember to write  somewhere above that the population size of the young worker is 1, and that each young worker supply one unit of labor inelastically. </font>
+
+**Note to Zejin and Tom: I have assumed that the goverment taxes interest on government debt. Do AK also assume that -- we can do
+what we want here**
+
+
+
+## Households' Activities in Factor Markets
+
+At time $t \geq 0$, an old person brings $K_t$ into the period, rents it to a representative  firm for $r_{t+1} K_t$, collects these rents, pays a lump sum tax or receives 
+receives a lump sum subsidy from the government, then sells whatever is left over to a young person.  
+
+At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays taxes to the goverment, then divides the remainder between acquiring assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and government bonds $D_{t+1}$  maturiting at $t+1$.
+
+
+
+
+## Representative firm's problem 
+
+The firm hires labor services from  young households and capital from old  households at competitive rental rates,
+$W_t$ for labor service, $r_t$ for capital. 
+
+The units of these rental rates are:
+
+* for $W_t$, output at time $t$ per unit of labor at time $t$  
+* for $r_t$,  output at time $t$  per unit of capitalat time $t$ 
+
+
+We take output at time $t$ as *numeraire*, so the price of output at time $t$ is one.
+
+The firm's profits at time $t$ are thus
+
+$$
+K_t^\alpha L_t^{1-\alpha} - r_t K_t - W_t L_t . 
+$$
+
+To maximize profits the firms equates marginal products to rental rates:
+
+$$
 \begin{align}
-W_t & = (1-\alpha) K_t^\alpha \\
-r_t & = \alpha K_t^{\alpha -1}
+W_t & = (1-\alpha) K_t^\alpha L_t^{-\alpha} \\
+r_t & = \alpha K_t^\alpha L_t^{1-\alpha}
 \end{align}
+$$  (eq:firmfonc)
+
+Output can either be consumed by old or young households, taken by the government for its own uses (e.g., throwing into the ocean),
+or used to augment the capital stock.  
 
 
-The condition for equilibrium in the market for capital is given by
+The firm  sells output to old households, young households, and the government.
+
+
+
+
+
+
+
+
+
+## Households' problems
+
+### Initial old household 
+
+At time $t=0$, a representative initial old household is endowed with  $(1 + r_0(1 - \tau_0)) A_0$ in initial assets, and must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
+$\delta_o$ the government.  The   households' budget constraint is
+
+
 
 $$
-K_t = A_t.
+C_{o0} = (1 + r_0 (1 - \tau_0)) A_0 - \delta_o .
+$$ (eq:hbudgetold)
+
+An initial old household's utility function is $C_{o0}$, so the household's optimal consumption plan
+is provided by equation {eq}`eq:hbudgetold`.
+
+### Young household
+
+At each $t \geq 0$, a  young household inelastically supplies one unit of labor and in return
+receives pre-tax labor earnings of $W_t$ units of output.  
+
+A young-household's post-tax-and-transfer earnings are $W_t (1 - \tau_t) - \delta_y$.  
+
+At each $t \geq 0$, a young household chooses a consumption plan  $C_{yt}, C_{ot+1}$ 
+to maximize
+
 $$
+U_t  = C_{yt}^\beta C_{o,t+1}^{1-\beta}, \quad \beta \in (0,1)
+$$ (eq:utilfn)
+
+subject to the budget constraints
+
+$$
+\begin{align}
+C_{yt} + A_{t+1} & =  W_t (1 - \tau_t) - \delta_y \\
+C_{ot+1} & = (1+ r_{t+1} (1 - \tau_{t+1}))A_{t+1} - \delta_o
+\end{align}
+$$ (eq:twobudgetc)
+
+
+Solving the second equation of {eq}`eq:twobudgetc` for savings  $A_{t+1}$ and substituting it into the first equation implies the present value budget constraint
+
+$$
+C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} = W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}
+$$ (eq:onebudgetc)
+
+Form a Lagrangian 
+
+$$ 
+\begin{align}
+L  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_y + \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr],
+\end{align}
+$$ (eq:lagC)
+
+where $\lambda$ is a Lagrange multiplier on the intertemporal budget constraint {eq}`eq:onebudgetc`.
+
+
+After several lines of algebra, first-order conditions for maximizing $L$ with respect to $C_{yt}, C_{ot+1}$ 
+imply that an optimal consumption plan satisfies
+
+$$
+\begin{align}
+C_{yt} & = \beta \Bigl[ W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] \\
+\frac{C_{0t+1}}{1 + r_{t+1}(1-\tau_{t+1})  } & = (1-\beta)   \Bigl[ W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] 
+\end{align}
+$$ (eq:optconsplan)
+
+The first-order condition for minimizing Lagrangian {eq}`eq:lagC` with respect to the Lagrange multipler $\lambda$ recovers the budget constraint {eq}`eq:onebudgetc`,
+which, using {eq}`eq:optconsplan` gives the optimal savings plan
+
+$$
+A_{t+1} = (1-\beta) [ (1- \tau_t) W_t - \delta_y] + \beta \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})} 
+$$ (eq:optsavingsplan)
+
+
+
+## Equilbrium 
+
+**Definition:** An equilibrium is an allocation,  a government policy, and a price system with the properties that
+* given the price system and the government policy, the allocation solves
+    * represenative firms' problems for $t \geq 0$
+    * households problems for $t \geq 0$
+* given the price system and the allocation, the government budget constraint is satisfies for all $t \geq 0$.
+
+
+**Tom's part stops, Zejin's part starts here.**
+
+
+We will first solve for equilibrium paths using the closed form solution that we derived in the class. And then, let's pretend that we don't know the closed form solution, and solve for the transitions paths by iterating over the guesses of price sequences and tax rate sequence. The equilibrium paths will be found as a fixed point.
+
 
 ## Zejin Start
 
