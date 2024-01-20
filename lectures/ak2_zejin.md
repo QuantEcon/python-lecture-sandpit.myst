@@ -317,38 +317,77 @@ $$ (eq:optsavingsplan)
 We will first solve for equilibrium paths using the closed form solution that we derived in the class. And then, let's pretend that we don't know the closed form solution, and solve for the transitions paths by iterating over the guesses of price sequences and tax rate sequence. The equilibrium paths will be found as a fixed point.
 
 
-## Zejin Start
+## Closed form solution
 
-In this simple two period life cycle model, we have a closed form solution for the transition dynamics of the aggregate capital level
+Let's start solving the model by considering a simple case, where we set both $\delta_o$ and $\delta_y$ at $0$s for all $t$.
 
-$$
-K_{t+1}=K_{t}^{\alpha}\left(1-\tau_{t}\right)\left(1-\alpha\right)\left(1-\beta\right)+A_{t}^{g} \\
-r_{t}=\alpha K_{t}^{\alpha-1} \\
-$$
-
-And the government budget constraint implies
+We will find that the optimal consumption plan of the representative young becomes indepedent of future prices and tax rates, so is the optimal saving plan.
 
 $$
-\tau_{t}=\left(G_{t}-r_{t}A_{t}^{g}\right)/\left(Y_{t} - r_t A_{t}^g\right) \\
+\begin{align}
+C_{yt} & = \beta (1 - \tau_t) W_t \\
+A_{t+1} &= (1-\beta) (1- \tau_t) W_t
+\end{align}
 $$
 
-Let the initial steady state be the case:
-1. there is no government debt, $A^g_t=0$,
-2. government consumption equals $15\%$ of the initial steady state output $Y$
-
-which implies the steady state values
+Combined with the equilibrium condition that determines the rental rate for labor {eq}`eq:firmfonc` and given that $A_t = K_t + D_t$, we obtain a closed form transition law for the capital stock in the economy,
 
 $$
-\hat{\tau} = 0.15 \\
-\hat{K} = \hat{K} ^ \alpha (1 - \hat{\tau}) (1 - \alpha) (1 - \beta)
+K_{t+1}=K_{t}^{\alpha}\left(1-\tau_{t}\right)\left(1-\alpha\right)\left(1-\beta\right) - D_{t}\\
 $$
 
-so that
+### Steady states
+
+Given the closed form transition law of the capital stock and the government budget constraint, we can easily solve for the steady states
 
 $$
-\hat{K}=\left[\left(1-\hat{\tau}\right)\left(1-\alpha\right)\left(1-\beta\right)\right]^{\frac{1}{1-\alpha}}
+\begin{align}
+\hat{K} &=\hat{K}\left(1-\hat{\tau}\right)\left(1-\alpha\right)\left(1-\beta\right) - \hat{D} \\
+\hat{D} &= (1 + \hat{r})  \hat{D} + \hat{G} - \hat{T} \\
+\hat{T} &= \hat{\tau} \hat{Y} + \hat{\tau} \hat{r} \hat{D}
+\end{align}
+$$ (eq:steadystates)
+
+which implies
+
 $$
-Let $\alpha = 0.3$, $\beta = 0.5$, solve for $\hat{K}$.
+\begin{align}
+\hat{K} &= \left[\left(1-\hat{\tau}\right)\left(1-\alpha\right)\left(1-\beta\right)\right]^{\frac{1}{1-\alpha}} \\
+\hat{\tau} &= \frac{\hat{G} + \hat{r} \hat{D}}{\hat{Y} + \hat{r} \hat{D}}
+\end{align}
+$$
+
+Let's consider a simple numerical example where
+
+1. there is no government debt, $D_t=0$,
+2. government consumption $G_t$ equals $15\%$ of the output $Y_t$
+
+This immediately tells us that
+
+$$
+\begin{align}
+\hat{D} &= 0 \\
+\hat{G} &= 0.15 \hat{Y} \\
+\hat{\tau} &= 0.15 \\
+\end{align}
+$$
+
+Let's solve for $\hat{K}$ given model parameters $\alpha = 0.3$ and $\beta = 0.5$
+
+```{code-cell} ipython3
+# parameters
+α = 0.3
+β = 0.5
+
+# steady state ̂τ
+τ_hat = 0.15
+D_hat = 0.
+
+# solve for steady state
+K_hat = ((1 - τ_hat) * (1 - α) * (1 - β)) ** (1 / (1 - α))
+K_hat
+```
+When the steady state capital stock is known, we can calculate other quantities in equilibrium. Let's first define useful Python helper functions that transform between quantities using equilibrium conditions
 
 ```{code-cell} ipython3
 @njit
@@ -367,11 +406,11 @@ def K_to_W(K, α):
     return (1 - α) * K ** α
 
 @njit
-def K_to_C(K, Ag, τ, r, α, β):
+def K_to_C(K, D, τ, r, α, β):
 
     # consumption for old
-    Ap = K - Ag
-    Co = Ap * (1 + r * (1 - τ))
+    A = K + D
+    Co = A * (1 + r * (1 - τ))
 
     # consumption for young
     W = K_to_W(K, α)
@@ -380,376 +419,281 @@ def K_to_C(K, Ag, τ, r, α, β):
     return Cy, Co
 ```
 
-```{code-cell} ipython3
-# parameters
-α = 0.3
-β = 0.5
-
-# steady state ̂τ
-τ_hat = 0.15
-Ag_hat = 0.
-
-# solve for steady state
-K_hat = ((1 - τ_hat) * (1 - α) * (1 - β)) ** (1 / (1 - α))
-K_hat
-```
+We can use these helper functions to obtain steady state values $\hat{Y}$, $\hat{r}$, and $\hat{W}$ given $\hat{K}$ and $\hat{r}$.
 
 ```{code-cell} ipython3
 Y_hat, r_hat, W_hat = K_to_Y(K_hat, α), K_to_r(K_hat, α), K_to_W(K_hat, α)
 Y_hat, r_hat, W_hat
 ```
 
+As the steady state government debt $\hat{D}$ is assumed to be $0$, all the tax collection will be used for government expenditure
+
 ```{code-cell} ipython3
 G_hat = τ_hat * Y_hat
 G_hat
 ```
 
+Finally, the steady state consumptions for the young and the old are given by the optimal consumption plans
+
 ```{code-cell} ipython3
-Cy_hat, Co_hat = K_to_C(K_hat, Ag_hat, τ_hat, r_hat, α, β)
+Cy_hat, Co_hat = K_to_C(K_hat, D_hat, τ_hat, r_hat, α, β)
 Cy_hat, Co_hat
 ```
 
-```{code-cell} ipython3
-init_ss = np.array([K_hat, Y_hat, Cy_hat, Co_hat,
-                    W_hat, r_hat,
-                    τ_hat, Ag_hat, G_hat])
-```
-
-
-
-Let's consider the following fiscal policy change:
-
-1. at $t=0$, unexpectedly announce a one-period tax cut ($\tau_0 \   0.15 \rightarrow 0.1$) by issuing government debt $A^g$
-2. from $t=1$, adjust $\tau_t$ and use tax revenues to pay for government consumption and interest payments on the official debt
-3. government consumption $G_t$ will be constant and equal $0.15 \hat{Y}$
-
-The implied transition dynamics will be
-
-$$
-K_{t+1}=K_{t}^{\alpha}\left(1-\tau_{t}\right)\left(1-\alpha\right)\left(1-\beta\right)+A^{g} \\
-A^{g}=\tau_0\hat{Y}-\hat{G} \\
-\hat{\tau}_{0}=0.1,\quad\tau_{t}=\frac{\hat{G}-r_{t}A^{g}}{\hat{Y}-r_{t}A^{g}}
-$$
+Let's store the steady state quantities and prices using an array called `init_ss` 
 
 ```{code-cell} ipython3
-@njit
-def closed_form_transition(T, init_ss, tax_cut, α, β):
-
-    # unpack the steady state variables
-    K_hat, Y_hat, Cy_hat, Co_hat = init_ss[:4]
-    W_hat, r_hat = init_ss[4:6]
-    τ_hat, Ag_hat, G_hat = init_ss[6:9]
-
-    # initialize array containers
-    # (note that Python is row-major)
-    # K, Y, Cy, Co
-    quant_seq = np.empty((T+1, 4))
-
-    # W, r
-    price_seq = np.empty((T+1, 2))
-
-    # τ, Ag, G
-    policy_seq = np.empty((T+1, 3))
-
-    # t=0, starting from steady state
-    K0, Y0 = K_hat, Y_hat
-    W0, r0 = W_hat, r_hat
-    Ag0 = 0.
-
-    # tax cut
-    τ0 = τ_hat * (1 - tax_cut)
-    Ag1 = Ag0 * (1 + r0 * (1 - τ0)) + τ0 * Y0 - G_hat
-
-    # immediate consumption increase
-    Cy0, Co0 = K_to_C(K0, Ag0, τ0, r0, α, β)
-
-    # t=0 economy
-    quant_seq[0, :] = K0, Y0, Cy0, Co0
-    price_seq[0, :] = W0, r0
-    policy_seq[0, :] = τ0, Ag0, G_hat
-
-    # starting from t=1 to T
-    for t in range(1, T+1):
-
-        # transition dynamics of K_t
-        K_old, τ_old = quant_seq[t-1, 0], policy_seq[t-1, 0]
-
-        # transition of K
-        K = K_old ** α * (1 - τ_old) * (1 - α) * (1 - β) + Ag1
-
-        # output, capital return, wage
-        Y, r, W = K_to_Y(K, α), K_to_r(K, α), K_to_W(K, α)
-
-        # tax rate
-        τ = (G_hat - r * Ag1) / (Y - r * Ag1)
-
-        # consumption
-        Cy, Co = K_to_C(K, Ag1, τ, r, α, β)
-
-        quant_seq[t, :] = K, Y, Cy, Co
-        price_seq[t, :] = W, r
-        policy_seq[t, :] = τ, Ag1, G_hat
-
-    return quant_seq, price_seq, policy_seq
+init_ss = np.array([K_hat, Y_hat, Cy_hat, Co_hat,     # quantities
+                    W_hat, r_hat,                     # prices
+                    τ_hat, D_hat, G_hat               # policies
+                    ])
 ```
+
+### Transitions
+
+Above we characterized an initial steady state of the economy, which we will use as the starting point of the transitional path driven by some fiscal policy changes.
+
+Here we define a Python class `ClosedFormTrans` which computes length $T$ transitional path of the economy in response to a particular fiscal policy change. It takes three keyword arguments, `τ_pol`, `D_pol`, and `G_pol`, which are the sequences of tax rate, government debt level, and government expenditure level respectively. In each policy experiment below, we will pass two out of three as inputs that fully depict a fiscal policy change, and the remaining one policy variable sequence will be determined by satisfying the government budget constraint.
+
+```{code-cell} ipython3
+class ClosedFormTrans:
+
+    def __init__(self, T, init_ss, α, β, τ_pol=None, D_pol=None, G_pol=None):
+        self.T = T
+        self.init_ss = init_ss
+        self.α, self.β = α, β
+        self.τ_pol, self.D_pol, self.G_pol = τ_pol, D_pol, G_pol
+
+    def solve(self):
+
+        T = self.T
+        α, β = self.α, self.β
+        τ_pol, D_pol, G_pol = self.τ_pol, self.D_pol, self.G_pol
+
+        # unpack the steady state variables
+        K_hat, Y_hat, Cy_hat, Co_hat = self.init_ss[:4]
+        W_hat, r_hat = self.init_ss[4:6]
+        τ_hat, D_hat, G_hat = self.init_ss[6:9]
+
+        # initialize array containers
+        # (note that Python is row-major)
+        # K, Y, Cy, Co
+        quant_seq = np.empty((T+1, 4))
+
+        # W, r
+        price_seq = np.empty((T+1, 2))
+
+        # τ, D, G
+        policy_seq = np.empty((T+2, 3))
+
+        # t=0, starting from steady state
+        K0, Y0 = K_hat, Y_hat
+        W0, r0 = W_hat, r_hat
+        D0 = D_hat
+
+        # fiscal policy
+        if τ_pol is None:
+            D1 = D_pol[1]
+            G0 = G_pol[0]
+            τ0 = (G0 + (1 + r0) * D0 - D1) / (Y0 + r0 * D0)
+        elif D_pol is None:
+            τ0 = τ_pol[0]
+            G0 = G_pol[0]
+            D1 = (1 + r0) * D0 + G0 - τ0 * (Y0 + r0 * D0)
+        elif G_pol is None:
+            D1 = D_pol[1]
+            τ0 = τ_pol[0]
+            G0 = τ0 * (Y0 + r0 * D0) + D1 - (1 + r0) * D0
+
+        # immediate consumption increase
+        Cy0, Co0 = K_to_C(K0, D0, τ0, r0, α, β)
+
+        # t=0 economy
+        quant_seq[0, :] = K0, Y0, Cy0, Co0
+        price_seq[0, :] = W0, r0
+        policy_seq[0, :] = τ0, D0, G0
+        policy_seq[1, 1] = D1
+
+        # starting from t=1 to T
+        for t in range(1, T+1):
+
+            # transition dynamics of K_t
+            K_old, τ_old = quant_seq[t-1, 0], policy_seq[t-1, 0]
+
+            D = policy_seq[t, 1]
+
+            # transition of K
+            K = K_old ** α * (1 - τ_old) * (1 - α) * (1 - β) - D
+
+            # output, capital return, wage
+            Y, r, W = K_to_Y(K, α), K_to_r(K, α), K_to_W(K, α)
+
+            if τ_pol is None:
+                D = D_pol[t]
+                D_next = D_pol[t+1]
+                G = G_pol[t]
+                τ = (G + (1 + r) * D - D_next) / (Y + r * D)
+            elif D_pol is None:
+                τ = τ_pol[t]
+                G = G_pol[t]
+                D = policy_seq[t, 1]
+                D_next = (1 + r) * D + G - τ * (Y + r * D)
+            elif G_pol is None:
+                D = D_pol[t]
+                D_next = D_pol[t+1]
+                τ = τ_pol[t]
+                G = τ * (Y + r * D) + D_next - (1 + r) * D
+
+            # consumption
+            Cy, Co = K_to_C(K, D, τ, r, α, β)
+
+            quant_seq[t, :] = K, Y, Cy, Co
+            price_seq[t, :] = W, r
+            policy_seq[t, 0] = τ
+            policy_seq[t+1, 1] = D_next
+            policy_seq[t, 2] = G
+
+        self.quant_seq = quant_seq
+        self.price_seq = price_seq
+        self.policy_seq = policy_seq
+
+    def plot(self):
+
+        quant_seq = self.quant_seq
+        price_seq = self.price_seq
+        policy_seq = self.policy_seq
+
+        fig, axs = plt.subplots(3, 3, figsize=(14, 10))
+
+        # quantities
+        for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
+            ax = axs[i//3, i%3]
+            ax.plot(range(T+1), quant_seq[:, i])
+            ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
+            ax.set_title(name)
+
+        # prices
+        for i, name in enumerate(['W', 'r']):
+            ax = axs[(i+4)//3, (i+4)%3]
+            ax.plot(range(T+1), price_seq[:, i])
+            ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
+            ax.set_title(name)
+
+        # policies
+        for i, name in enumerate(['τ', 'D', 'G']):
+            ax = axs[(i+6)//3, (i+6)%3]
+            ax.plot(range(T+1), policy_seq[:-1, i])
+            ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
+            ax.set_title(name)
+```
+
+### Experiment 1: Tax cut
+
+To see the power of `ClosedFormTrans`, let's first experiment with the following fiscal policy change:
+
+1. at $t=0$, the government unexpectedly announces a one-period tax cut, $\tau_0 =(1-\frac{1}{3}) \hat{\tau}$, by issuing government debt $\bar{D}$
+2. from $t=1$, the government will keep $D_t=\bar{D}$ and adjust $\tau_{t}$ to collect taxation to pay for the government consumption and interest payments on the debt
+3. government consumption $G_t$ will be fixed at $0.15 \hat{Y}$
+
+The following equations completely characterize the equilibrium transition path originating from the initial steady state
+
+$$
+\begin{align}
+K_{t+1} &= K_{t}^{\alpha}\left(1-\tau_{t}\right)\left(1-\alpha\right)\left(1-\beta\right) - \bar{D} \\
+\tau_{0} &= (1-\frac{1}{3}) \hat{\tau} \\
+\bar{D} &= \hat{G} - \tau_0\hat{Y} \\
+\quad\tau_{t} & =\frac{\hat{G}+r_{t} \bar{D}}{\hat{Y}+r_{t} \bar{D}}
+\end{align}
+$$
+
+We can use the `ClosedFormTrans` to compute and plot the transition of the economy for $20$ periods, after which the economy will be fairly close to the new steady state.
+
+The first step is to prepare sequences of policy variables that describe the fiscal policy change. In this example, we need to define the determinant sequences of government expenditure $\{G_t\}_{t=0}^{T}$ and debt level $\{D_t\}_{t=0}^{T+1}$ in advance, and then pass it to the solver.
 
 ```{code-cell} ipython3
 T = 20
-tax_cut = 1 / 3
 
-quant_seq, price_seq, policy_seq = closed_form_transition(T, init_ss, tax_cut, α, β)
+# tax cut
+τ0 = τ_hat * (1 - 1/3)
+
+# sequence of government expenditure
+G_seq = τ_hat * Y_hat * np.ones(T+1)
+
+# sequence of government debt
+D_bar = G_hat - τ0 * Y_hat
+D_seq = np.ones(T+2) * D_bar
+D_seq[0] = D_hat
 ```
 
+We can create an instance `closed1` and use it to obtain the dynamic transitions. Note that we leave `τ_pol` as `None` since the tax rates need to be determined to satisfy the government budget constraint.
+
 ```{code-cell} ipython3
-fig, axs = plt.subplots(3, 3, figsize=(14, 10))
-
-# quantities
-for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
-    ax = axs[i//3, i%3]
-    ax.plot(range(T+1), quant_seq[:, i])
-    ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-
-# prices
-for i, name in enumerate(['W', 'r']):
-    ax = axs[(i+4)//3, (i+4)%3]
-    ax.plot(range(T+1), price_seq[:, i])
-    ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-
-# policies
-for i, name in enumerate(['τ', 'Ag', 'G']):
-    ax = axs[(i+6)//3, (i+6)%3]
-    ax.plot(range(T+1), policy_seq[:, i])
-    ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
+closed1 = ClosedFormTrans(T, init_ss, α, β, τ_pol=None, D_pol=D_seq, G_pol=G_seq)
+closed1.solve()
+closed1.plot()
 ```
 
-
-
-Above we did an experiment where the tax cut rate is $1/3$. Here we can also try to let the tax cut rate be $0.2$.
+We can also easily experiment with a lower tax cut rate, such as $0.2$
 
 ```{code-cell} ipython3
-tax_cut2 = 0.2
-quant_seq2, price_seq2, policy_seq2 = closed_form_transition(T, init_ss, tax_cut2, α, β)
+# lower tax cut rate
+τ0 = 0.15 * (1 - 0.2)
+
+# the corresponding debt sequence
+D_bar = G_hat - τ0 * Y_hat
+D_seq = np.ones(T+2) * D_bar
+D_seq[0] = D_hat
+
+closed2 = ClosedFormTrans(T, init_ss, α, β, τ_pol=None, D_pol=D_seq, G_pol=G_seq)
+closed2.solve()
+closed2.plot()
 ```
 
+### Experiment 2: Government asset accumulation
+
+Assuming that the economy was in the same steady state, but instead of announcing a tax cut at $t=0$, the government now promises to cut its spending on services and goods by a half $\forall t \leq 0$.
+
+The government wants to target the same tax rate $\tau_t=\hat{\tau}$ and accumulate assets $-D_t$ over time.
+
+Note that in this experiment, we pass `τ_seq` and `G_seq` as inputs, and let `D_pol` to be determined along the path by satisfying the government budget constraint.
+
 ```{code-cell} ipython3
-fig, axs = plt.subplots(3, 3, figsize=(14, 10))
+# government expenditure cut by a half
+G_seq = τ_hat * 0.5 * Y_hat * np.ones(T+1)
 
-# quantities
-for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
-    ax = axs[i//3, i%3]
-    ax.plot(range(T+1), quant_seq[:, i])
-    ax.plot(range(T+1), quant_seq2[:, i])
-    ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
+# targeted tax rate
+τ_seq = τ_hat * np.ones(T+1)
 
-# prices
-for i, name in enumerate(['W', 'r']):
-    ax = axs[(i+4)//3, (i+4)%3]
-    ax.plot(range(T+1), price_seq[:, i])
-    ax.plot(range(T+1), price_seq2[:, i])
-    ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-
-# prices
-for i, name in enumerate(['τ', 'Ag', 'G']):
-    ax = axs[(i+6)//3, (i+6)%3]
-    ax.plot(range(T+1), policy_seq[:, i])
-    ax.plot(range(T+1), policy_seq2[:, i])
-    ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
+closed3 = ClosedFormTrans(T, init_ss, α, β, τ_pol=τ_seq, D_pol=None, G_pol=G_seq)
+closed3.solve()
+closed3.plot()
 ```
 
-
-
-### Look at another policy experiment
-
-
-
-The same initial steady state: $\hat{\tau}=0.15$, $\hat{G}=0.15\hat{Y}$, $\hat{A^g}=0$
-
-But assume that from $t=0$, the government decreases its spending on services and goods by $\gamma$ fraction, $G_t=\left(1-\gamma\right) \hat{G} \  \forall t \geq 0$.
-
-The government wants to keep the same $\tau_t=\hat{\tau}$ and accumulate assets $A^g_t$ over time.
+It will be useful for understanding the transition paths by looking at the ratio of government asset to the output, $-\frac{D_t}{Y_t}$
 
 ```{code-cell} ipython3
-T = 20
-
-quant_seq3 = np.empty((T+1, 4))
-price_seq3 = np.empty((T+1, 2))
-policy_seq3 = np.empty((T+1, 3))
-
-# t=0, starting from steady state
-K0, Y0 = K_hat, Y_hat
-W0, r0 = W_hat, r_hat
-Ag0 = 0.
-
-# remove government consumption
-γ = 0.5
-G0 = G_hat * (1 - γ)
-# keep the same tax rate
-τ0 = τ_hat
-# government net worth at t=0 is predetermined
-Ag0 = Ag_hat
-
-Cy0, Co0 = K_to_C(K0, Ag0, τ0, r0, α, β)
-
-# t=0 economy
-quant_seq3[0, :] = K0, Y0, Cy0, Co0
-price_seq3[0, :] = W0, r0
-policy_seq3[0, :] = τ0, Ag0, G0
-
-# starting from t=1 to T
-for t in range(1, T+1):
-
-    # from last period
-    K_old, Y_old = quant_seq3[t-1, :2]
-    W_old, r_old = price_seq3[t-1, :]
-    τ_old, Ag_old, G_old = policy_seq3[t-1, :]
-
-    # transition of government assets
-    Ag = Ag_old * (1 + r_old * (1 - τ_old)) + τ_old * Y_old - G_old
-
-    # transition of K
-    K = K_old ** α * (1 - τ_hat) * (1 - α) * (1 - β) + Ag
-
-    # output, capital return, wage
-    Y, r, W = K_to_Y(K, α), K_to_r(K, α), K_to_W(K, α)
-
-    # tax rate
-    τ = τ_hat
-
-    # consumption
-    Cy, Co = K_to_C(K, Ag, τ, r, α, β)
-
-    quant_seq3[t, :] = K, Y, Cy, Co
-    price_seq3[t, :] = W, r
-    policy_seq3[t, :] = τ, Ag, G0
-```
-
-```{code-cell} ipython3
-fig, axs = plt.subplots(3, 3, figsize=(14, 10))
-
-# quantities
-for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
-    ax = axs[i//3, i%3]
-    ax.plot(range(T+1), quant_seq3[:, i])
-    ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-
-# prices
-for i, name in enumerate(['W', 'r']):
-    ax = axs[(i+4)//3, (i+4)%3]
-    ax.plot(range(T+1), price_seq3[:, i])
-    ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-
-# policies
-for i, name in enumerate(['τ', 'Ag', 'G']):
-    ax = axs[(i+6)//3, (i+6)%3]
-    ax.plot(range(T+1), policy_seq3[:, i])
-    ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-```
-
-
-
-It will be useful for understanding the transition paths by looking at the ratio of government asset to the output, $\frac{A^g_t}{Y_t}$
-
-```{code-cell} ipython3
-plt.plot(range(T+1), policy_seq3[:, 1] / quant_seq3[:, 0])
+plt.plot(range(T+1), -closed3.policy_seq[:-1, 1] / closed3.quant_seq[:, 0])
 plt.xlabel('t')
-plt.title('Ag/Y');
+plt.title('-D/Y');
 ```
 
+### Experiment 3: Temporary expenditure cut
 
-
-### Another interesting policy
-
-
-
-Again, the economy was in the same initial steady state.
-
-The government spend $G_0=0$ for only one period, and accumulate $A^g_1$ asset. From $t \geq 1$, the government will choose the same level of consumption as before $\hat{G}$, and will adjust $\tau_t$ to keep the same level of asset $A^g_1$.
+Let's now consider the case where the government also cuts its spending by a half and accumulates asset, but this time the expenditure cut only lasts for one period at $t=0$. From $t \geq 1$, the government will return to the original level of consumption $\hat{G}$, and will adjust $\tau_t$ to maintain the same level of asset $-D_t = -D_1$.
 
 ```{code-cell} ipython3
-quant_seq4 = np.empty((T+1, 4))
-price_seq4 = np.empty((T+1, 2))
-policy_seq4 = np.empty((T+1, 3))
+# sequence of government expenditure
+G_seq = τ_hat * Y_hat * np.ones(T+1)
+G_seq[0] = 0
 
-# t=0, starting from steady state
-K0, Y0 = K_hat, Y_hat
-W0, r0 = W_hat, r_hat
-Ag0 = 0.
+# sequence of government debt
+D_bar = G_seq[0] - τ_hat * Y_hat
+D_seq = D_bar * np.ones(T+2)
+D_seq[0] = D_hat
 
-# remove government consumption
-G0 = 0.
-# keep the same tax rate
-τ0 = τ_hat
-# government net worth at t=0 is predetermined
-Ag0 = Ag_hat
-Ag1 = Ag0 * (1 + r0 * (1 - τ0)) + τ0 * Y0 - G0
-
-Cy0, Co0 = K_to_C(K0, Ag0, τ0, r0, α, β)
-
-# t=0 economy
-quant_seq4[0, :] = K0, Y0, Cy0, Co0
-price_seq4[0, :] = W0, r0
-policy_seq4[0, :] = τ0, Ag0, G0
-
-# starting from t=1 to T
-for t in range(1, T+1):
-
-    # from last period
-    K_old, Y_old = quant_seq4[t-1, :2]
-    W_old, r_old = price_seq4[t-1, :]
-    τ_old, Ag_old, G_old = policy_seq4[t-1, :]
-
-    # transition of government assets
-    Ag = Ag_old * (1 + r_old * (1 - τ_old)) + τ_old * Y_old - G_old
-
-    # transition of K
-    K = K_old ** α * (1 - τ_hat) * (1 - α) * (1 - β) + Ag
-
-    # output, capital return, wage
-    Y, r, W = K_to_Y(K, α), K_to_r(K, α), K_to_W(K, α)
-
-    # tax rate
-    τ = (G_hat - r * Ag1) / (Y - r * Ag1)
-
-    # consumption
-    Cy, Co = K_to_C(K, Ag, τ, r, α, β)
-
-    quant_seq4[t, :] = K, Y, Cy, Co
-    price_seq4[t, :] = W, r
-    policy_seq4[t, :] = τ, Ag, G_hat
-```
-
-```{code-cell} ipython3
-fig, axs = plt.subplots(3, 3, figsize=(14, 10))
-
-# quantities
-for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
-    ax = axs[i//3, i%3]
-    ax.plot(range(T+1), quant_seq4[:, i])
-    ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-
-# prices
-for i, name in enumerate(['W', 'r']):
-    ax = axs[(i+4)//3, (i+4)%3]
-    ax.plot(range(T+1), price_seq4[:, i])
-    ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
-
-# policies
-for i, name in enumerate(['τ', 'Ag', 'G']):
-    ax = axs[(i+6)//3, (i+6)%3]
-    ax.plot(range(T+1), policy_seq4[:, i])
-    ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
-    ax.set_title(name)
+closed4 = ClosedFormTrans(T, init_ss, α, β, τ_pol=None, D_pol=D_seq, G_pol=G_seq)
+closed4.solve()
+closed4.plot()
 ```
 
 
