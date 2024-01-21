@@ -55,7 +55,7 @@ Auerbach and Kotlikoff use computer code to calculate transition paths for their
 
 Time is discrete and is indexed by $t=0, 1, 2, \ldots$.  
 
-The economy lives forever, but the people living in it do not.  
+The economy lives forever, but the people  inside  it do not.  
 
 At each time $t, t \geq 0$ a representative old person and a representative young person are alive.
 
@@ -79,14 +79,14 @@ Initial conditions set from outside the model at time $t=0$ are
   
 $K_0$ and $D_0$ are both measured in units of time $0$ goods.
 
-A government **policy** is a collection of sequences $\{G_t, D_t, \tau_t, \delta_o, \delta_y,\}_{t=0}^\infty $,
+A government **policy** is a triple  of sequences $\{G_t, D_t, \tau_t\}_{t=0}^\infty $ and a pair of scalars $(\delta_o, \delta_y)$,
 where  
 
  * $\tau_t$ -- flat rate tax on wages and earnings from capital and government bonds
- * $\delta_y$ -- lump sum tax on each young person
- * $\delta_o$ -- lump sum tax on each old person
  * $D_t$ -- one-period government bond principal due at time $t$, per capita
  * $G_t$ -- government purchases of goods (`thrown into ocean'), per capita
+ * $\delta_y$ -- time-invariant lump sum tax on each young person
+ * $\delta_o$ -- time-invariant lump sum tax on each old person
   
 An **allocation** is a collection of sequences $\{C_{yt}, C_{ot}, K_{t+1}, Y_t, G_t\}_{t=0}^\infty $, where constituents
 of the sequence include output and factors of production
@@ -101,7 +101,7 @@ and also consumption and physical  investment
 * $C_{ot}$ -- consumption of old person at time $t \geq 0$
 * $K_{t+1} - K_t \equiv I_t $ -- investment in physical capital at time $t \geq 0$
 
-The national income and product accounts for the economy are described by a sequence of equalities
+National income and product accounts consist of  a sequence of equalities
 
 * $Y_t = C_{yt} + C_{ot} + (K_{t+1} - K_t) + G_t, \quad t \geq 0$ 
 
@@ -141,9 +141,11 @@ $$ (eq:prodfn)
 
 ## Government
 
-The government at time  $t-1$   issues one-period risk-free debt promising to pay $D_t$ time $t$  goods per capita at time $t$.
+At time  $t-1$, the government    issues one-period risk-free debt that promises to pay $D_t$ time $t$  goods per capita at time $t$.
 
-Young people at time $t$ purchase government debt $D_{t+1}$ maturing at time $t+1$. 
+Young people at time $t$ purchase government debt $D_{t+1}$ that matures at time $t+1$. 
+
+Government debt issued at $t$ bears a before-tax net rate of interest rate of $r_{t}$ at time $t+1$.
 
 The government budget constraint at time $t \geq 0$ is
 
@@ -158,7 +160,7 @@ or
 
 $$
 D_{t+1} = (1 + r_t)  D_t + G_t - T_t 
-$$ 
+$$ (eq:govbudgetsequence) 
 
 where total tax collections net of transfers are given by $T_t$ satisfying
 
@@ -176,23 +178,27 @@ what we want here**
 
 ## Households' Activities in Factor Markets
 
-At time $t \geq 0$, an old person brings $K_t$ into the period, rents it to a representative  firm for $r_{t+1} K_t$, collects these rents, pays a lump sum tax or receives 
-receives a lump sum subsidy from the government, then sells whatever is left over to a young person.  
+* Old people:    At time $t \geq 0$, an old person brings $K_t$ and $D_t$ into the period, rents capital to a representative  firm for $r_{t} K_t$, pays taxes $\tau_t (K_t+ D_t)$ on its rental and interest earnings,  pays a lump sum tax or receives receives a lump sum subsidy from the government, and sells $K_t$ to a young person.  
 
-At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays taxes to the goverment, then divides the remainder between acquiring assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and government bonds $D_{t+1}$  maturiting at $t+1$.
+
+* Young people: At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays  taxes $\tau_t W_t$ on its labor earnings plus the lump sum  tax $\delta_y$ to the goverment, spends $C_{yt}$ on consumption, and  acquires non-negative assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and one-period government bonds $D_{t+1}$  that mature at $t+1$.
+
+<font color='red'>Tom's note to Zejin: I had made mistakes in the two previous sentences. I tried to fix them! Jan 20. </font>
 
 
 
 
 ## Representative firm's problem 
 
-The firm hires labor services from  young households and capital from old  households at competitive rental rates,
-$W_t$ for labor service, $r_t$ for capital. 
+The firm hires labor services from  young households  at competitive wage  rate $W_t$  and capital from old  households at competitive rental rate
+$r_t$. 
 
-The units of these rental rates are:
+The rental rate on capital $r_t$ equals the interest rate on government one-period bonds.
+
+Units of the rental rates are:
 
 * for $W_t$, output at time $t$ per unit of labor at time $t$  
-* for $r_t$,  output at time $t$  per unit of capitalat time $t$ 
+* for $r_t$,  output at time $t$  per unit of capita at time $t$ 
 
 
 We take output at time $t$ as *numeraire*, so the price of output at time $t$ is one.
@@ -203,7 +209,7 @@ $$
 K_t^\alpha L_t^{1-\alpha} - r_t K_t - W_t L_t . 
 $$
 
-To maximize profits the firms equates marginal products to rental rates:
+To maximize profits a firm equates marginal products to rental rates:
 
 $$
 \begin{align}
@@ -212,11 +218,10 @@ r_t & = \alpha K_t^\alpha L_t^{1-\alpha}
 \end{align}
 $$  (eq:firmfonc)
 
-Output can either be consumed by old or young households, taken by the government for its own uses (e.g., throwing into the ocean),
-or used to augment the capital stock.  
+Output can either be consumed by old or young households, sold to young households who use it  to augment the capital stock, or  sold to  the government for  uses that do not generate utility for the people in the model  (e.g., throwing into the ocean).  
 
 
-The firm  sells output to old households, young households, and the government.
+The firm  thus sells output to old households, young households, and the government.
 
 
 
@@ -230,8 +235,12 @@ The firm  sells output to old households, young households, and the government.
 
 ### Initial old household 
 
-At time $t=0$, a representative initial old household is endowed with  $(1 + r_0(1 - \tau_0)) A_0$ in initial assets, and must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
-$\delta_o$ the government.  The   households' budget constraint is
+At time $t=0$, a representative initial old household is endowed with  $(1 + r_0(1 - \tau_0)) A_0$ in initial assets.
+
+It  must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
+$\delta_o$ the government. 
+
+An old   household's budget constraint is
 
 
 
@@ -250,13 +259,13 @@ receives pre-tax labor earnings of $W_t$ units of output.
 A young-household's post-tax-and-transfer earnings are $W_t (1 - \tau_t) - \delta_y$.  
 
 At each $t \geq 0$, a young household chooses a consumption plan  $C_{yt}, C_{ot+1}$ 
-to maximize
+to maximize the Cobb-Douglas utility function 
 
 $$
 U_t  = C_{yt}^\beta C_{o,t+1}^{1-\beta}, \quad \beta \in (0,1)
 $$ (eq:utilfn)
 
-subject to the budget constraints
+subject to the following  budget constraints at times $t$ and $t+1$:
 
 $$
 \begin{align}
@@ -272,18 +281,18 @@ $$
 C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} = W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}
 $$ (eq:onebudgetc)
 
-Form a Lagrangian 
+To solve the young household's choice problem, form a Lagrangian 
 
 $$ 
 \begin{align}
-L  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_y + \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr],
+{\mathcal L}  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_y + \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr],
 \end{align}
 $$ (eq:lagC)
 
 where $\lambda$ is a Lagrange multiplier on the intertemporal budget constraint {eq}`eq:onebudgetc`.
 
 
-After several lines of algebra, first-order conditions for maximizing $L$ with respect to $C_{yt}, C_{ot+1}$ 
+After several lines of algebra, the intertemporal budget constraint {eq}`eq:onebudgetc` and the first-order conditions for maximizing ${\mathcal L}$ with respect to $C_{yt}, C_{ot+1}$ 
 imply that an optimal consumption plan satisfies
 
 $$
@@ -311,17 +320,28 @@ $$ (eq:optsavingsplan)
 * given the price system and the allocation, the government budget constraint is satisfies for all $t \geq 0$.
 
 
-**Tom's part stops, Zejin's part starts here.**
+## Next steps
 
 
-We will first solve for equilibrium paths using the closed form solution that we derived in the class. And then, let's pretend that we don't know the closed form solution, and solve for the transitions paths by iterating over the guesses of price sequences and tax rate sequence. The equilibrium paths will be found as a fixed point.
+To begin our analysis of  equilibrium outcomes, we'll study the special case of the model with which  Auerbach and 
+Kotlikoff (1987) {cite}`auerbach1987dynamic` began their analysis in chapter 2.
 
+It can be solved by hand.  
+
+After we derive this closed form solution, we'll pretend that we don't know and will compute an equilibrium outcome  paths by first formulating it as a fixed point
+of a mapping from  sequences of factor prices
+and tax rates to sequences of factor prices and tax rates, and then iterating to convergence on that mapping.
+
+
+<font color='red'>I rewrote the preceding several sentences. </font>
 
 ## Closed form solution
 
-Let's start solving the model by considering a simple case, where we set both $\delta_o$ and $\delta_y$ at $0$s for all $t$.
+To get the special chapter 2 case of  Auerbach and 
+Kotlikoff (1987) {cite}`auerbach1987dynamic`, we  set both $\delta_o$ and $\delta_y$ to zero.
 
-We will find that the optimal consumption plan of the representative young becomes indepedent of future prices and tax rates, so is the optimal saving plan.
+As our special case of {eq}`eq:optconsplan`, we compute the following consumption-savings plan for a representative young person:
+
 
 $$
 \begin{align}
@@ -330,25 +350,25 @@ A_{t+1} &= (1-\beta) (1- \tau_t) W_t
 \end{align}
 $$
 
-Combined with the equilibrium condition that determines the rental rate for labor {eq}`eq:firmfonc` and given that $A_t = K_t + D_t$, we obtain a closed form transition law for the capital stock in the economy,
+Using  {eq}`eq:firmfonc` and  $A_t = K_t + D_t$, we obtain the following closed form transition law for capital:
 
 $$
 K_{t+1}=K_{t}^{\alpha}\left(1-\tau_{t}\right)\left(1-\alpha\right)\left(1-\beta\right) - D_{t}\\
-$$
+$$ (eq:Klawclosed)
 
 ### Steady states
 
-Given the closed form transition law of the capital stock and the government budget constraint, we can easily solve for the steady states
+From {eq}`eq:Klawclosed` and the government budget constraint {eq}`eq:govbudgetsequence`, we compute **steady state values**   $\hat K, \hat D, \hat T$ that are time-invariant:
 
 $$
 \begin{align}
 \hat{K} &=\hat{K}\left(1-\hat{\tau}\right)\left(1-\alpha\right)\left(1-\beta\right) - \hat{D} \\
 \hat{D} &= (1 + \hat{r})  \hat{D} + \hat{G} - \hat{T} \\
-\hat{T} &= \hat{\tau} \hat{Y} + \hat{\tau} \hat{r} \hat{D}
+\hat{T} &= \hat{\tau} \hat{Y} + \hat{\tau} \hat{r} \hat{D} .
 \end{align}
 $$ (eq:steadystates)
 
-which implies
+These imply
 
 $$
 \begin{align}
@@ -357,12 +377,12 @@ $$
 \end{align}
 $$
 
-Let's consider a simple numerical example where
+Let's take a numerical example in which
 
-1. there is no government debt, $D_t=0$,
+1. there is no initial government debt, $D_t=0$,
 2. government consumption $G_t$ equals $15\%$ of the output $Y_t$
 
-This immediately tells us that
+Our formulas for steady-state values  tell us that
 
 $$
 \begin{align}
@@ -372,7 +392,8 @@ $$
 \end{align}
 $$
 
-Let's solve for $\hat{K}$ given model parameters $\alpha = 0.3$ and $\beta = 0.5$
+
+For parameters $\alpha = 0.3$ and $\beta = 0.5$, let's compute  $\hat{K}$:
 
 ```{code-cell} ipython3
 # parameters
@@ -387,7 +408,9 @@ D_hat = 0.
 K_hat = ((1 - τ_hat) * (1 - α) * (1 - β)) ** (1 / (1 - α))
 K_hat
 ```
-When the steady state capital stock is known, we can calculate other quantities in equilibrium. Let's first define useful Python helper functions that transform between quantities using equilibrium conditions
+Knowing $\hat K$, we can calculate other equilibrium objects. 
+
+Let's first define useful Python helper functions to help us.
 
 ```{code-cell} ipython3
 @njit
@@ -448,6 +471,8 @@ init_ss = np.array([K_hat, Y_hat, Cy_hat, Co_hat,     # quantities
                     τ_hat, D_hat, G_hat               # policies
                     ])
 ```
+
+<font color='red'>Zejin: I stopped my editing here.  Jan 20. You have done a great job. </font>
 
 ### Transitions
 
