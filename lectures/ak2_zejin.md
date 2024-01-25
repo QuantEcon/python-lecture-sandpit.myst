@@ -593,21 +593,21 @@ class ClosedFormTrans:
         # quantities
         for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
             ax = axs[i//3, i%3]
-            ax.plot(range(T+1), quant_seq[:, i])
+            ax.plot(range(T+1), quant_seq[:T+1, i])
             ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
             ax.set_title(name)
 
         # prices
         for i, name in enumerate(['W', 'r']):
             ax = axs[(i+4)//3, (i+4)%3]
-            ax.plot(range(T+1), price_seq[:, i])
+            ax.plot(range(T+1), price_seq[:T+1, i])
             ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
             ax.set_title(name)
 
         # policies
         for i, name in enumerate(['τ', 'D', 'G']):
             ax = axs[(i+6)//3, (i+6)%3]
-            ax.plot(range(T+1), policy_seq[:-1, i])
+            ax.plot(range(T+1), policy_seq[:T+1, i])
             ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
             ax.set_title(name)
 ```
