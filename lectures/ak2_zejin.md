@@ -978,6 +978,7 @@ ak2.simulate(δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol)
 ak2.plot()
 ```
 
+<font color='red'>Note to Tom: Zejin's Jan 24th edits stop here.</font>
 
 ## Work in two periods
 
