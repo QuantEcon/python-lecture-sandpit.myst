@@ -34,7 +34,7 @@ This lecture is presents the life cycle model consisting of overlapping generati
 Kotlikoff (1987) {cite}`auerbach1987dynamic`.
 
 Auerbach and 
-Kotlikoff (1987) use the two period model as a warm-up for their analysis of  overlapping generation models of long-lived people that is the main topic of their book.
+Kotlikoff (1987) use their  two period model as a warm-up for their analysis of  overlapping generation models of long-lived people that is the main topic of their book.
 
 Their model of two-period lived overlapping generations is a useful warmup because 
 
@@ -88,24 +88,25 @@ where
  * $\delta_y$ -- time-invariant lump sum tax on each young person
  * $\delta_o$ -- time-invariant lump sum tax on each old person
   
-An **allocation** is a collection of sequences $\{C_{yt}, C_{ot}, K_{t+1}, Y_t, G_t\}_{t=0}^\infty $, where constituents
-of the sequence include output and factors of production
+An **allocation** is a collection of sequences $\{C_{yt}, C_{ot}, K_{t+1}, L_t,  Y_t, G_t\}_{t=0}^\infty $; constituents
+of the sequence include 
 
  * $K_t$ -- physical capital per capita
  * $L_t$ -- labor per capita
  * $Y_t$ -- output per capita
 
-and also consumption and physical  investment
+and also
 
 * $C_{yt}$ -- consumption of young person at time $t \geq 0$
 * $C_{ot}$ -- consumption of old person at time $t \geq 0$
 * $K_{t+1} - K_t \equiv I_t $ -- investment in physical capital at time $t \geq 0$
+* $G_t$ -- government purchases
 
 National income and product accounts consist of  a sequence of equalities
 
 * $Y_t = C_{yt} + C_{ot} + (K_{t+1} - K_t) + G_t, \quad t \geq 0$ 
 
-A **price system** is a pair of sequences $\{W_t, r_t\}_{t=0}^\infty$, where constituents of the sequence include rental rates for the factors of production
+A **price system** is a pair of sequences $\{W_t, r_t\}_{t=0}^\infty$; constituents of the sequence include rental rates for the factors of production
 
 * $W_t$ -- rental rate for labor at time $t \geq 0$
 * $r_t$ -- rental rate for capital at time $t \geq 0$
@@ -178,17 +179,21 @@ what we want here**
 
 ## Households' Activities in Factor Markets
 
-* Old people:    At time $t \geq 0$, an old person brings $K_t$ and $D_t$ into the period, rents capital to a representative  firm for $r_{t} K_t$, pays taxes $\tau_t (K_t+ D_t)$ on its rental and interest earnings,  pays a lump sum tax or receives receives a lump sum subsidy from the government, and sells $K_t$ to a young person.  
+**Old people:**
+
+At each  $t \geq 0$, an old person brings $K_t$ and $D_t$ into the period, rents capital to a representative  firm for $r_{t} K_t$, pays taxes $\tau_t (K_t+ D_t)$ on its rental and interest earnings,  pays a lump sum tax or receives receives a lump sum subsidy from the government, and sells $K_t$ to a young person.  
 
 
-* Young people: At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays  taxes $\tau_t W_t$ on its labor earnings plus the lump sum  tax $\delta_y$ to the goverment, spends $C_{yt}$ on consumption, and  acquires non-negative assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and one-period government bonds $D_{t+1}$  that mature at $t+1$.
+  **Young people:**
+  
+At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays  taxes $\tau_t W_t$ on its labor earnings plus the lump sum  tax $\delta_y$ to the goverment, spends $C_{yt}$ on consumption, and  acquires non-negative assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and one-period government bonds $D_{t+1}$  that mature at $t+1$.
 
 
 
 
 ## Representative firm's problem 
 
-The firm hires labor services from  young households  at competitive wage  rate $W_t$  and capital from old  households at competitive rental rate
+The firm hires labor services from  young households  at competitive wage  rate $W_t$  and hires  capital from old  households at competitive rental rate
 $r_t$. 
 
 The rental rate on capital $r_t$ equals the interest rate on government one-period bonds.
@@ -324,17 +329,16 @@ $$ (eq:optsavingsplan)
 To begin our analysis of  equilibrium outcomes, we'll study the special case of the model with which  Auerbach and 
 Kotlikoff (1987) {cite}`auerbach1987dynamic` began their analysis in chapter 2.
 
-It can be solved by hand.  
+It can be solved by hand. 
 
-After we derive this closed form solution, we'll pretend that we don't know and will compute an equilibrium outcome  paths by first formulating it as a fixed point
-of a mapping from  sequences of factor prices
-and tax rates to sequences of factor prices and tax rates, and then iterating to convergence on that mapping.
+We shall do that next. 
+
+After we derive a closed form solution, we'll pretend that we don't know and will compute an equilibrium outcome  paths by first formulating it as a fixed point of a mapping from  sequences of factor prices and tax rates to sequences of factor prices and tax rates, and then iterating to convergence on that mapping.
 
 
 ## Closed form solution
 
-To get the special chapter 2 case of  Auerbach and 
-Kotlikoff (1987) {cite}`auerbach1987dynamic`, we  set both $\delta_o$ and $\delta_y$ to zero.
+To get the special chapter 2 case of  Auerbach and Kotlikoff (1987) {cite}`auerbach1987dynamic`, we  set both $\delta_o$ and $\delta_y$ to zero.
 
 As our special case of {eq}`eq:optconsplan`, we compute the following consumption-savings plan for a representative young person:
 
@@ -354,7 +358,7 @@ $$ (eq:Klawclosed)
 
 ### Steady states
 
-From {eq}`eq:Klawclosed` and the government budget constraint {eq}`eq:govbudgetsequence`, we compute **steady state values**   $\hat K, \hat D, \hat T$ that are time-invariant:
+From {eq}`eq:Klawclosed` and the government budget constraint {eq}`eq:govbudgetsequence`, we compute **time-invariant** or **steady state values**   $\hat K, \hat D, \hat T$:
 
 $$
 \begin{align}
@@ -373,10 +377,10 @@ $$
 \end{align}
 $$
 
-Let's take a numerical example in which
+Let's take an example in which
 
 1. there is no initial government debt, $D_t=0$,
-2. government consumption $G_t$ equals $15\%$ of the output $Y_t$
+2. government consumption $G_t$ equals $15\%$ of output $Y_t$
 
 Our formulas for steady-state values  tell us that
 
@@ -406,7 +410,7 @@ K_hat
 ```
 Knowing $\hat K$, we can calculate other equilibrium objects. 
 
-Let's first define useful Python helper functions to help us.
+Let's first define  some Python helper functions.
 
 ```{code-cell} ipython3
 @njit
@@ -438,14 +442,14 @@ def K_to_C(K, D, τ, r, α, β):
     return Cy, Co
 ```
 
-We can use these helper functions to obtain steady state values $\hat{Y}$, $\hat{r}$, and $\hat{W}$ given $\hat{K}$ and $\hat{r}$.
+We can use these helper functions to obtain steady state values $\hat{Y}$, $\hat{r}$, and $\hat{W}$ that are associated with  steady state values $\hat{K}$ and $\hat{r}$.
 
 ```{code-cell} ipython3
 Y_hat, r_hat, W_hat = K_to_Y(K_hat, α), K_to_r(K_hat, α), K_to_W(K_hat, α)
 Y_hat, r_hat, W_hat
 ```
 
-As the steady state government debt $\hat{D}$ is assumed to be $0$, all the tax collection will be used for government expenditure
+Since  steady state government debt $\hat{D}$ is  $0$, all taxes are  used to pay for government expenditures
 
 ```{code-cell} ipython3
 G_hat = τ_hat * Y_hat
@@ -471,7 +475,12 @@ init_ss = np.array([K_hat, Y_hat, Cy_hat, Co_hat,     # quantities
 
 ### Transitions
 
-Above we characterized an initial steady state of the economy, which we will use as the starting point of the transitional path driven by some fiscal policy changes.
+We have computed a steady state.
+
+
+<font color='red'>Tom: edit starting here to state clearly what the policy experiment is in terms of the sequence. </font>
+
+We'll use it as a starting point for a fixed-point algorithm designed to compute a transition path from one steady state of the transitional path driven by some fiscal policy changes.
 
 Here we define a Python class `ClosedFormTrans` which computes length $T$ transitional path of the economy in response to a particular fiscal policy change. It takes three keyword arguments, `τ_pol`, `D_pol`, and `G_pol`, which are the sequences of tax rate, government debt level, and government expenditure level respectively. In each policy experiment below, we will pass two out of three as inputs that fully depict a fiscal policy change, and the remaining one policy variable sequence will be determined by satisfying the government budget constraint.
 
