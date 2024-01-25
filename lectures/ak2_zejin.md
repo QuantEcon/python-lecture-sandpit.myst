@@ -183,8 +183,6 @@ what we want here**
 
 * Young people: At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays  taxes $\tau_t W_t$ on its labor earnings plus the lump sum  tax $\delta_y$ to the goverment, spends $C_{yt}$ on consumption, and  acquires non-negative assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and one-period government bonds $D_{t+1}$  that mature at $t+1$.
 
-<font color='red'>Tom's note to Zejin: I had made mistakes in the two previous sentences. I tried to fix them! Jan 20. </font>
-
 
 
 
@@ -310,7 +308,7 @@ A_{t+1} = (1-\beta) [ (1- \tau_t) W_t - \delta_y] + \beta \frac{\delta_o}{1 + r_
 $$ (eq:optsavingsplan)
 
 
-
+(sec-equilibrium)=
 ## Equilbrium 
 
 **Definition:** An equilibrium is an allocation,  a government policy, and a price system with the properties that
@@ -332,8 +330,6 @@ After we derive this closed form solution, we'll pretend that we don't know and 
 of a mapping from  sequences of factor prices
 and tax rates to sequences of factor prices and tax rates, and then iterating to convergence on that mapping.
 
-
-<font color='red'>I rewrote the preceding several sentences. </font>
 
 ## Closed form solution
 
@@ -472,7 +468,6 @@ init_ss = np.array([K_hat, Y_hat, Cy_hat, Co_hat,     # quantities
                     ])
 ```
 
-<font color='red'>Zejin: I stopped my editing here.  Jan 20. You have done a great job. </font>
 
 ### Transitions
 
@@ -612,6 +607,7 @@ class ClosedFormTrans:
             ax.set_title(name)
 ```
 
+(exp-tax-cut)=
 ### Experiment 1: Tax cut
 
 To see the power of `ClosedFormTrans`, let's first experiment with the following fiscal policy change:
@@ -725,35 +721,37 @@ closed4.plot()
 
 ## A general method of computation
 
+In the above demonstration, we study the dynamic transitions of the economy associated with various fiscal policy experiments. In these experiments, we maintain the assumption that lump sum taxes are absent ($\delta_{yt}=0, \delta_{ot}=0$).
 
+In this section, we investigate the transition dynamics when the lump sum taxes are present. In fact, this will be a useful tool for the government to facilitate transfers between cohorts.
 
-Given model parameters {$\alpha$, $\beta$}, a competitive equilibrium is characterized by
+Noticeably, activating lump sum taxes will break down the closed form solution which we use for solving the model in the previous sections, as now the optimal consumption and saving plans involve future prices and tax rates. As a result, we switch to "guess and verify" for finding numerical solutions.
 
-1. sequences of optimal consumptions $\{C_{yt}, C_{ot}\}$
-2. sequences of prices $\{W_t, r_t\}$
-3. sequences of aggregate capital and output $\{K_t, Y_t\}$
-4. sequences of tax rates, assets (debt), government consumption $\{\tau_t, A_t^g, G_t\}$
+We elaborate on the equilibrium conditions as we define in section {ref}`sec-equilibrium`
+
+**Definition:** Given model parameters {$\alpha$, $\beta$}, a competitive equilibrium is characterized by
+
+* sequences of optimal consumptions $\{C_{yt}, C_{ot}\}$
+* sequences of prices $\{W_t, r_t\}$
+* sequences of capital stock and output $\{K_t, Y_t\}$
+* sequences of tax rates, assets (debt), government consumption $\{\tau_t, D_t, G_t\, \delta_{yt}, \delta_{ot}\}$
 
 such that
 
-1. given the price sequences and government policy, the consumption choices maximize the household utility
-2. the consumption and the government policy satisfy the government budget constraints
+* given the price sequences and government policy, the consumption choices maximize the household utility
+* the consumption and the government policy satisfy the government budget constraints
 
+The equilibrium transition path can be found by "guess and verify"
 
+For instance, in {ref}`exp-tax-cut`, the sequences $\{D_t\}_{t=0}^{T}$ and $\{G_t\}_{t=0}^{T}$ are given. We also know the lump sum tax policies we intend to implement, $\{\delta_{yt}, \delta_{ot}\}_{t=0}^{T}$. We can solve for sequences of other variables in equilibrium by the following steps
 
-Focus on a particular fiscal policy experiment that we consider here
-
-1. $\tau_0 = 0.1$
-2. $A_t^g = A^g_1$
-3. $G_t = \hat{G}$
-
-The equilibrium transition path can be found by
-
-1. giving guesses on the prices $\{W_t, r_t\}$ and tax rates $\{\tau_t\}$
-2. solve for individual optimization problem
-3. solve for transition of aggregate capital
-4. update the guesses for prices and tax rates
+1. take guesses on the prices $\{W_t, r_t\}_{t=0}^{T}$ and tax rates $\{\tau_t\}_{t=0}^{T}$
+2. solve for optimal consumption and saving plans, treating the guesses of future prices and taxes as true
+3. solve for transitions of capital stock
+4. update the guesses for prices and tax rates with the values implied by the equilibrium conditions
 5. iterate until convergence
+
+Below we implement the "guess and verify" computation. We start by defining the Cobb-Douglas utility function
 
 ```{code-cell} ipython3
 @njit
@@ -762,165 +760,223 @@ def U(Cy, Co, β):
     return (Cy ** β) * (Co ** (1-β))
 ```
 
-
-
-`quantecon.optimize.brent_max`:
-
-1. quantecon source code: https://github.com/QuantEcon/QuantEcon.py/blob/8dbd7b2b4063f2caa89230fa6481b7eae5a91dec/quantecon/optimize/scalar_maximization.py#L5
-
-```{code-cell} ipython3
-brent_max?
-```
+We use `Cy_val` to compute the lifetime value of choosing an arbitrary consumption plan, $C_y$, given the intertemporal budget constraint
 
 ```{code-cell} ipython3
 @njit
-def Cy_val(Cy, W, r_next, τ, τ_next, β):
+def Cy_val(Cy, W, r_next, τ, τ_next, δy, δo_next, β):
 
     # Co given by the budget constraint
-    Co = (W * (1 - τ) - Cy) * (1 + r_next * (1 - τ_next))
+    Co = (W * (1 - τ) - δy - Cy) * (1 + r_next * (1 - τ_next)) - δo_next
 
     return U(Cy, Co, β)
 ```
 
+Then we can find the optimal consumption plan $C_y^*$ by maximizing `Cy_val`.
+
+Here is an example of finding the optimal consumption $C_y$ in the steady state as we discussed before, with $\delta_y=\delta_o=0$
+
 ```{code-cell} ipython3
 W, r_next, τ, τ_next = W_hat, r_hat, τ_hat, τ_hat
-Cy_opt, U_opt, _ = brent_max(Cy_val,         # maximand
-                             1e-3,           # lower bound
-                             W*(1-τ)-1e-3,   # upper bound
-                             args=(W, r_next, τ, τ_next, β))
+δy, δo_next = 0, 0      # in steady state we assumed no lump sum tax
+
+Cy_opt, U_opt, _ = brent_max(Cy_val,            # maximand
+                             1e-3,              # lower bound
+                             W*(1-τ)-δy-1e-3,   # upper bound
+                             args=(W, r_next, τ, τ_next, δy, δo_next, β))
 
 Cy_opt, U_opt
 ```
 
-
-
-Compare with the closed form solution.
+Below we define the class `AK2` that solves for the transitional paths of the economy, given any fiscal policy experiment allowing for nonzero lump sum taxes
 
 ```{code-cell} ipython3
-Cy_hat
+class AK2():
+
+    def __init__(self, T, init_ss, α, β):
+
+        self.T = T
+        self.init_ss = init_ss
+        self.α, self.β = α, β
+
+    def simulate(self, δy_seq, δo_seq,
+                       τ_pol=None, D_pol=None, G_pol=None,
+                       verbose=False, max_iter=500, tol=1e-5):
+
+        T = self.T
+        α, β = self.α, self.β
+
+        K_hat, Y_hat, Cy_hat, Co_hat = self.init_ss[:4]
+        W_hat, r_hat = self.init_ss[4:6]
+        τ_hat, D_hat, G_hat = self.init_ss[6:9]
+
+        # K, Y, Cy, Co
+        quant_seq = np.empty((T+2, 4))
+
+        # W, r
+        price_seq = np.empty((T+2, 2))
+
+        # τ, D, G
+        policy_seq = np.empty((T+2, 3))
+        policy_seq[:, 1] = D_pol
+        policy_seq[:, 2] = G_pol
+
+        # initial guesses of prices
+        price_seq[:, 0] = np.ones(T+2) * W_hat
+        price_seq[:, 1] = np.ones(T+2) * r_hat
+
+        # initial guesses of policies
+        policy_seq[:, 0] = np.ones(T+2) * τ_hat
+
+        # t=0, starting from steady state
+        quant_seq[0, :2] = K_hat, Y_hat
+
+        if verbose:
+            # prepare to plot iterations until convergence
+            fig, axs = plt.subplots(1, 3, figsize=(14, 4))
+
+        # containers for checking convergence (Don't use np.copy)
+        price_seq_old = np.empty_like(price_seq)
+        policy_seq_old = np.empty_like(policy_seq)
+
+        # start iteration
+        i_iter = 0
+        while True:
+
+            # plot current prices at ith iteration
+            if verbose:
+                for i, name in enumerate(['W', 'r']):
+                    axs[i].plot(range(T+1), price_seq[:T+1, i])
+                    axs[i].set_title(name)
+                axs[2].plot(range(T+1), policy_seq[:T+1, 0])
+                axs[2].set_title('τ')
+
+            # store old prices from last iteration
+            price_seq_old[:] = price_seq
+            policy_seq_old[:] = policy_seq
+
+            # start update quantities and prices
+            for t in range(T+1):
+                K, Y = quant_seq[t, :2]
+                W, r = price_seq[t, :]
+                r_next = price_seq[t+1, 1]
+                τ, D, G = policy_seq[t, :]
+                τ_next, D_next, G_next = policy_seq[t+1, :]
+                δy, δo, δy_next, δo_next = δy_seq[t], δo_seq[t], δy_seq[t+1], δo_seq[t+1]
+
+                # consumption optimization
+                Co = (1 + r * (1 - τ)) * (K + D) - δo
+
+                out = brent_max(Cy_val, 1e-3, W*(1-τ)-δy-1e-3,
+                                args=(W, r_next, τ, τ_next,
+                                      δy, δo_next, β))
+                Cy = out[0]
+
+                quant_seq[t, 2:] = Cy, Co
+                τ_num = ((1 + r) * D + G - D_next - δy - δo)
+                τ_denom = (Y + r * D)
+                policy_seq[t, 0] = τ_num / τ_denom
+
+                # private saving, Ap[t+1]
+                A_next = W * (1 - τ) - δy - Cy
+
+                # asset next period
+                K_next = A_next - D_next
+                W_next, r_next, Y_next = K_to_W(K_next, α), K_to_r(K_next, α), K_to_Y(K_next, α)
+
+                quant_seq[t+1, :2] = K_next, Y_next
+                # note that here the updated guesses will be used immediately!
+                price_seq[t+1, :] = W_next, r_next
+
+            # one iteration finishes
+            i_iter += 1
+
+            # check convergence
+            if (np.max(np.abs(price_seq_old - price_seq)) < tol) & \
+               (np.max(np.abs(policy_seq_old - policy_seq)) < tol):
+                print(f"Converge using {i_iter} iterations")
+                break
+
+            if i_iter > max_iter:
+                print(f"Fail to converge using {i_iter} iterations")
+                break
+        
+        self.quant_seq = quant_seq
+        self.price_seq = price_seq
+        self.policy_seq = policy_seq
+
+    def plot(self):
+
+        quant_seq = self.quant_seq
+        price_seq = self.price_seq
+        policy_seq = self.policy_seq
+
+        fig, axs = plt.subplots(3, 3, figsize=(14, 10))
+
+        # quantities
+        for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
+            ax = axs[i//3, i%3]
+            ax.plot(range(T+1), quant_seq[:T+1, i])
+            ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
+            ax.set_title(name)
+
+        # prices
+        for i, name in enumerate(['W', 'r']):
+            ax = axs[(i+4)//3, (i+4)%3]
+            ax.plot(range(T+1), price_seq[:T+1, i])
+            ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
+            ax.set_title(name)
+
+        # policies
+        for i, name in enumerate(['τ', 'D', 'G']):
+            ax = axs[(i+6)//3, (i+6)%3]
+            ax.plot(range(T+1), policy_seq[:T+1, i])
+            ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
+            ax.set_title(name)
 ```
 
-
-
-which is
+Initialize an instance of class `AK2`
 
 ```{code-cell} ipython3
-W * β * (1 - τ)
+ak2 = AK2(T, init_ss, α, β)
 ```
 
-
-
-Verify that the optimal $C_{y,t}$ does not depend on future prices or policies (but $C_{o,t+1}$ will).
+We first examine that the "guess and verify" method leads to the same numerical results as we obtain with the cloased form solution when lump sum taxes are muted
 
 ```{code-cell} ipython3
-r_next, τ_next = r_hat * 0.5, τ_hat * 0.5
-brent_max(Cy_val, 1e-3, W*(1-τ)-1e-3, args=(W, r_next, τ, τ_next, β))
-```
+δy_seq = np.ones(T+2) * 0.
+δo_seq = np.ones(T+2) * 0.
 
-```{code-cell} ipython3
-T = 20
-tax_cut = 1 / 3
-
-K_hat, Y_hat, Cy_hat, Co_hat = init_ss[:4]
-W_hat, r_hat = init_ss[4:6]
-τ_hat, Ag_hat, G_hat = init_ss[6:9]
-
-# initial guesses of prices
-W_seq = np.ones(T+2) * W_hat
-r_seq = np.ones(T+2) * r_hat
-
-# initial guesses of policies
-τ_seq = np.ones(T+2) * τ_hat
-
-Ag_seq = np.zeros(T+1)
-G_seq = np.ones(T+1) * G_hat
-
-# containers
-K_seq = np.empty(T+2)
-Y_seq = np.empty(T+2)
-C_seq = np.empty((T+1, 2))
-
-# t=0, starting from steady state
-K_seq[0], Y_seq[0] = K_hat, Y_hat
-W_seq[0], r_seq[0] = W_hat, r_hat
+D_pol = np.zeros(T+2)
+G_pol = np.ones(T+2) * G_hat
 
 # tax cut
-τ_seq[0] = τ_hat * (1 - tax_cut)
-Ag1 = Ag_hat * (1 + r_seq[0] * (1 - τ_seq[0])) + τ_seq[0] * Y_hat - G_hat
-Ag_seq[1:] = Ag1
-
-# prepare to plot iterations until convergence
-fig, axs = plt.subplots(1, 3, figsize=(14, 4))
-
-# containers for checking convergence (Don't use np.copy)
-W_seq_old = np.empty_like(W_seq)
-r_seq_old = np.empty_like(r_seq)
-τ_seq_old = np.empty_like(τ_seq)
-
-max_iter = 500
-i_iter = 0
-tol = 1e-5 # tolerance for convergence
-
-# start iteration
-while True:
-
-    # plot current prices at ith iteration
-    for i, seq in enumerate([W_seq, r_seq, τ_seq]):
-        axs[i].plot(range(T+2), seq)
-
-    # store old prices from last iteration
-    W_seq_old[:] = W_seq
-    r_seq_old[:] = r_seq
-    τ_seq_old[:] = τ_seq
-
-    # start update quantities and prices
-    for t in range(T+1):
-
-        # note that r_seq[t+1] and τ_seq[t+1] are guesses!
-        W, r_next, τ, τ_next = W_seq[t], r_seq[t+1], τ_seq[t], τ_seq[t+1]
-
-        # consumption optimization
-        out = brent_max(Cy_val, 1e-3, W*(1-τ)-1e-3, args=(W, r_next, τ, τ_next, β))
-        Cy = out[0]
-
-        # private saving, Ap[t+1]
-        Ap_next = W * (1 - τ) - Cy
-
-        # asset next period
-        K_next = Ap_next + Ag1
-        W_next, r_next, Y_next = K_to_W(K_next, α), K_to_r(K_next, α), K_to_Y(K_next, α)
-
-        K_seq[t+1] = K_next
-        # note that here the updated guesses will be used immediately!
-        W_seq[t+1] = W_next
-        r_seq[t+1] = r_next
-        τ_seq[t+1] = (G_hat - r_next * Ag1) / (Y_next - r_next * Ag1)
-
-    # one iteration finishes
-    i_iter += 1
-
-    # check convergence
-    if (np.max(np.abs(W_seq_old - W_seq)) < tol) & \
-       (np.max(np.abs(r_seq_old - r_seq)) < tol) & \
-       (np.max(np.abs(τ_seq_old - τ_seq)) < tol):
-        print(f"Converge using {i_iter} iterations")
-        break
-
-    if i_iter > max_iter:
-        print(f"Fail to converge using {i_iter} iterations")
-        break
-
-# compare to the closed form solutions
-axs[0].plot(range(T+1), price_seq[:, 0], 'r-*')
-axs[0].set_title('W')
-axs[1].plot(range(T+1), price_seq[:, 1], 'r-*')
-axs[1].set_title('r')
-axs[2].plot(range(T+1), policy_seq[:, 0], 'r-*')
-axs[2].set_title('τ')
-
-plt.show();
+τ0 = τ_hat * (1 - 1/3)
+D1 = D_hat * (1 + r_hat * (1 - τ0)) + G_hat - τ0 * Y_hat - δy_seq[0] - δo_seq[0]
+D_pol[0] = D_hat
+D_pol[1:] = D1
 ```
 
+```{code-cell} ipython3
+ak2.simulate(δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol, verbose=True)
+```
+
+```{code-cell} ipython3
+ak2.plot()
+```
+
+With the more general laboratory at hand, we can now turn on the lump sum taxes. For example, let's try the same tax cut experiment, but now the government will increase the lump sum taxes for both the young and old $\delta_{yt}=\delta_{ot}=0.1, t\geq0$. As a result, we see that the "crowding out" effect is mitigated.
+
+```{code-cell} ipython3
+δy_seq = np.ones(T+2) * 0.01
+δo_seq = np.ones(T+2) * 0.01
+
+D1 = D_hat * (1 + r_hat * (1 - τ0)) + G_hat - τ0 * Y_hat - δy_seq[0] - δo_seq[0]
+D_pol[1:] = D1
+
+ak2.simulate(δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol)
+ak2.plot()
+```
 
 
 ## Work in two periods
