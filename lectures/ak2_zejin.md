@@ -475,14 +475,21 @@ init_ss = np.array([K_hat, Y_hat, Cy_hat, Co_hat,     # quantities
 
 ### Transitions
 
-We have computed a steady state.
+<font color='red'>Zejin: I tried to edit the following part to describe the fiscal policy experiment and the objects we are interested in computing. </font>
 
+We have computed a steady state, in which the agents believe that the current fiscal policy will last forever.
 
 <font color='red'>Tom: edit starting here to state clearly what the policy experiment is in terms of the sequence. </font>
 
-We'll use it as a starting point for a fixed-point algorithm designed to compute a transition path from one steady state of the transitional path driven by some fiscal policy changes.
+We'll use it as a starting point for trajectory paths of the economy driven by some fiscal policy changes. We will index the day of policy change announcement by $t=0$, after which the agents will adjust their optimal consumption and saving plans differently from the steady state values in response to the unexpected policy shock. While the fiscal policy change itself is regareded as a shock, the sequences of prices and tax rates will be foreseen by the households assumed with rational expectation, especially for the representative young households who can then make their optimal saving plans.
 
-Here we define a Python class `ClosedFormTrans` which computes length $T$ transitional path of the economy in response to a particular fiscal policy change. It takes three keyword arguments, `τ_pol`, `D_pol`, and `G_pol`, which are the sequences of tax rate, government debt level, and government expenditure level respectively. In each policy experiment below, we will pass two out of three as inputs that fully depict a fiscal policy change, and the remaining one policy variable sequence will be determined by satisfying the government budget constraint.
+As the capital stock and other economy aggregates adjust to the fiscal policy change over time, the economy will eventually converge to a new steady state.
+
+In general, we can find the whole transitional path from the old steady state to the new steady state by employing a fixed-point algorithm. But in this simple case with closed form solutions, we are able to directly simulate the paths forward from the initial steady state.
+
+Here we define a Python class `ClosedFormTrans` which computes length $T$ transitional path of the economy in response to a particular fiscal policy change. We choose $T$ big enough such that we believe the economy will be close to the new steady state after $T$ periods. The class takes three keyword arguments, `τ_pol`, `D_pol`, and `G_pol`, which are the sequences of tax rate, government debt level, and government purchases respectively. In each policy experiment below, we will pass two out of three as inputs that fully depict a fiscal policy change, and the remaining one policy variable sequence will be determined by satisfying the government budget constraint.
+
+When simulating the transitional paths, it is useful to keep in mind what are the **state variables**, such as $K_t, Y_t, D_t, W_t, r_t$, versus the **control variables** including $C_{yt}, C_{ot}, \tau_{t}, G_t$. 
 
 ```{code-cell} ipython3
 class ClosedFormTrans:
