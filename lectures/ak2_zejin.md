@@ -79,6 +79,8 @@ Initial conditions set from outside the model at time $t=0$ are
   
 $K_0$ and $D_0$ are both measured in units of time $0$ goods.
 
+<font color='red'>Zejin: Tom, I allowed the Python class to analyze fiscal policy change where \delta_o and \delta_y can vary across time. We might need to decide whether we want to keep them as scalars or relax them for this lecture.</font>
+
 A government **policy** is a triple  of sequences $\{G_t, D_t, \tau_t\}_{t=0}^\infty $ and a pair of scalars $(\delta_o, \delta_y)$,
 where  
 
@@ -739,31 +741,31 @@ closed4.plot()
 
 In the above demonstration, we study the dynamic transitions of the economy associated with various fiscal policy experiments. In these experiments, we maintain the assumption that lump sum taxes are absent ($\delta_{yt}=0, \delta_{ot}=0$).
 
-In this section, we investigate the transition dynamics when the lump sum taxes are present. In fact, this will be a useful tool for the government to facilitate transfers between cohorts.
+In this section, we investigate the transition dynamics when the lump sum taxes are present. In fact, the lump sum taxation will be a useful tool for the government to facilitate transfers between cohorts.
 
-Noticeably, activating lump sum taxes will break down the closed form solution which we use for solving the model in the previous sections, as now the optimal consumption and saving plans involve future prices and tax rates. As a result, we switch to "guess and verify" for finding numerical solutions.
+Noticeably, activating lump sum taxes will break down the closed form solution which we use for simulating the transitional paths in the previous sections, as now the optimal consumption and saving plans depend on future prices and tax rates. Therefore, we switch to a more general way of solving for the transitional paths, which is to find the model solution as a fixed point.
 
-We elaborate on the equilibrium conditions as we define in section {ref}`sec-equilibrium`
+We elaborate on the equilibrium conditions as we define in section {ref}`sec-equilibrium`, which characterize the fixed point
 
-**Definition:** Given model parameters {$\alpha$, $\beta$}, a competitive equilibrium is characterized by
+**Definition:** Given model parameters $\{\alpha$, $\beta\}$, a competitive equilibrium is characterized by
 
 * sequences of optimal consumptions $\{C_{yt}, C_{ot}\}$
 * sequences of prices $\{W_t, r_t\}$
 * sequences of capital stock and output $\{K_t, Y_t\}$
-* sequences of tax rates, assets (debt), government consumption $\{\tau_t, D_t, G_t\, \delta_{yt}, \delta_{ot}\}$
+* sequences of tax rates, government assets (debt), government purchases $\{\tau_t, D_t, G_t\, \delta_{yt}, \delta_{ot}\}$
 
 such that
 
-* given the price sequences and government policy, the consumption choices maximize the household utility
-* the consumption and the government policy satisfy the government budget constraints
+* given the price system and government fiscal policy, the household consumption plans are optimal
+* the government budget constraints are satisfied for all $t$
 
-The equilibrium transition path can be found by "guess and verify"
+The equilibrium transitional path can be found by "guess and verify"
 
-For instance, in {ref}`exp-tax-cut`, the sequences $\{D_t\}_{t=0}^{T}$ and $\{G_t\}_{t=0}^{T}$ are given. We also know the lump sum tax policies we intend to implement, $\{\delta_{yt}, \delta_{ot}\}_{t=0}^{T}$. We can solve for sequences of other variables in equilibrium by the following steps
+Taking {ref}`exp-tax-cut` for instance, the sequences $\{D_t\}_{t=0}^{T}$ and $\{G_t\}_{t=0}^{T}$ are pre-determined. In addition, we assume that the lump sum taxes $\{\delta_{yt}, \delta_{ot}\}_{t=0}^{T}$ are given and known to the households. We can solve for sequences of other equilibrium objects following the steps below
 
 1. take guesses on the prices $\{W_t, r_t\}_{t=0}^{T}$ and tax rates $\{\tau_t\}_{t=0}^{T}$
-2. solve for optimal consumption and saving plans, treating the guesses of future prices and taxes as true
-3. solve for transitions of capital stock
+2. solve for optimal consumption and saving plans $\{C_{yt}, C_{ot}\}_{t=0}^{T}$, treating the guesses of future prices and taxes as true
+3. solve for transitional dynamics of the capital stock $\{K_t\}_{t=0}^{T}$
 4. update the guesses for prices and tax rates with the values implied by the equilibrium conditions
 5. iterate until convergence
 
@@ -776,7 +778,7 @@ def U(Cy, Co, β):
     return (Cy ** β) * (Co ** (1-β))
 ```
 
-We use `Cy_val` to compute the lifetime value of choosing an arbitrary consumption plan, $C_y$, given the intertemporal budget constraint
+We use `Cy_val` to compute the lifetime value of choosing an arbitrary consumption plan, $C_y$, given the intertemporal budget constraint. Note that it requires knowledge about future prices $r_{t+1}$ and tax rate $\tau_{t+1}$.
 
 ```{code-cell} ipython3
 @njit
@@ -788,13 +790,13 @@ def Cy_val(Cy, W, r_next, τ, τ_next, δy, δo_next, β):
     return U(Cy, Co, β)
 ```
 
-Then we can find the optimal consumption plan $C_y^*$ by maximizing `Cy_val`.
+The optimal consumption plan $C_y^*$ can be found by maximizing `Cy_val`.
 
-Here is an example of finding the optimal consumption $C_y$ in the steady state as we discussed before, with $\delta_y=\delta_o=0$
+Here is an example of finding the optimal consumption $C_y^*=\hat{C}_y$ in the steady state as we discussed before, with $\delta_y=\delta_o=0$
 
 ```{code-cell} ipython3
 W, r_next, τ, τ_next = W_hat, r_hat, τ_hat, τ_hat
-δy, δo_next = 0, 0      # in steady state we assumed no lump sum tax
+δy, δo_next = 0, 0
 
 Cy_opt, U_opt, _ = brent_max(Cy_val,            # maximand
                              1e-3,              # lower bound
@@ -804,7 +806,7 @@ Cy_opt, U_opt, _ = brent_max(Cy_val,            # maximand
 Cy_opt, U_opt
 ```
 
-Below we define the class `AK2` that solves for the transitional paths of the economy, given any fiscal policy experiment allowing for nonzero lump sum taxes
+Below we define a Python class `AK2` that solves for the transitional paths of the economy using the fixed-point algorithm. It can handle any fiscal policy experiment including nonzero lump sum taxations
 
 ```{code-cell} ipython3
 class AK2():
@@ -951,13 +953,13 @@ class AK2():
             ax.set_title(name)
 ```
 
-Initialize an instance of class `AK2`
+We can initialize an instance of class `AK2` given the model parameters $\{\alpha, \beta\}$ and then use it for various fiscal policy experiments.
 
 ```{code-cell} ipython3
 ak2 = AK2(T, init_ss, α, β)
 ```
 
-We first examine that the "guess and verify" method leads to the same numerical results as we obtain with the cloased form solution when lump sum taxes are muted
+We first examine that the "guess and verify" method leads to the same numerical results as we obtain with the closed form solution when lump sum taxes are muted
 
 ```{code-cell} ipython3
 δy_seq = np.ones(T+2) * 0.
@@ -981,7 +983,7 @@ ak2.simulate(δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol, verbose=True)
 ak2.plot()
 ```
 
-With the more general laboratory at hand, we can now turn on the lump sum taxes. For example, let's try the same tax cut experiment, but now the government will increase the lump sum taxes for both the young and old $\delta_{yt}=\delta_{ot}=0.1, t\geq0$. As a result, we see that the "crowding out" effect is mitigated.
+Next, we can now try to turn on the lump sum taxes with the more general laboratory at hand. For example, let's try the same fiscal policy experiment in {ref}`exp-tax-cut`, but slightly modify it and assume that the government will in addition increase the lump sum taxes for both the young and old households $\delta_{yt}=\delta_{ot}=0.1, t\geq0$. As a result, we see that the "crowding out" effect is mitigated.
 
 ```{code-cell} ipython3
 δy_seq = np.ones(T+2) * 0.01
