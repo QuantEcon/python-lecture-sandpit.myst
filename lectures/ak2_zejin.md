@@ -29,12 +29,14 @@ from quantecon.optimize import brent_max
 
 # Introduction
 
-This lecture is presents the life cycle model consisting of overlapping generations of two-period lived people proposed  by Peter Diamond
-{cite}`diamond1965national` and  analyzed  in chapter 2 of Auerbach and 
+
+This lecture presents a  life-cycle model consisting of overlapping generations of two-period lived people proposed  by Peter Diamond
+{cite}`diamond1965national`.
+
+We'll present the version  that was   analyzed  in chapter 2 of Auerbach and 
 Kotlikoff (1987) {cite}`auerbach1987dynamic`.
 
-Auerbach and 
-Kotlikoff (1987) use their  two period model as a warm-up for their analysis of  overlapping generation models of long-lived people that is the main topic of their book.
+Auerbach and Kotlikoff (1987) used their  two period model as a warm-up for their analysis of  overlapping generation models of long-lived people that is the main topic of their book.
 
 Their model of two-period lived overlapping generations is a useful warmup because 
 
@@ -61,6 +63,8 @@ At each time $t, t \geq 0$ a representative old person and a representative youn
 
 Thus, at time $t$ a representative old person coexists with a representative young person who will become an old person at time $t+1$. 
 
+We assume that the population size is constant over time.  
+
 A young person works, saves, and consumes.
 
 An old person dissaves and consumes but does not work, 
@@ -79,19 +83,17 @@ Initial conditions set from outside the model at time $t=0$ are
   
 $K_0$ and $D_0$ are both measured in units of time $0$ goods.
 
-<font color='red'>Zejin: Tom, I allowed the Python class to analyze fiscal policy change where \delta_o and \delta_y can vary across time. We might need to decide whether we want to keep them as scalars or relax them for this lecture.</font>
+A government **policy** consists of  five sequences $\{G_t, D_t, \tau_t, \delta_{ot}, \delta_{yt}\}_{t=0}^\infty $ whose components are  
 
-A government **policy** is a triple  of sequences $\{G_t, D_t, \tau_t\}_{t=0}^\infty $ and a pair of scalars $(\delta_o, \delta_y)$,
-where  
-
- * $\tau_t$ -- flat rate tax on wages and earnings from capital and government bonds
+ * $\tau_t$ -- flat rate tax  at time $t$ on wages and earnings from capital and government bonds 
  * $D_t$ -- one-period government bond principal due at time $t$, per capita
- * $G_t$ -- government purchases of goods (`thrown into ocean'), per capita
- * $\delta_y$ -- time-invariant lump sum tax on each young person
- * $\delta_o$ -- time-invariant lump sum tax on each old person
+ * $G_t$ -- government purchases of goods  at time $t$ (`thrown into ocean'), per capita
+ * $\delta_{yt}$ -- a  lump sum tax on each young person at time $t$
+ * $\delta_{ot}$ -- a lump sum tax on each old person  at time $t$
+
+
   
-An **allocation** is a collection of sequences $\{C_{yt}, C_{ot}, K_{t+1}, L_t,  Y_t, G_t\}_{t=0}^\infty $; constituents
-of the sequence include 
+An **allocation** is a collection of sequences $\{C_{yt}, C_{ot}, K_{t+1}, L_t,  Y_t, G_t\}_{t=0}^\infty $; constituents of the sequences include 
 
  * $K_t$ -- physical capital per capita
  * $L_t$ -- labor per capita
@@ -169,28 +171,33 @@ where total tax collections net of transfers are given by $T_t$ satisfying
 
 
 $$
-T_t = \tau_t W_t L_t + \tau_t r_t (D_t + K_t) + \delta_y + \delta_o
+T_t = \tau_t W_t L_t + \tau_t r_t (D_t + K_t) + \delta_{yt} + \delta_{ot}
 $$
 
-<font color='red'>Tom's answer to Zejin: You are completely correct.  I will remember to write  somewhere above that the population size of the young worker is 1, and that each young worker supply one unit of labor inelastically. </font>
-
-**Note to Zejin and Tom: I have assumed that the goverment taxes interest on government debt. Do AK also assume that -- we can do
-what we want here**
 
 
 
 ## Households' Activities in Factor Markets
 
-**Old people:**
+**Old people:**  At each  $t \geq 0$, an old person 
 
-At each  $t \geq 0$, an old person brings $K_t$ and $D_t$ into the period, rents capital to a representative  firm for $r_{t} K_t$, pays taxes $\tau_t (K_t+ D_t)$ on its rental and interest earnings,  pays a lump sum tax or receives receives a lump sum subsidy from the government, and sells $K_t$ to a young person.  
+   * brings $K_t$ and $D_t$ into the period,
+   * rents capital to a representative  firm for $r_{t} K_t$,
+   * pays taxes $\tau_t (K_t+ D_t)$ on its rental and interest earnings,
+   * pays a lump sum tax $\delta_{ot}$ to the government,
+   * sells $K_t$ to a young person.  
 
 
-  **Young people:**
-  
-At each $t \geq 0$, a  young person sells one unit of labor services to a representative firm for $W_t$ in wages, pays  taxes $\tau_t W_t$ on its labor earnings plus the lump sum  tax $\delta_y$ to the goverment, spends $C_{yt}$ on consumption, and  acquires non-negative assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and one-period government bonds $D_{t+1}$  that mature at $t+1$.
+  **Young people:** At each $t \geq 0$, a  young person 
+   * sells one unit of labor services to a representative firm for $W_t$ in wages,
+   * pays  taxes $\tau_t W_t$ on its labor earnings
+   * pays a lump sum  tax $\delta_{yt}$ to the goverment, 
+   * spends $C_{yt}$ on consumption,
+   * acquires non-negative assets $A_{t+1}$ consisting of a sum of physical capital $K_{t+1}$ and one-period government bonds $D_{t+1}$  that mature at $t+1$.
 
-
+```{note}
+If a lump-sum tax is negative, it means that the government pays the person a subsidy.
+``` 
 
 
 ## Representative firm's problem 
@@ -223,7 +230,7 @@ r_t & = \alpha K_t^\alpha L_t^{1-\alpha}
 \end{align}
 $$  (eq:firmfonc)
 
-Output can either be consumed by old or young households, sold to young households who use it  to augment the capital stock, or  sold to  the government for  uses that do not generate utility for the people in the model  (e.g., throwing into the ocean).  
+Output can either be consumed by old or young households, sold to young households who use it  to augment the capital stock, or  sold to  the government for  uses that do not generate utility for the people in the model  (e.g., ``thrown into the ocean'').  
 
 
 The firm  thus sells output to old households, young households, and the government.
@@ -243,14 +250,14 @@ The firm  thus sells output to old households, young households, and the governm
 At time $t=0$, a representative initial old household is endowed with  $(1 + r_0(1 - \tau_0)) A_0$ in initial assets.
 
 It  must pay a lump sum tax to (if positive) or receive a subsidy from  (if negative)
-$\delta_o$ the government. 
+$\delta_{ot}$ the government. 
 
 An old   household's budget constraint is
 
 
 
 $$
-C_{o0} = (1 + r_0 (1 - \tau_0)) A_0 - \delta_o .
+C_{o0} = (1 + r_0 (1 - \tau_0)) A_0 - \delta_{ot} .
 $$ (eq:hbudgetold)
 
 An initial old household's utility function is $C_{o0}$, so the household's optimal consumption plan
@@ -261,7 +268,7 @@ is provided by equation {eq}`eq:hbudgetold`.
 At each $t \geq 0$, a  young household inelastically supplies one unit of labor and in return
 receives pre-tax labor earnings of $W_t$ units of output.  
 
-A young-household's post-tax-and-transfer earnings are $W_t (1 - \tau_t) - \delta_y$.  
+A young-household's post-tax-and-transfer earnings are $W_t (1 - \tau_t) - \delta_{yt}$.  
 
 At each $t \geq 0$, a young household chooses a consumption plan  $C_{yt}, C_{ot+1}$ 
 to maximize the Cobb-Douglas utility function 
@@ -274,8 +281,8 @@ subject to the following  budget constraints at times $t$ and $t+1$:
 
 $$
 \begin{align}
-C_{yt} + A_{t+1} & =  W_t (1 - \tau_t) - \delta_y \\
-C_{ot+1} & = (1+ r_{t+1} (1 - \tau_{t+1}))A_{t+1} - \delta_o
+C_{yt} + A_{t+1} & =  W_t (1 - \tau_t) - \delta_{yt} \\
+C_{ot+1} & = (1+ r_{t+1} (1 - \tau_{t+1}))A_{t+1} - \delta_{ot}
 \end{align}
 $$ (eq:twobudgetc)
 
@@ -283,14 +290,14 @@ $$ (eq:twobudgetc)
 Solving the second equation of {eq}`eq:twobudgetc` for savings  $A_{t+1}$ and substituting it into the first equation implies the present value budget constraint
 
 $$
-C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} = W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}
+C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} = W_t (1 - \tau_t) - \delta_{yt} - \frac{\delta_{ot}}{1 + r_{t+1}(1 - \tau_{t+1})}
 $$ (eq:onebudgetc)
 
 To solve the young household's choice problem, form a Lagrangian 
 
 $$ 
 \begin{align}
-{\mathcal L}  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_y + \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr],
+{\mathcal L}  & = C_{yt}^\beta C_{o,t+1}^{1-\beta} \\ &  + \lambda \Bigl[ C_{yt} + \frac{C_{ot+1}}{1 + r_{t+1}(1 - \tau_{t+1})} - W_t (1 - \tau_t) + \delta_{yt} + \frac{\delta_{ot}}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr],
 \end{align}
 $$ (eq:lagC)
 
@@ -302,8 +309,8 @@ imply that an optimal consumption plan satisfies
 
 $$
 \begin{align}
-C_{yt} & = \beta \Bigl[ W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] \\
-\frac{C_{0t+1}}{1 + r_{t+1}(1-\tau_{t+1})  } & = (1-\beta)   \Bigl[ W_t (1 - \tau_t) - \delta_y - \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] 
+C_{yt} & = \beta \Bigl[ W_t (1 - \tau_t) - \delta_{yt} - \frac{\delta_{ot}}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] \\
+\frac{C_{0t+1}}{1 + r_{t+1}(1-\tau_{t+1})  } & = (1-\beta)   \Bigl[ W_t (1 - \tau_t) - \delta_{yt} - \frac{\delta_{ot}}{1 + r_{t+1}(1 - \tau_{t+1})}\Bigr] 
 \end{align}
 $$ (eq:optconsplan)
 
@@ -311,7 +318,7 @@ The first-order condition for minimizing Lagrangian {eq}`eq:lagC` with respect t
 which, using {eq}`eq:optconsplan` gives the optimal savings plan
 
 $$
-A_{t+1} = (1-\beta) [ (1- \tau_t) W_t - \delta_y] + \beta \frac{\delta_o}{1 + r_{t+1}(1 - \tau_{t+1})} 
+A_{t+1} = (1-\beta) [ (1- \tau_t) W_t - \delta_{yt}] + \beta \frac{\delta_{ot}}{1 + r_{t+1}(1 - \tau_{t+1})} 
 $$ (eq:optsavingsplan)
 
 
@@ -335,12 +342,16 @@ It can be solved by hand.
 
 We shall do that next. 
 
-After we derive a closed form solution, we'll pretend that we don't know and will compute an equilibrium outcome  paths by first formulating it as a fixed point of a mapping from  sequences of factor prices and tax rates to sequences of factor prices and tax rates, and then iterating to convergence on that mapping.
+After we derive a closed form solution, we'll pretend that we don't know and will compute  equilibrium outcome  paths.
+
+We'll do that  by first formulating an equilibrium  as a fixed point of a mapping from  sequences of factor prices and tax rates to sequences of factor prices and tax rates.
+
+We'll compute an equilibrium by iterating to convergence on that mapping.
 
 
 ## Closed form solution
 
-To get the special chapter 2 case of  Auerbach and Kotlikoff (1987) {cite}`auerbach1987dynamic`, we  set both $\delta_o$ and $\delta_y$ to zero.
+To get the special chapter 2 case of  Auerbach and Kotlikoff (1987) {cite}`auerbach1987dynamic`, we  set both $\delta_{ot}$ and $\delta_{yt}$ to zero.
 
 As our special case of {eq}`eq:optconsplan`, we compute the following consumption-savings plan for a representative young person:
 
@@ -444,7 +455,7 @@ def K_to_C(K, D, τ, r, α, β):
     return Cy, Co
 ```
 
-We can use these helper functions to obtain steady state values $\hat{Y}$, $\hat{r}$, and $\hat{W}$ that are associated with  steady state values $\hat{K}$ and $\hat{r}$.
+We can use these helper functions to obtain steady state values $\hat{Y}$, $\hat{r}$, and $\hat{W}$ associated with  steady state values $\hat{K}$ and $\hat{r}$.
 
 ```{code-cell} ipython3
 Y_hat, r_hat, W_hat = K_to_Y(K_hat, α), K_to_r(K_hat, α), K_to_W(K_hat, α)
@@ -458,7 +469,7 @@ G_hat = τ_hat * Y_hat
 G_hat
 ```
 
-Finally, the steady state consumptions for the young and the old are given by the optimal consumption plans
+We use the optimal consumption plans to find  steady state consumption for  young and  old are given by the 
 
 ```{code-cell} ipython3
 Cy_hat, Co_hat = K_to_C(K_hat, D_hat, τ_hat, r_hat, α, β)
@@ -477,21 +488,44 @@ init_ss = np.array([K_hat, Y_hat, Cy_hat, Co_hat,     # quantities
 
 ### Transitions
 
-<font color='red'>Zejin: I tried to edit the following part to describe the fiscal policy experiment and the objects we are interested in computing. </font>
+%<font color='red'>Zejin: I tried to edit the following part to describe the fiscal policy %experiment and the objects we are interested in computing. </font>
 
-We have computed a steady state, in which the agents believe that the current fiscal policy will last forever.
+We have computed a steady state in which the government policy sequences are each constant over time.
 
-<font color='red'>Tom: edit starting here to state clearly what the policy experiment is in terms of the sequence. </font>
 
-We'll use it as a starting point for trajectory paths of the economy driven by some fiscal policy changes. We will index the day of policy change announcement by $t=0$, after which the agents will adjust their optimal consumption and saving plans differently from the steady state values in response to the unexpected policy shock. While the fiscal policy change itself is regareded as a shock, the sequences of prices and tax rates will be foreseen by the households assumed with rational expectation, especially for the representative young households who can then make their optimal saving plans.
+We'll use this steady state as  an initial condition at time $t=0$ for another economy in which   government policy sequences are  with time-varying sequences.  
 
-As the capital stock and other economy aggregates adjust to the fiscal policy change over time, the economy will eventually converge to a new steady state.
+To make sense of our calculation, we'll treat  $t=0$ as  time when a huge unanticipated shock occurs in the form of
 
-In general, we can find the whole transitional path from the old steady state to the new steady state by employing a fixed-point algorithm. But in this simple case with closed form solutions, we are able to directly simulate the paths forward from the initial steady state.
+  *  the complete abondonment of the time-invariant government policy sequences that led to an original  steady state 
+  *  the revelation of a new government policy in the form of sequences starting at time $t=0$
+  *  the new government policy sequences are eventually time-invariant in the sense that after some date $T >0$,  each sequence is constant over time.  
 
-Here we define a Python class `ClosedFormTrans` which computes length $T$ transitional path of the economy in response to a particular fiscal policy change. We choose $T$ big enough such that we believe the economy will be close to the new steady state after $T$ periods. The class takes three keyword arguments, `τ_pol`, `D_pol`, and `G_pol`, which are the sequences of tax rate, government debt level, and government purchases respectively. In each policy experiment below, we will pass two out of three as inputs that fully depict a fiscal policy change, and the remaining one policy variable sequence will be determined by satisfying the government budget constraint.
+We assume that all agents including the initial old people at time $t=0$ know  the new government policy sequence and choose accordingly. 
 
-When simulating the transitional paths, it is useful to keep in mind what are the **state variables**, such as $K_t, Y_t, D_t, W_t, r_t$, versus the **control variables** including $C_{yt}, C_{ot}, \tau_{t}, G_t$. 
+
+
+
+As the capital stock and other economy aggregates adjust to the fiscal policy change over time, the economy will approach a new steady state.
+
+In general, we can find the whole transitional path from the old steady state to the new steady state by employing a fixed-point algorithm. 
+
+But in our special case with its closed form solution, we have available a simpler and faster
+method.   
+
+Here we define a Python class `ClosedFormTrans` that  computes length $T$ transitional path of the economy in response to a particular fiscal policy change. 
+
+We choose $T$ large  enough so that we have gotten very close  to a new steady state after $T$ periods. 
+
+The class takes three keyword arguments, `τ_pol`, `D_pol`, and `G_pol`. 
+
+These are  sequences of tax rate, government debt level, and government purchases, respectively.
+
+In each policy experiment below, we will pass two out of three as inputs that fully depict a fiscal policy change.
+
+We'll then compute the single remaining policy variable from the government budget constraint.
+
+When simulating the transitional paths, it is useful to distinguish what  **state variables** at time $t$  such as $K_t, Y_t, D_t, W_t, r_t$ from  **control variables** including $C_{yt}, C_{ot}, \tau_{t}, G_t$. 
 
 ```{code-cell} ipython3
 class ClosedFormTrans:
@@ -650,7 +684,9 @@ $$
 
 We can simulate the transition of the economy for $20$ periods, after which the economy will be fairly close to the new steady state.
 
-The first step is to prepare sequences of policy variables that describe the fiscal policy change. In this example, we need to define the determinant sequences of government expenditure $\{G_t\}_{t=0}^{T}$ and debt level $\{D_t\}_{t=0}^{T+1}$ in advance, and then pass it to the solver.
+The first step is to prepare sequences of policy variables that describe the fiscal policy change.
+
+ In this example, we need to define  sequences of government expenditure $\{G_t\}_{t=0}^{T}$ and debt level $\{D_t\}_{t=0}^{T+1}$ in advance, then pass them  to the solver.
 
 ```{code-cell} ipython3
 T = 20
@@ -667,7 +703,9 @@ D_seq = np.ones(T+2) * D_bar
 D_seq[0] = D_hat
 ```
 
-Let's use the `simulate` method of `closed` to obtain the dynamic transitions. Note that we leave `τ_pol` as `None` since the tax rates need to be determined to satisfy the government budget constraint.
+Let's use the `simulate` method of `closed` to obtain the dynamic transitions. 
+
+Note that we leave `τ_pol` as `None`, since the tax rates need to be determined to satisfy the government budget constraint.
 
 ```{code-cell} ipython3
 closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq)
@@ -695,7 +733,7 @@ Assuming that the economy was in the same steady state, but instead of announcin
 
 The government wants to target the same tax rate $\tau_t=\hat{\tau}$ and accumulate assets $-D_t$ over time.
 
-Note that in this experiment, we pass `τ_seq` and `G_seq` as inputs, and let `D_pol` to be determined along the path by satisfying the government budget constraint.
+Note that in this experiment, we pass `τ_seq` and `G_seq` as inputs, and let `D_pol`  be determined along the path by satisfying the government budget constraint.
 
 ```{code-cell} ipython3
 # government expenditure cut by a half
@@ -718,7 +756,11 @@ plt.title('-D/Y');
 
 ### Experiment 3: Temporary expenditure cut
 
-Let's now consider the case where the government also cuts its spending by a half and accumulates asset, but this time the expenditure cut only lasts for one period at $t=0$. From $t \geq 1$, the government will return to the original level of consumption $\hat{G}$, and will adjust $\tau_t$ to maintain the same level of asset $-D_t = -D_1$.
+Let's now consider the case where the government also cuts its spending by  half and accumulates asset.
+
+But this time the expenditure cut only lasts for one period at $t=0$.
+
+From $t \geq 1$, the government will return to the original level of consumption $\hat{G}$, and will adjust $\tau_t$ to maintain the same level of asset $-D_t = -D_1$.
 
 ```{code-cell} ipython3
 # sequence of government expenditure
@@ -738,11 +780,18 @@ closed.plot()
 
 ## A general method of computation
 
-In the above demonstration, we study the dynamic transitions of the economy associated with various fiscal policy experiments. In these experiments, we maintain the assumption that lump sum taxes are absent ($\delta_{yt}=0, \delta_{ot}=0$).
+In the above illustrations, we studied  dynamic transitions  associated with various fiscal policy experiments.
 
-In this section, we investigate the transition dynamics when the lump sum taxes are present. In fact, the lump sum taxation will be a useful tool for the government to facilitate transfers between cohorts.
+In these experiments, we maintained the assumption that lump sum taxes are absent ($\delta_{yt}=0, \delta_{ot}=0$).
 
-Noticeably, activating lump sum taxes will break down the closed form solution which we use for simulating the transitional paths in the previous sections, as now the optimal consumption and saving plans depend on future prices and tax rates. Therefore, we switch to a more general way of solving for the transitional paths, which is to find the model solution as a fixed point.
+In this section, we investigate the transition dynamics when the lump sum taxes are present.
+
+The government will use  lump sum taxes and transfers  to redistribute resources across successive 
+generations.
+
+Including  lump sum taxes will break down the closed form solution because now  optimal consumption and saving plans will  depend on future prices and tax rates. 
+
+Therefore, we use  a more general way of solving for equilibriunm  transitional paths that involves computing them as a fixed point in a mapping from sequences to sequences.
 
 We elaborate on the equilibrium conditions as we define in section {ref}`sec-equilibrium`, which characterize the fixed point
 
@@ -760,15 +809,21 @@ such that
 
 The equilibrium transitional path can be found by "guess and verify"
 
-Taking {ref}`exp-tax-cut` for instance, the sequences $\{D_t\}_{t=0}^{T}$ and $\{G_t\}_{t=0}^{T}$ are pre-determined. In addition, we assume that the lump sum taxes $\{\delta_{yt}, \delta_{ot}\}_{t=0}^{T}$ are given and known to the households. We can solve for sequences of other equilibrium objects following the steps below
+Taking {ref}`exp-tax-cut` for instance, the sequences $\{D_t\}_{t=0}^{T}$ and $\{G_t\}_{t=0}^{T}$ are pre-determined. 
 
-1. take guesses on the prices $\{W_t, r_t\}_{t=0}^{T}$ and tax rates $\{\tau_t\}_{t=0}^{T}$
+In addition, we assume that the lump sum taxes $\{\delta_{yt}, \delta_{ot}\}_{t=0}^{T}$ are given and known to the households.
+
+We can solve for sequences of other equilibrium objects following the steps below
+
+1. guesses prices $\{W_t, r_t\}_{t=0}^{T}$ and tax rates $\{\tau_t\}_{t=0}^{T}$
 2. solve for optimal consumption and saving plans $\{C_{yt}, C_{ot}\}_{t=0}^{T}$, treating the guesses of future prices and taxes as true
 3. solve for transitional dynamics of the capital stock $\{K_t\}_{t=0}^{T}$
 4. update the guesses for prices and tax rates with the values implied by the equilibrium conditions
 5. iterate until convergence
 
-Below we implement the "guess and verify" computation. We start by defining the Cobb-Douglas utility function
+Below we implement the "guess and verify" computation. 
+
+We start by defining the Cobb-Douglas utility function
 
 ```{code-cell} ipython3
 @njit
@@ -777,7 +832,9 @@ def U(Cy, Co, β):
     return (Cy ** β) * (Co ** (1-β))
 ```
 
-We use `Cy_val` to compute the lifetime value of choosing an arbitrary consumption plan, $C_y$, given the intertemporal budget constraint. Note that it requires knowledge about future prices $r_{t+1}$ and tax rate $\tau_{t+1}$.
+We use `Cy_val` to compute the lifetime value of choosing an arbitrary consumption plan, $C_y$, given the intertemporal budget constraint.
+
+Note that it requires knowing future prices $r_{t+1}$ and tax rate $\tau_{t+1}$.
 
 ```{code-cell} ipython3
 @njit
@@ -791,7 +848,7 @@ def Cy_val(Cy, W, r_next, τ, τ_next, δy, δo_next, β):
 
 The optimal consumption plan $C_y^*$ can be found by maximizing `Cy_val`.
 
-Here is an example of finding the optimal consumption $C_y^*=\hat{C}_y$ in the steady state as we discussed before, with $\delta_y=\delta_o=0$
+Here is an example of finding the optimal consumption $C_y^*=\hat{C}_y$ in the steady state as we discussed before, with $\delta_{yt}=\delta_{ot}=0$
 
 ```{code-cell} ipython3
 W, r_next, τ, τ_next = W_hat, r_hat, τ_hat, τ_hat
@@ -980,7 +1037,11 @@ ak2.simulate(T, init_ss, δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol, verbose=Tru
 ak2.plot()
 ```
 
-Next, we can now try to turn on the lump sum taxes with the more general laboratory at hand. For example, let's try the same fiscal policy experiment in {ref}`exp-tax-cut`, but slightly modify it and assume that the government will in addition increase the lump sum taxes for both the young and old households $\delta_{yt}=\delta_{ot}=0.1, t\geq0$. As a result, we see that the "crowding out" effect is mitigated.
+Next, we can now try to turn on the lump sum taxes with the more general laboratory at hand.
+
+For example, let's try the same fiscal policy experiment in {ref}`exp-tax-cut`, but slightly modify it and assume that the government will in addition increase the lump sum taxes for both the young and old households $\delta_{yt}=\delta_{ot}=0.1, t\geq0$. 
+
+As a result, we see that the "crowding out" effect is mitigated.
 
 ```{code-cell} ipython3
 δy_seq = np.ones(T+2) * 0.01
@@ -993,9 +1054,9 @@ ak2.simulate(T, init_ss, δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol)
 ak2.plot()
 ```
 
-<font color='red'>Note to Tom: Zejin's Jan 24th edits stop here.</font>
+<font color='red'>Note to Zejin: Hi. My Jan 31 edits have stopped here for now.</font>
 
-## Work in two periods
+## Working when old as well as when young
 
 
 
