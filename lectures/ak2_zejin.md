@@ -496,22 +496,18 @@ When simulating the transitional paths, it is useful to keep in mind what are th
 ```{code-cell} ipython3
 class ClosedFormTrans:
 
-    def __init__(self, T, init_ss, α, β, τ_pol=None, D_pol=None, G_pol=None):
-        self.T = T
-        self.init_ss = init_ss
+    def __init__(self, α, β):
+
         self.α, self.β = α, β
-        self.τ_pol, self.D_pol, self.G_pol = τ_pol, D_pol, G_pol
 
-    def solve(self):
+    def simulate(self, T, init_ss, τ_pol=None, D_pol=None, G_pol=None):
 
-        T = self.T
         α, β = self.α, self.β
-        τ_pol, D_pol, G_pol = self.τ_pol, self.D_pol, self.G_pol
 
         # unpack the steady state variables
-        K_hat, Y_hat, Cy_hat, Co_hat = self.init_ss[:4]
-        W_hat, r_hat = self.init_ss[4:6]
-        τ_hat, D_hat, G_hat = self.init_ss[6:9]
+        K_hat, Y_hat, Cy_hat, Co_hat = init_ss[:4]
+        W_hat, r_hat = init_ss[4:6]
+        τ_hat, D_hat, G_hat = init_ss[6:9]
 
         # initialize array containers
         # (note that Python is row-major)
@@ -625,6 +621,13 @@ class ClosedFormTrans:
             ax.set_title(name)
 ```
 
+We can create an instance `closed` given model parameters $\{\alpha, \beta\}$ and use it for various fiscal policy experiments.
+
+
+```{code-cell} ipython3
+closed = ClosedFormTrans(α, β)
+```
+
 (exp-tax-cut)=
 ### Experiment 1: Tax cut
 
@@ -645,7 +648,7 @@ K_{t+1} &= K_{t}^{\alpha}\left(1-\tau_{t}\right)\left(1-\alpha\right)\left(1-\be
 \end{align}
 $$
 
-We can use the `ClosedFormTrans` to compute and plot the transition of the economy for $20$ periods, after which the economy will be fairly close to the new steady state.
+We can simulate the transition of the economy for $20$ periods, after which the economy will be fairly close to the new steady state.
 
 The first step is to prepare sequences of policy variables that describe the fiscal policy change. In this example, we need to define the determinant sequences of government expenditure $\{G_t\}_{t=0}^{T}$ and debt level $\{D_t\}_{t=0}^{T+1}$ in advance, and then pass it to the solver.
 
@@ -664,12 +667,11 @@ D_seq = np.ones(T+2) * D_bar
 D_seq[0] = D_hat
 ```
 
-We can create an instance `closed1` and use it to obtain the dynamic transitions. Note that we leave `τ_pol` as `None` since the tax rates need to be determined to satisfy the government budget constraint.
+Let's use the `simulate` method of `closed` to obtain the dynamic transitions. Note that we leave `τ_pol` as `None` since the tax rates need to be determined to satisfy the government budget constraint.
 
 ```{code-cell} ipython3
-closed1 = ClosedFormTrans(T, init_ss, α, β, τ_pol=None, D_pol=D_seq, G_pol=G_seq)
-closed1.solve()
-closed1.plot()
+closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq)
+closed.plot()
 ```
 
 We can also easily experiment with a lower tax cut rate, such as $0.2$
@@ -683,9 +685,8 @@ D_bar = G_hat - τ0 * Y_hat
 D_seq = np.ones(T+2) * D_bar
 D_seq[0] = D_hat
 
-closed2 = ClosedFormTrans(T, init_ss, α, β, τ_pol=None, D_pol=D_seq, G_pol=G_seq)
-closed2.solve()
-closed2.plot()
+closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq)
+closed.plot()
 ```
 
 ### Experiment 2: Government asset accumulation
@@ -703,15 +704,14 @@ G_seq = τ_hat * 0.5 * Y_hat * np.ones(T+1)
 # targeted tax rate
 τ_seq = τ_hat * np.ones(T+1)
 
-closed3 = ClosedFormTrans(T, init_ss, α, β, τ_pol=τ_seq, D_pol=None, G_pol=G_seq)
-closed3.solve()
-closed3.plot()
+closed.simulate(T, init_ss, τ_pol=τ_seq, G_pol=G_seq)
+closed.plot()
 ```
 
 It will be useful for understanding the transition paths by looking at the ratio of government asset to the output, $-\frac{D_t}{Y_t}$
 
 ```{code-cell} ipython3
-plt.plot(range(T+1), -closed3.policy_seq[:-1, 1] / closed3.quant_seq[:, 0])
+plt.plot(range(T+1), -closed.policy_seq[:-1, 1] / closed.quant_seq[:, 0])
 plt.xlabel('t')
 plt.title('-D/Y');
 ```
@@ -730,9 +730,8 @@ D_bar = G_seq[0] - τ_hat * Y_hat
 D_seq = D_bar * np.ones(T+2)
 D_seq[0] = D_hat
 
-closed4 = ClosedFormTrans(T, init_ss, α, β, τ_pol=None, D_pol=D_seq, G_pol=G_seq)
-closed4.solve()
-closed4.plot()
+closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq)
+closed.plot()
 ```
 
 
@@ -811,22 +810,20 @@ Below we define a Python class `AK2` that solves for the transitional paths of t
 ```{code-cell} ipython3
 class AK2():
 
-    def __init__(self, T, init_ss, α, β):
+    def __init__(self, α, β):
 
-        self.T = T
-        self.init_ss = init_ss
         self.α, self.β = α, β
 
-    def simulate(self, δy_seq, δo_seq,
+    def simulate(self, T, init_ss,
+                       δy_seq, δo_seq,
                        τ_pol=None, D_pol=None, G_pol=None,
                        verbose=False, max_iter=500, tol=1e-5):
 
-        T = self.T
         α, β = self.α, self.β
 
-        K_hat, Y_hat, Cy_hat, Co_hat = self.init_ss[:4]
-        W_hat, r_hat = self.init_ss[4:6]
-        τ_hat, D_hat, G_hat = self.init_ss[6:9]
+        K_hat, Y_hat, Cy_hat, Co_hat = init_ss[:4]
+        W_hat, r_hat = init_ss[4:6]
+        τ_hat, D_hat, G_hat = init_ss[6:9]
 
         # K, Y, Cy, Co
         quant_seq = np.empty((T+2, 4))
@@ -953,10 +950,10 @@ class AK2():
             ax.set_title(name)
 ```
 
-We can initialize an instance of class `AK2` given the model parameters $\{\alpha, \beta\}$ and then use it for various fiscal policy experiments.
+As before, We can initialize an instance of class `AK2` given the model parameters $\{\alpha, \beta\}$ and then use it for various fiscal policy experiments.
 
 ```{code-cell} ipython3
-ak2 = AK2(T, init_ss, α, β)
+ak2 = AK2(α, β)
 ```
 
 We first examine that the "guess and verify" method leads to the same numerical results as we obtain with the closed form solution when lump sum taxes are muted
@@ -976,7 +973,7 @@ D_pol[1:] = D1
 ```
 
 ```{code-cell} ipython3
-ak2.simulate(δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol, verbose=True)
+ak2.simulate(T, init_ss, δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol, verbose=True)
 ```
 
 ```{code-cell} ipython3
@@ -992,7 +989,7 @@ Next, we can now try to turn on the lump sum taxes with the more general laborat
 D1 = D_hat * (1 + r_hat * (1 - τ0)) + G_hat - τ0 * Y_hat - δy_seq[0] - δo_seq[0]
 D_pol[1:] = D1
 
-ak2.simulate(δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol)
+ak2.simulate(T, init_ss, δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol)
 ak2.plot()
 ```
 
