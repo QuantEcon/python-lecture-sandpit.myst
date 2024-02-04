@@ -13,9 +13,10 @@ kernelspec:
 
 # Zejin_Auerbach-Kotlikoff 2
 
+In addition to what’s in Anaconda, this lecture will need the following libraries:
+
 ```{code-cell} ipython3
-!pip install numba
-!pip install quantecon
+!pip install --upgrade quantecon
 ```
 
 ```{code-cell} ipython3
@@ -529,12 +530,23 @@ When simulating the transitional paths, it is useful to distinguish what  **stat
 
 ```{code-cell} ipython3
 class ClosedFormTrans:
+    """
+    This class simulates length T transitional path of a economy in response to
+    a fiscal policy change given its initial steady state. The simulation is based
+    on the closed form solution when the lump sum taxations are absent.
+
+    """
 
     def __init__(self, α, β):
 
         self.α, self.β = α, β
 
-    def simulate(self, T, init_ss, τ_pol=None, D_pol=None, G_pol=None):
+    def simulate(self,
+                T,           # length of transitional path to simulate
+                init_ss,     # initial steady state
+                τ_pol=None,  # sequence of tax rates
+                D_pol=None,  # sequence of government debt levels
+                G_pol=None): # sequence of government purchases
 
         α, β = self.α, self.β
 
@@ -544,7 +556,6 @@ class ClosedFormTrans:
         τ_hat, D_hat, G_hat = init_ss[6:9]
 
         # initialize array containers
-        # (note that Python is row-major)
         # K, Y, Cy, Co
         quant_seq = np.empty((T+1, 4))
 
@@ -573,7 +584,7 @@ class ClosedFormTrans:
             τ0 = τ_pol[0]
             G0 = τ0 * (Y0 + r0 * D0) + D1 - (1 + r0) * D0
 
-        # immediate consumption increase
+        # optimal consumption plans
         Cy0, Co0 = K_to_C(K0, D0, τ0, r0, α, β)
 
         # t=0 economy
@@ -585,17 +596,15 @@ class ClosedFormTrans:
         # starting from t=1 to T
         for t in range(1, T+1):
 
-            # transition dynamics of K_t
-            K_old, τ_old = quant_seq[t-1, 0], policy_seq[t-1, 0]
-
-            D = policy_seq[t, 1]
-
             # transition of K
+            K_old, τ_old = quant_seq[t-1, 0], policy_seq[t-1, 0]
+            D = policy_seq[t, 1]
             K = K_old ** α * (1 - τ_old) * (1 - α) * (1 - β) - D
 
             # output, capital return, wage
             Y, r, W = K_to_Y(K, α), K_to_r(K, α), K_to_W(K, α)
 
+            # to satisfy the government budget constraint
             if τ_pol is None:
                 D = D_pol[t]
                 D_next = D_pol[t+1]
@@ -612,9 +621,10 @@ class ClosedFormTrans:
                 τ = τ_pol[t]
                 G = τ * (Y + r * D) + D_next - (1 + r) * D
 
-            # consumption
+            # optimal consumption plans
             Cy, Co = K_to_C(K, D, τ, r, α, β)
 
+            # store time t economy aggregates
             quant_seq[t, :] = K, Y, Cy, Co
             price_seq[t, :] = W, r
             policy_seq[t, 0] = τ
@@ -694,7 +704,7 @@ T = 20
 # tax cut
 τ0 = τ_hat * (1 - 1/3)
 
-# sequence of government expenditure
+# sequence of government purchase
 G_seq = τ_hat * Y_hat * np.ones(T+1)
 
 # sequence of government debt
@@ -763,7 +773,7 @@ But this time the expenditure cut only lasts for one period at $t=0$.
 From $t \geq 1$, the government will return to the original level of consumption $\hat{G}$, and will adjust $\tau_t$ to maintain the same level of asset $-D_t = -D_1$.
 
 ```{code-cell} ipython3
-# sequence of government expenditure
+# sequence of government purchase
 G_seq = τ_hat * Y_hat * np.ones(T+1)
 G_seq[0] = 0
 
@@ -866,18 +876,32 @@ Below we define a Python class `AK2` that solves for the transitional paths of t
 
 ```{code-cell} ipython3
 class AK2():
+    """
+    This class simulates length T transitional path of a economy in response to
+    a fiscal policy change given its initial steady state. The transitional path
+    is found by employing a fixed point algorithm that and uses equilibrium conditions.
+
+    """
 
     def __init__(self, α, β):
 
         self.α, self.β = α, β
 
-    def simulate(self, T, init_ss,
-                       δy_seq, δo_seq,
-                       τ_pol=None, D_pol=None, G_pol=None,
-                       verbose=False, max_iter=500, tol=1e-5):
+    def simulate(self,
+                T,           # length of transitional path to simulate
+                init_ss,     # initial steady state
+                δy_seq,      # sequence of lump sum tax for the young
+                δo_seq,      # sequence of lump sum tax for the old
+                τ_pol=None,  # sequence of tax rates
+                D_pol=None,  # sequence of government debt levels
+                G_pol=None,  # sequence of government purchases
+                verbose=False,
+                max_iter=500,
+                tol=1e-5):
 
         α, β = self.α, self.β
 
+        # unpack the steady state variables
         K_hat, Y_hat, Cy_hat, Co_hat = init_ss[:4]
         W_hat, r_hat = init_ss[4:6]
         τ_hat, D_hat, G_hat = init_ss[6:9]
@@ -907,7 +931,7 @@ class AK2():
             # prepare to plot iterations until convergence
             fig, axs = plt.subplots(1, 3, figsize=(14, 4))
 
-        # containers for checking convergence (Don't use np.copy)
+        # containers for checking convergence
         price_seq_old = np.empty_like(price_seq)
         policy_seq_old = np.empty_like(policy_seq)
 
@@ -915,8 +939,8 @@ class AK2():
         i_iter = 0
         while True:
 
-            # plot current prices at ith iteration
             if verbose:
+                # plot current prices at ith iteration
                 for i, name in enumerate(['W', 'r']):
                     axs[i].plot(range(T+1), price_seq[:T+1, i])
                     axs[i].set_title(name)
@@ -927,18 +951,20 @@ class AK2():
             price_seq_old[:] = price_seq
             policy_seq_old[:] = policy_seq
 
-            # start update quantities and prices
+            # start updating quantities and prices
             for t in range(T+1):
                 K, Y = quant_seq[t, :2]
                 W, r = price_seq[t, :]
                 r_next = price_seq[t+1, 1]
                 τ, D, G = policy_seq[t, :]
                 τ_next, D_next, G_next = policy_seq[t+1, :]
-                δy, δo, δy_next, δo_next = δy_seq[t], δo_seq[t], δy_seq[t+1], δo_seq[t+1]
+                δy, δo = δy_seq[t], δo_seq[t]
+                δy_next, δo_next = δy_seq[t+1], δo_seq[t+1]
 
-                # consumption optimization
+                # consumption for the old
                 Co = (1 + r * (1 - τ)) * (K + D) - δo
 
+                # optimal consumption for the young
                 out = brent_max(Cy_val, 1e-3, W*(1-τ)-δy-1e-3,
                                 args=(W, r_next, τ, τ_next,
                                       δy, δo_next, β))
@@ -949,21 +975,19 @@ class AK2():
                 τ_denom = (Y + r * D)
                 policy_seq[t, 0] = τ_num / τ_denom
 
-                # private saving, Ap[t+1]
+                # saving of the young
                 A_next = W * (1 - τ) - δy - Cy
 
-                # asset next period
+                # transition of K
                 K_next = A_next - D_next
-                W_next, r_next, Y_next = K_to_W(K_next, α), K_to_r(K_next, α), K_to_Y(K_next, α)
+                Y_next = K_to_Y(K_next, α)
+                W_next, r_next = K_to_W(K_next, α), K_to_r(K_next, α)
 
                 quant_seq[t+1, :2] = K_next, Y_next
-                # note that here the updated guesses will be used immediately!
                 price_seq[t+1, :] = W_next, r_next
 
-            # one iteration finishes
             i_iter += 1
 
-            # check convergence
             if (np.max(np.abs(price_seq_old - price_seq)) < tol) & \
                (np.max(np.abs(policy_seq_old - policy_seq)) < tol):
                 print(f"Converge using {i_iter} iterations")
