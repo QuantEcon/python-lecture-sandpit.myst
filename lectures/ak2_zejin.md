@@ -531,9 +531,10 @@ When simulating the transitional paths, it is useful to distinguish what  **stat
 ```{code-cell} ipython3
 class ClosedFormTrans:
     """
-    This class simulates length T transitional path of a economy in response to
-    a fiscal policy change given its initial steady state. The simulation is based
-    on the closed form solution when the lump sum taxations are absent.
+    This class simulates length T transitional path of a economy
+    in response to a fiscal policy change given its initial steady
+    state. The simulation is based on the closed form solution when
+    the lump sum taxations are absent.
 
     """
 
@@ -635,6 +636,8 @@ class ClosedFormTrans:
         self.price_seq = price_seq
         self.policy_seq = policy_seq
 
+        return quant_seq, price_seq, policy_seq
+
     def plot(self):
 
         quant_seq = self.quant_seq
@@ -646,23 +649,26 @@ class ClosedFormTrans:
         # quantities
         for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
             ax = axs[i//3, i%3]
-            ax.plot(range(T+1), quant_seq[:T+1, i])
+            ax.plot(range(T+1), quant_seq[:T+1, i], label=name)
             ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
-            ax.set_title(name)
+            ax.legend()
+            ax.set_xlabel('t')
 
         # prices
         for i, name in enumerate(['W', 'r']):
             ax = axs[(i+4)//3, (i+4)%3]
-            ax.plot(range(T+1), price_seq[:T+1, i])
+            ax.plot(range(T+1), price_seq[:T+1, i], label=name)
             ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
-            ax.set_title(name)
+            ax.legend()
+            ax.set_xlabel('t')
 
         # policies
         for i, name in enumerate(['τ', 'D', 'G']):
             ax = axs[(i+6)//3, (i+6)%3]
-            ax.plot(range(T+1), policy_seq[:T+1, i])
+            ax.plot(range(T+1), policy_seq[:T+1, i], label=name)
             ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
-            ax.set_title(name)
+            ax.legend()
+            ax.set_xlabel('t')
 ```
 
 We can create an instance `closed` given model parameters $\{\alpha, \beta\}$ and use it for various fiscal policy experiments.
@@ -718,11 +724,13 @@ Let's use the `simulate` method of `closed` to obtain the dynamic transitions.
 Note that we leave `τ_pol` as `None`, since the tax rates need to be determined to satisfy the government budget constraint.
 
 ```{code-cell} ipython3
-closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq)
+quant_seq1, price_seq1, policy_seq1 = closed.simulate(T, init_ss,
+                                                      D_pol=D_seq,
+                                                      G_pol=G_seq)
 closed.plot()
 ```
 
-We can also easily experiment with a lower tax cut rate, such as $0.2$
+We can also easily experiment with a lower tax cut rate, such as $0.2$, and compare
 
 ```{code-cell} ipython3
 # lower tax cut rate
@@ -733,8 +741,40 @@ D_bar = G_hat - τ0 * Y_hat
 D_seq = np.ones(T+2) * D_bar
 D_seq[0] = D_hat
 
-closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq)
-closed.plot()
+quant_seq2, price_seq2, policy_seq2 = closed.simulate(T, init_ss,
+                                                      D_pol=D_seq,
+                                                      G_pol=G_seq)
+```
+
+```{code-cell} ipython3
+fig, axs = plt.subplots(3, 3, figsize=(14, 10))
+
+# quantities
+for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
+    ax = axs[i//3, i%3]
+    ax.plot(range(T+1), quant_seq1[:T+1, i], label=name+', 1/3')
+    ax.plot(range(T+1), quant_seq2[:T+1, i], label=name+', 0.2')
+    ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+
+# prices
+for i, name in enumerate(['W', 'r']):
+    ax = axs[(i+4)//3, (i+4)%3]
+    ax.plot(range(T+1), price_seq1[:T+1, i], label=name+', 1/3')
+    ax.plot(range(T+1), price_seq2[:T+1, i], label=name+', 0.2')
+    ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+
+# policies
+for i, name in enumerate(['τ', 'D', 'G']):
+    ax = axs[(i+6)//3, (i+6)%3]
+    ax.plot(range(T+1), policy_seq1[:T+1, i], label=name+', 1/3')
+    ax.plot(range(T+1), policy_seq2[:T+1, i], label=name+', 0.2')
+    ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
 ```
 
 ### Experiment 2: Government asset accumulation
@@ -752,7 +792,7 @@ G_seq = τ_hat * 0.5 * Y_hat * np.ones(T+1)
 # targeted tax rate
 τ_seq = τ_hat * np.ones(T+1)
 
-closed.simulate(T, init_ss, τ_pol=τ_seq, G_pol=G_seq)
+closed.simulate(T, init_ss, τ_pol=τ_seq, G_pol=G_seq);
 closed.plot()
 ```
 
@@ -782,7 +822,7 @@ D_bar = G_seq[0] - τ_hat * Y_hat
 D_seq = D_bar * np.ones(T+2)
 D_seq[0] = D_hat
 
-closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq)
+closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq);
 closed.plot()
 ```
 
@@ -865,8 +905,8 @@ W, r_next, τ, τ_next = W_hat, r_hat, τ_hat, τ_hat
 δy, δo_next = 0, 0
 
 Cy_opt, U_opt, _ = brent_max(Cy_val,            # maximand
-                             1e-3,              # lower bound
-                             W*(1-τ)-δy-1e-3,   # upper bound
+                             1e-6,              # lower bound
+                             W*(1-τ)-δy-1e-6,   # upper bound
                              args=(W, r_next, τ, τ_next, δy, δo_next, β))
 
 Cy_opt, U_opt
@@ -877,9 +917,10 @@ Below we define a Python class `AK2` that solves for the transitional paths of t
 ```{code-cell} ipython3
 class AK2():
     """
-    This class simulates length T transitional path of a economy in response to
-    a fiscal policy change given its initial steady state. The transitional path
-    is found by employing a fixed point algorithm that and uses equilibrium conditions.
+    This class simulates length T transitional path of a economy
+    in response to a fiscal policy change given its initial steady
+    state. The transitional path is found by employing a fixed point
+    algorithm that and uses equilibrium conditions.
 
     """
 
@@ -944,8 +985,10 @@ class AK2():
                 for i, name in enumerate(['W', 'r']):
                     axs[i].plot(range(T+1), price_seq[:T+1, i])
                     axs[i].set_title(name)
+                    axs[i].set_xlabel('t')
                 axs[2].plot(range(T+1), policy_seq[:T+1, 0])
                 axs[2].set_title('τ')
+                axs[2].set_xlabel('t')
 
             # store old prices from last iteration
             price_seq_old[:] = price_seq
@@ -965,7 +1008,7 @@ class AK2():
                 Co = (1 + r * (1 - τ)) * (K + D) - δo
 
                 # optimal consumption for the young
-                out = brent_max(Cy_val, 1e-3, W*(1-τ)-δy-1e-3,
+                out = brent_max(Cy_val, 1e-6, W*(1-τ)-δy-1e-6,
                                 args=(W, r_next, τ, τ_next,
                                       δy, δo_next, β))
                 Cy = out[0]
@@ -990,16 +1033,20 @@ class AK2():
 
             if (np.max(np.abs(price_seq_old - price_seq)) < tol) & \
                (np.max(np.abs(policy_seq_old - policy_seq)) < tol):
-                print(f"Converge using {i_iter} iterations")
+                if verbose:
+                    print(f"Converge using {i_iter} iterations")
                 break
 
             if i_iter > max_iter:
-                print(f"Fail to converge using {i_iter} iterations")
+                if verbose:
+                    print(f"Fail to converge using {i_iter} iterations")
                 break
         
         self.quant_seq = quant_seq
         self.price_seq = price_seq
         self.policy_seq = policy_seq
+
+        return quant_seq, price_seq, policy_seq
 
     def plot(self):
 
@@ -1012,23 +1059,26 @@ class AK2():
         # quantities
         for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
             ax = axs[i//3, i%3]
-            ax.plot(range(T+1), quant_seq[:T+1, i])
+            ax.plot(range(T+1), quant_seq[:T+1, i], label=name)
             ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
-            ax.set_title(name)
+            ax.legend()
+            ax.set_xlabel('t')
 
         # prices
         for i, name in enumerate(['W', 'r']):
             ax = axs[(i+4)//3, (i+4)%3]
-            ax.plot(range(T+1), price_seq[:T+1, i])
+            ax.plot(range(T+1), price_seq[:T+1, i], label=name)
             ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
-            ax.set_title(name)
+            ax.legend()
+            ax.set_xlabel('t')
 
         # policies
         for i, name in enumerate(['τ', 'D', 'G']):
             ax = axs[(i+6)//3, (i+6)%3]
-            ax.plot(range(T+1), policy_seq[:T+1, i])
+            ax.plot(range(T+1), policy_seq[:T+1, i], label=name)
             ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
-            ax.set_title(name)
+            ax.legend()
+            ax.set_xlabel('t')
 ```
 
 As before, We can initialize an instance of class `AK2` given the model parameters $\{\alpha, \beta\}$ and then use it for various fiscal policy experiments.
@@ -1054,7 +1104,10 @@ D_pol[1:] = D1
 ```
 
 ```{code-cell} ipython3
-ak2.simulate(T, init_ss, δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol, verbose=True)
+quant_seq3, price_seq3, policy_seq3 = ak2.simulate(T, init_ss,
+                                                   δy_seq, δo_seq,
+                                                   D_pol=D_pol, G_pol=G_pol,
+                                                   verbose=True)
 ```
 
 ```{code-cell} ipython3
@@ -1063,9 +1116,7 @@ ak2.plot()
 
 Next, we can now try to turn on the lump sum taxes with the more general laboratory at hand.
 
-For example, let's try the same fiscal policy experiment in {ref}`exp-tax-cut`, but slightly modify it and assume that the government will in addition increase the lump sum taxes for both the young and old households $\delta_{yt}=\delta_{ot}=0.1, t\geq0$. 
-
-As a result, we see that the "crowding out" effect is mitigated.
+For example, let's try the same fiscal policy experiment in {ref}`exp-tax-cut`, but slightly modify it and assume that the government will in addition increase the lump sum taxes for both the young and old households $\delta_{yt}=\delta_{ot}=0.01, t\geq0$. 
 
 ```{code-cell} ipython3
 δy_seq = np.ones(T+2) * 0.01
@@ -1074,11 +1125,43 @@ As a result, we see that the "crowding out" effect is mitigated.
 D1 = D_hat * (1 + r_hat * (1 - τ0)) + G_hat - τ0 * Y_hat - δy_seq[0] - δo_seq[0]
 D_pol[1:] = D1
 
-ak2.simulate(T, init_ss, δy_seq, δo_seq, D_pol=D_pol, G_pol=G_pol)
-ak2.plot()
+quant_seq4, price_seq4, policy_seq4 = ak2.simulate(T, init_ss,
+                                                   δy_seq, δo_seq,
+                                                   D_pol=D_pol, G_pol=G_pol)
 ```
 
-<font color='red'>Note to Zejin: Hi. My Jan 31 edits have stopped here for now.</font>
+As a result, we see that the "crowding out" effect is mitigated.
+
+```{code-cell} ipython3
+fig, axs = plt.subplots(3, 3, figsize=(14, 10))
+
+# quantities
+for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
+    ax = axs[i//3, i%3]
+    ax.plot(range(T+1), quant_seq3[:T+1, i], label=name+', $\delta$s=0')
+    ax.plot(range(T+1), quant_seq4[:T+1, i], label=name+', $\delta$s=0.01')
+    ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+
+# prices
+for i, name in enumerate(['W', 'r']):
+    ax = axs[(i+4)//3, (i+4)%3]
+    ax.plot(range(T+1), price_seq3[:T+1, i], label=name+', $\delta$s=0')
+    ax.plot(range(T+1), price_seq4[:T+1, i], label=name+', $\delta$s=0.01')
+    ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+
+# policies
+for i, name in enumerate(['τ', 'D', 'G']):
+    ax = axs[(i+6)//3, (i+6)%3]
+    ax.plot(range(T+1), policy_seq3[:T+1, i], label=name+', $\delta$s=0')
+    ax.plot(range(T+1), policy_seq4[:T+1, i], label=name+', $\delta$s=0.01')
+    ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+```
 
 ## Working when old as well as when young
 
