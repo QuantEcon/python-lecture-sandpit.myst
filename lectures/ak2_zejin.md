@@ -39,10 +39,10 @@ Kotlikoff (1987) {cite}`auerbach1987dynamic`.
 
 Auerbach and Kotlikoff (1987) used their  two period model as a warm-up for their analysis of  overlapping generation models of long-lived people that is the main topic of their book.
 
-Their model of two-period lived overlapping generations is a useful warmup because 
+Their model of two-period lived overlapping generations is a useful starting point because 
 
 * it sets forth the structure of interactions between generations of different agents who are alive at a given date
-* it activates key forces and tradeoffs confronting the government and successive generations of people
+* it activates forces and tradeoffs confronting the government and successive generations of people
 * interesting experiments involving transitions from one steady state to another can be computed by hand
  ```{note}
 Auerbach and Kotlikoff use computer code to calculate transition paths for their models with long-lived people.
@@ -60,7 +60,7 @@ Time is discrete and is indexed by $t=0, 1, 2, \ldots$.
 
 The economy lives forever, but the people  inside  it do not.  
 
-At each time $t, t \geq 0$ a representative old person and a representative young person are alive.
+At each time $ t \geq 0$ a representative old person and a representative young person are alive.
 
 Thus, at time $t$ a representative old person coexists with a representative young person who will become an old person at time $t+1$. 
 
@@ -165,10 +165,10 @@ or
 
 
 $$
-D_{t+1} = (1 + r_t)  D_t + G_t - T_t 
+D_{t+1} = (1 + r_t)  D_t + G_t - T_t  .
 $$ (eq:govbudgetsequence) 
 
-where total tax collections net of transfers are given by $T_t$ satisfying
+Here total tax collections net of transfers are given by $T_t$ satisfying
 
 
 $$
@@ -498,21 +498,21 @@ We'll use this steady state as  an initial condition at time $t=0$ for another e
 
 To make sense of our calculation, we'll treat  $t=0$ as  time when a huge unanticipated shock occurs in the form of
 
-  *  the complete abondonment of the time-invariant government policy sequences that led to an original  steady state 
-  *  the revelation of a new government policy in the form of sequences starting at time $t=0$
-  *  the new government policy sequences are eventually time-invariant in the sense that after some date $T >0$,  each sequence is constant over time.  
+  *  a time-varying government policy sequences that disrupts an original  steady state 
+  *  new government policy sequences are eventually time-invariant in the sense that after some date $T >0$,  each sequence is constant over time.  
+  *  sudden revelation of a new government policy in the form of sequences starting at time $t=0$
 
-We assume that all agents including the initial old people at time $t=0$ know  the new government policy sequence and choose accordingly. 
+We assume that everyone,  including old people at time $t=0$, know  the new government policy sequence and choose accordingly. 
 
 
 
 
 As the capital stock and other economy aggregates adjust to the fiscal policy change over time, the economy will approach a new steady state.
 
-In general, we can find the whole transitional path from the old steady state to the new steady state by employing a fixed-point algorithm. 
+We can find a transition path from an old steady state to a new steady state by employing a fixed-point algorithm in a space of sequences. 
 
 But in our special case with its closed form solution, we have available a simpler and faster
-method.   
+approach.   
 
 Here we define a Python class `ClosedFormTrans` that  computes length $T$ transitional path of the economy in response to a particular fiscal policy change. 
 
@@ -681,7 +681,7 @@ closed = ClosedFormTrans(α, β)
 (exp-tax-cut)=
 ### Experiment 1: Tax cut
 
-To see the power of `ClosedFormTrans`, let's first experiment with the following fiscal policy change:
+To illustrate the power of `ClosedFormTrans`, let's first experiment with the following fiscal policy change:
 
 1. at $t=0$, the government unexpectedly announces a one-period tax cut, $\tau_0 =(1-\frac{1}{3}) \hat{\tau}$, by issuing government debt $\bar{D}$
 2. from $t=1$, the government will keep $D_t=\bar{D}$ and adjust $\tau_{t}$ to collect taxation to pay for the government consumption and interest payments on the debt
@@ -845,21 +845,21 @@ Therefore, we use  a more general way of solving for equilibriunm  transitional 
 
 We elaborate on the equilibrium conditions as we define in section {ref}`sec-equilibrium`, which characterize the fixed point
 
-**Definition:** Given model parameters $\{\alpha$, $\beta\}$, a competitive equilibrium is characterized by
+**Definition:** Given model parameters $\{\alpha$, $\beta\}$, a competitive equilibrium consists of 
 
 * sequences of optimal consumptions $\{C_{yt}, C_{ot}\}$
 * sequences of prices $\{W_t, r_t\}$
 * sequences of capital stock and output $\{K_t, Y_t\}$
 * sequences of tax rates, government assets (debt), government purchases $\{\tau_t, D_t, G_t\, \delta_{yt}, \delta_{ot}\}$
 
-such that
+with the properties that
 
 * given the price system and government fiscal policy, the household consumption plans are optimal
 * the government budget constraints are satisfied for all $t$
 
-The equilibrium transitional path can be found by "guess and verify"
+An equilibrium transition path can be computed  by "guessing and verifying"
 
-Taking {ref}`exp-tax-cut` for instance, the sequences $\{D_t\}_{t=0}^{T}$ and $\{G_t\}_{t=0}^{T}$ are pre-determined. 
+In our {ref}`exp-tax-cut` example, sequences $\{D_t\}_{t=0}^{T}$ and $\{G_t\}_{t=0}^{T}$ are exogenous. 
 
 In addition, we assume that the lump sum taxes $\{\delta_{yt}, \delta_{ot}\}_{t=0}^{T}$ are given and known to the households.
 
@@ -1081,7 +1081,7 @@ class AK2():
             ax.set_xlabel('t')
 ```
 
-As before, We can initialize an instance of class `AK2` given the model parameters $\{\alpha, \beta\}$ and then use it for various fiscal policy experiments.
+We can initialize an instance of class `AK2` with model parameters $\{\alpha, \beta\}$ and then use it for various fiscal policy experiments.
 
 ```{code-cell} ipython3
 ak2 = AK2(α, β)
@@ -1165,13 +1165,11 @@ for i, name in enumerate(['τ', 'D', 'G']):
 
 ## Working when old as well as when young
 
+Now let's assume that each person supplies $1/2$ labor unit when both young and old.
 
+The aggregate labor supply doesn't change.
 
-Changing the assumption that agents only supply $1$ labor unit when young, but assume that they supply $1/2$ labor unit when young and old.
-
-The aggregate labor supply in the economy won't change.
-
-Now the lifetime budget constraint becomes
+The lifetime budget constraint becomes
 
 $$
 C_{yt}+\frac{C_{ot+1}}{1+r_{t+1}\left(1-\tau_{t+1}\right)}=\frac{1}{2}W_{t}\left(1-\tau_{t}\right)+\frac{1}{2}\frac{W_{t+1}\left(1-\tau_{t+1}\right)}{1+r_{t+1}\left(1-\tau_{t+1}\right)}
@@ -1384,7 +1382,9 @@ plt.title('K')
 
 
 
-Here is a demonstration of how to use `interp`. This jitted function is very useful for solving optimal consumption and saving problems using Bellman equations.
+Here is a demonstration of how to use `interp`.
+
+This jitted function is very useful for solving optimal consumption and saving problems using Bellman equations.
 
 ```{code-cell} ipython3
 !pip install interpolation
