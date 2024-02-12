@@ -9,8 +9,9 @@ sections:
 # - file: ar1_turningpts
 # - file: prob_matrix
 - file: PT_intro
-- file: ak2_tom
+# - file: ak2_tom
 - file: ak2_zejin 
+- file: money_inflation
 # - file: PT_static
 # - file: PT_dynamic
 # - file: markov_switching_lss
