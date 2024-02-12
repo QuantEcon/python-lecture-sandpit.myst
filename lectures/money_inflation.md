@@ -52,7 +52,7 @@ Let
   * $g$ be the government deficit that is financed by printing currency at $t \geq 1$
   * $m_{t+1}^d$ be the demand at time $t$ for currency  to bring into time $t+1$
   * $p_t$ be  the price level at time $t$
-  * $b_t$ be real balances at time $t$
+  * $b_t = \frac{m_{t+1}}{p_t}$ is real balances at the end of time $t$ 
   * $R_t = \frac{p_t}{p_{t+1}} $ be the gross rate of return on currency held from time $t$ to time $t+1$
   
 It is often helpful  to state units in which quantitities are measured:
@@ -118,20 +118,26 @@ or
 
 $$
 b_t - b_{t-1} R_{t-1} = g
-$$
+$$ (eq:bmotion)
 
 where
 
   * $b_t = \frac{m_{t+1}}{p_t}$ is real balances at the end of period $t$
   * $R_{t-1} = \frac{p_{t-1}}{p_t}$ is the gross rate of return on real balances held from $t-1$ to $t$
+
+The demand for real balances is 
+
+$$
+b_t = \gamma_1 - \gamma_2 R_t^{-1} . 
+$$ (eq:bdemand)
   
-We'll restrict our attention to  parameter values and  associated gross real rates of return on real balances that assure that the demand for real balances is positive, which according to (1) means that
+We'll restrict our attention to  parameter values and  associated gross real rates of return on real balances that assure that the demand for real balances is positive, which according to {eq}`eq:bdemand` means that
 
 $$
 b_t = \gamma_1 - \gamma_2 R_t^{-1} > 0 
-$$ (eq:bdynamics)
+$$ 
 
-which implies that
+which implies that 
 
 $$
 R_t \geq \left( \frac{\gamma_2}{\gamma_1} \right) \equiv \underline R
@@ -191,7 +197,7 @@ $$
 R_t \in \bar R  = [\underline R, \overline R],  \quad t \geq 0. 
 $$
 
-Maximizing steady state seigniorage  {eq}`eq:SSsigng` with respect to $\bar R$, we find that the ßmaximizing rate of return on currency is 
+Maximizing steady state seigniorage  {eq}`eq:SSsigng` with respect to $\bar R$, we find that the maximizing rate of return on currency is 
 
 $$
 \bar R_{\rm max} = \sqrt{\frac{\gamma_2}{\gamma_1}}
@@ -249,7 +255,7 @@ print("seignmax = ",seignmax)
 
 Now let's plot seigniorage as a function of altenative potential steady-state values of $R$.
 
-We'll see that there are two values of $R$ that attain seigniorage levels equal to $g$.ß
+We'll see that there are two values of $R$ that attain seigniorage levels equal to $g$.
 
 ```{code-cell} ipython3
 import numpy as np
@@ -317,9 +323,9 @@ We can deploy one of two computation stratgies.
 
    * set $R_0 \in [\underline R, \overline R]$ and compute $b_0 = \gamma_1 - \gamma_2/R_0$.
 
-   * compute sequences $\{R_t, b_t\}_{t=1}^\infty$ of rates of return and real balances that are associated with an equilibrium by solving the following equations sequentially for $t \geq 1$:
+   * compute sequences $\{R_t, b_t\}_{t=1}^\infty$ of rates of return and real balances that are associated with an equilibrium by solving equation {eq}`eq:bmotion` and {eq}`eq:bdemand` sequentially  for $t \geq 1$; i.e., we want to solve 
    \begin{align}
-b_t & = b_{t-1} R_{t-1} + p_t \cr
+b_t & = b_{t-1} R_{t-1} + g \cr
 R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t 
 \end{align}
 
@@ -335,7 +341,7 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
   $$
    \begin{align}
    p_t & = R_t p_{t-1} \cr
-   m_t & = b_t p_t 
+   m_t & = b_{t-1} p_t 
    \end{align}
   $$ (eq:method1) 
    
@@ -401,7 +407,7 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 We proceed as follows:
 
 Start at $t=0$ 
- * select a  $R_0 \in \in [ß\underline R, \overline R]$  
+ * select a  $R_0 \in [\underline R, \overline R]$  
  * compute   $b_0 = \gamma_1 - \gamma_0 R_0^{-1} $ 
  
 Then  for $t \geq 1$ construct $(b_t, R_t)$ by
