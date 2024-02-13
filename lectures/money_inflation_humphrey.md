@@ -458,7 +458,7 @@ def draw_paths(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
 
     fig, axs = plt.subplots(2, 1, figsize=(8, 8), sharex=True)
     
-    # Define graphical paramters
+    # Define graphical parameters
     dashed_param = {'color':'grey', 
                     'linestyle': '--',
                     'lw': 1.5,
@@ -472,20 +472,20 @@ def draw_paths(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
                   'marker': 'o',
                   'markersize': 3}
     
-    # Iterating over R_0s and simulate the system 
+    # Iterate over R_0s and simulate the system 
     for R0 in R0_values:
         b_values, R_values = simulate_system(
                         R0, γ1, γ2, g, num_steps)
         
-        # Plotting R_t against time
+        # Plot R_t against time
         axs[0].plot(range(num_steps), R_values, 
                     **line_param)
         
-        # Plotting b_t against time
+        # Plot b_t against time
         axs[1].plot(range(num_steps), b_values, 
                     **line_param)
         
-    # Adding dashed lines for R_u, R_l and γ2/γ1
+    # Add dashed lines for R_u, R_l and γ2/γ1
     axs[0].axhline(y=R_u, **dashed_param)
     axs[0].axhline(y=R_l, **dashed_param)
     axs[0].axhline(y=γ2/γ1, **dashed_param)
