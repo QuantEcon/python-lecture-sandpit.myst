@@ -258,9 +258,15 @@ print("R_max =", R_max)
 print("Max seigniorage =", max_seign)
 ```
 
-Now let's plot seigniorage as a function of altenative potential steady-state values of $R$.
+Now let's plot seigniorage as a function of alternative potential steady-state values of $R$.
 
-We'll see that there are two values of $R$ that attain seigniorage levels equal to $g$.
+We'll see that there are two values of $R$ that attain seigniorage levels equal to $g$,
+one that we'll denote $R_l$, another that we'll denote $R_u$.
+
+They satisfy $R_l < R_u$ and are affiliated with a higher inflation tax rate $(1-R_l)$ and a lower
+inflation tax rate $1 - R_u$.  
+
+
 
 ```{code-cell} ipython3
 ---
@@ -320,9 +326,9 @@ We shall  deploy two distinct computation strategies.
 
 ### Method 1 
 
-   * set $R_0 \in [\underline R, \overline R]$ and compute $b_0 = \gamma_1 - \gamma_2/R_0$.
+   * set $R_0 \in [\frac{\gamma_2}{\gamma_1}, R_u]$ and compute $b_0 = \gamma_1 - \gamma_2/R_0$.
 
-   * compute sequences $\{R_t, b_t\}_{t=1}^\infty$ of rates of return and real balances that are associated with an equilibrium by solving equation {eq}`eq:bmotion` and {eq}`eq:bdemand` sequentially  for $t \geq 1$; i.e., we want to solve 
+   * compute sequences $\{R_t, b_t\}_{t=1}^\infty$ of rates of return and real balances that are associated with an equilibrium by solving equation {eq}`eq:bmotion` and {eq}`eq:bdemand` sequentially  for $t \geq 1$:  
    \begin{align}
 b_t & = b_{t-1} R_{t-1} + g \cr
 R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t 
@@ -346,7 +352,7 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 **Remark 1:** method 1 uses an indirect approach to computing an equilibrium by first computing an equilbrium  $\{R_t, b_t\}_{t=0}^\infty$ sequence and then using it to back out an equilibrium  $\{p_t, m_t\}_{t=0}^\infty$  sequence.
 
 
- **Remark 2:** notice that  method 1 starts by picking an **initial condition** $R_0$ from a set $[\underline R, \overline R]$. That we have to do this is a symptom that equilibrium $\{p_t, m_t\}_{t=0}^\infty$ sequences are not unique.  There is actually a continuum of equilibria indexed by a choice of $R_0$ from the set $[\underline R, \overline R]$ that we shall describe soon. 
+ **Remark 2:** notice that  method 1 starts by picking an **initial condition** $R_0$ from a set $[\frac{\gamma_2}{\gamma_1}, R_u]$. An equilibrium $\{p_t, m_t\}_{t=0}^\infty$ sequences are not unique.  There is actually a continuum of equilibria indexed by a choice of $R_0$ from the set $[\frac{\gamma_2}{\gamma_1}, R_u]$. 
 
  **Remark 3:** associated with each selection of $R_0$ there is a unique $p_0$ described by
  equation {eq}`eq:p0fromR0`.
@@ -392,12 +398,12 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 %b_0 = \gamma_1 - \gamma_0 R_0^{-1} 
 %$$
 
-Remember that there exist  two steady state values $R_{\rm min} \equiv R_l < R_{\rm max} \equiv R_u$  of the rate of return on currency  $R_t$.
+Remember that there exist  two steady state equilibrium  values $ R_l <  R_u$  of the rate of return on currency  $R_t$.
 
 We proceed as follows.
 
 Start at $t=0$ 
- * select a  $R_0 \in [\underline R, R_u]$  
+ * select a  $R_0 \in [\frac{\gamma_2}{\gamma_1}, R_u]$  
  * compute   $b_0 = \gamma_1 - \gamma_0 R_0^{-1} $ 
  
 Then  for $t \geq 1$ construct $(b_t, R_t)$ by
@@ -411,15 +417,15 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 When we implement this part of method 1, we shall discover the following  striking 
 outcome:
 
- * starting from an $R_0$ in  $[\underline R, R_u]$, we shall find that 
+ * starting from an $R_0$ in  $[\frac{\gamma_2}{\gamma_1}, R_u]$, we shall find that 
 $\{R_t\}$ always converges to a limiting "steady state" value  $\bar R$ that depends on the initial
 condition $R_0$.
 
-  * there are only two possible limit points $\{ \bar R_{\rm min}, \bar R_{\rm max}\}$. 
+  * there are only two possible limit points $\{ R_l, R_u\}$. 
   
-  * for almost every initial condition $R_0$, $\lim_{t \rightarrow +\infty} R_t = \bar R_{\rm min}$.
+  * for almost every initial condition $R_0$, $\lim_{t \rightarrow +\infty} R_t = R_l$.
   
-  * if and only if $R_0 = \bar R_{\rm max}$, $\lim_{t \rightarrow +\infty} R_t = \bar R_{\rm max}$.
+  * if and only if $R_0 = R_u$, $\lim_{t \rightarrow +\infty} R_t = R_u$.
   
 The quantity   $1 - R_t$ can be interpreted as an **inflation tax rate** that the government imposes on holders of its currency.
 
@@ -508,9 +514,9 @@ def draw_paths(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
     plt.show()
 ```
 
-**REQUEST FOR HUMPHREY: YOU DID A GREAT JOB.  I'D LIKE TO ASK A SMALL TWEAK. I'D LIKE  THE GRAPH BELOW TO BE FOR VALUES OF R_0 IN THE INTERVAL [\gamma_2/\gamma_1, R_u]  INSTEAD OF THE ONE THAT I HAD ORIGINALLY ASKED FOR AND THAT YOU PLOTTED.  SO THERE WILL BE SOME STARTING FROM BELOW R_l, but NONE STARTING FROM ABOVE R_u.  MIGHT YOU BE ABLE TO DO THIS. THANKS SO MUCH. THE GRAPH IS PERFECT FOR MY PURPOSES. THANK YOU.**
 
-Let's plot  distinct outcomes  associated with several  $R_0 \in [\underline R, \overline R]$.
+
+Let's plot  distinct outcomes  associated with several  $R_0 \in [\frac{\gamma_2}{\gamma_1}, R_u]$.
 
 Each line below shows a path associated with a different $R_0$.
 
@@ -518,7 +524,7 @@ Each line below shows a path associated with a different $R_0$.
 ---
 mystnb:
   figure:
-    caption: Paths from different $R_0$ values
+    caption: Paths of $R_t$ (top panel) and $b_t$ (bottom panel) starting from different initial condition $R_0$
     name: R0_path
     width: 500px
 ---
@@ -530,7 +536,7 @@ draw_paths(R0s, R_u, R_l,
            γ1, γ2, g, num_steps=20)
 ```
 
-Notice how sequences that  start from $R_0 \in [\underline R, \overline R)$ converge to the steady state  associated with  to $\underline R$.
+Notice how sequences that  start from $R_0$ in the half-open interval $[R_l, R_u)$ converge to the steady state  associated with  to $ R_l$.
 
 +++ {"user_expressions": []}
 
