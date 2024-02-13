@@ -157,7 +157,7 @@ that is consistent with a nonnegative demand for real balances.
 
 
 
-We shall describe two distinct but closely related ways of computing an equilibrium $\{p_t, m_t\}_{t=0}$ sequence.
+We shall describe two distinct but closely related ways of computing a pair   $\{p_t, m_t\}_{t=0}^\infty$ of sequences for the price level and money supply.
 
 But first it is instructive to describe a special type of equilibrium known as a **steady state**.
 
@@ -282,17 +282,17 @@ plt.plot(R_values, seign_values, label='inflation tax revenue')
 plt.axhline(y=g, color='red', linestyle='--', label='government deficit')
 plt.xlabel('$R$')
 plt.ylabel('seigniorage')
-plt.title('Revenue from inflation tax')
+#plt.title('Steady state revenue from inflation tax')
 plt.legend()
 plt.grid(True)
 plt.show()
 ```
 
-Let's print the two steady-state rates of return $\bar R$ and the seigniorge revenues that they earn the government.
+Let's print the two steady-state rates of return $\bar R$ and the associated seigniorage revenues that the government collects.
 
-(By contruction, both state state rates of return should raise the same amounts real revenue).
+(By contruction, both steady state rates of return should raise the same amounts real revenue).
 
-The following code confirms this, we hope.
+We hope that the following code will  confirm this.
 
 ```{code-cell} ipython3
 g1 = seign(R_u, γ1, γ2, g)
@@ -315,9 +315,9 @@ print(f"R_max, g_max = {R_max:.4f}, {g_max:.4f}")
 
 We now proceed to compute equilibria, not necessarily steady states.
 
-We can deploy one of two computation stratgies.
+We shall  deploy two distinct computation strategies.
 
-**Method 1:** 
+### Method 1 
 
    * set $R_0 \in [\underline R, \overline R]$ and compute $b_0 = \gamma_1 - \gamma_2/R_0$.
 
@@ -328,11 +328,11 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 \end{align}
 
    
-   * Construct an equilibrium $p_0$ from 
+   * Construct the associated equilibrium $p_0$ from 
   
    $$
    p_0 = \frac{m_0}{\gamma_1 - g - \gamma_2/R_0}
-   $$
+   $$ (eq:p0fromR0)
    
    * compute $\{p_t, m_t\}_{t=1}^\infty$  by solving the following equations sequentially
   
@@ -343,13 +343,18 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
    \end{align}
   $$ (eq:method1) 
    
-**Remark:** method 1 uses an indirect approach to computing an equilibrium by first computing an equilbrium  $\{R_t, b_t\}_{t=0}^\infty$ sequence and then using it to back out an equilibrium  $\{p_t, m_t\}_{t=0}^\infty$  sequence.
+**Remark 1:** method 1 uses an indirect approach to computing an equilibrium by first computing an equilbrium  $\{R_t, b_t\}_{t=0}^\infty$ sequence and then using it to back out an equilibrium  $\{p_t, m_t\}_{t=0}^\infty$  sequence.
+
+
  
- **Remark:** notice that  method 1 starts by picking an **initial condition** $R_0$ from a set $[\underline R, \overline R]$. That we have to do this is a symptom that equilibrium $\{p_t, m_t\}_{t=0}^\infty$ sequences are not unique.  There is actually a continuum of them indexed by a choice of $R_0$ from the set $[\underline R, \overline R]$ that we shall describe soon. 
+ **Remark 2:** notice that  method 1 starts by picking an **initial condition** $R_0$ from a set $[\underline R, \overline R]$. That we have to do this is a symptom that equilibrium $\{p_t, m_t\}_{t=0}^\infty$ sequences are not unique.  There is actually a continuum of equilibria indexed by a choice of $R_0$ from the set $[\underline R, \overline R]$ that we shall describe soon. 
+
+ **Remark 3:** associated with each selection of $R_0$ there is a unique $p_0$ described by
+ equation {eq}`eq:p0fromR0`.
  
  
    
-**Method 2:** 
+### Method 2
 
    This method deploys a direct approach. 
    It defines a "state vector" 
@@ -376,11 +381,9 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
    
    But what about $p_0$?  
    
-   Isn't it  something that we want  to be **deteR_mined** by our model?
+   Isn't it  something that we want  to be **determined** by our model?
 
-   Yes, but sometimes we want too much, as we shall see now. 
-   
-   There is actually a continuum of initial $p_0$ levels that are compatible with the existence of an equilibrium.  
+   Yes, but sometimes we want too much, because there is actually a continuum of initial $p_0$ levels that are compatible with the existence of an equilibrium.  
    
    As we shall see soon, selecting an initial $p_0$ in method 2 is intimately tied to selecting an initial rate of return on currency $R_0$ in method 1. 
    
@@ -402,7 +405,7 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 %b_0 = \gamma_1 - \gamma_0 R_0^{-1} 
 %$$
 
-We proceed as follows:
+We proceed as follows.
 
 Start at $t=0$ 
  * select a  $R_0 \in [\underline R, \overline R]$  
@@ -429,11 +432,17 @@ condition $R_0$.
   
   * if and only if $R_0 = \bar R_{\rm max}$, $\lim_{t \rightarrow +\infty} R_t = \bar R_{\rm max}$.
   
-When we recognize that $1 - R_t$ can be interpreted as an **inflation tax rate** that the government imposes on holders of its currency, we shall see that the existence of two steady state rates of return on currency
-that serve to finance the government deficit of $g$ indicates the presence of a **Laffer curve** in the inflation tax rate.
+The quantity   $1 - R_t$ can be interpreted as an **inflation tax rate** that the government imposes on holders of its currency.
 
-REQUEST FOR HUMPHREY:  PLEASE BEAUTIFY AND IMPROVE THE CODE BELOW AND USE IT TO DO THE FOLLOWING:
-(1) FOR AN INITIAL R_0 THAT WE'LL SET, GRAPH VALUES OF $R_t$ and $b_t$ OVER TIME.  GENERATE SEVERAL EXMPLES.  WE'LL FIND THAT UNLESS WE START R_0 RIGHT AT THE HIGHER STEADY STATE VALUE, R_0 WILL DIVERGE (IF WE START IT ABOVE THE HIGHEST LEVEL) OR ELSE CONVERGE TO THE LOWER STEADY STATE VALUE OF R_0
+
+We shall soon  see that the existence of two steady state rates of return on currency
+that serve to finance the government deficit of $g$ indicates the presence of a **Laffer curve** in the inflation tax rate.  
+
+```{note}
+Arthur Laffer's curve plots a hump shaped curve of revenue raised from a tax against the tax rate.  
+Its hump shape indicates that there are typically two tax rates that yield the same amount of revenue. This is due to two countervailing courses, one being that raising a tax rate typically decreases the **base** of the tax as people take decisions to reduce their exposure to the tax.
+```
+
 
 ```{code-cell} ipython3
 def simulate_system(R0, γ1, γ2, g, num_steps):
@@ -452,71 +461,8 @@ def simulate_system(R0, γ1, γ2, g, num_steps):
     return b_values, R_values
 ```
 
-```{code-cell} ipython3
-def draw_path(R0, R_u, R_l, 
-              γ1, γ2, g, pt_color, num_steps):
 
-    R0_values = [R_u, R_l, R0]
-    colors = ['blue', 'red', pt_color] 
-
-    plt.figure(figsize=(12, 6))
-    num_steps = 50
-
-    # Generate colors with varying alpha values
-    alphas = np.linspace(0.1, 1, num_steps)
-
-    for R0, color in zip(R0_values, colors):
-        b_values, R_values = simulate_system(R0, γ1, γ2, g, num_steps)
-        
-        if np.isclose(R0, R_u) or np.isclose(R0, R_l):
-            plt.axvline(x=b_values[-1], color=color, 
-                        linestyle='--', alpha=0.7)
-            plt.axhline(y=R_values[-1], color=color, 
-                        linestyle='--', alpha=0.7) 
-            
-            label = r'$R_l$' if np.isclose(R0, R_l) else r'$R_u$'
-            
-            plt.scatter(b_values[-1], R_values[-1], 
-                         marker='o', 
-                         color=color, 
-                         label=label)
-        else:
-            for i in range(1, num_steps):
-                plt.plot(b_values[i-1:i+1], R_values[i-1:i+1], 
-                         marker='o', linestyle='-', 
-                         color=color, alpha=alphas[i], 
-                         label=f'$R_0 = {R0:.2f}$' 
-                         if i == num_steps-1 else "")
-
-    plt.xlabel('$b$')
-    plt.ylabel('$R$')
-    plt.legend(loc='upper left')
-    plt.grid(True)
-
-    plt.show()
-```
-
-```{code-cell} ipython3
----
-mystnb:
-  figure:
-    caption: System evolution for Different $R_0$ over time
-    name: gdppc_gbr1
-    width: 500px
----
-R0 = 0.7
-
-draw_path(R0, R_u, R_l, 
-          γ1, γ2, g, 'green', num_steps=20)
-```
-
-```{code-cell} ipython3
-R0 = 1
-    
-draw_path(R0, R_u, R_l, γ1, γ2, g, 'brown', num_steps=20)
-```
-
-Here is another way to visualize the same idea
+Let's write some code plot outcomes for several possible initial values $R_0$.
 
 ```{code-cell} ipython3
 def draw_seperate(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
@@ -558,9 +504,9 @@ def draw_seperate(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
     plt.show()
 ```
 
-First we examine the path for $R_0 \in [\underline R, \overline R]$.
+Let's plot  distinct outcomes  associated with several  $R_0 \in [\underline R, \overline R]$.
 
-Each line below shows the path from a different $R_0$
+Each line below shows a path associated with a different $R_0$.
 
 ```{code-cell} ipython3
 R0s = np.linspace(R_l, R_u, 10)
@@ -568,17 +514,11 @@ draw_seperate(R0s, R_u, R_l,
           γ1, γ2, g, num_steps=20)
 ```
 
-We find all sequences starting from $R_0 \in [\underline R, \overline R]$ converge to the steady state that corresponds to $\underline R$,
+Notice how sequences that  start from $R_0 \in [\underline R, \overline R)$ converge to the steady state  associated with  to $\underline R$.
 
-Now we examine the cases where $R_0 > \overline R$
 
-```{code-cell} ipython3
-R0s = np.linspace(R_u, R_u+10, 10)
-draw_seperate(R0s, R_u, R_l, 
-          γ1, γ2, g, num_steps=20)
-```
 
-We find them diverge at the initial timesteps and then converge to the steady state corresponding to $\underline R$.
+
 
 +++ {"user_expressions": []}
 
