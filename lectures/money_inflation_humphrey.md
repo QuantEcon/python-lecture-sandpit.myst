@@ -267,9 +267,10 @@ We'll see that there are two values of $R$ that attain seigniorage levels equal 
 mystnb:
   figure:
     caption: Revenue from inflation tax
-    name: gdppc_gbr1
+    name: infl_tax
     width: 500px
 ---
+
 # Generate values for R
 R_values = np.linspace(γ2/γ1, 1, 250)
 
@@ -327,7 +328,6 @@ b_t & = b_{t-1} R_{t-1} + g \cr
 R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t 
 \end{align}
 
-   
    * Construct the associated equilibrium $p_0$ from 
   
    $$
@@ -346,14 +346,11 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 **Remark 1:** method 1 uses an indirect approach to computing an equilibrium by first computing an equilbrium  $\{R_t, b_t\}_{t=0}^\infty$ sequence and then using it to back out an equilibrium  $\{p_t, m_t\}_{t=0}^\infty$  sequence.
 
 
- 
  **Remark 2:** notice that  method 1 starts by picking an **initial condition** $R_0$ from a set $[\underline R, \overline R]$. That we have to do this is a symptom that equilibrium $\{p_t, m_t\}_{t=0}^\infty$ sequences are not unique.  There is actually a continuum of equilibria indexed by a choice of $R_0$ from the set $[\underline R, \overline R]$ that we shall describe soon. 
 
  **Remark 3:** associated with each selection of $R_0$ there is a unique $p_0$ described by
  equation {eq}`eq:p0fromR0`.
  
- 
-   
 ### Method 2
 
    This method deploys a direct approach. 
@@ -387,16 +384,6 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
    
    As we shall see soon, selecting an initial $p_0$ in method 2 is intimately tied to selecting an initial rate of return on currency $R_0$ in method 1. 
    
-   
-   
-  
-
-
-
-
-
-
-
 ## Computation Method 1  
 
 %We start from an arbitrary $R_0$ and  $b_t = \frac{m_{t+1}}{p_t}$, we have 
@@ -445,16 +432,15 @@ Arthur Laffer's curve plots a hump shaped curve of revenue raised from a tax aga
 Its hump shape indicates that there are typically two tax rates that yield the same amount of revenue. This is due to two countervailing courses, one being that raising a tax rate typically decreases the **base** of the tax as people take decisions to reduce their exposure to the tax.
 ```
 
-
 ```{code-cell} ipython3
 def simulate_system(R0, γ1, γ2, g, num_steps):
-    # Initialize arrays to store results
+    # Initialize lists to store results
     b_values = [γ1 - γ2 / R0]
     R_values = [1 / ((γ1 / γ2) - (γ2**(-1) * b_values[0]))]
 
     # Iterate over time steps
     for t in range(1, num_steps):
-        # Calculate b_t and R_t based on the given formulas
+        # Calculate b_t and R_t
         b_t = b_values[t - 1] * R_values[t - 1] + g
         R_t_inverse = (γ1 / γ2) - γ2**(-1) * b_t
         R_values.append(1 / R_t_inverse)
@@ -463,41 +449,57 @@ def simulate_system(R0, γ1, γ2, g, num_steps):
     return b_values, R_values
 ```
 
-
 Let's write some code plot outcomes for several possible initial values $R_0$.
 
 ```{code-cell} ipython3
-def draw_seperate(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
+:tags: [hide-cell]
+
+def draw_paths(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
 
     fig, axs = plt.subplots(2, 1, figsize=(8, 8), sharex=True)
-    dashed_label = False
     
+    # Define graphical paramters
+    dashed_param = {'color':'grey', 
+                    'linestyle': '--',
+                    'lw': 1.5,
+                    'alpha': 0.6}
+    
+    label_param = {'verticalalignment': 'center', 
+                   'color': 'grey',
+                   'size': 12}
+    
+    line_param = {'lw': 1.5, 
+                  'marker': 'o',
+                  'markersize': 3}
+    
+    # Iterating over R_0s and simulate the system 
     for R0 in R0_values:
-        b_values, R_values = simulate_system(R0, γ1, γ2, g, num_steps)
-        
-        # Adding dashed lines for R_u and R_l
-        axs[0].axhline(y=R_u, color='grey', 
-                       linestyle='--', label='' if dashed_label else r'$[R_l, R_u]$', 
-                       alpha=0.7)
-        axs[0].axhline(y=R_l, color='grey', 
-                       linestyle='--', 
-                       alpha=0.7)
-        
-        dashed_label = True
+        b_values, R_values = simulate_system(
+                        R0, γ1, γ2, g, num_steps)
         
         # Plotting R_t against time
         axs[0].plot(range(num_steps), R_values, 
-                    lw=0.5, marker='o',
-                    markersize=3)
+                    **line_param)
         
         # Plotting b_t against time
         axs[1].plot(range(num_steps), b_values, 
-                    lw=0.5, marker='o',
-                    markersize=3)
+                    **line_param)
         
-        
+    # Adding dashed lines for R_u, R_l and γ2/γ1
+    axs[0].axhline(y=R_u, **dashed_param)
+    axs[0].axhline(y=R_l, **dashed_param)
+    axs[0].axhline(y=γ2/γ1, **dashed_param)
+
+    # Add text annotations for dashed lines
+    axs[0].text(num_steps * 1.02, R_u, 
+                r'$R_u$', **label_param)
+    axs[0].text(num_steps * 1.02, R_l, 
+                r'$R_l$', **label_param)
+    axs[0].text(num_steps * 1.02, γ2/γ1, 
+                r'$\frac{\gamma_2}{\gamma_1}$', 
+                **label_param)
+
     axs[0].set_ylabel('$R_t$')
-    axs[0].legend()
     
     axs[1].set_xlabel('timestep')
     axs[1].set_ylabel('$b_t$')
@@ -513,16 +515,22 @@ Let's plot  distinct outcomes  associated with several  $R_0 \in [\underline R, 
 Each line below shows a path associated with a different $R_0$.
 
 ```{code-cell} ipython3
-R0s = np.linspace(R_l, R_u, 10)
-draw_seperate(R0s, R_u, R_l, 
-          γ1, γ2, g, num_steps=20)
+---
+mystnb:
+  figure:
+    caption: Paths from different $R_0$ values
+    name: R0_path
+    width: 500px
+---
+
+# Create a grid of R_0s
+R0s = np.linspace(γ2/γ1, R_u, 9)
+R0s = np.append(R_l, R0s)
+draw_paths(R0s, R_u, R_l, 
+           γ1, γ2, g, num_steps=20)
 ```
 
 Notice how sequences that  start from $R_0 \in [\underline R, \overline R)$ converge to the steady state  associated with  to $\underline R$.
-
-
-
-
 
 +++ {"user_expressions": []}
 
