@@ -405,10 +405,12 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 %b_0 = \gamma_1 - \gamma_0 R_0^{-1} 
 %$$
 
+Remember that there exist  two steady state values $R_{\rm min} \equiv R_l < R_{\rm max} \equiv R_u$  of the rate of return on currency  $R_t$.
+
 We proceed as follows.
 
 Start at $t=0$ 
- * select a  $R_0 \in [\underline R, \overline R]$  
+ * select a  $R_0 \in [\underline R, R_u]$  
  * compute   $b_0 = \gamma_1 - \gamma_0 R_0^{-1} $ 
  
 Then  for $t \geq 1$ construct $(b_t, R_t)$ by
@@ -422,7 +424,7 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
 When we implement this part of method 1, we shall discover the following  striking 
 outcome:
 
- * starting from an $R_0$ in an admissible set $[\underline R, \overline R]$, we shall find that 
+ * starting from an $R_0$ in  $[\underline R, R_u]$, we shall find that 
 $\{R_t\}$ always converges to a limiting "steady state" value  $\bar R$ that depends on the initial
 condition $R_0$.
 
@@ -503,6 +505,8 @@ def draw_seperate(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
     plt.tight_layout()
     plt.show()
 ```
+
+**REQUEST FOR HUMPHREY: YOU DID A GREAT JOB.  I'D LIKE TO ASK A SMALL TWEAK. I'D LIKE  THE GRAPH BELOW TO BE FOR VALUES OF R_0 IN THE INTERVAL [\gamma_2/\gamma_1, R_u]  INSTEAD OF THE ONE THAT I HAD ORIGINALLY ASKED FOR AND THAT YOU PLOTTED.  SO THERE WILL BE SOME STARTING FROM BELOW R_l, but NONE STARTING FROM ABOVE R_u.  MIGHT YOU BE ABLE TO DO THIS. THANKS SO MUCH. THE GRAPH IS PERFECT FOR MY PURPOSES. THANK YOU.**
 
 Let's plot  distinct outcomes  associated with several  $R_0 \in [\underline R, \overline R]$.
 
