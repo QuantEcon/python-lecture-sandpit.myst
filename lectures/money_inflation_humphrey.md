@@ -247,8 +247,8 @@ R_u, R_l = R_steady
 print("[R_u, R_l] =", R_steady)
 
 # Calculate initial guess for p0
-p0 = M0 / (γ1 - g - γ2 / R_u)
-print("p0 =", p0)
+p0min = M0 / (γ1 - g - γ2 / R_u)
+print("p0min =", p0min)
 R_max = np.sqrt(γ2 / γ1)
 
 # Calculate seigniorage revenue
@@ -542,77 +542,270 @@ Notice how sequences that  start from $R_0$ in the half-open interval $[R_l, R_u
 
 ## Computation method 2 
 
+Set $m_t = m_t^d $ for all $t \geq -1$. 
 
+Let 
 
-Set $m_t = m_t^d $ for all $t \geq -1$, and represent  equilibrium conditions {eq}`eq:demandmoney`, {eq}`eq:budgcontraint`, and    {eq}`eq:syeqdemand` as
+$$
+  y_t =  \begin{bmatrix} m_{t} \cr p_{t} \end{bmatrix} .
+$$
+
+Represent  equilibrium conditions {eq}`eq:demandmoney`, {eq}`eq:budgcontraint`, and    {eq}`eq:syeqdemand` as
 
 $$
 \begin{bmatrix} 1 & \gamma_2 \cr
                  1 & 0 \end{bmatrix} \begin{bmatrix} m_{t+1} \cr p_{t+1} \end{bmatrix} =
                  \begin{bmatrix} 0 & 1 \cr
                  1 & g \end{bmatrix} \begin{bmatrix} m_{t} \cr p_{t} \end{bmatrix} 
-$$
+$$ (eq:sytem101)
 
 or
 
 $$ 
-L y_t = N y_{t-1} 
+H_1 y_t = H_2  y_{t-1} 
 $$
 
 where 
 
-\begin{align} L & = \begin{bmatrix} 1 & \gamma_2 \cr
+\begin{align} H_1 & = \begin{bmatrix} 1 & \gamma_2 \cr
                  1 & 0 \end{bmatrix} \cr
-                N & = \begin{bmatrix} 0 & 1 \cr
-                 1 & g \end{bmatrix}  \cr
-                 y_t & = \begin{bmatrix} m_{t} \cr p_{t} \end{bmatrix}
+                H_2 & = \begin{bmatrix} 0 & 1 \cr
+                 1 & g \end{bmatrix}  
 \end{align}
 
 Define
 
 $$
-M = L^{-1} N
+H = H_1^{-1} H_2
 $$
 
-and write the system as
+and write the system  {eq}`eq:sytem101` as
 
 $$
-y_{t+1} = M y_t, \quad t \geq 0
+y_{t+1} = H y_t, \quad t \geq 0 
 $$ (eq:Vaughn)
+
+so that $\{y_t\}_{t=0}$ can be computed from
+
+$$
+y_t = H^t y_0, t \geq 0
+$$ (eq:ytiterate)
 
 where 
 
 $$
-y_0 = \begin{bmatrix} m_{0} \cr p_0 \end{bmatrix}
+y_0 = \begin{bmatrix} m_{0} \cr p_0 \end{bmatrix} .
 $$
 
 
-To find the smallest equilibrium  $p_0$, we use the invariant subspace methods described in section 5.6 of RMT5.  
+It is natural to take  $m_0$ as an initial condition determined outside the model.
+
+The mathematics seems to tell us that $p_0$ must also be determined outside the model, even though
+it is something that we actually wanted to be determined by the model.
+
+(As usual, we should listen when mathematics talks to us.)
+
+For now, let's just proceed mechanically on faith. 
 
 Compute the eigenvector decomposition 
 
 $$
-M = V D V^{-1}
+H=  Q \Lambda Q^{-1} 
 $$ 
 
-where $D$ is a diagonal matrix of eigenvalues and the columns of $V$ are eigenvectors correspondng to those eigenvalues.
+where $\Lambda$ is a diagonal matrix of eigenvalues and the columns of $Q$ are eigenvectors correspondng to those eigenvalues.
 
-Partition $V$ as
+It turns out that  
+
+
+$$
+\begin{bmatrix} {R_l}^{-1} & 0 \cr 
+                0 & {R_u}^{-1} \end{bmatrix}
+$$
+
+where $R_l$ and $R_u$ are the lower and higher steady-state rates of return on currency that we computed above.  
+
+
+
+Partition $Q$ as
 
 $$ 
-V =\begin{bmatrix} V_{11} & V_{12} \cr
-                   V_{21} & V_{22} \end{bmatrix}
+Q =\begin{bmatrix} Q_{11} & Q_{12} \cr
+                   Q_{21} & Q_{22} \end{bmatrix}
 $$
 
-Then set 
+Below we shall verify the following claims: 
 
+
+**Claims:** If we set 
 
 $$
-p_0 = V_{21} V_{11}^{-1}  m_{0} .
+p_0 = \overline p_0 \equiv Q_{21} Q_{11}^{-1}  m_{0} ,
+$$ (eq:magicp0)
+
+it turns out that 
+
+$$ 
+\frac{p_{t+1}}{p_t} = {R_u}^{-1}, \quad t \geq 0
 $$
 
-This is the unique value of $p_0$ that is consistent with a steady state equilibrium in which
-the rate of return on currency stays at the higher steady state value..
+
+However, if we set 
+
+$$ 
+p_0 > \bar p_0
+$$
+
+then
+
+$$
+\lim_{t\rightarrow + \infty} \frac{p_{t+1}}{p_t} = {R_l}^{-1}.
+$$
+
+Let's verify these claims step by step.
+
+
+
+Note that
+
+$$
+H^t = Q \Lambda^t Q^{-1}
+$$
+
+so that
+
+$$
+y_t = Q \Lambda^t Q^{-1} y_0
+$$
+
+For almost all initial vectors $y_0$, the gross rate of inflation $\frac{p_{t+1}}{p_t}$ eventually converges to  the larger eigenvalue ${R_l}^{-1}$.
+
+The only way to avoid this outcome is for  $p_0$ to take  the specific value described by {eq}`eq:magicp0`.
+
+To understand  this situation,  we  use the following
+transformation
+
+$$
+y^*_t = Q^{-1} y_t . 
+$$
+
+Dynamics of $y^*_t$ are evidently governed by 
+
+$$
+y^*_{t+1} = \Lambda^t y^*_t .
+$$ (eq:stardynamics)
+
+This equation represents the dynamics of our system  in a way that lets us  isolate the
+force that causes  gross inflation to converge to the inverse of the lower steady state rate
+of inflation $R_l$ that we discovered earlier. 
+
+Staring at  equation {eq}`eq:stardynamics` indicates that unless
+
+```{math}
+:label: equation_11
+
+y^*_0 = \begin{bmatrix} y^*_{1,0} \cr 0 \end{bmatrix}
+```
+
+the path of $y^*_t$,  and therefore the paths of both $m_t$ and $p_t$ given by
+$y_t = Q y^*_t$ will eventually grow at gross rates ${R_l}^{-1}$ as 
+$t \rightarrow +\infty$. 
+
+Equation {eq}`equation_11` also leads us to conclude that there is a unique setting
+for the initial vector $y_0$ for which both components forever grow at the lower rate ${R_u}^{-1}$. 
+
+
+For this to occur, the required setting of $y_0$ must evidently have the property
+that
+
+$$
+Q y_0 =  y^*_0 = \begin{bmatrix} y^*_{1,0} \cr 0 \end{bmatrix} .
+$$
+
+But note that since
+$y_0 = \begin{bmatrix} m_0 \cr p_0 \end{bmatrix}$ and $m_0$
+is given to us an initial condition,  $p_0$ has to do all the adjusting to satisfy this equation.
+
+Sometimes this situation is described informally  by saying that while $m_0$
+is truly a **state** variable, $p_0$ is a **jump** variable that
+must adjust at $t=0$ in order to satisfy the equation.
+
+Thus, in a nutshell the unique value of the vector $y_0$ for which
+the paths of $y_t$ **don't** eventually grow at rate ${R_l}^{-1}$ requires  setting the second component
+of $y^*_0$ equal to zero.
+
+The component $p_0$ of the initial vector
+$y_0 = \begin{bmatrix} m_0 \cr p_0 \end{bmatrix}$ must evidently
+satisfy
+
+$$
+Q^{\{2\}} y_0 =0
+$$
+
+where $Q^{\{2\}}$ denotes the second row of $Q^{-1}$, a
+restriction that is equivalent to
+
+```{math}
+:label: equation_12
+
+Q^{21} m_0 + Q^{22} p_0 = 0
+```
+
+where $Q^{ij}$ denotes the $(i,j)$ component of
+$Q^{-1}$.
+
+Solving this equation for $p_0$, we find
+
+```{math}
+:label: equation_13
+
+p_0 = - (Q^{22})^{-1} Q^{21} m_0.
+```
+
+
+#### A more convenient formula 
+
+We can get the equivalent but perhaps more convenient formula {eq}`eq:magicp0` for $p_0$ that is cast
+in terms of components of $Q$ instead of components of
+$Q^{-1}$.
+
+To get this formula, first note that because $(Q^{21}\ Q^{22})$ is
+the second row of the inverse of $Q$ and because
+$Q^{-1} Q = I$, it follows that
+
+$$
+\begin{bmatrix} Q^{21} & Q^{22} \end{bmatrix}  \begin{bmatrix} Q_{11}\cr Q_{21} \end{bmatrix} = 0
+$$
+
+which implies that
+
+$$
+Q^{21} Q_{11} + Q^{22} Q_{21} = 0.
+$$
+
+Therefore,
+
+$$
+-(Q^{22})^{-1} Q^{21} = Q_{21} Q^{-1}_{11}.
+$$
+
+So we can write
+
+```{math}
+
+p_0 = Q_{21} Q_{11}^{-1} m_0 .
+```
+
+whic is our formula {eq}`eq:magicp0`.
+
+It can be verified that this formula replicates itself over time in the sense  that
+
+```{math}
+:label: equation_15
+
+p_t = Q_{21} Q^{-1}_{11} m_t.
+```
+
 
 
 Let's compute $p_0$ in the code below.
@@ -625,122 +818,78 @@ Let's compute $p_0$ in the code below.
 g = 3.0
 M0 = 100
 
-m1 = np.array([[1, γ2], [1, 0]])  # This is $L$
-m2 = np.array([[0, γ1], [1, g]])  # This is $N$
+A1 = np.array([[1, γ2], [1, 0]])  # This is $L$
+A2 = np.array([[0, γ1], [1, g]])  # This is $N$
 
-m1, m2
+A1, A2
 
-print("m1 = ", m1)
+print("A1 = ", A1)
 
-print("m2 = ", m2)
+print("A2 = ", A2)
 
-M = np.linalg.inv(m1) @ m2
+A = np.linalg.inv(A1) @ A2
 
-print("M = ", M)
+print("A = ", A)
 
-d, v = np.linalg.eig(np.linalg.inv(m1) @ m2)
-v, d
+lam, Q = np.linalg.eig(np.linalg.inv(A1) @ A2)
+Q, lam
 
 
-d = np.diag(d)
+# lam = np.diag(lam)
 
 #v = np.linalg.inv(w)
 
 #print("w = ", w)
-print("d = ", d)
+print("lam = ", lam)
 
 #print("v = ", v)
 
 
-print (d)
+#print (d)
 
 
-Rsteady1 = 1/d[0]
-Rsteady2 = 1/d[1]
-
-print("Rsteady1 =", Rsteady1)
-print("Rsteady2 =", Rsteady2)
-
-
-d = np.diag(d)
-
-
-a1 = v @ d @ np.linalg.inv(v)
-
-print("M = ", M)
-print("a1 = ", a1)
-
-
-γ1 = 100
-γ2 = 50
-g = 3.0
-M0 = 100
-
-m1 = np.array([[1, γ2], [1, 0]])  # This is $L$
-m2 = np.array([[0, γ1], [1, g]])  # This is $N$
-
-m1, m2
-
-print("m1 = ", m1)
-
-print("m2 = ", m2)
-
-M = np.linalg.inv(m1) @ m2
-
-print("M = ", M)
-
-d, v = np.linalg.eig(np.linalg.inv(m1) @ m2)
-v, d
-
-
-Rsteady1 = 1/d[0]
-Rsteady2 = 1/d[1]
+Rsteady1 = 1/lam[0]
+Rsteady2 = 1/lam[1]
 
 print("Rsteady1 =", Rsteady1)
 print("Rsteady2 =", Rsteady2)
-      
-
-
-d = np.diag(d)
 
 
 
-
-#print("d = ", d)
-
-
-
-
-#a1 = v @ d @ np.linalg.inv(v)
-
-
-#a10 = v @ np.linalg.matrix_power(d, 10) @ np.linalg.inv(v)
-#M10 = np.linalg.matrix_power(M,10)
-
-#print("M10= ",M10)
-#print("a10= ", a10)
-
-p0 = (v[1, 0] / v[0, 0]) * M0
+p0 = (Q[1, 0] / Q[0, 0]) * M0
 
 
 
 y0 = np.array([M0, p0])
 
 print("p0 =", p0)
-print("p0 = ", p0)
+print("p0min =", p0min)
+
 
 print("y0 =", y0)
    
 
 
 
-print("M = ", M)
-print("a1 = ", a1)
 ```
 
 ```{code-cell} ipython3
 
+print("Q = ", Q)
+print("lam = ", lam)
 ```
 
 NOTE TO HUMPRHEY.  WHAT I'D LIKE TO DO IS WRITE SOME CODE TO ITERATE ON EQUATION SYSTEM 
-{eq}`eq:Vaughn` from initial condition $m_0$ and VARIOUS $p_0$ values. ONLY FOR THE ``STABILIZING'' $p_0$ value computed in the above code will the the inflation rate state at the inverse of the higher steady state rate of return on currency. FOR ALL OTHER ADMISSIBLE VALUES OF $p_0$, rates of return on currency will converge to the lower steady-state rate of return on currency.
+{eq}`eq:Vaughn` from initial condition $m_0$ and VARIOUS $p_0$ values. 
+
+ONLY FOR THE particular value of $p_0$ computed in the above code will the the inflation rate state at the inverse of the ** highe**r steady state rate of return on currency. 
+
+FOR ALL OTHER ADMISSIBLE VALUES OF $p_0$, rates of return on currency will converge to the lower steady-state rate of return on currency.
+
+I SUSPECT THAT SOME NICE GRAPHS COULD BE GOTTEN BY PLOTTING LOGARITHMS OF M_0 AND p_0 -- EACH SHOULD EVENTUALLY START GROWING AT A CONSTANT RATE.  
+
+OR MAYBE INSTEAD JUST PLOT THE GROSS RATES OF GROWTH, LIKE YOU HAVE ABOVE.  
+
+ARE YOU WILLING TO EXPERIMENT WITH THIS?
+
+
