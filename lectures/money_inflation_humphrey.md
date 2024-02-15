@@ -31,7 +31,7 @@ The law of motion for the supply of money assumes that the government prints mon
 Our model equates the demand for money to the supply at each time $t \geq 0$.
 
 Equality between those demands and supply gives in a **dynamic** model in which   money supply
-and  price level **sequences** are simultaneously deteR_mined by a special  set of simultaneous linear  
+and  price level **sequences** are simultaneously determined by a special  set of simultaneous linear  
 equations.
 
 These equations take the form of what are often called vector linear **difference equations**.  
@@ -64,7 +64,7 @@ Let
   * $b_t = \frac{m_{t+1}}{p_t}$ is real balances at the end of time $t$ 
   * $R_t = \frac{p_t}{p_{t+1}} $ be the gross rate of return on currency held from time $t$ to time $t+1$
   
-It is often helpful  to state units in which quantitities are measured:
+It is often helpful  to state units in which quantities are measured:
 
   * $m_t$ and $m_t^d$ are measured in dollars
   * $g$ is measured in time $t$ goods 
@@ -84,11 +84,11 @@ $$ (eq:demandmoney)
   
 Now we turn to the supply of money.
 
-We assume that $m_0 >0$ is an "initial condition" deteR_mined outside the model. 
+We assume that $m_0 >0$ is an "initial condition" determined outside the model. 
 
 We set $m_0$ at some arbitrary positive value, say \$100.
   
-For $ t \geq 1$, we assume that the supply of money is deteR_mined by the government's budget constraint
+For $ t \geq 1$, we assume that the supply of money is determined by the government's budget constraint
 
 $$
 m_{t+1} - m_{t} = p_t g , \quad t \geq 0
@@ -108,7 +108,7 @@ The demand for money at any time $t$ depends on the price level at time $t$ and 
 
 The supply of money at time $t+1$ depends on the money supply at time $t$ and the price level at time $t$.
 
-So the infinite sequence  of equations {eq}`eq:syeqdemand` for $ t \geq 0$ imply that the **sequences** $\{p_t\}_{t=0}^\infty$ and $\{m_t\}_{t=0}^\infty$ are tied together and ultimately simulataneously deteR_mined.
+So the infinite sequence  of equations {eq}`eq:syeqdemand` for $ t \geq 0$ imply that the **sequences** $\{p_t\}_{t=0}^\infty$ and $\{m_t\}_{t=0}^\infty$ are tied together and ultimately simulataneously determined.
 
 
 ## Equilibrium price and money supply sequences
@@ -227,13 +227,11 @@ A steady state value $\bar R$ solves quadratic equation {eq}`eq:steadyquadratic`
 So two steady states typically exist. 
 
 
-Let's set some parameter values and compute possible steady state rates of return on currency $\bar R$, the  signiorage maximizing rate of return on currency, and an object that we'll discuss later, namely, an initial price level $p_0$ associated with the maximum steady state rate of return on currency.
+Let's set some parameter values and compute possible steady state rates of return on currency $\bar R$, the  seigniorage maximizing rate of return on currency, and an object that we'll discuss later, namely, an initial price level $p_0$ associated with the maximum steady state rate of return on currency.
 
 +++
 
-First, we create a `namedtuple` to store pararmeters.
-
-We can reuse this `namedtuple` in our functions throughout this lecture
+First, we create a `namedtuple` to store parameters so that we can reuse this `namedtuple` in our functions throughout this lecture
 
 ```{code-cell} ipython3
 γ1 = 100
@@ -270,7 +268,7 @@ R_u, R_l = seign_model.R_u, seign_model.R_l
 p0_min = M0 / (γ1 - g - γ2 / R_u)
 print("p0_min =", p0_min)
 
-# Calculate signiorage maximizing rate of return
+# Calculate seigniorage maximizing rate of return
 R_max = np.sqrt(γ2 / γ1)
 
 # Calculate seigniorage revenue
@@ -317,7 +315,7 @@ plt.show()
 
 Let's print the two steady-state rates of return $\bar R$ and the associated seigniorage revenues that the government collects.
 
-(By contruction, both steady state rates of return should raise the same amounts real revenue).
+(By construction, both steady state rates of return should raise the same amounts real revenue).
 
 We hope that the following code will  confirm this.
 
@@ -369,7 +367,7 @@ R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t
    \end{align}
   $$ (eq:method1) 
    
-**Remark 1:** method 1 uses an indirect approach to computing an equilibrium by first computing an equilbrium  $\{R_t, b_t\}_{t=0}^\infty$ sequence and then using it to back out an equilibrium  $\{p_t, m_t\}_{t=0}^\infty$  sequence.
+**Remark 1:** method 1 uses an indirect approach to computing an equilibrium by first computing an equilibrium  $\{R_t, b_t\}_{t=0}^\infty$ sequence and then using it to back out an equilibrium  $\{p_t, m_t\}_{t=0}^\infty$  sequence.
 
 
  **Remark 2:** notice that  method 1 starts by picking an **initial condition** $R_0$ from a set $[\frac{\gamma_2}{\gamma_1}, R_u]$. An equilibrium $\{p_t, m_t\}_{t=0}^\infty$ sequences are not unique.  There is actually a continuum of equilibria indexed by a choice of $R_0$ from the set $[\frac{\gamma_2}{\gamma_1}, R_u]$. 
@@ -519,7 +517,7 @@ def draw_paths(R0_values, model, graph_params, num_steps):
         axes[1].plot(range(num_steps), b_values, 
                     **line_param)
         
-    # Add line and text annotations to subgraph 
+    # Add line and text annotations to the subgraph 
     annotate_graph(axes[0], model, 
                    num_steps, 
                    dashed_param, label_param)
@@ -929,7 +927,7 @@ def draw_iterations(p0s, model, graph_params,
         axes[2].plot(range(num_steps-1), R, 
                 **line_param)
         
-    # Add line and text annotations to subgraph 
+    # Add line and text annotations to the subgraph 
     annotate_graph(axes[2], model, 
                    num_steps, 
                    dashed_param, label_param)
