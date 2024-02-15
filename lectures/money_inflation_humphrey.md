@@ -176,7 +176,7 @@ b_t & = \bar b
 
 for $t \geq 0$.  
 
-To compute a steady state, we seek steady state values $\bar R, \bar b$ that satisfy steady-state versions of  both the government budget constraint and the demand function for real balances:
+To compute a steady state, we seek gross rates of return on currency  $\bar R, \bar b$ that satisfy steady-state versions of  both the government budget constraint and the demand function for real balances:
 
 \begin{align}
 g & = \bar b ( 1 - \bar R)  \cr
@@ -228,7 +228,7 @@ $$
 -\gamma_2 + (\gamma_1 + \gamma_2 + g) \bar R - \gamma_1 \bar R^2 = 0
 $$ (eq:steadyquadratic)
 
-A steady state value $\bar R$ solves quadratic equation {eq}`eq:steadyquadratic`.
+A steady state gross rate of return  $\bar R$ solves quadratic equation {eq}`eq:steadyquadratic`.
 
 So two steady states typically exist. 
 
@@ -286,7 +286,7 @@ inflation tax rate $1 - R_u$.
 ---
 mystnb:
   figure:
-    caption: Revenue from inflation tax
+    caption: Steady state revenue from inflation tax as function of steady state gross return on currency
     name: infl_tax
     width: 500px
 ---
