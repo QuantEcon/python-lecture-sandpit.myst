@@ -44,8 +44,8 @@ Let's start with some imports:
 
 ```{code-cell} ipython3
 import numpy as np
-%matplotlib inline
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 plt.rcParams["figure.figsize"] = (11, 5)
 from collections import namedtuple
 ```
@@ -71,9 +71,7 @@ It is often helpful  to state units in which quantitities are measured:
   * $p_t$ is measured in dollars per time $t$ goods
   * $R_t$ is measured in time $t+1$ goods per unit of time $t$ goods
   * $b_t$ is measured in time $t$ goods
-  
-  
-  
+   
   
 Our job now is to specify demand and supply functions for money. 
 
@@ -231,31 +229,55 @@ So two steady states typically exist.
 
 Let's set some parameter values and compute possible steady state rates of return on currency $\bar R$, the  signiorage maximizing rate of return on currency, and an object that we'll discuss later, namely, an initial price level $p_0$ associated with the maximum steady state rate of return on currency.
 
++++
+
+First, we create a `namedtuple` to store pararmeters.
+
+We can reuse this `namedtuple` in our functions throughout this lecture
+
 ```{code-cell} ipython3
-# Parameters
 γ1 = 100
 γ2 = 50
 g = 3.0
 M0 = 100
 
-def seign(R, γ1, γ2, g):
+# Create a namedtuple that contains parameters
+SeignModel = namedtuple("SeignModel", 
+                        ["γ1", "γ2", "g", 
+                         "M0", "R_u", "R_l"])
+
+def create_model(γ1=100, γ2=50, g=3.0, M0=100):
+    
+    # Calculate the steady states for R
+    R_steady = np.roots((-γ1, γ1 + γ2 - g, -γ2))
+    R_u, R_l = R_steady
+    print("[R_u, R_l] =", R_steady)
+    
+    return SeignModel(γ1=γ1, γ2=γ2, g=g, M0=M0, R_u=R_u, R_l=R_l)
+```
+
+Now we compute the $\bar R_{\rm max}$ and corresponding revenue
+
+```{code-cell} ipython3
+def seign(R, model):
+    γ1, γ2, g = model.γ1, model.γ2, model.g
     return -γ2/R + (γ1 + γ2)  - γ1 * R
 
-# Solve the quadratic equation to find roots
-R_steady = np.roots((-γ1, γ1 + γ2 - g, -γ2))
-R_u, R_l = R_steady
-print("[R_u, R_l] =", R_steady)
+seign_model = create_model()
+R_u, R_l = seign_model.R_u, seign_model.R_l
 
 # Calculate initial guess for p0
-p0min = M0 / (γ1 - g - γ2 / R_u)
-print("p0min =", p0min)
+p0_min = M0 / (γ1 - g - γ2 / R_u)
+print("p0_min =", p0_min)
+
+# Calculate signiorage maximizing rate of return
 R_max = np.sqrt(γ2 / γ1)
 
 # Calculate seigniorage revenue
-max_seign = seign(R_max, γ1, γ2, g)
+max_seign = seign(R_max, seign_model)
 
 print("R_max =", R_max)
-print("Max seigniorage =", max_seign)
+print("Max seigniorage revenue =", max_seign)
 ```
 
 Now let's plot seigniorage as a function of alternative potential steady-state values of $R$.
@@ -264,9 +286,7 @@ We'll see that there are two values of $R$ that attain seigniorage levels equal 
 one that we'll denote $R_l$, another that we'll denote $R_u$.
 
 They satisfy $R_l < R_u$ and are affiliated with a higher inflation tax rate $(1-R_l)$ and a lower
-inflation tax rate $1 - R_u$.  
-
-
+inflation tax rate $1 - R_u$.
 
 ```{code-cell} ipython3
 ---
@@ -276,12 +296,11 @@ mystnb:
     name: infl_tax
     width: 500px
 ---
-
 # Generate values for R
 R_values = np.linspace(γ2/γ1, 1, 250)
 
 # Calculate the function values
-seign_values = seign(R_values, γ1, γ2, g)
+seign_values = seign(R_values, seign_model)
 
 # Visualize seign_values against R values
 fig, ax = plt.subplots(dpi=300)
@@ -289,6 +308,7 @@ plt.plot(R_values, seign_values, label='inflation tax revenue')
 plt.axhline(y=g, color='red', linestyle='--', label='government deficit')
 plt.xlabel('$R$')
 plt.ylabel('seigniorage')
+
 #plt.title('Steady state revenue from inflation tax')
 plt.legend()
 plt.grid(True)
@@ -302,10 +322,10 @@ Let's print the two steady-state rates of return $\bar R$ and the associated sei
 We hope that the following code will  confirm this.
 
 ```{code-cell} ipython3
-g1 = seign(R_u, γ1, γ2, g)
+g1 = seign(R_u, seign_model)
 print(f"R_u, g_u = {R_u:.4f}, {g1:.4f}")
 
-g2 = seign(R_l, γ1, γ2, g)
+g2 = seign(R_l, seign_model)
 print(f"R_l, g_l = {R_l:.4f}, {g2:.4f}")
 ```
 
@@ -313,7 +333,7 @@ Now let's compute the maximum steady state amount of seigniorage that could be g
 
 ```{code-cell} ipython3
 R_max = np.sqrt(γ2/γ1)
-g_max = seign(R_max, γ1, γ2, g)
+g_max = seign(R_max, seign_model)
 print(f"R_max, g_max = {R_max:.4f}, {g_max:.4f}")
 ```
 
@@ -439,7 +459,10 @@ Its hump shape indicates that there are typically two tax rates that yield the s
 ```
 
 ```{code-cell} ipython3
-def simulate_system(R0, γ1, γ2, g, num_steps):
+def simulate_system(R0, model, num_steps):
+    
+    γ1, γ2, g = model.γ1, model.γ2, model.g
+    
     # Initialize lists to store results
     b_values = [γ1 - γ2 / R0]
     R_values = [1 / ((γ1 / γ2) - (γ2**(-1) * b_values[0]))]
@@ -460,61 +483,77 @@ Let's write some code plot outcomes for several possible initial values $R_0$.
 ```{code-cell} ipython3
 :tags: [hide-cell]
 
-def draw_paths(R0_values, R_u, R_l, γ1, γ2, g, num_steps):
+dashed_param = {'color':'grey', 
+                'linestyle': '--',
+                'lw': 1.5,
+                'alpha': 0.6}
 
-    fig, axs = plt.subplots(2, 1, figsize=(8, 8), sharex=True)
+label_param = {'verticalalignment': 'center', 
+               'color': 'grey',
+               'size': 12}
+
+line_param = {'lw': 1.5, 
+              'marker': 'o',
+              'markersize': 3}
+
+graph_params = [dashed_param, label_param, line_param]
+
+def draw_paths(R0_values, model, graph_params, num_steps):
     
-    # Define graphical parameters
-    dashed_param = {'color':'grey', 
-                    'linestyle': '--',
-                    'lw': 1.5,
-                    'alpha': 0.6}
+    R_u, R_l, γ1, γ2, g = (model.R_u, model.R_l, 
+                           model.γ1, model.γ2, model.g)
     
-    label_param = {'verticalalignment': 'center', 
-                   'color': 'grey',
-                   'size': 12}
-    
-    line_param = {'lw': 1.5, 
-                  'marker': 'o',
-                  'markersize': 3}
+    dashed_param, label_param, line_param = graph_params
+
+    fig, axes = plt.subplots(2, 1, figsize=(8, 8), sharex=True)
     
     # Iterate over R_0s and simulate the system 
     for R0 in R0_values:
-        b_values, R_values = simulate_system(
-                        R0, γ1, γ2, g, num_steps)
+        b_values, R_values = simulate_system(R0, model, num_steps)
         
         # Plot R_t against time
-        axs[0].plot(range(num_steps), R_values, 
+        axes[0].plot(range(num_steps), R_values, 
                     **line_param)
         
         # Plot b_t against time
-        axs[1].plot(range(num_steps), b_values, 
+        axes[1].plot(range(num_steps), b_values, 
                     **line_param)
         
-    # Add dashed lines for R_u, R_l and γ2/γ1
-    axs[0].axhline(y=R_u, **dashed_param)
-    axs[0].axhline(y=R_l, **dashed_param)
-    axs[0].axhline(y=γ2/γ1, **dashed_param)
-
-    # Add text annotations for dashed lines
-    axs[0].text(num_steps * 1.02, R_u, 
-                r'$R_u$', **label_param)
-    axs[0].text(num_steps * 1.02, R_l, 
-                r'$R_l$', **label_param)
-    axs[0].text(num_steps * 1.02, γ2/γ1, 
-                r'$\frac{\gamma_2}{\gamma_1}$', 
-                **label_param)
-
-    axs[0].set_ylabel('$R_t$')
+    # Add line and text annotations to subgraph 
+    annotate_graph(axes[0], model, 
+                   num_steps, 
+                   dashed_param, label_param)
     
-    axs[1].set_xlabel('timestep')
-    axs[1].set_ylabel('$b_t$')
+    axes[0].set_ylabel('$R_t$')
+    
+    axes[1].set_xlabel('timestep')
+    axes[1].set_ylabel('$b_t$')
+    
+    axes[1].xaxis.set_major_locator(MaxNLocator(integer=True))
     
     plt.tight_layout()
     plt.show()
+    
+def annotate_graph(ax, model, num_steps, 
+                   dashed_param, label_param):
+    
+    R_u, R_l, γ1, γ2 = (model.R_u, model.R_l, 
+                        model.γ1, model.γ2)
+    
+    # Add dashed lines for R_u, R_l, and γ2/γ1
+    ax.axhline(y=R_u, **dashed_param)
+    ax.axhline(y=R_l, **dashed_param)
+    ax.axhline(y=γ2/γ1, **dashed_param)
+
+    # Add text annotations for dashed lines
+    ax.text(num_steps * 1.02, R_u, 
+            r'$R_u$', **label_param)
+    ax.text(num_steps * 1.02, R_l, 
+            r'$R_l$', **label_param)
+    ax.text(num_steps * 1.02, γ2/γ1, 
+            r'$\frac{\gamma_2}{\gamma_1}$', 
+            **label_param)
 ```
-
-
 
 Let's plot  distinct outcomes  associated with several  $R_0 \in [\frac{\gamma_2}{\gamma_1}, R_u]$.
 
@@ -524,16 +563,16 @@ Each line below shows a path associated with a different $R_0$.
 ---
 mystnb:
   figure:
-    caption: Paths of $R_t$ (top panel) and $b_t$ (bottom panel) starting from different initial condition $R_0$
+    caption: Paths of $R_t$ (top panel) and $b_t$ (bottom panel) starting from different
+      initial condition $R_0$
     name: R0_path
     width: 500px
 ---
-
 # Create a grid of R_0s
 R0s = np.linspace(γ2/γ1, R_u, 9)
 R0s = np.append(R_l, R0s)
-draw_paths(R0s, R_u, R_l, 
-           γ1, γ2, g, num_steps=20)
+draw_paths(R0s, seign_model, 
+           graph_params, num_steps=20)
 ```
 
 Notice how sequences that  start from $R_0$ in the half-open interval $[R_l, R_u)$ converge to the steady state  associated with  to $ R_l$.
@@ -813,70 +852,113 @@ Let's compute $p_0$ in the code below.
 ```{code-cell} ipython3
 :user_expressions: []
 
-γ1 = 100
-γ2 = 50
-g = 3.0
-M0 = 100
+# Define H1 and H2
+H1 = np.array([[1, γ2], 
+               [1, 0]])
+H2 = np.array([[0, γ1], 
+               [1, g]]) 
 
-A1 = np.array([[1, γ2], [1, 0]])  # This is $L$
-A2 = np.array([[0, γ1], [1, g]])  # This is $N$
+H = np.linalg.inv(H1) @ H2
+print("H = ", H)
 
-A1, A2
-
-print("A1 = ", A1)
-
-print("A2 = ", A2)
-
-A = np.linalg.inv(A1) @ A2
-
-print("A = ", A)
-
-lam, Q = np.linalg.eig(np.linalg.inv(A1) @ A2)
-Q, lam
-
-
-# lam = np.diag(lam)
-
-#v = np.linalg.inv(w)
-
-#print("w = ", w)
-print("lam = ", lam)
-
-#print("v = ", v)
-
-
-#print (d)
-
-
-Rsteady1 = 1/lam[0]
-Rsteady2 = 1/lam[1]
-
-print("Rsteady1 =", Rsteady1)
-print("Rsteady2 =", Rsteady2)
-
-
-
-p0 = (Q[1, 0] / Q[0, 0]) * M0
-
-
-
-y0 = np.array([M0, p0])
-
-print("p0 =", p0)
-print("p0min =", p0min)
-
-
-print("y0 =", y0)
-   
-
-
-
+Λ, Q = np.linalg.eig(H)
+print("Λ = ", Λ)
+print("Q = ", Q)
 ```
 
 ```{code-cell} ipython3
+R_bar1 = 1 / Λ[0]
+R_bar2 = 1 / Λ[1]
 
-print("Q = ", Q)
-print("lam = ", lam)
+print(f'R_bar_1 = {R_bar1:.4f}')
+print(f'R_bar_2 = {R_bar2:.4f}')
+```
+
+```{code-cell} ipython3
+p0_bar = (Q[1, 0]/Q[0, 0]) * M0
+
+print('p0_bar = ', p0_bar)
+print('p0_bar == p0_min:', np.isclose(p0_bar, p0_min))
+```
+
+```{code-cell} ipython3
+def iterate_H(y_0, H, num_steps):
+    y = np.empty((2, num_steps))
+    y[:, 0] = y_0
+    for t in range(num_steps-1):
+        y[:, t+1] = H @ y[:, t]
+    return y
+```
+
+Let's draw the dynamics of $m_t$, $p_t$, and $R_t$ starting from different $p_0$ values.
+
+We create a function `draw_iterations` to generate the plot
+
+```{code-cell} ipython3
+:tags: [hide-cell]
+
+def draw_iterations(p0s, model, graph_params,
+                    num_steps):
+    
+    M0, R_u, R_l, γ1, γ2 = (model.M0, model.R_u, 
+                            model.R_l, model.γ1, 
+                            model.γ2)
+
+    dashed_param, label_param, line_param = graph_params
+
+    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True)
+
+    # Iterate over R_0s and simulate the system 
+    for p0 in p0s:
+        y0 = np.array([M0, p0])
+        y_series = iterate_H(y0, H, num_steps)
+        M, P = y_series[0, :], y_series[1, :]
+
+        # Plot R_t against time
+        axes[0].plot(range(num_steps), M, 
+                    **line_param)
+        axes[0].set_yscale('log')
+
+        # Plot b_t against time
+        axes[1].plot(range(num_steps), P, 
+                    **line_param)
+        axes[1].set_yscale('log')
+
+        R = [P[i]/P[i+1] for i in range(len(P)-1)]
+
+        axes[2].plot(range(num_steps-1), R, 
+                **line_param)
+        
+    # Add line and text annotations to subgraph 
+    annotate_graph(axes[2], model, 
+                   num_steps, 
+                   dashed_param, label_param)
+    
+    # Draw labels
+    axes[0].set_ylabel('$m_t$')
+    axes[1].set_ylabel('$p_t$')
+    axes[2].set_ylabel('$R_t$')
+    axes[2].set_xlabel('timestep')
+    
+    # Enforce integar axis label
+    axes[2].xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    plt.tight_layout()
+    plt.show()
+```
+
+```{code-cell} ipython3
+---
+mystnb:
+  figure:
+    caption: Paths of $m_t$ (top panel), $p_t$ (middle panel), $R_t$ (bottom panel)
+      starting from different initial condition $p_0$
+    name: R0_path
+    width: 500px
+---
+p0s = [p0_bar, 2.34, 2.5, 3, 4, 7, 30, 100_000]
+
+draw_iterations(p0s, seign_model, graph_params, num_steps=20)
 ```
 
 NOTE TO HUMPRHEY.  WHAT I'D LIKE TO DO IS WRITE SOME CODE TO ITERATE ON EQUATION SYSTEM 
@@ -891,5 +973,3 @@ I SUSPECT THAT SOME NICE GRAPHS COULD BE GOTTEN BY PLOTTING LOGARITHMS OF M_0 AN
 OR MAYBE INSTEAD JUST PLOT THE GROSS RATES OF GROWTH, LIKE YOU HAVE ABOVE.  
 
 ARE YOU WILLING TO EXPERIMENT WITH THIS?
-
-
