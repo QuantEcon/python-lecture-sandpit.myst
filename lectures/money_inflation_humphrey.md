@@ -52,7 +52,7 @@ Let's start with some imports:
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
-plt.rcParams["figure.figsize"] = (11, 5)
+plt.rcParams['figure.dpi'] = 300
 from collections import namedtuple
 ```
 
@@ -240,13 +240,8 @@ Let's set some parameter values and compute possible steady state rates of retur
 First, we create a `namedtuple` to store parameters so that we can reuse this `namedtuple` in our functions throughout this lecture
 
 ```{code-cell} ipython3
-γ1 = 100
-γ2 = 50
-g = 3.0
-M0 = 100
-
 # Create a namedtuple that contains parameters
-SeignModel = namedtuple("SeignModel", 
+MoneySupplyModel = namedtuple("MoneySupplyModel", 
                         ["γ1", "γ2", "g", 
                          "M0", "R_u", "R_l"])
 
@@ -257,7 +252,7 @@ def create_model(γ1=100, γ2=50, g=3.0, M0=100):
     R_u, R_l = R_steady
     print("[R_u, R_l] =", R_steady)
     
-    return SeignModel(γ1=γ1, γ2=γ2, g=g, M0=M0, R_u=R_u, R_l=R_l)
+    return MoneySupplyModel(γ1=γ1, γ2=γ2, g=g, M0=M0, R_u=R_u, R_l=R_l)
 ```
 
 Now we compute the $\bar R_{\rm max}$ and corresponding revenue
@@ -267,21 +262,16 @@ def seign(R, model):
     γ1, γ2, g = model.γ1, model.γ2, model.g
     return -γ2/R + (γ1 + γ2)  - γ1 * R
 
-seign_model = create_model()
-R_u, R_l = seign_model.R_u, seign_model.R_l
+msm = create_model()
 
 # Calculate initial guess for p0
-p0_min = M0 / (γ1 - g - γ2 / R_u)
-print("p0_min =", p0_min)
+p0_guess = msm.M0 / (msm.γ1 - msm.g - msm.γ2 / msm.R_u)
+print(f'p0 guess = {p0_guess:.4f}')
 
 # Calculate seigniorage maximizing rate of return
-R_max = np.sqrt(γ2 / γ1)
-
-# Calculate seigniorage revenue
-max_seign = seign(R_max, seign_model)
-
-print("R_max =", R_max)
-print("Max seigniorage revenue =", max_seign)
+R_max = np.sqrt(msm.γ2/msm.γ1)
+g_max = seign(R_max, msm)
+print(f'R_max, g_max = {R_max:.4f}, {g_max:.4f}')
 ```
 
 Now let's plot seigniorage as a function of alternative potential steady-state values of $R$.
@@ -301,15 +291,15 @@ mystnb:
     width: 500px
 ---
 # Generate values for R
-R_values = np.linspace(γ2/γ1, 1, 250)
+R_values = np.linspace(msm.γ2/msm.γ1, 1, 250)
 
 # Calculate the function values
-seign_values = seign(R_values, seign_model)
+seign_values = seign(R_values, msm)
 
 # Visualize seign_values against R values
-fig, ax = plt.subplots(dpi=300)
+fig, ax = plt.subplots(figsize=(11, 5))
 plt.plot(R_values, seign_values, label='inflation tax revenue')
-plt.axhline(y=g, color='red', linestyle='--', label='government deficit')
+plt.axhline(y=msm.g, color='red', linestyle='--', label='government deficit')
 plt.xlabel('$R$')
 plt.ylabel('seigniorage')
 
@@ -325,20 +315,16 @@ Let's print the two steady-state rates of return $\bar R$ and the associated sei
 We hope that the following code will  confirm this.
 
 ```{code-cell} ipython3
-g1 = seign(R_u, seign_model)
-print(f"R_u, g_u = {R_u:.4f}, {g1:.4f}")
+g1 = seign(msm.R_u, msm)
+print(f'R_u, g_u = {msm.R_u:.4f}, {g1:.4f}')
 
-g2 = seign(R_l, seign_model)
-print(f"R_l, g_l = {R_l:.4f}, {g2:.4f}")
+g2 = seign(msm.R_l, msm)
+print(f'R_l, g_l = {msm.R_l:.4f}, {g2:.4f}')
 ```
 
 Now let's compute the maximum steady state amount of seigniorage that could be gathered by printing money and the state state rate of return on money that attains it.
 
-```{code-cell} ipython3
-R_max = np.sqrt(γ2/γ1)
-g_max = seign(R_max, seign_model)
-print(f"R_max, g_max = {R_max:.4f}, {g_max:.4f}")
-```
++++
 
 ## Two  Computation Strategies
 
@@ -463,21 +449,22 @@ Its hump shape indicates that there are typically two tax rates that yield the s
 
 ```{code-cell} ipython3
 def simulate_system(R0, model, num_steps):
-    
     γ1, γ2, g = model.γ1, model.γ2, model.g
-    
-    # Initialize lists to store results
-    b_values = [γ1 - γ2 / R0]
-    R_values = [1 / ((γ1 / γ2) - (γ2**(-1) * b_values[0]))]
+
+    # Initialize arrays to store results
+    b_values = np.empty(num_steps)
+    R_values = np.empty(num_steps)
+
+    # Initial values
+    b_values[0] = γ1 - γ2/R0
+    R_values[0] = 1 / (γ1/γ2 - (1 / γ2) * b_values[0])
 
     # Iterate over time steps
     for t in range(1, num_steps):
-
-        # Calculate b_t and R_t
         b_t = b_values[t - 1] * R_values[t - 1] + g
-        R_t_inverse = (γ1 / γ2) - γ2**(-1) * b_t
-        R_values.append(1 / R_t_inverse)
-        b_values.append(b_t)
+        R_t_inverse = γ1/γ2 - (1/γ2) * b_t
+        R_values[t] = 1 / (γ1/γ2 - (1/γ2) * b_t)
+        b_values[t] = b_t
 
     return b_values, R_values
 ```
@@ -487,76 +474,45 @@ Let's write some code plot outcomes for several possible initial values $R_0$.
 ```{code-cell} ipython3
 :tags: [hide-cell]
 
-dashed_param = {'color':'grey', 
-                'linestyle': '--',
-                'lw': 1.5,
-                'alpha': 0.6}
-
-label_param = {'verticalalignment': 'center', 
-               'color': 'grey',
-               'size': 12}
-
-line_param = {'lw': 1.5, 
+line_params = {'lw': 1.5, 
               'marker': 'o',
               'markersize': 3}
 
-graph_params = [dashed_param, label_param, line_param]
+def annotate_graph(ax, model, num_steps):
+    for y, label in [(model.R_u, '$R_u$'), (model.R_l, '$R_l$'), 
+                     (model.γ2 / model.γ1, r'$\frac{\gamma_2}{\gamma_1}$')]:
+        ax.axhline(y=y, color='grey', linestyle='--', lw=1.5, alpha=0.6)
+        ax.text(num_steps * 1.02, y, label, verticalalignment='center', 
+                color='grey', size=12)
 
-def draw_paths(R0_values, model, graph_params, num_steps):
-    
-    R_u, R_l, γ1, γ2, g = (model.R_u, model.R_l, 
-                           model.γ1, model.γ2, model.g)
-    
-    dashed_param, label_param, line_param = graph_params
+def draw_paths(R0_values, model, line_params, num_steps):
 
     fig, axes = plt.subplots(2, 1, figsize=(8, 8), sharex=True)
+    
+    # Pre-compute time steps
+    time_steps = np.arange(num_steps) 
     
     # Iterate over R_0s and simulate the system 
     for R0 in R0_values:
         b_values, R_values = simulate_system(R0, model, num_steps)
         
         # Plot R_t against time
-        axes[0].plot(range(num_steps), R_values, 
-                    **line_param)
+        axes[0].plot(time_steps, R_values, **line_params)
         
         # Plot b_t against time
-        axes[1].plot(range(num_steps), b_values, 
-                    **line_param)
+        axes[1].plot(time_steps, b_values, **line_params)
         
     # Add line and text annotations to the subgraph 
-    annotate_graph(axes[0], model, 
-                   num_steps, 
-                   dashed_param, label_param)
+    annotate_graph(axes[0], model, num_steps)
     
+    # Add Labels
     axes[0].set_ylabel('$R_t$')
-    
     axes[1].set_xlabel('timestep')
     axes[1].set_ylabel('$b_t$')
-    
     axes[1].xaxis.set_major_locator(MaxNLocator(integer=True))
     
     plt.tight_layout()
     plt.show()
-    
-def annotate_graph(ax, model, num_steps, 
-                   dashed_param, label_param):
-    
-    R_u, R_l, γ1, γ2 = (model.R_u, model.R_l, 
-                        model.γ1, model.γ2)
-    
-    # Add dashed lines for R_u, R_l, and γ2/γ1
-    ax.axhline(y=R_u, **dashed_param)
-    ax.axhline(y=R_l, **dashed_param)
-    ax.axhline(y=γ2/γ1, **dashed_param)
-
-    # Add text annotations for dashed lines
-    ax.text(num_steps * 1.02, R_u, 
-            r'$R_u$', **label_param)
-    ax.text(num_steps * 1.02, R_l, 
-            r'$R_l$', **label_param)
-    ax.text(num_steps * 1.02, γ2/γ1, 
-            r'$\frac{\gamma_2}{\gamma_1}$', 
-            **label_param)
 ```
 
 Let's plot  distinct outcomes  associated with several  $R_0 \in [\frac{\gamma_2}{\gamma_1}, R_u]$.
@@ -573,10 +529,9 @@ mystnb:
     width: 500px
 ---
 # Create a grid of R_0s
-R0s = np.linspace(γ2/γ1, R_u, 9)
-R0s = np.append(R_l, R0s)
-draw_paths(R0s, seign_model, 
-           graph_params, num_steps=20)
+R0s = np.linspace(msm.γ2/msm.γ1, msm.R_u, 9)
+R0s = np.append(msm.R_l, R0s)
+draw_paths(R0s, msm, line_params, num_steps=20)
 ```
 
 Notice how sequences that  start from $R_0$ in the half-open interval $[R_l, R_u)$ converge to the steady state  associated with  to $ R_l$.
@@ -616,11 +571,23 @@ where
                  1 & g \end{bmatrix}  
 \end{align}
 
+```{code-cell} ipython3
+H1 = np.array([[1, msm.γ2], 
+               [1, 0]])
+H2 = np.array([[0, msm.γ1], 
+               [1, msm.g]]) 
+```
+
 Define
 
 $$
 H = H_1^{-1} H_2
 $$
+
+```{code-cell} ipython3
+H = np.linalg.inv(H1) @ H2
+print('H = \n', H)
+```
 
 and write the system  {eq}`eq:sytem101` as
 
@@ -640,7 +607,6 @@ $$
 y_0 = \begin{bmatrix} m_{0} \cr p_0 \end{bmatrix} .
 $$
 
-
 It is natural to take  $m_0$ as an initial condition determined outside the model.
 
 The mathematics seems to tell us that $p_0$ must also be determined outside the model, even though
@@ -653,7 +619,7 @@ For now, let's just proceed mechanically on faith.
 Compute the eigenvector decomposition 
 
 $$
-H=  Q \Lambda Q^{-1} 
+H =  Q \Lambda Q^{-1} 
 $$ 
 
 where $\Lambda$ is a diagonal matrix of eigenvalues and the columns of $Q$ are eigenvectors corresponding to those eigenvalues.
@@ -666,9 +632,21 @@ $$
                 0 & {R_u}^{-1} \end{bmatrix}
 $$
 
-where $R_l$ and $R_u$ are the lower and higher steady-state rates of return on currency that we computed above.  
+where $R_l$ and $R_u$ are the lower and higher steady-state rates of return on currency that we computed above.
 
+```{code-cell} ipython3
+Λ, Q = np.linalg.eig(H)
+print('Λ = \n', Λ)
+print('Q = \n', Q)
+```
 
+```{code-cell} ipython3
+R_l = 1 / Λ[0]
+R_u = 1 / Λ[1]
+
+print(f'R_l = {R_l:.4f}')
+print(f'R_u = {R_u:.4f}')
+```
 
 Partition $Q$ as
 
@@ -720,6 +698,16 @@ so that
 $$
 y_t = Q \Lambda^t Q^{-1} y_0
 $$
+
+```{code-cell} ipython3
+def iterate_H(y_0, H, num_steps):
+    Λ, Q = np.linalg.eig(H)
+    Q_inv = np.linalg.inv(Q)
+    y = np.stack(
+        [Q @ np.diag(Λ**t) @ Q_inv @ y_0 for t in range(num_steps)], 1)
+    
+    return y
+```
 
 For almost all initial vectors $y_0$, the gross rate of inflation $\frac{p_{t+1}}{p_t}$ eventually converges to  the larger eigenvalue ${R_l}^{-1}$.
 
@@ -839,7 +827,13 @@ So we can write
 p_0 = Q_{21} Q_{11}^{-1} m_0 .
 ```
 
-whic is our formula {eq}`eq:magicp0`.
+which is our formula {eq}`eq:magicp0`.
+
+```{code-cell} ipython3
+p0_bar = (Q[1, 0]/Q[0, 0]) * msm.M0
+
+print(f'p0_bar = {p0_bar:.4f}')
+```
 
 It can be verified that this formula replicates itself over time in the sense  that
 
@@ -849,94 +843,42 @@ It can be verified that this formula replicates itself over time in the sense  t
 p_t = Q_{21} Q^{-1}_{11} m_t.
 ```
 
-
-
-Let's compute $p_0$ in the code below.
-
-```{code-cell} ipython3
-:user_expressions: []
-
-# Define H1 and H2
-H1 = np.array([[1, γ2], 
-               [1, 0]])
-H2 = np.array([[0, γ1], 
-               [1, g]]) 
-
-H = np.linalg.inv(H1) @ H2
-print("H = ", H)
-
-Λ, Q = np.linalg.eig(H)
-print("Λ = ", Λ)
-print("Q = ", Q)
-```
-
-```{code-cell} ipython3
-R_bar1 = 1 / Λ[0]
-R_bar2 = 1 / Λ[1]
-
-print(f'R_bar_1 = {R_bar1:.4f}')
-print(f'R_bar_2 = {R_bar2:.4f}')
-```
-
-```{code-cell} ipython3
-p0_bar = (Q[1, 0]/Q[0, 0]) * M0
-
-print('p0_bar = ', p0_bar)
-print('p0_bar == p0_min:', np.isclose(p0_bar, p0_min))
-```
-
-```{code-cell} ipython3
-def iterate_H(y_0, H, num_steps):
-    y = np.empty((2, num_steps))
-    y[:, 0] = y_0
-    for t in range(num_steps-1):
-        y[:, t+1] = H @ y[:, t]
-    return y
-```
-
-Let's draw the dynamics of $m_t$, $p_t$, and $R_t$ starting from different $p_0$ values.
+Now let's visualize the dynamics of $m_t$, $p_t$, and $R_t$ starting from different $p_0$ values to verify our claims above.
 
 We create a function `draw_iterations` to generate the plot
 
 ```{code-cell} ipython3
 :tags: [hide-cell]
 
-def draw_iterations(p0s, model, graph_params,
-                    num_steps):
-    
-    M0, R_u, R_l, γ1, γ2 = (model.M0, model.R_u, 
-                            model.R_l, model.γ1, 
-                            model.γ2)
-
-    dashed_param, label_param, line_param = graph_params
+def draw_iterations(p0s, model, line_params, num_steps):
 
     fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True)
+    
+    # Pre-compute time steps
+    time_steps = np.arange(num_steps) 
+    
+    # Plot the first two y-axes in log scale
+    for ax in axes[:2]:
+        ax.set_yscale('log')
 
     # Iterate over p_0s and calculate a series of y_t
     for p0 in p0s:
-        y0 = np.array([M0, p0])
+        y0 = np.array([msm.M0, p0])
         y_series = iterate_H(y0, H, num_steps)
         M, P = y_series[0, :], y_series[1, :]
 
         # Plot R_t against time
-        axes[0].plot(range(num_steps), M, 
-                    **line_param)
-        axes[0].set_yscale('log')
+        axes[0].plot(time_steps, M, **line_params)
 
         # Plot b_t against time
-        axes[1].plot(range(num_steps), P, 
-                    **line_param)
-        axes[1].set_yscale('log')
+        axes[1].plot(time_steps, P, **line_params)
+        
         # Calculate R_t
-        R = [P[i]/P[i+1] for i in range(len(P)-1)]
-
-        axes[2].plot(range(num_steps-1), R, 
-                **line_param)
+        R = np.insert(P[:-1] / P[1:], 0, np.NAN)
+        axes[2].plot(time_steps, R, **line_params)
         
     # Add line and text annotations to the subgraph 
-    annotate_graph(axes[2], model, 
-                   num_steps, 
-                   dashed_param, label_param)
+    annotate_graph(axes[2], model, num_steps)
     
     # Draw labels
     axes[0].set_ylabel('$m_t$')
@@ -955,16 +897,16 @@ def draw_iterations(p0s, model, graph_params,
 ---
 mystnb:
   figure:
-    caption: Starting from different initial values of  $p_0$, paths of $m_t$ (top panel, log scale for $m$), $p_t$ (middle panel, log scale for $m$), $R_t$ (bottom panel)
-      
+    caption: Starting from different initial values of  $p_0$, paths of $m_t$ (top
+      panel, log scale for $m$), $p_t$ (middle panel, log scale for $m$), $R_t$ (bottom
+      panel)
     name: p0_path
     width: 500px
 ---
 p0s = [p0_bar, 2.34, 2.5, 3, 4, 7, 30, 100_000]
 
-draw_iterations(p0s, seign_model, graph_params, num_steps=20)
+draw_iterations(p0s, msm, line_params, num_steps=20)
 ```
-
 
 Please notice that for $m_t$ and $p_t$, we have used  log scales for the coordinate (i.e., vertical) axes.  
 
