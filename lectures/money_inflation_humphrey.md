@@ -307,7 +307,6 @@ plt.axhline(y=g, color='red', linestyle='--', label='government deficit')
 plt.xlabel('$R$')
 plt.ylabel('seigniorage')
 
-#plt.title('Steady state revenue from inflation tax')
 plt.legend()
 plt.grid(True)
 plt.show()
@@ -467,6 +466,7 @@ def simulate_system(R0, model, num_steps):
 
     # Iterate over time steps
     for t in range(1, num_steps):
+
         # Calculate b_t and R_t
         b_t = b_values[t - 1] * R_values[t - 1] + g
         R_t_inverse = (γ1 / γ2) - γ2**(-1) * b_t
@@ -650,7 +650,7 @@ $$
 H=  Q \Lambda Q^{-1} 
 $$ 
 
-where $\Lambda$ is a diagonal matrix of eigenvalues and the columns of $Q$ are eigenvectors correspondng to those eigenvalues.
+where $\Lambda$ is a diagonal matrix of eigenvalues and the columns of $Q$ are eigenvectors corresponding to those eigenvalues.
 
 It turns out that  
 
@@ -800,7 +800,7 @@ p_0 = - (Q^{22})^{-1} Q^{21} m_0.
 ```
 
 
-#### A more convenient formula 
+### A more convenient formula 
 
 We can get the equivalent but perhaps more convenient formula {eq}`eq:magicp0` for $p_0$ that is cast
 in terms of components of $Q$ instead of components of
@@ -906,7 +906,7 @@ def draw_iterations(p0s, model, graph_params,
 
     fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True)
 
-    # Iterate over R_0s and simulate the system 
+    # Iterate over p_0s and calculate a series of y_t
     for p0 in p0s:
         y0 = np.array([M0, p0])
         y_series = iterate_H(y0, H, num_steps)
@@ -921,7 +921,7 @@ def draw_iterations(p0s, model, graph_params,
         axes[1].plot(range(num_steps), P, 
                     **line_param)
         axes[1].set_yscale('log')
-
+        # Calculate R_t
         R = [P[i]/P[i+1] for i in range(len(P)-1)]
 
         axes[2].plot(range(num_steps-1), R, 
@@ -951,7 +951,7 @@ mystnb:
   figure:
     caption: Paths of $m_t$ (top panel), $p_t$ (middle panel), $R_t$ (bottom panel)
       starting from different initial condition $p_0$
-    name: R0_path
+    name: p0_path
     width: 500px
 ---
 p0s = [p0_bar, 2.34, 2.5, 3, 4, 7, 30, 100_000]
