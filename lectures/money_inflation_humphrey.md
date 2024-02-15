@@ -40,6 +40,12 @@ In this lecture, we'll roll up our sleeves and solve those equations in a couple
 
 As we'll see, Python is good at solving them.
 
+We'll use theses tools from linear algebra:
+
+ * matrix multiplication
+ * matrix inversion
+ * eigenvalues and eigenvectors of a matrix
+
 Let's start with some imports:
 
 ```{code-cell} ipython3
@@ -50,7 +56,7 @@ plt.rcParams["figure.figsize"] = (11, 5)
 from collections import namedtuple
 ```
 
-## Demands  for and Supplies of Money
+## Demand  for and Supply of Money
 
 We say demand**s** and supp**ies** (plurals) because there is one of each for each $t \geq 0$.
 
@@ -334,7 +340,7 @@ g_max = seign(R_max, seign_model)
 print(f"R_max, g_max = {R_max:.4f}, {g_max:.4f}")
 ```
 
-## Two equilibrium computation strategies
+## Two  Computation Strategies
 
 
 We now proceed to compute equilibria, not necessarily steady states.
@@ -800,7 +806,7 @@ p_0 = - (Q^{22})^{-1} Q^{21} m_0.
 ```
 
 
-### A more convenient formula 
+### More convenient formula 
 
 We can get the equivalent but perhaps more convenient formula {eq}`eq:magicp0` for $p_0$ that is cast
 in terms of components of $Q$ instead of components of
@@ -949,8 +955,8 @@ def draw_iterations(p0s, model, graph_params,
 ---
 mystnb:
   figure:
-    caption: Paths of $m_t$ (top panel), $p_t$ (middle panel), $R_t$ (bottom panel)
-      starting from different initial condition $p_0$
+    caption: Starting from different initial values of  $p_0$, paths of $m_t$ (top panel, log scale for $m$), $p_t$ (middle panel, log scale for $m$), $R_t$ (bottom panel)
+      
     name: p0_path
     width: 500px
 ---
@@ -959,15 +965,8 @@ p0s = [p0_bar, 2.34, 2.5, 3, 4, 7, 30, 100_000]
 draw_iterations(p0s, seign_model, graph_params, num_steps=20)
 ```
 
-NOTE TO HUMPRHEY.  WHAT I'D LIKE TO DO IS WRITE SOME CODE TO ITERATE ON EQUATION SYSTEM 
-{eq}`eq:Vaughn` from initial condition $m_0$ and VARIOUS $p_0$ values. 
 
-ONLY FOR THE particular value of $p_0$ computed in the above code will the the inflation rate state at the inverse of the ** highe**r steady state rate of return on currency. 
+Please notice that for $m_t$ and $p_t$, we have used  log scales for the coordinate (i.e., vertical) axes.  
 
-FOR ALL OTHER ADMISSIBLE VALUES OF $p_0$, rates of return on currency will converge to the lower steady-state rate of return on currency.
-
-I SUSPECT THAT SOME NICE GRAPHS COULD BE GOTTEN BY PLOTTING LOGARITHMS OF M_0 AND p_0 -- EACH SHOULD EVENTUALLY START GROWING AT A CONSTANT RATE.  
-
-OR MAYBE INSTEAD JUST PLOT THE GROSS RATES OF GROWTH, LIKE YOU HAVE ABOVE.  
-
-ARE YOU WILLING TO EXPERIMENT WITH THIS?
+Using log scales allows us to spot distinct constant limiting gross  rates of growth ${R_u}^{-1}$ and
+${R_l}^{-1}$ by eye.
