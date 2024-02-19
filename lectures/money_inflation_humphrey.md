@@ -165,9 +165,17 @@ We shall describe two distinct but closely related ways of computing a pair   $\
 
 But first it is instructive to describe a special type of equilibrium known as a **steady state**.
 
+In a  steady state equilibrium, a subset of key variables remain constant or **invariant** over time, while remaining variables can be expressed as functions of  those constant variables.
+
+Finding such state variables is something of an art.  
+
+In many models, a good source of candidates for such invariant variables is a set of **ratios**.   
+
+This is true in the present model.
+
 ### Steady States
 
-In a **steady state**
+In a **steady state** equilibrium of our the  model we are studying, 
 
 \begin{align}
 R_t & = \bar R \cr
@@ -175,6 +183,8 @@ b_t & = \bar b
 \end{align}
 
 for $t \geq 0$.  
+
+Notice that both $R_t = \frac{p_t}{p_{t+1}}$ and $b_t = \frac{m_{t+1}}{p_t} $ are **ratios**.
 
 To compute a steady state, we seek gross rates of return on currency  $\bar R, \bar b$ that satisfy steady-state versions of  both the government budget constraint and the demand function for real balances:
 
