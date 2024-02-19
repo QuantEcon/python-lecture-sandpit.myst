@@ -175,7 +175,7 @@ This is true in the present model.
 
 ### Steady States
 
-In a **steady state** equilibrium of our the  model we are studying, 
+In a **steady state** equilibrium of the  model we are studying, 
 
 \begin{align}
 R_t & = \bar R \cr
