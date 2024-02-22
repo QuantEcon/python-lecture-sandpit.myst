@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# Zejin_Auerbach-Kotlikoff 2
+# Transition Dynamics in an Overlapping Generations Model
 
 In addition to what’s in Anaconda, this lecture will need the following libraries:
 
@@ -28,7 +28,7 @@ from quantecon.optimize import brent_max
 
 
 
-# Introduction
+## Introduction
 
 
 This lecture presents a  life-cycle model consisting of overlapping generations of two-period lived people proposed  by Peter Diamond

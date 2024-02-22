@@ -1436,7 +1436,7 @@ plt.title("Figure 4\n Full Information Consumption", y=-0.2)
 plt.show()
 ```
 
-# Dynamic Version of Phelan-Townsend (1991)
+## Dynamic Version of Phelan-Townsend (1991)
 
 +++
 
