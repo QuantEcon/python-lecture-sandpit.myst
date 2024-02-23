@@ -18,14 +18,18 @@ jupyter:
 ## Overview
 
 
-This lecture starts where our lecture on Money Supplies and Price Levels ended.
+This lecture starts where our lecture on **Money Supplies and Price Levels** ended.
 
 That lecture describes stationary equilibria that reveal a **Laffer curve** in the inflation tax rate and the associated  stationary rate of return 
 on currency.  
 
-We describe a setting in which from date $T > 0$, such  a stationary equilibrium prevails.  
+We describe a setting in which  such  a stationary equilibrium prevails from date $T > 0$, but not before then.  
 
-But for $t=0, \ldots, T-1$, the money supply, the price level, and interest-bearing government debt vary along a transition path that ends at $t=T$.
+For $t=0, \ldots, T-1$, the money supply,  price level, and interest-bearing government debt vary along a transition path that ends at $t=T$.
+
+During this transition, the ratio of the real balances $m_{t+1}{p_t}$ to indexed one-period  government bonds $\tilde R B_{t-1}$  maturing at time $t$ decreases each period.  
+
+The critical **money-to-bonds** ratio stabilizes only at time $T$ and afterwards.
 
 We use this setting to describe Sargent and Wallace's **unpleasant monetarist arithmetic**.
 
@@ -38,7 +42,9 @@ That lecture  described  supplies and demands for money that appear in lecture, 
 
 ## Setup
 
-Let's start with quick reminders of the model's components.
+Let's start with quick reminders of the model's components set out in our lecture on **Money Supplies and Price Levels**.
+
+Please consult that lecture for more details and Python code that we'll also use in this lecture.
 
 For $t \geq 1$, **real balances** evolve according to
 
@@ -68,20 +74,26 @@ $$ (eq:bdemand)
 
 ## Monetary-Fiscal Policy
 
-To the basic model of lecture XXX, as a way for the government to finance government expenditures, we add inflation-indexed one-period government bonds. 
+To the basic model of our lecture on **Money Supplies and Price Levels**, we add inflation-indexed one-period government bonds as an additional  way for the government to finance government expenditures. 
 
-Let $\widetilde R > 1$ be the gross real rate of return on government one-period inflation-indexed bonds.
+Let $\widetilde R > 1$ be a time-invariant gross real rate of return on government one-period inflation-indexed bonds.
 
-The government's budget constraint at time $t \geq 0$ is
+
+With this additional source of funds, the government's budget constraint at time $t \geq 0$ is now
 
 $$
 B_t + \frac{m_{t+1}}{p_t} = \widetilde B_{t-1} + \frac{m_t}{p_t} + g
 $$ 
 
 
-Just before the beginning of time $0$, the  public owns  $\check m_0$ units of currency
-and $\widetilde R \check R_{-1}$ units of one-period indexed bonds (TOM ADD UNITS)
+Just before the beginning of time $0$, the  public owns  $\check m_0$ units of currency (measured in dollars)
+and $\widetilde R \check B_{-1}$ units of one-period indexed bonds (measured in time $0$ goods); these two quantities are initial conditions set outside the model.
 
+Notice that $\check m_0$ is a **nominal** quantity, being measured in dollar, while
+$\widetilde R \check B_{-1}$ is a **real** quantity, being measured in time $0$ goods.
+
+
+### Open market operations
 
 At time $0$, government can rearrange its portolio of debts with subject to the following constraint (on open-market operations):
 
@@ -97,6 +109,14 @@ $$ (eq:openmarketconstraint)
 
 This equation says that the government (e.g., the central bank) can **decrease** $m_0$ relative to 
 $\check m_0$ by **increasing** $B_{-1}$ relative to $\check B_{-1}$. 
+
+This is a version of a standard constraint on a central bank's **open market operations** in which it expands the stock of money by buying government bonds from  the public. 
+
+## An open market operation at $t=0$
+
+Following Sargent and Wallace (1981), we analyze consequences of a central bank policy that 
+uses an open market operation to lower the price level in the face of a peristent fiscal
+deficit that takes the form of a positive $g$.
 
 Just before time $0$, the government chooses $(m_0, B_{-1})$  subject to constraint
 {eq}`eq:openmarketconstraint`.
@@ -125,6 +145,10 @@ $$
 \overline g = \left[(\tilde R -1) B_{T-1} +  g \right]
 $$ (eq:overlineg)
 
+We want to compute an equilibrium $\{p_t,m_t,b_t, R_t\}_{t=0}$ sequence under this scheme for
+running monetary-fiscal policy.
+
+**TOM: add definitions of monetary and fiscal policy and coordination here.**
 
 ## Algorithm (basic idea)
 
@@ -250,6 +274,14 @@ $$
 
 where $\theta \in [0,1)$ is a relaxation parameter.
 
+
+## Requests for Zejin
+
+Thanks for being willing to code up the transition path using the little fixed point strategy.
+
+I recommend staring with the parameter from the Laffer curve lecture mentioned above, including the setting for g.  
+
+Then I recommend setting $\tilde R = 1.01, \check B_{-1} = 0, \check m_0 = 105, T = 5$ and a "small" open market operation by settin $m_0 = 100$. These cautious parameter perturbations give us a chance that a plausible equilibrium exists, and won't stress the coding too much as we begin.
 
 
 
