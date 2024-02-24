@@ -82,7 +82,7 @@ Let $\widetilde R > 1$ be a time-invariant gross real rate of return on governme
 With this additional source of funds, the government's budget constraint at time $t \geq 0$ is now
 
 $$
-B_t + \frac{m_{t+1}}{p_t} = \widetilde B_{t-1} + \frac{m_t}{p_t} + g
+B_t + \frac{m_{t+1}}{p_t} = \widetilde R B_{t-1} + \frac{m_t}{p_t} + g
 $$ 
 
 
@@ -155,18 +155,30 @@ running monetary-fiscal policy.
 
 We work backwards from $t=T$ and first compute $p_T, R_u$ associated with the  low-inflation, low-inflation-tax-rate   stationary equilibrium of our lecture on the dynamic Laffer curve for the inflation tax.
 
-In particular, we compute 
+To start our description of our algorithm, it is useful to recall that a stationary rate of return
+on currency $\bar R$ solves the quadratic equation
+
+$$
+-\gamma_2 + (\gamma_1 + \gamma_2 + \overline g) \bar R - \gamma_1 \bar R^2 = 0
+$$ (eq:steadyquadratic)
+
+Quadratic equation {eq}`eq:steadyquadratic` has two roots, $R_l < R_u < 1$.
+
+For reasons described at the end of **this lecture**, we select the larger root $R_u$. 
+
+
+Next, we compute
 
 $$
 \begin{align}
 R_T & = R_u \cr
-b_T & = \gamma_1 - \gamma_2 R_T \cr
-p_T & = \frac{m_0}{\gamma_1 - \overline g - \gamma_2 R_T^{-1}}
+b_T & = \gamma_1 - \gamma_2 R_u^{-1} \cr
+p_T & = \frac{m_0}{\gamma_1 - \overline g - \gamma_2 R_u^{-1}}
 \end{align}
 $$ (eq:LafferTstationary)
 
 
-We compute continuation sequences $\{R_t, b_t\}_{t=T+1}^\infty$ of rates of return and real balances that are associated with an equilibrium by solving equation {eq}`eq:bmotion` and {eq}`eq:bdemand` sequentially  for $t \geq 1$:  
+We can compute continuation sequences $\{R_t, b_t\}_{t=T+1}^\infty$ of rates of return and real balances that are associated with an equilibrium by solving equation {eq}`eq:bmotion` and {eq}`eq:bdemand` sequentially  for $t \geq 1$:  
    \begin{align}
 b_t & = b_{t-1} R_{t-1} + \overline g \cr
 R_t^{-1} & = \frac{\gamma_1}{\gamma_2} - \gamma_2^{-1} b_t \cr
@@ -179,9 +191,12 @@ p_t & = R_t p_{t-1} \cr
 ## Earlier dates
 
 Define 
+
 $$
-\lambda \equiv \frac{\gamma_2}{\gamma_1}
+\lambda \equiv \frac{\gamma_2}{\gamma_1},
 $$
+
+where our restrictions that $\gamma_1 > \gamma_2 > 0$ imply that $\lambda \in [0,1)$.
 
 We want to compute
 
@@ -218,13 +233,8 @@ $$ (eq:pTformula)
 
 **Remark:**
 We can verify the equivalence of the two formulas on the right sides of {eq}`eq:pTformula` by recalling that 
-$R_u$ is a root of the quadratic equation that determines steady state rates of return on currency,
-namely,
+$R_u$ is a root of the quadratic equation {eq}`eq:steadyquadratic` that determines steady state rates of return on currency.
 
-$$
--\gamma_2 + (\gamma_1 + \gamma_2 + g) \bar R - \gamma_1 \bar R^2 = 0
-$$ (eq:steadyquadratic)
- 
  
  
 ## Algorithm (pseudo code)
@@ -238,7 +248,7 @@ We define a mappying from $p_0$ to $p_0$ as follows.
 * Set $m_0$ and then compute $B_{-1}$ to satisfy the constraint on time $0$ **open market operations**
 
 $$
-B_{-1}- \check B_{-1}  = \frac{\widetilde R}{p_0} \left( \check m_0 - m_0) \right)
+B_{-1}- \check B_{-1}  = \frac{\widetilde R}{p_0} \left( \check m_0 - m_0 \right)
 $$
 
 * Compute $B_{T-1}$ from
@@ -253,7 +263,9 @@ $$
 \overline g = g + \left[ \tilde R - 1\right] B_{T-1}
 $$
 
-* Compute $R_u, p_T$ from formulas {eq}`eq:LafferTstationary` above
+
+
+* Compute $R_u, p_T$ from formulas {eq}`eq:steadyquadratic`  and {eq}`eq:LafferTstationary` above
 
 * Compute a new estimate of $p_0$, call it $\widehat p_0$,  from equation {eq}`eq:allts` above
 

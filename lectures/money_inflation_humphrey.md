@@ -296,7 +296,7 @@ inflation tax rate $1 - R_u$.
 ---
 mystnb:
   figure:
-    caption: Steady state revenue from inflation tax as function of steady state gross return on currency
+    caption: Steady state revenue from inflation tax as function of steady state gross return on currency (solid blue curve) and  real government expenditures (dotted red line) plotted against steady-state rate of return currency
     name: infl_tax
     width: 500px
 ---
