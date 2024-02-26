@@ -107,6 +107,12 @@ $$
 B_{-1} - \check B_{-1} = \frac{\widetilde R}{p_0} \left( \check m_0 - m_0 \right)  
 $$ (eq:openmarketconstraint)
 
+<p style="color:red;">Zejin: should 4.3 be the following?</p>
+
+$$
+B_{-1} - \check B_{-1} = \frac{1}{p_0 \widetilde R} \left( \check m_0 - m_0 \right)  
+$$
+
 This equation says that the government (e.g., the central bank) can **decrease** $m_0$ relative to 
 $\check m_0$ by **increasing** $B_{-1}$ relative to $\check B_{-1}$. 
 
@@ -160,6 +166,12 @@ on currency $\bar R$ solves the quadratic equation
 
 $$
 -\gamma_2 + (\gamma_1 + \gamma_2 + \overline g) \bar R - \gamma_1 \bar R^2 = 0
+$$ (eq:steadyquadratic)
+
+<p style="color:red;">Zejin: should it be a minus sign before g bar?</p>
+
+$$
+-\gamma_2 + (\gamma_1 + \gamma_2 - \overline g) \bar R - \gamma_1 \bar R^2 = 0
 $$ (eq:steadyquadratic)
 
 Quadratic equation {eq}`eq:steadyquadratic` has two roots, $R_l < R_u < 1$.
@@ -235,6 +247,20 @@ $$ (eq:pTformula)
 We can verify the equivalence of the two formulas on the right sides of {eq}`eq:pTformula` by recalling that 
 $R_u$ is a root of the quadratic equation {eq}`eq:steadyquadratic` that determines steady state rates of return on currency.
 
+<p style="color:red;">Zejin: Below I try to derive the right side following the remark but got slightly different results</p>
+
+From {eq}`eq:steadyquadratic`, we have
+
+$$
+-\gamma_{2}\frac{1}{R_{u}}+\gamma_{1}+\gamma_{2}-\bar{g}-\gamma_{1}R_{u}=0  \\
+\gamma_{1}-\bar{g}-\gamma_{2}\frac{1}{R_{u}}=\gamma_{1}R_{u}-\gamma_{2} \\
+$$
+
+so that
+
+$$
+p_T =   \frac{m_0}{\gamma_1 - \overline g - \gamma_2 R_u^{-1}}  = \gamma_{1}^{-1} m_0 \left\{ \frac{1}{R_u-\lambda}\right\} 
+$$
  
  
 ## Algorithm (pseudo code)
