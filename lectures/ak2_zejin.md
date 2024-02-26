@@ -11,20 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# Transition Dynamics in an Overlapping Generations Model
-
-In addition to what’s in Anaconda, this lecture will need the following libraries:
-
-```{code-cell} ipython3
-!pip install --upgrade quantecon
-```
-
-```{code-cell} ipython3
-import numpy as np
-import matplotlib.pyplot as plt
-from numba import njit, prange
-from quantecon.optimize import brent_max
-```
+# Transitions in an Overlapping Generations Model
 
 
 
@@ -43,12 +30,19 @@ Their model of two-period lived overlapping generations is a useful starting poi
 
 * it sets forth the structure of interactions between generations of different agents who are alive at a given date
 * it activates forces and tradeoffs confronting the government and successive generations of people
+* it is good laboratory for studying connections between government tax and subsidy programs and for policies for issuing and servicing government debt
+* it is a good setting for introducing describing the **shooting method** for solving a system of non-linear difference equations with boundary conditions that take the form of initial and terminal conditions
 * interesting experiments involving transitions from one steady state to another can be computed by hand
  ```{note}
 Auerbach and Kotlikoff use computer code to calculate transition paths for their models with long-lived people.
 ``` 
 
- 
+We take the liberty of extending Auerbach and Kotlikoff's chapter 2 model by adding ways to redistribute resources across generations
+
+  * these take the form of a sequence of  age-specific lump sum taxes and transfers
+
+We  study how  these  additional instruments for redistributing resources across generations affect capital accumulation and government debt 
+
 
 
 
@@ -405,6 +399,24 @@ $$
 \hat{\tau} &= 0.15 \\
 \end{align}
 $$
+
+
+
+## Code
+
+
+In addition to what’s in Anaconda, this lecture will need the following libraries:
+
+```{code-cell} ipython3
+!pip install --upgrade quantecon
+```
+
+```{code-cell} ipython3
+import numpy as np
+import matplotlib.pyplot as plt
+from numba import njit, prange
+from quantecon.optimize import brent_max
+```
 
 
 For parameters $\alpha = 0.3$ and $\beta = 0.5$, let's compute  $\hat{K}$:
@@ -828,7 +840,7 @@ closed.plot()
 
 
 
-## A general method of computation
+## A computational strategy
 
 In the above illustrations, we studied  dynamic transitions  associated with various fiscal policy experiments.
 
@@ -1162,6 +1174,24 @@ for i, name in enumerate(['τ', 'D', 'G']):
     ax.legend()
     ax.set_xlabel('t')
 ```
+
+
+## NOTES TO ZEJIN FEB 26
+
+Hi Zejin.
+
+I recommend that we add a few simple experiments in which we do the following.
+
+* take a simple baseline, perhaps on  in which capital starts at or quickly converges to a steady state value.
+
+* start from that steady-state value of capital and add a tax transfer scheme that mimics an unfunded social security system in which young people pay a lump sum tax and old people get a lump sum transfer, starting from the beginning (the initial old will love this!) 
+
+* study how this policy affects the steady state capital stock
+
+* describe in words how this policy experiment compares to one in which at time 0 the government gives government debt to the initial old
+
+* the last bullet point is vague and we'll have to tighten it up
+
 
 ## Working when old as well as when young
 

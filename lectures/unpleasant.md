@@ -109,6 +109,8 @@ $$ (eq:openmarketconstraint)
 
 <p style="color:red;">Zejin: should 4.3 be the following?</p>
 
+<p style="color:blue;">You are correct. I am so bad at algebra! </p>
+
 $$
 B_{-1} - \check B_{-1} = \frac{1}{p_0 \widetilde R} \left( \check m_0 - m_0 \right)  
 $$
@@ -169,6 +171,8 @@ $$
 $$ (eq:steadyquadratic)
 
 <p style="color:red;">Zejin: should it be a minus sign before g bar?</p>
+<p style="color:blue;">Again you are correct.  May I please ask you also to correct this in the 
+text of the money_inflation_humprhey lecture?  Hopefully the code and calculations had the correct formula -- but we should check this too!</p>
 
 $$
 -\gamma_2 + (\gamma_1 + \gamma_2 - \overline g) \bar R - \gamma_1 \bar R^2 = 0
@@ -248,6 +252,7 @@ We can verify the equivalence of the two formulas on the right sides of {eq}`eq:
 $R_u$ is a root of the quadratic equation {eq}`eq:steadyquadratic` that determines steady state rates of return on currency.
 
 <p style="color:red;">Zejin: Below I try to derive the right side following the remark but got slightly different results</p>
+<p style="color:blue;">Oops again.  Let's go with your corrected formula. Hopefully, we can realign the subsequent formulas too.  </p>
 
 From {eq}`eq:steadyquadratic`, we have
 
