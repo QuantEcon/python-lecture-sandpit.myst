@@ -5,7 +5,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.14.4
+      jupytext_version: 1.16.1
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -20,9 +20,9 @@ jupyter:
 
 This notebook uses data from three spreadsheets:
 
-  * fig_3.ods
-  * dette.xlsx
-  * assignat.xlsx
+  * _static/fig_3.ods
+  * _static/dette.xlsx
+  * _static/assignat.xlsx
 <!-- #endregion -->
 
 <!-- #region user_expressions=[] -->
@@ -67,8 +67,8 @@ plt.rcParams.update({'font.size': 12})
 
 ```python
 # Read the data from the Excel file
-data1 = pd.read_excel('dette.xlsx', sheet_name='Debt', usecols='R:S', skiprows=5, nrows=99, header=None)
-data1a = pd.read_excel('dette.xlsx', sheet_name='Debt', usecols='P', skiprows=89, nrows=15, header=None)
+data1 = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='R:S', skiprows=5, nrows=99, header=None)
+data1a = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='P', skiprows=89, nrows=15, header=None)
 
 # Plot the data
 plt.figure()
@@ -103,7 +103,7 @@ plt.show()
 
 ```python
 # Read the data from Excel file
-data2 = pd.read_excel('dette.xlsx', sheet_name='Militspe', usecols='M:X', skiprows=7, nrows=102, header=None)
+data2 = pd.read_excel('_static/dette.xlsx', sheet_name='Militspe', usecols='M:X', skiprows=7, nrows=102, header=None)
 
 # Plot the data
 plt.figure()
@@ -137,7 +137,7 @@ plt.text(1759, 7.3, 'revenues', fontname='Times New Roman', fontsize=10)
 
 ```python
 # Read the data from the Excel file
-data1 = pd.read_excel('fig_3.ods', sheet_name='Sheet1', usecols='C:F', skiprows=5, nrows=30, header=None, engine="odf")
+data1 = pd.read_excel('_static/fig_3.ods', sheet_name='Sheet1', usecols='C:F', skiprows=5, nrows=30, header=None, engine="odf")
 
 data1.replace(0, np.nan, inplace=True)
 ```
@@ -197,7 +197,7 @@ plt.ylabel('millions of livres')
 
 ```python
 # French military spending, 1685-1789, in 1726 livres
-data4 = pd.read_excel('dette.xlsx', sheet_name='Militspe', usecols='D', skiprows=3, nrows=105, header=None).squeeze()
+data4 = pd.read_excel('_static/dette.xlsx', sheet_name='Militspe', usecols='D', skiprows=3, nrows=105, header=None).squeeze()
 years = range(1685, 1790)
 
 plt.figure()
@@ -222,7 +222,7 @@ plt.ylim([0, 475])
 
 ```python
 # Read data from Excel file
-data5 = pd.read_excel('dette.xlsx', sheet_name='Debt', usecols='K', skiprows=41, nrows=120, header=None)
+data5 = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='K', skiprows=41, nrows=120, header=None)
 
 # Plot the data
 plt.figure()
@@ -627,8 +627,8 @@ plt.legend()
 
 ```python
 # Read the data from Excel file
-data7 = pd.read_excel('assignat.xlsx', sheet_name='Data', usecols='P:Q', skiprows=4, nrows=80, header=None)
-data7a = pd.read_excel('assignat.xlsx', sheet_name='Data', usecols='L', skiprows=4, nrows=80, header=None)
+data7 = pd.read_excel('_static/assignat.xlsx', sheet_name='Data', usecols='P:Q', skiprows=4, nrows=80, header=None)
+data7a = pd.read_excel('_static/assignat.xlsx', sheet_name='Data', usecols='L', skiprows=4, nrows=80, header=None)
 
 # Create the figure and plot
 plt.figure()
@@ -694,7 +694,7 @@ plt.text(1794.9, 40, 'gold', fontname='Times New Roman', fontsize=12)
 
 ```python
 # Read data from Excel file
-data11 = pd.read_excel('assignat.xlsx', sheet_name='Budgets', usecols='J:K', skiprows=22, nrows=52, header=None)
+data11 = pd.read_excel('_static/assignat.xlsx', sheet_name='Budgets', usecols='J:K', skiprows=22, nrows=52, header=None)
 
 # Prepare the x-axis data
 x_data = np.concatenate([
@@ -732,7 +732,7 @@ plt.ylabel('millions of livres', fontsize=12, fontname='Times New Roman')
 
 ```python
 # Read data from Excel file
-data12 = pd.read_excel('assignat.xlsx', sheet_name='seignor', usecols='F', skiprows=6, nrows=75, header=None).squeeze()
+data12 = pd.read_excel('_static/assignat.xlsx', sheet_name='seignor', usecols='F', skiprows=6, nrows=75, header=None).squeeze()
 
 
 # Create a figure and plot the data
@@ -757,7 +757,7 @@ plt.text(pd.Timestamp('1793-11'), 39.5, 'revenues in 1788', verticalalignment='t
 
 ```python
 # Read data from Excel file
-data13 = pd.read_excel('assignat.xlsx', sheet_name='Exchge', usecols='P:T', skiprows=3, nrows=502, header=None)
+data13 = pd.read_excel('_static/assignat.xlsx', sheet_name='Exchge', usecols='P:T', skiprows=3, nrows=502, header=None)
 
 # Plot the last column of the data
 plt.figure()
@@ -796,8 +796,8 @@ plt.annotate('end of the assignat', xy=(340, 172), xytext=(380, 160),
 
 ```python
 # figure 14
-data14 = pd.read_excel('assignat.xlsx', sheet_name='Post-95', usecols='I', skiprows=9, nrows=91, header=None).squeeze()
-data14a = pd.read_excel('assignat.xlsx', sheet_name='Post-95', usecols='F', skiprows=100, nrows=151, header=None).squeeze()
+data14 = pd.read_excel('_static/assignat.xlsx', sheet_name='Post-95', usecols='I', skiprows=9, nrows=91, header=None).squeeze()
+data14a = pd.read_excel('_static/assignat.xlsx', sheet_name='Post-95', usecols='F', skiprows=100, nrows=151, header=None).squeeze()
 
 plt.figure()
 h = plt.plot(data14, '*-', markersize=2, linewidth=0.8)
@@ -817,7 +817,7 @@ plt.ylabel('Francs')
 
 ```python
 # figure 15
-data15 = pd.read_excel('assignat.xlsx', sheet_name='Post-95', usecols='N', skiprows=4, nrows=88, header=None).squeeze()
+data15 = pd.read_excel('_static/assignat.xlsx', sheet_name='Post-95', usecols='N', skiprows=4, nrows=88, header=None).squeeze()
 
 plt.figure()
 h = plt.plot(range(2, 90), data15, '*-', linewidth=0.8)
