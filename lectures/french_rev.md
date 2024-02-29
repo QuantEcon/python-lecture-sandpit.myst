@@ -15,41 +15,106 @@ kernelspec:
 # Inflation During French Revolution 
 
 
-## Overview and Data Sources
+## Overview 
+
+
+In response to a motion by Catholic Bishop Talleyrand,
+the National Assembly placed the Church's assets ''at the Nation's disposal,''
+giving the state a ''privatization problem.'' Necker and the Constituants planned
+to solve the privatization problem **and** the debt problem simultaneously
+by creating a new currency. They devised a scheme to raise revenues by auctioning
+the confiscated lands, thereby withdrawing paper notes issued on the security of
+the lands sold by the government. This ''tax-backed money'' scheme propelled the
+State into the domain of monetary experimentation. Records of their debates show
+how members of the Assembly marshaled theory and evidence to assess the likely
+effects of their innovation. They quoted David Hume and Adam Smith and cited John
+Law's System of 1720 and the American experiences with paper money fifteen years
+earlier as examples of how paper money schemes can go awry.
+
+
+Necker's original plan embodied two components: a national bank and a new
+financial instrument, the \textit{assignat.}  Necker's national
+bank was patterned after the Bank of England. He proposed to transform the *Caisse d'Escompte* into a national bank by granting it a monopoly on issuing
+notes and marketing government debt. The *Caisse*  was a
+discount bank founded in 1776 whose main function was to discount commercial bills
+and issue convertible notes. Although independent of the government in principle,
+it had occasionally been used as a source of loans. Its notes had been declared
+inconvertible in August 1788, and by the time of Necker's proposal, its reserves
+were exhausted. Necker's plan placed the National Estates (as the Church lands
+became known after the addition of the royal demesne) at the center of the financial
+picture: a ''Bank of France'' would issue a $5\%$ security mortgaged on the prospective
+receipts from the modest sale of some 400 millions' worth of National Estates in
+the years 1791 to 1793.
+```{note}
+ Only 170 million was to be used initially
+to cover the deficits of 1789 and 1790.
+```
+
+
+By mid-1790, members of the National Assembly had agreed to sell the National
+Estates and to use the proceeds to service the debt in a ``tax-backed money'' scheme 
+```{note}
+The current
+weight of the debt on government revenues was over 60\% when due reimbursements
+were included. 
+```
+
+The government would issue securities with which it would reimburse debt. The securities
+were acceptable as payment for National Estates purchased at auctions; once received
+in payment, they were to be burned. (The Appendix describes the mechanics of the
+auctions.) The Estates available for sale were thought to be worth about 2,400
+million, while the exactable debt (essentially fixed-term loans, unpaid arrears,
+and liquidated offices) stood at about 2,000 million. The value of the land was
+sufficient to let the Assembly retire all of the exactable debt and thereby eliminate
+the interest payments on it. After lengthy debates, in August 1790, the Assembly set the denomination
+and interest rate structure of the debt. 
+
+```{note} Two distinct
+aspects of monetary theory help in thinking about the assignat plan. First, a system
+beginning with a commodity standard typically has room for a once-and-for-all emission
+of (an unbacked) paper currency that can replace the commodity money without generating
+inflation. \citet{Sargent/Wallace:1983} describe models with this property. That
+commodity money systems are wasteful underlies Milton \possessivecite{Friedman1960} preference
+for a fiat money regime over a commodity money. Second, in a small country on a
+commodity money system that starts with restrictions on intermediation, those restrictions
+can be relaxed by letting the government issue bank notes on the security of safe
+private indebtedness, while leaving bank notes convertible into gold at par. See
+Adam \citet{Smith:1776} and \citet{Sargent_Wallace_1982} for expressions of this idea.
+```
+
+
+```{note} 
+The
+National Assembly debated many now classic questions in monetary economics. Under
+what conditions would money creation generate inflation, with what consequences
+for business conditions? Distinctions were made between issue of money to pay off
+debt, on one hand, and monetization of deficits, on the other. Would *assignats* be akin
+to notes emitted under a real bills regime, and cause loss of specie, or would
+they circulate alongside specie, thus increasing the money stock? Would inflation
+affect real wages? How would it impact foreign trade, competitiveness of French
+industry and agriculture, balance of trade, foreign exchange?
+```
+
+## Data Sources
 
 This notebook uses data from three spreadsheets:
 
   * _static/fig_3.ods
   * _static/dette.xlsx
   * _static/assignat.xlsx
+
+It also requires that we install odfpy with pip.
+
 <!-- #endregion -->
 
 <!-- #region user_expressions=[] -->
-## To Do for Zejin
 
-I want to tweak and consolidate the extra lines that Zejin drew on   **Figure 7**.  
-
-I'd like to experiment in plotting **six** extra lines on the graph -- a pair of lines for each of our subsamples
-
-  * one for the $y$ on $x$ regression line
-  * another for the $x$ on $y$ regression line
-
-I'd like the  $y$ on $x$ and $x$ on $y$ lines to be in separate colors.
-
-Zejin, I can explain on zoom the lessons I want to convey with this.  
-
-It will be fun. 
-
-To compute the regression lines, Zejin wrote  a  function that use standard formulas
-for a and b in a least squares regression y = a + b x + residual -- i.e., b is ratio of sample covariance of y,x to sample variance of x; while a is then computed from a =  sample mean of y - \hat b *sample mean of x
-
-We could presumably tell students how to do this with a couple of numpy lines
 
  
 <!-- #endregion -->
 
 ```{code-cell} ipython3
-!pip install odfpy
+#!pip install odfpy
 ```
 
 ```{code-cell} ipython3
@@ -238,13 +303,71 @@ plt.ylabel('1726 = 1', fontsize=12, fontname='Times New Roman')
 #plt.savefig('frfinfig5.pdf', dpi=600)
 ```
 
+## Rise and Fall of the *Assignat*
+
+
+
+ We have partitioned Figures~\ref{fig:fig7}, \ref{fig:fig8}, and \ref{fig:fig9}
+ into three periods, corresponding
+to different monetary regimes or episodes. The three clouds of points in
+Figure~\ref{fig:fig7}
+ depict different real balance-inflation relationships. Only the cloud for the
+third period has the inverse relationship familiar to us now from twentieth-century
+hyperinflations. The first period ends in the late summer of 1793, and is characterized
+by growing real balances and moderate inflation. The second period begins and ends
+with the Terror. It is marked by high real balances, around 2,500 millions, and
+roughly stable prices. The fall of Robespierre in late July 1794 begins the third
+of our episodes, in which real balances decline and prices rise rapidly. We interpret
+these three episodes in terms of three separate theories about money: a ``backing''
+or ''real bills'' theory (the text is Adam Smith [1776],
+a legal restrictions theory,%
+\footnote{\citet{Keynes:1940} urged a forced saving
+program for war finance. \citet{Bryant/Wallace:1984} and \citet{Villamil:1988} have formalized aspects
+of Keynes's analysis.}
+and a classical hyperinflation theory.%
+```{note}
+According to \possessivecite{Cagan:1956} definition of hyperinflation,
+beginning in the month that inflation exceeds 50 percent
+per month and ending in the month before inflation drops below 50 percent per month
+for at least a year, the \emph{assignat} experienced a hyperinflation from May to December
+1795.
+```
+We view these
+theories not as competitors but as alternative collections of ``if-then''
+statements about government note issues, each of which finds its conditions more
+nearly met in one of these episodes than in the other two.
+
 <!-- #region user_expressions=[] -->
+
+
+
 ## Figure 7
 
+
+## To Do for Zejin
+
+I want to tweak and consolidate the extra lines that Zejin drew on   the beautiful **Figure 7**.  
+
+I'd like to experiment in plotting the **six** extra lines all on one graph -- a pair of lines for each of our subsamples
+
+  * one for the $y$ on $x$ regression line
+  * another for the $x$ on $y$ regression line
+
+I'd like the  $y$ on $x$ and $x$ on $y$ lines to be in separate colors.
+
+Once we are satisfied with this new graph with its six additional lines, we can dispense with the other graphs that add one line at a time. 
+
+Zejin, I can explain on zoom the lessons I want to convey with this.  
+
+
+
+Just to recall, to compute the regression lines, Zejin wrote  a  function that use standard formulas
+for a and b in a least squares regression y = a + b x + residual -- i.e., b is ratio of sample covariance of y,x to sample variance of x; while a is then computed from a =  sample mean of y - \hat b *sample mean of x
+
+We could presumably tell students how to do this with a couple of numpy lines
 I'd like to create three additional versions of the following figure. 
 
-The additional versions would have least squares regression lines of the y variable on the x data, in different colors
-during three pertinent subperiods:
+To remind you, we focused on  three  subperiods:
 
 
 * subperiod 1: ("real bills period): January 1791 to July 1793
@@ -253,14 +376,9 @@ during three pertinent subperiods:
 
 * subperiod 3: ("classic Cagan hyperinflation): August 1794 - March 1796
 
-We could try several versions and figure out which is most informative and beautiful.  
-
-One possibility would be to have all three regression lines on the same graph -- they we'd just have the original graph followed by this one.
 
 I can explain what this is designed to show.
 
-
-To compute the regression lines we could simply use python to compute the constant and slope in a couple of Python lines. I don't want the R^2 and other stuff produced by statsmodels at this point
 <!-- #endregion -->
 
 ```{code-cell} ipython3
