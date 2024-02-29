@@ -1,15 +1,14 @@
 ---
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .md
-      format_name: markdown
-      format_version: '1.3'
-      jupytext_version: 1.16.1
-  kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
-    name: python3
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.16.1
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
 ---
 
 <!-- #region user_expressions=[] -->
@@ -49,11 +48,11 @@ We could presumably tell students how to do this with a couple of numpy lines
  
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 !pip install odfpy
 ```
 
-```python
+```{code-cell} ipython3
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -65,7 +64,7 @@ plt.rcParams.update({'font.size': 12})
 ## Figure 1
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read the data from the Excel file
 data1 = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='R:S', skiprows=5, nrows=99, header=None)
 data1a = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='P', skiprows=89, nrows=15, header=None)
@@ -101,7 +100,7 @@ plt.show()
 ## Figure 2
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read the data from Excel file
 data2 = pd.read_excel('_static/dette.xlsx', sheet_name='Militspe', usecols='M:X', skiprows=7, nrows=102, header=None)
 
@@ -135,14 +134,14 @@ plt.text(1759, 7.3, 'revenues', fontname='Times New Roman', fontsize=10)
 
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read the data from the Excel file
 data1 = pd.read_excel('_static/fig_3.ods', sheet_name='Sheet1', usecols='C:F', skiprows=5, nrows=30, header=None, engine="odf")
 
 data1.replace(0, np.nan, inplace=True)
 ```
 
-```python
+```{code-cell} ipython3
 # Plot the data
 plt.figure()
 
@@ -167,7 +166,7 @@ plt.ylabel('millions of livres')
 #plt.savefig('frfinfig3.jpg', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 # Plot the data
 plt.figure()
 
@@ -195,7 +194,7 @@ plt.ylabel('millions of livres')
 ## Figure 4
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # French military spending, 1685-1789, in 1726 livres
 data4 = pd.read_excel('_static/dette.xlsx', sheet_name='Militspe', usecols='D', skiprows=3, nrows=105, header=None).squeeze()
 years = range(1685, 1790)
@@ -220,7 +219,7 @@ plt.ylim([0, 475])
 ## Figure 5
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read data from Excel file
 data5 = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='K', skiprows=41, nrows=120, header=None)
 
@@ -264,7 +263,7 @@ I can explain what this is designed to show.
 To compute the regression lines we could simply use python to compute the constant and slope in a couple of Python lines. I don't want the R^2 and other stuff produced by statsmodels at this point
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 def fit(x, y):
 
     b = np.cov(x, y)[0, 1] / np.var(x)
@@ -273,7 +272,7 @@ def fit(x, y):
     return a, b
 ```
 
-```python
+```{code-cell} ipython3
 caron = np.array([
     [1791, 96.696],
     [1791 + 1/12, 96.426],
@@ -424,7 +423,7 @@ nom_balances= np.array([[1789+10/12   ,  90.000   ],
 [1796+6/12  , 33555.590]])
 ```
 
-```python
+```{code-cell} ipython3
 infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
 bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 
@@ -447,7 +446,7 @@ plt.legend()
 #plt.savefig('frfinfig7.pdf', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
 bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 
@@ -476,7 +475,7 @@ plt.legend()
 #plt.savefig('frfinfig7_line1.pdf', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
 bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 
@@ -505,7 +504,7 @@ plt.legend()
 #plt.savefig('frfinfig7_line1_rev.pdf', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
 bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 
@@ -534,7 +533,7 @@ plt.legend()
 #plt.savefig('frfinfig7_line2.pdf', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
 bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 
@@ -563,7 +562,7 @@ plt.legend()
 #plt.savefig('frfinfig7_line2_rev.pdf', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
 bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 
@@ -592,7 +591,7 @@ plt.legend()
 #plt.savefig('frfinfig7_line3.pdf', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
 bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 
@@ -625,7 +624,7 @@ plt.legend()
 ## Figure 8
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read the data from Excel file
 data7 = pd.read_excel('_static/assignat.xlsx', sheet_name='Data', usecols='P:Q', skiprows=4, nrows=80, header=None)
 data7a = pd.read_excel('_static/assignat.xlsx', sheet_name='Data', usecols='L', skiprows=4, nrows=80, header=None)
@@ -662,7 +661,7 @@ plt.text(pd.Timestamp('1794-10-01'), 2500, 'real value', fontname='Times New Rom
 ## Figure 9
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Create the figure and plot
 plt.figure()
 x = np.arange(1789 + 10/12, 1796 + 5/12, 1/12)
@@ -692,7 +691,7 @@ plt.text(1794.9, 40, 'gold', fontname='Times New Roman', fontsize=12)
 ## Figure 11
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read data from Excel file
 data11 = pd.read_excel('_static/assignat.xlsx', sheet_name='Budgets', usecols='J:K', skiprows=22, nrows=52, header=None)
 
@@ -730,7 +729,7 @@ plt.ylabel('millions of livres', fontsize=12, fontname='Times New Roman')
 ## Figure 12
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read data from Excel file
 data12 = pd.read_excel('_static/assignat.xlsx', sheet_name='seignor', usecols='F', skiprows=6, nrows=75, header=None).squeeze()
 
@@ -755,7 +754,7 @@ plt.text(pd.Timestamp('1793-11'), 39.5, 'revenues in 1788', verticalalignment='t
 ## Figure 13
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # Read data from Excel file
 data13 = pd.read_excel('_static/assignat.xlsx', sheet_name='Exchge', usecols='P:T', skiprows=3, nrows=502, header=None)
 
@@ -794,7 +793,7 @@ plt.annotate('end of the assignat', xy=(340, 172), xytext=(380, 160),
 ## Figure 14
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # figure 14
 data14 = pd.read_excel('_static/assignat.xlsx', sheet_name='Post-95', usecols='I', skiprows=9, nrows=91, header=None).squeeze()
 data14a = pd.read_excel('_static/assignat.xlsx', sheet_name='Post-95', usecols='F', skiprows=100, nrows=151, header=None).squeeze()
@@ -815,7 +814,7 @@ plt.ylabel('Francs')
 ## Figure 15
 <!-- #endregion -->
 
-```python
+```{code-cell} ipython3
 # figure 15
 data15 = pd.read_excel('_static/assignat.xlsx', sheet_name='Post-95', usecols='N', skiprows=4, nrows=88, header=None).squeeze()
 
@@ -835,6 +834,6 @@ plt.ylabel('Francs')
 #plt.savefig('frfinfig15.pdf', dpi=600)
 ```
 
-```python
+```{code-cell} ipython3
 
 ```
