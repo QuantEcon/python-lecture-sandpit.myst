@@ -14,6 +14,7 @@ sections:
 # - file: money_inflation
 - file: money_inflation_humphrey
 - file: unpleasant 
+- file: french_rev 
 # - file: PT_static
 # - file: PT_dynamic
 # - file: markov_switching_lss
