@@ -474,7 +474,6 @@ def simulate_system(R0, model, num_steps):
     # Iterate over time steps
     for t in range(1, num_steps):
         b_t = b_values[t - 1] * R_values[t - 1] + g
-        R_t_inverse = γ1/γ2 - (1/γ2) * b_t
         R_values[t] = 1 / (γ1/γ2 - (1/γ2) * b_t)
         b_values[t] = b_t
 
