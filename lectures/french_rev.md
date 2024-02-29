@@ -103,7 +103,6 @@ This notebook uses data from three spreadsheets:
   * _static/dette.xlsx
   * _static/assignat.xlsx
 
-It also requires that we install odfpy with pip.
 
 <!-- #endregion -->
 
@@ -114,14 +113,9 @@ It also requires that we install odfpy with pip.
 <!-- #endregion -->
 
 ```{code-cell} ipython3
-#!pip install odfpy
-```
-
-```{code-cell} ipython3
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-plt.rcParams["font.family"] = "Times New Roman"
 plt.rcParams.update({'font.size': 12})
 ```
 
@@ -181,13 +175,13 @@ plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 plt.gca().tick_params(labelsize=12)
 plt.xlim([1689, 1790])
-plt.ylabel('millions of pounds', fontname='Times New Roman', fontsize=12)
+plt.ylabel('millions of pounds', fontsize=12)
 
 # Add text annotations
-plt.text(1765, 1.5, 'civil', fontname='Times New Roman', fontsize=10)
-plt.text(1760, 4.2, 'civil plus debt service', fontname='Times New Roman', fontsize=10)
-plt.text(1708, 15.5, 'total govt spending', fontname='Times New Roman', fontsize=10)
-plt.text(1759, 7.3, 'revenues', fontname='Times New Roman', fontsize=10)
+plt.text(1765, 1.5, 'civil', fontsize=10)
+plt.text(1760, 4.2, 'civil plus debt service', fontsize=10)
+plt.text(1708, 15.5, 'total govt spending', fontsize=10)
+plt.text(1759, 7.3, 'revenues', fontsize=10)
 
 # Save the figure as a PDF
 #plt.savefig('frfinfig2.pdf', dpi=600)
@@ -201,7 +195,7 @@ plt.text(1759, 7.3, 'revenues', fontname='Times New Roman', fontsize=10)
 
 ```{code-cell} ipython3
 # Read the data from the Excel file
-data1 = pd.read_excel('_static/fig_3.ods', sheet_name='Sheet1', usecols='C:F', skiprows=5, nrows=30, header=None, engine="odf")
+data1 = pd.read_excel('_static/fig_3.xlsx', sheet_name='Sheet1', usecols='C:F', skiprows=5, nrows=30, header=None)
 
 data1.replace(0, np.nan, inplace=True)
 ```
@@ -215,11 +209,11 @@ plt.plot(range(1759, 1789, 1), data1.iloc[:, 1], '--*', linewidth=0.8)
 plt.plot(range(1759, 1789, 1), data1.iloc[:, 2], '-o', linewidth=0.8, markerfacecolor='none')
 plt.plot(range(1759, 1789, 1), data1.iloc[:, 3], '-*', linewidth=0.8)
 
-plt.text(1775, 610, 'total spending', fontname='Times New Roman', fontsize=10)
-plt.text(1773, 325, 'military', fontname='Times New Roman', fontsize=10)
-plt.text(1773, 220, 'civil plus debt service', fontname='Times New Roman', fontsize=10)
-plt.text(1773, 80, 'debt service', fontname='Times New Roman', fontsize=10)
-plt.text(1785, 500, 'revenues', fontname='Times New Roman', fontsize=10)
+plt.text(1775, 610, 'total spending', fontsize=10)
+plt.text(1773, 325, 'military', fontsize=10)
+plt.text(1773, 220, 'civil plus debt service', fontsize=10)
+plt.text(1773, 80, 'debt service', fontsize=10)
+plt.text(1785, 500, 'revenues', fontsize=10)
 
 
 
@@ -240,11 +234,11 @@ plt.plot(np.arange(1759, 1789, 1)[~np.isnan(data1.iloc[:, 1])], data1.iloc[:, 1]
 plt.plot(np.arange(1759, 1789, 1)[~np.isnan(data1.iloc[:, 2])], data1.iloc[:, 2][~np.isnan(data1.iloc[:, 2])], '-o', linewidth=0.8, markerfacecolor='none')
 plt.plot(np.arange(1759, 1789, 1)[~np.isnan(data1.iloc[:, 3])], data1.iloc[:, 3][~np.isnan(data1.iloc[:, 3])], '-*', linewidth=0.8)
 
-plt.text(1775, 610, 'total spending', fontname='Times New Roman', fontsize=10)
-plt.text(1773, 325, 'military', fontname='Times New Roman', fontsize=10)
-plt.text(1773, 220, 'civil plus debt service', fontname='Times New Roman', fontsize=10)
-plt.text(1773, 80, 'debt service', fontname='Times New Roman', fontsize=10)
-plt.text(1785, 500, 'revenues', fontname='Times New Roman', fontsize=10)
+plt.text(1775, 610, 'total spending', fontsize=10)
+plt.text(1773, 325, 'military', fontsize=10)
+plt.text(1773, 220, 'civil plus debt service', fontsize=10)
+plt.text(1773, 80, 'debt service', fontsize=10)
+plt.text(1785, 500, 'revenues', fontsize=10)
 
 
 plt.gca().spines['top'].set_visible(False)
@@ -297,7 +291,7 @@ plt.gca().spines['right'].set_visible(False)
 plt.gca().set_facecolor('white')
 plt.gca().tick_params(labelsize=12)
 plt.xlim([1726, 1845])
-plt.ylabel('1726 = 1', fontsize=12, fontname='Times New Roman')
+plt.ylabel('1726 = 1', fontsize=12)
 
 # Save the figure as a PDF
 #plt.savefig('frfinfig5.pdf', dpi=600)
@@ -391,160 +385,29 @@ def fit(x, y):
 ```
 
 ```{code-cell} ipython3
-caron = np.array([
-    [1791, 96.696],
-    [1791 + 1/12, 96.426],
-    [1791 + 2/12, 95.822],
-    [1791 + 3/12, 95.074],
-    [1791 + 4/12, 93.606],
-    [1791 + 5/12, 92.921],
-    [1791 + 6/12, 92.130],
-    [1791 + 7/12, 89.927],
-    [1791 + 8/12, 89.832],
-    [1791 + 9/12, 89.620],
-    [1791 + 10/12, 88.035],
-    [1791 + 11/12, 85.605],
-    [1792, 81.324],
-    [1792 + 1/12, 76.178],
-    [1792 + 2/12, 73.931],
-    [1792 + 3/12, 75.893],
-    [1792 + 4/12, 71.867],
-    [1792 + 5/12, 71.914],
-    [1792 + 6/12, 72.720],
-    [1792 + 7/12, 72.311],
-    [1792 + 8/12, 75.099],
-    [1792 + 9/12, 75.861],
-    [1792 + 10/12, 76.415],
-    [1792 + 11/12, 74.994],
-    [1793, 66.025],
-    [1793 + 1/12, 64.809],
-    [1793 + 2/12, 62.833],
-    [1793 + 3/12, 57.618],
-    [1793 + 4/12, 57.092],
-    [1793 + 5/12, 48.559],
-    [1793 + 6/12, 42.205],
-    [1793 + 7/12, 40.263],
-    [1793 + 8/12, 40.601],
-    [1793 + 9/12, 42.283],
-    [1793 + 10/12, 48.283],
-    [1793 + 11/12, 54.751],
-    [1794, 49.558],
-    [1794 + 1/12, 48.932],
-    [1794 + 2/12, 45.587],
-    [1794 + 3/12, 44.501],
-    [1794 + 4/12, 42.479],
-    [1794 + 5/12, 39.822],
-    [1794 + 6/12, 41.518],
-    [1794 + 7/12, 39.119],
-    [1794 + 8/12, 36.225],
-    [1794 + 9/12, 34.409],
-    [1794 + 10/12, 31.247],
-    [1794 + 11/12, 27.725],
-    [1795, 24.313],
-    [1795 + 1/12, 21.974],
-    [1795 + 2/12, 18.654],
-    [1795 + 3/12, 14.326],
-    [1795 + 4/12, 9.158],
-    [1795 + 5/12, 5.654],
-    [1795 + 6/12, 4.471],
-    [1795 + 7/12, 3.716],
-    [1795 + 8/12, 2.859],
-    [1795 + 9/12, 2.149],
-    [1795 + 10/12, 1.217],
-    [1795 + 11/12, 0.820],
-    [1796, 0.634],
-    [1796 + 1/12, 0.547],
-    [1796 + 3/12, 0.431]
-])
+# load data
+caron = np.load('_static/caron.npy')
+nom_balances = np.load('_static/nom_balances.npy')
 
-
-nom_balances= np.array([[1789+10/12   ,  90.000   ],
-[1789+11/12 ,   105.000   ],
-[1790       ,   124.000   ],
-[1790+1/12  ,   142.000   ],
-[1790+2/12  ,   170.000   ],
-[1790+3/12  ,   190.237   ],
-[1790+4/12  ,   212.795   ],
-[1790+5/12  ,   258.606   ],
-[1790+6/12  ,   307.669   ],
-[1790+7/12  ,   348.881   ],
-[1790+8/12  ,   390.294   ],
-[1790+9/12  ,   437.095   ],
-[1790+10/12 ,   485.095   ],
-[1790+11/12 ,   529.095   ],
-[1791       ,   627.018   ],
-[1791+1/12  ,   722.398   ],
-[1791+2/12  ,   808.214   ],
-[1791+3/12  ,   897.784   ],
-[1791+4/12  ,   984.671   ],
-[1791+5/12  ,  1041.232   ],
-[1791+6/12  ,  1109.164   ],
-[1791+7/12  ,  1162.808   ],
-[1791+8/12  ,  1200.332   ],
-[1791+9/12  ,  1299.622   ],
-[1791+10/12 ,  1366.562   ],
-[1791+11/12 ,  1394.241   ],
-[1792       ,  1460.602   ],
-[1792+1/12  ,  1529.391   ],
-[1792+2/12  ,  1570.098   ],
-[1792+3/12  ,  1621.548   ],
-[1792+4/12  ,  1693.131   ],
-[1792+5/12  ,  1722.802   ],
-[1792+6/12  ,  1765.895   ],
-[1792+7/12  ,  1836.786   ],
-[1792+8/12  ,  1950.917   ],
-[1792+9/12  ,  2062.232   ],
-[1792+10/12 ,  2172.500   ],
-[1792+11/12 ,  2291.201   ],
-[1793       ,  2413.451   ],
-[1793+1/12  ,  2583.358   ],
-[1793+2/12  ,  2834.287   ],
-[1793+3/12  ,  3114.676   ],
-[1793+4/12  ,  3388.209   ],
-[1793+5/12  ,  3527.772   ],
-[1793+6/12  ,  3766.645   ],
-[1793+7/12  ,  4084.883   ],
-[1793+8/12  ,  4452.083   ],
-[1793+9/12  ,  4603.083   ],
-[1793+10/12 ,  4878.728   ],
-[1793+11/12 ,  5114.951   ],
-[1794       ,  5229.818   ],
-[1794+1/12  ,  5382.818   ],
-[1794+2/12  ,  5478.720   ],
-[1794+3/12  ,  5705.913   ],
-[1794+4/12  ,  5905.769],
-[1794+5/12  ,  6054.298],
-[1794+6/12  ,  6217.455],
-[1794+7/12  ,  6397.486],
-[1794+8/12  ,  6573.364],
-[1794+9/12  ,  6721.252],
-[1794+10/12 ,  6962.986],
-[1794+11/12 ,  7154.619],
-[1795       ,  7349.853],
-[1795+1/12  ,  7702.848],
-[1795+2/12  ,  8148.652],
-[1795+3/12  ,  8903.508],
-[1795+4/12  , 10055.347],
-[1795+5/12  , 11374.560],
-[1795+6/12  , 13822.633],
-[1795+7/12  , 15469.625],
-[1795+8/12  , 17271.144],
-[1795+9/12  , 19462.168],
-[1795+10/12 , 22356.131],
-[1795+11/12 , 25457.189],
-[1796       , 34611.005],
-[1796+1/12  , 35620.096],
-[1796+2/12  , 37540.933],
-[1796+3/12  , 36758.033],
-[1796+4/12  , 35800.495],
-[1796+5/12  , 34682.422],
-[1796+6/12  , 33555.590]])
+infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
+bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
 ```
 
 ```{code-cell} ipython3
-infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
-bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
+# fit data
 
+# reg y on x for three periods
+a1, b1 = fit(bal[1:31], infl[1:31])
+a2, b2 = fit(bal[31:44], infl[31:44])
+a3, b3 = fit(bal[44:63], infl[44:63])
+
+# reg x on y for three periods
+a1_rev, b1_rev = fit(infl[1:31], bal[1:31])
+a2_rev, b2_rev = fit(infl[31:44], bal[31:44])
+a3_rev, b3_rev = fit(infl[44:63], bal[44:63])
+```
+
+```{code-cell} ipython3
 plt.figure()
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
@@ -564,28 +427,48 @@ plt.legend()
 #plt.savefig('frfinfig7.pdf', dpi=600)
 ```
 
-```{code-cell} ipython3
-infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
-bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
+<p style="color:red;">Zejin: below is the grapth with six lines in one graph. The lines generated by regressing y on x have the same color as the corresponding data points, while the lines generated by regressing x on y are all in green.</p>
 
+```{code-cell} ipython3
 plt.figure()
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 
 # first subsample
 plt.plot(bal[1:31], infl[1:31], 'o', markerfacecolor='none', color='blue', label='real bills period')
-a1, b1 = fit(bal[1:31], infl[1:31])
+plt.plot(bal[1:31], a1 + bal[1:31] * b1, color='blue', linewidth=0.8)
+plt.plot(a1_rev + b1_rev * infl[1:31], infl[1:31], color='green', linewidth=0.8)
+
+# second subsample
+plt.plot(bal[31:44], infl[31:44], '+', color='red', label='terror')
+plt.plot(bal[31:44], a2 + bal[31:44] * b2, color='red', linewidth=0.8)
+plt.plot(a2_rev + b2_rev * infl[31:44], infl[31:44], color='green', linewidth=0.8)
+
+# third subsample
+plt.plot(bal[44:63], infl[44:63], '*', color='orange', label='classic Cagan hyperinflation')
+plt.plot(bal[44:63], a3 + bal[44:63] * b3, color='orange', linewidth=0.8)
+plt.plot(a3_rev + b3_rev * infl[44:63], infl[44:63], color='green', linewidth=0.8)
+
+plt.xlabel('real balances')
+plt.ylabel('inflation')
+plt.legend()
+#plt.savefig('frfinfig7.pdf', dpi=600)
+```
+
+```{code-cell} ipython3
+plt.figure()
+plt.gca().spines['top'].set_visible(False)
+plt.gca().spines['right'].set_visible(False)
+
+# first subsample
+plt.plot(bal[1:31], infl[1:31], 'o', markerfacecolor='none', color='blue', label='real bills period')
 plt.plot(bal[1:31], a1 + bal[1:31] * b1, color='blue')
 
 # second subsample
 plt.plot(bal[31:44], infl[31:44], '+', color='red', label='terror')
-# a2, b2 = fit(bal[31:44], infl[31:44])
-# plt.plot(bal[31:44], a2 + bal[31:44] * b2, color='red')
 
 # third subsample
 plt.plot(bal[44:63], infl[44:63], '*', color='orange', label='classic Cagan hyperinflation')
-# a3, b3 = fit(bal[44:63], infl[44:63])
-# plt.plot(bal[44:63], a3 + bal[44:63] * b3, color='orange')
 
 plt.xlabel('real balances')
 plt.ylabel('inflation')
@@ -594,27 +477,19 @@ plt.legend()
 ```
 
 ```{code-cell} ipython3
-infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
-bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
-
 plt.figure()
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 
 # first subsample
 plt.plot(bal[1:31], infl[1:31], 'o', markerfacecolor='none', color='blue', label='real bills period')
-a1_rev, b1_rev = fit(infl[1:31], bal[1:31])
 plt.plot(a1_rev + b1_rev * infl[1:31], infl[1:31], color='blue')
 
 # second subsample
 plt.plot(bal[31:44], infl[31:44], '+', color='red', label='terror')
-# a2, b2 = fit(bal[31:44], infl[31:44])
-# plt.plot(bal[31:44], a2 + bal[31:44] * b2, color='red')
 
 # third subsample
 plt.plot(bal[44:63], infl[44:63], '*', color='orange', label='classic Cagan hyperinflation')
-# a3, b3 = fit(bal[44:63], infl[44:63])
-# plt.plot(bal[44:63], a3 + bal[44:63] * b3, color='orange')
 
 plt.xlabel('real balances')
 plt.ylabel('inflation')
@@ -623,27 +498,19 @@ plt.legend()
 ```
 
 ```{code-cell} ipython3
-infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
-bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
-
 plt.figure()
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 
 # first subsample
 plt.plot(bal[1:31], infl[1:31], 'o', markerfacecolor='none', color='blue', label='real bills period')
-# a1, b1 = fit(bal[1:31], infl[1:31])
-# plt.plot(bal[1:31], a1 + bal[1:31] * b1, color='blue')
 
 # second subsample
 plt.plot(bal[31:44], infl[31:44], '+', color='red', label='terror')
-a2, b2 = fit(bal[31:44], infl[31:44])
 plt.plot(bal[31:44], a2 + bal[31:44] * b2, color='red')
 
 # third subsample
 plt.plot(bal[44:63], infl[44:63], '*', color='orange', label='classic Cagan hyperinflation')
-# a3, b3 = fit(bal[44:63], infl[44:63])
-# plt.plot(bal[44:63], a3 + bal[44:63] * b3, color='orange')
 
 plt.xlabel('real balances')
 plt.ylabel('inflation')
@@ -652,27 +519,19 @@ plt.legend()
 ```
 
 ```{code-cell} ipython3
-infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
-bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
-
 plt.figure()
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 
 # first subsample
 plt.plot(bal[1:31], infl[1:31], 'o', markerfacecolor='none', color='blue', label='real bills period')
-# a1, b1 = fit(bal[1:31], infl[1:31])
-# plt.plot(bal[1:31], a1 + bal[1:31] * b1, color='blue')
 
 # second subsample
 plt.plot(bal[31:44], infl[31:44], '+', color='red', label='terror')
-a2_rev, b2_rev = fit(infl[31:44], bal[31:44])
 plt.plot(a2_rev + b2_rev * infl[31:44], infl[31:44], color='red')
 
 # third subsample
 plt.plot(bal[44:63], infl[44:63], '*', color='orange', label='classic Cagan hyperinflation')
-# a3, b3 = fit(bal[44:63], infl[44:63])
-# plt.plot(bal[44:63], a3 + bal[44:63] * b3, color='orange')
 
 plt.xlabel('real balances')
 plt.ylabel('inflation')
@@ -681,26 +540,18 @@ plt.legend()
 ```
 
 ```{code-cell} ipython3
-infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
-bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
-
 plt.figure()
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 
 # first subsample
 plt.plot(bal[1:31], infl[1:31], 'o', markerfacecolor='none', color='blue', label='real bills period')
-# a1, b1 = fit(bal[1:31], infl[1:31])
-# plt.plot(bal[1:31], a1 + bal[1:31] * b1, color='blue')
 
 # second subsample
 plt.plot(bal[31:44], infl[31:44], '+', color='red', label='terror')
-# a2, b2 = fit(bal[31:44], infl[31:44])
-# plt.plot(bal[31:44], a2 + bal[31:44] * b2, color='red')
 
 # third subsample
 plt.plot(bal[44:63], infl[44:63], '*', color='orange', label='classic Cagan hyperinflation')
-a3, b3 = fit(bal[44:63], infl[44:63])
 plt.plot(bal[44:63], a3 + bal[44:63] * b3, color='orange')
 
 plt.xlabel('real balances')
@@ -710,26 +561,18 @@ plt.legend()
 ```
 
 ```{code-cell} ipython3
-infl = np.concatenate(([np.nan], -np.log(caron[1:63, 1] / caron[0:62, 1])))
-bal = nom_balances[14:77, 1] * caron[:, 1] / 1000
-
 plt.figure()
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 
 # first subsample
 plt.plot(bal[1:31], infl[1:31], 'o', markerfacecolor='none', color='blue', label='real bills period')
-# a1, b1 = fit(bal[1:31], infl[1:31])
-# plt.plot(bal[1:31], a1 + bal[1:31] * b1, color='blue')
 
 # second subsample
 plt.plot(bal[31:44], infl[31:44], '+', color='red', label='terror')
-# a2, b2 = fit(bal[31:44], infl[31:44])
-# plt.plot(bal[31:44], a2 + bal[31:44] * b2, color='red')
 
 # third subsample
 plt.plot(bal[44:63], infl[44:63], '*', color='orange', label='classic Cagan hyperinflation')
-a3_rev, b3_rev = fit(infl[44:63], bal[44:63])
 plt.plot(a3_rev + b3_rev * infl[44:63], infl[44:63], color='orange')
 
 plt.xlabel('real balances')
@@ -752,9 +595,8 @@ plt.figure()
 h = plt.plot(pd.date_range(start='1789-11-01', periods=len(data7), freq='M'), (data7a.values * [1, 1]) * data7.values, linewidth=1.)
 plt.setp(h[1], linestyle='--', color='red')
 
-# Hold on equivalent in matplotlib is just plotting on the same figure
-plt.vlines(['1793-07-15', '1793-07-15'], 0, 3000, linewidth=0.8, color='orange')
-plt.vlines(['1794-07-15', '1794-07-15'], 0, 3000, linewidth=0.8, color='purple')
+plt.vlines([pd.Timestamp('1793-07-15'), pd.Timestamp('1793-07-15')], 0, 3000, linewidth=0.8, color='orange')
+plt.vlines([pd.Timestamp('1794-07-15'), pd.Timestamp('1794-07-15')], 0, 3000, linewidth=0.8, color='purple')
 
 plt.ylim([0, 3000])
 
@@ -764,12 +606,12 @@ plt.gca().spines['right'].set_visible(False)
 plt.gca().set_facecolor('white')
 plt.gca().tick_params(labelsize=12)
 plt.xlim(pd.Timestamp('1789-11-01'), pd.Timestamp('1796-06-01'))
-plt.ylabel('millions of livres', fontname='Times New Roman', fontsize=12)
+plt.ylabel('millions of livres', fontsize=12)
 
 # Add text annotations
-plt.text(pd.Timestamp('1793-09-01'), 200, 'Terror', fontname='Times New Roman', fontsize=12)
-plt.text(pd.Timestamp('1791-05-01'), 750, 'gold value', fontname='Times New Roman', fontsize=12)
-plt.text(pd.Timestamp('1794-10-01'), 2500, 'real value', fontname='Times New Roman', fontsize=12)
+plt.text(pd.Timestamp('1793-09-01'), 200, 'Terror', fontsize=12)
+plt.text(pd.Timestamp('1791-05-01'), 750, 'gold value', fontsize=12)
+plt.text(pd.Timestamp('1794-10-01'), 2500, 'real value', fontsize=12)
 
 # Save the figure as a PDF
 #plt.savefig('frfinfig8.pdf', dpi=600)
@@ -798,9 +640,9 @@ plt.axvline(x=1793 + 6.5/12, linestyle='-', linewidth=0.8, color='orange')
 plt.axvline(x=1794 + 6.5/12, linestyle='-', linewidth=0.8, color='purple')
 
 # Add text
-plt.text(1793.75, 120, 'Terror', fontname='Times New Roman', fontsize=12)
-plt.text(1795, 2.8, 'price level', fontname='Times New Roman', fontsize=12)
-plt.text(1794.9, 40, 'gold', fontname='Times New Roman', fontsize=12)
+plt.text(1793.75, 120, 'Terror', fontsize=12)
+plt.text(1795, 2.8, 'price level', fontsize=12)
+plt.text(1794.9, 40, 'gold', fontsize=12)
 
 #plt.savefig('frfinfig9.pdf', dpi=600)
 ```
@@ -838,7 +680,7 @@ plt.xticks(np.arange(1791, 1796))
 plt.yticks(np.arange(0, 201, 20))
 
 # Set the y-axis label
-plt.ylabel('millions of livres', fontsize=12, fontname='Times New Roman')
+plt.ylabel('millions of livres', fontsize=12)
 
 #plt.savefig('frfinfig11.pdf', dpi=600)
 ```
@@ -862,8 +704,8 @@ plt.gca().spines['right'].set_visible(False)
 plt.axhline(y=472.42/12, color='r', linestyle=':')
 plt.xticks(ticks=pd.date_range(start='1790', end='1796', freq='AS'), labels=range(1790, 1797))
 plt.xlim(pd.Timestamp('1791'), pd.Timestamp('1796-02') + pd.DateOffset(months=2))
-plt.ylabel('millions of livres', fontsize=12, fontname='Times New Roman')
-plt.text(pd.Timestamp('1793-11'), 39.5, 'revenues in 1788', verticalalignment='top', fontsize=12, fontname='Times New Roman')
+plt.ylabel('millions of livres', fontsize=12)
+plt.text(pd.Timestamp('1793-11'), 39.5, 'revenues in 1788', verticalalignment='top', fontsize=12)
 
 #plt.savefig('frfinfig12.pdf', dpi=600)
 ```
@@ -892,17 +734,16 @@ plt.xticks(ttt[~np.isnan(data13.iloc[:, 0])],
            'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'])
 
 # Add text to the plot
-plt.text(1, 120, '1795', fontname='Times New Roman', fontsize=12, ha='center')
-plt.text(262, 120, '1796', fontname='Times New Roman', fontsize=12, ha='center')
+plt.text(1, 120, '1795', fontsize=12, ha='center')
+plt.text(262, 120, '1796', fontsize=12, ha='center')
 
 # Draw a horizontal line and add text
 plt.axhline(y=186.7, color='red', linestyle='-', linewidth=0.8)
-plt.text(150, 190, 'silver parity', fontname='Times New Roman', fontsize=12)
+plt.text(150, 190, 'silver parity', fontsize=12)
 
 # Add an annotation with an arrow
 plt.annotate('end of the assignat', xy=(340, 172), xytext=(380, 160),
-             arrowprops=dict(facecolor='black', arrowstyle='->'),
-             fontname='Times New Roman', fontsize=12)
+             arrowprops=dict(facecolor='black', arrowstyle='->'), fontsize=12)
 
 #plt.savefig('frfinfig13.pdf', dpi=600)
 ```
@@ -941,11 +782,11 @@ h = plt.plot(range(2, 90), data15, '*-', linewidth=0.8)
 plt.setp(h, markersize=2)
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
-plt.text(47.5, 11.4, '17 brumaire', horizontalalignment='left', fontname='Times New Roman', fontsize=12)
-plt.text(49.5, 14.75, '19 brumaire', horizontalalignment='left', fontname='Times New Roman', fontsize=12)
-plt.text(15, -1, 'Vendémiaire 8', fontname='Times New Roman', fontsize=12, horizontalalignment='center')
-plt.text(45, -1, 'Brumaire', fontname='Times New Roman', fontsize=12, horizontalalignment='center')
-plt.text(75, -1, 'Frimaire', fontname='Times New Roman', fontsize=12, horizontalalignment='center')
+plt.text(47.5, 11.4, '17 brumaire', horizontalalignment='left', fontsize=12)
+plt.text(49.5, 14.75, '19 brumaire', horizontalalignment='left', fontsize=12)
+plt.text(15, -1, 'Vendémiaire 8', fontsize=12, horizontalalignment='center')
+plt.text(45, -1, 'Brumaire', fontsize=12, horizontalalignment='center')
+plt.text(75, -1, 'Frimaire', fontsize=12, horizontalalignment='center')
 plt.ylim([0, 25])
 plt.xticks([], [])
 plt.ylabel('Francs')
