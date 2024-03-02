@@ -17,23 +17,46 @@ kernelspec:
 
 ## Overview 
 
+This lecture describes some monetary and fiscal  features of the French Revolution
+described by Sargent and Velde {cite}`sargent_velde1995`.
+
+We use matplotlib to replicate several of the graphs that they used to present salient patterns.
+
+
+
+## Fiscal Situation and Response of National Assembly
+
 
 In response to a motion by Catholic Bishop Talleyrand,
 the National Assembly placed the Church's assets ''at the Nation's disposal,''
-giving the state a ''privatization problem.'' Necker and the Constituants planned
+giving the state a ''privatization problem.'' 
+
+Finance Minister Necker and the Constituants planned
 to solve the privatization problem **and** the debt problem simultaneously
-by creating a new currency. They devised a scheme to raise revenues by auctioning
+by creating a new currency. 
+
+They devised a scheme to raise revenues by auctioning
 the confiscated lands, thereby withdrawing paper notes issued on the security of
-the lands sold by the government. This ''tax-backed money'' scheme propelled the
-State into the domain of monetary experimentation. Records of their debates show
+the lands sold by the government.
+
+ This ''tax-backed money'' scheme propelled the National Assembly  into the domain of monetary experimentation.
+ 
+Records of their debates show
 how members of the Assembly marshaled theory and evidence to assess the likely
-effects of their innovation. They quoted David Hume and Adam Smith and cited John
+effects of their innovation. 
+
+They quoted David Hume and Adam Smith and cited John
 Law's System of 1720 and the American experiences with paper money fifteen years
 earlier as examples of how paper money schemes can go awry.
 
 
+### Necker's plan and how it was tweaked
+
 Necker's original plan embodied two components: a national bank and a new
-financial instrument, the \textit{assignat.}  Necker's national
+financial instrument, the ''assignat''. 
+
+
+Necker's national
 bank was patterned after the Bank of England. He proposed to transform the *Caisse d'Escompte* into a national bank by granting it a monopoly on issuing
 notes and marketing government debt. The *Caisse*  was a
 discount bank founded in 1776 whose main function was to discount commercial bills
@@ -54,20 +77,27 @@ to cover the deficits of 1789 and 1790.
 By mid-1790, members of the National Assembly had agreed to sell the National
 Estates and to use the proceeds to service the debt in a ``tax-backed money'' scheme 
 ```{note}
-The current
-weight of the debt on government revenues was over 60\% when due reimbursements
-were included. 
+Debt service costs absorbed 
+ over 60\% of French government expenditures. 
 ```
 
-The government would issue securities with which it would reimburse debt. The securities
+The government would issue securities with which it would reimburse debt.
+
+The securities
 were acceptable as payment for National Estates purchased at auctions; once received
-in payment, they were to be burned. (The Appendix describes the mechanics of the
-auctions.) The Estates available for sale were thought to be worth about 2,400
+in payment, they were to be burned. 
+
+```{note} 
+The appendix to {cite}`sargent_velde1995` describes  the
+auction rules in detail.
+```
+) The Estates available for sale were thought to be worth about 2,400
 million, while the exactable debt (essentially fixed-term loans, unpaid arrears,
 and liquidated offices) stood at about 2,000 million. The value of the land was
 sufficient to let the Assembly retire all of the exactable debt and thereby eliminate
 the interest payments on it. After lengthy debates, in August 1790, the Assembly set the denomination
 and interest rate structure of the debt. 
+
 
 ```{note} Two distinct
 aspects of monetary theory help in thinking about the assignat plan. First, a system
@@ -124,6 +154,13 @@ plt.rcParams.update({'font.size': 12})
 <!-- #endregion -->
 
 ```{code-cell} ipython3
+---
+mystnb:
+  figure:
+    caption: "Long run time series of the price level"
+    name: fig1
+---
+
 # Read the data from the Excel file
 data1 = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='R:S', skiprows=5, nrows=99, header=None)
 data1a = pd.read_excel('_static/dette.xlsx', sheet_name='Debt', usecols='P', skiprows=89, nrows=15, header=None)
@@ -155,11 +192,20 @@ plt.show()
 #plt.savefig('frfinfig1.jpg', dpi=600)
 ```
 
+
+TO TEACH TOM:  By staring at {numref}`fig1` carefully
 <!-- #region user_expressions=[] -->
 ## Figure 2
 <!-- #endregion -->
 
 ```{code-cell} ipython3
+---
+mystnb:
+  figure:
+    caption: "Long run time series of the price level"
+    name: fig2
+---
+
 # Read the data from Excel file
 data2 = pd.read_excel('_static/dette.xlsx', sheet_name='Militspe', usecols='M:X', skiprows=7, nrows=102, header=None)
 
@@ -194,6 +240,12 @@ plt.text(1759, 7.3, 'revenues', fontsize=10)
 <!-- #endregion -->
 
 ```{code-cell} ipython3
+---
+mystnb:
+  figure:
+    caption: "Fig 3"
+    name: fig3
+---
 # Read the data from the Excel file
 data1 = pd.read_excel('_static/fig_3.xlsx', sheet_name='Sheet1', usecols='C:F', skiprows=5, nrows=30, header=None)
 
