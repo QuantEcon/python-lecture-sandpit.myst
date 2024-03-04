@@ -240,7 +240,6 @@ $$ (eq:steadyquadratic)
 
 A steady state gross rate of return  $\bar R$ solves quadratic equation {eq}`eq:steadyquadratic`.
 
-<p style="color:blue;">Zejin: Hi I corrected the sign error in the above equation following your suggestion in the unpleasant.md file.  Hopefully the code implements the correct formula! </p>
 
 So two steady states typically exist. 
 

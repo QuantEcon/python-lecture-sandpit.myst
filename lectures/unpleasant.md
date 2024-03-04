@@ -17,24 +17,35 @@ kernelspec:
 ## Overview
 
 
-This lecture starts where our lecture on **Money Supplies and Price Levels** ended.
+This lecture builds on concepts and issues introduced in our  lecture on **Money Supplies and Price Levels**.
 
 That lecture describes stationary equilibria that reveal a **Laffer curve** in the inflation tax rate and the associated  stationary rate of return 
 on currency.  
 
-We describe a setting in which  such  a stationary equilibrium prevails from date $T > 0$, but not before then.  
+In this lecture we study  a situation  in which a stationary equilibrium prevails after  date $T > 0$, but not before then.  
 
 For $t=0, \ldots, T-1$, the money supply,  price level, and interest-bearing government debt vary along a transition path that ends at $t=T$.
 
-During this transition, the ratio of the real balances $m_{t+1}{p_t}$ to indexed one-period  government bonds $\tilde R B_{t-1}$  maturing at time $t$ decreases each period.  
+During this transition, the ratio of the real balances $\frac{m_{t+1}}{{p_t}}$ to indexed one-period  government bonds $\tilde R B_{t-1}$  maturing at time $t$ decreases each period. 
+
+This has consequences for the **gross-of-interest** government deficit that must be financed by printing money for times $t \geq T$. 
 
 The critical **money-to-bonds** ratio stabilizes only at time $T$ and afterwards.
 
-We use this setting to describe Sargent and Wallace's **unpleasant monetarist arithmetic**.
+And the larger is $T$, the higher is the gross-of-interest government deficit that must be financed
+by printing money at times $t \geq T$. 
+
+These outcomes are the essential finding of Sargent and Wallace's **unpleasant monetarist arithmetic** {cite}`sargent1981`.
 
 **Reader's Guide:** Please read our lecture on Money Supplies and Price levels before diving into this lecture.
 
-That lecture  described  supplies and demands for money that appear in lecture, and it  characterized the steady state equilibrium from which we work backwards in this lecture. 
+That lecture  described  supplies and demands for money that appear in lecture.
+
+It also   characterized the steady state equilibrium from which we work backwards in this lecture. 
+
+In addition to learning about ''unpleasant monetarist arithmetic", in this lecture we'll learn how to implement a **fixed point** algorithm for computing an initial price level.
+
+
 <!-- #endregion -->
 
 <!-- #region user_expressions=[] -->
@@ -195,15 +206,15 @@ p_t & = R_t p_{t-1} \cr
 
    
 
-## Earlier dates
+## Before time $T$ 
 
 Define 
 
 $$
-\lambda \equiv \frac{\gamma_2}{\gamma_1},
+\lambda \equiv \frac{\gamma_2}{\gamma_1}.
 $$
 
-where our restrictions that $\gamma_1 > \gamma_2 > 0$ imply that $\lambda \in [0,1)$.
+Our restrictions that $\gamma_1 > \gamma_2 > 0$ imply that $\lambda \in [0,1)$.
 
 We want to compute
 
@@ -226,7 +237,7 @@ p_T & = \gamma_1^{-1} m_0  \left\{\frac{1}{R_u-\lambda}   \right\}
 \end{align}
 $$ (eq:allts)
 
-We can code  the preceding formulas by iterating on
+We can implement  the preceding formulas by iterating on
 
 $$
 p_t = \gamma_1^{-1} m_0 + \lambda p_{t+1}, \quad t = T-1, T-2, \ldots, 0
@@ -243,6 +254,10 @@ We can verify the equivalence of the two formulas on the right sides of {eq}`eq:
 $R_u$ is a root of the quadratic equation {eq}`eq:steadyquadratic` that determines steady state rates of return on currency.
  
 ## Algorithm (pseudo code)
+
+Now let's describe a computational algorithm in more detail in the form of a description
+that constitutes  ''pseudo code'' because it approaches a set of instructions we could provide to a 
+Python coder.
 
 To compute an equilibrium, we deploy the following algorithm.
 
@@ -292,13 +307,27 @@ $$
 where $\theta \in [0,1)$ is a relaxation parameter.
 
 
-## Requests for Zejin
+## Example Calculations
 
-Thanks for being willing to code up the transition path using the little fixed point strategy.
+We'll set parameters of the model so that the steady state after time $T$ is initially the same
+as in our lecture on "Money and Inflation".
 
-I recommend staring with the parameter from the Laffer curve lecture mentioned above, including the setting for g.  
+In particular, we set $\gamma_1=100, \gamma_2 =50, g=3.0$.  We set $m_0 = 100$ in that lecture,
+but now the counterpart will be $M_T$, which is endogenous.  
 
-Then I recommend setting $\tilde R = 1.01, \check B_{-1} = 0, \check m_0 = 105, T = 5$ and a "small" open market operation by settin $m_0 = 100$. These cautious parameter perturbations give us a chance that a plausible equilibrium exists, and won't stress the coding too much as we begin.
+As for new parameters, we'll set $\tilde R = 1.01, \check B_{-1} = 0, \check m_0 = 105, T = 5$.
+
+We'll study a "small" open market operation by setting $m_0 = 100$.
+
+These parameter settings mean that just before time $0$, the "central bank" sells the public bonds in exchange for $\check m_0 - m_0 = 5$ units of currency.  
+
+That leaves the public with less currency but more government interest-bearing bonds.
+
+Since the public has less currency (it's supply has diminished) it is plausible to anticipate that the price level at time $0$ will be driven downward.
+
+But that is not the end of the story, because this ''open market operation'' at time $0$ has consequences for future settings of $m_{t+1}$ and the gross-of-interest government deficit $\bar g_t$. 
+
+Let's dive in and implement our ''pseudo code'' in Python.
 
 ```{code-cell} ipython3
 # Create a namedtuple that contains parameters
@@ -364,6 +393,15 @@ def compute_fixed_point(m0, p0_guess, model, θ=0.5, tol=1e-6):
 
     return p0
 ```
+Let's look at how  price level $p_0$  in the stationary  $R_u$ equilibrium  depends on the initial
+money supply $m_0$.  
+
+Notice that the slope of $p_0$ as a function of $m_0$ is constant.
+
+This outcome indicates that our model verifies a ''quantity theory of money'' outcome,
+something that Sargent and Wallace {cite}`sargent1981` purposefully built into their model to justify
+the adjective **monetarist** in their title.
+
 
 ```{code-cell} ipython3
 m0_arr = np.arange(10, 110, 10)
@@ -377,6 +415,8 @@ plt.xlabel('$m_0$')
 
 plt.show()
 ```
+
+Now let's write and implement code that let's us experiment with the time $0$ open market operation described earlier.
 
 ```{code-cell} ipython3
 def simulate(m0, model, length=15, p0_guess=1):
@@ -452,9 +492,23 @@ def plot_path(m0_arr, model, length=15):
 ```
 
 ```{code-cell} ipython3
+---
+mystnb:
+  figure:
+    caption: "Unpleasant Arithmetic"
+    name: fig:unpl1
+---
 plot_path([80, 100], msm)
 ```
 
+Figure  {numref}`fig:unpl1` summarizes outcomes of  two experiments that convey   messages of 
+Sargent and Wallace's **unpleasant monetarist arithmetic** {cite}`sargent1981`.
+
+ * An open market operation that reduces the supply of money at time $t=0$ reduces  the price level at time $t=0$
+
+* The lower is the post-open-market-operation money supply at time $0$, lower is the price level at time $0$.
+
+* An open  market operation that reduces the post-open-market-operation money supply at time $0$ also **lowers** the rate of return on money $R_u$ at times $t \geq T$ because it brings  a higher gross-of-interest government deficit that must be financed by printing money (i.e., levying an inflation tax) at time $t \geq T$.
 
 
 
