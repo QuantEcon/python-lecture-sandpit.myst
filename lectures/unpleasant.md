@@ -366,7 +366,7 @@ def compute_fixed_point(m0, p0_guess, model, θ=0.5, tol=1e-6):
 ```
 
 ```{code-cell} ipython3
-m0_arr = np.arange(10, 100, 10)
+m0_arr = np.arange(10, 110, 10)
 ```
 
 ```{code-cell} ipython3
@@ -404,15 +404,14 @@ def simulate(m0, model, length=15, p0_guess=1):
     paths[1, 0] = m0
 
     # 1 <= t <= T
-    for t in range(1, T, 1):
+    for t in range(1, T+1, 1):
         paths[0, t] = (1 / γ1) * m0 * \
                       ((1 - λ ** (T - t)) / (1 - λ)
                        + (λ ** (T - t) / (Ru - λ)))
         paths[1, t] = m0
-    paths[1, T] = m0
 
     # t > T
-    for t in range(T, length):
+    for t in range(T+1, length):
         paths[0, t] = paths[0, t-1] / Ru
         paths[1, t] = paths[1, t-1] + paths[0, t] * g_bar
 
