@@ -1,15 +1,14 @@
 ---
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .md
-      format_name: markdown
-      format_version: '1.3'
-      jupytext_version: 1.14.4
-  kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
-    name: python3
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.14.1
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
 ---
 
 <!-- #region user_expressions=[] -->
@@ -39,6 +38,14 @@ That lecture  described  supplies and demands for money that appear in lecture, 
 <!-- #endregion -->
 
 <!-- #region user_expressions=[] -->
+
+Let's start with some imports:
+
+```{code-cell} ipython3
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import namedtuple
+```
 
 ## Setup
 
@@ -293,8 +300,161 @@ I recommend staring with the parameter from the Laffer curve lecture mentioned a
 
 Then I recommend setting $\tilde R = 1.01, \check B_{-1} = 0, \check m_0 = 105, T = 5$ and a "small" open market operation by settin $m_0 = 100$. These cautious parameter perturbations give us a chance that a plausible equilibrium exists, and won't stress the coding too much as we begin.
 
+```{code-cell} ipython3
+# Create a namedtuple that contains parameters
+MoneySupplyModel = namedtuple("MoneySupplyModel", 
+                              ["γ1", "γ2", "g",
+                               "R_tilde", "m0_check", "Bm1_check",
+                               "T"])
 
+def create_model(γ1=100, γ2=50, g=3.0,
+                 R_tilde=1.01,
+                 Bm1_check=0, m0_check=105,
+                 T=5):
+    
+    return MoneySupplyModel(γ1=γ1, γ2=γ2, g=g,
+                            R_tilde=R_tilde,
+                            m0_check=m0_check, Bm1_check=Bm1_check,
+                            T=T)
+```
 
+```{code-cell} ipython3
+msm = create_model()
+```
+
+```{code-cell} ipython3
+def S(p0, m0, model):
+
+    # unpack parameters
+    γ1, γ2, g = model.γ1, model.γ2, model.g
+    R_tilde = model.R_tilde
+    m0_check, Bm1_check = model.m0_check, model.Bm1_check
+    T = model.T
+
+    # open market operation
+    Bm1 = 1 / (p0 * R_tilde) * (m0_check - m0) + Bm1_check
+
+    # compute B_{T-1}
+    BTm1 = R_tilde ** T * Bm1 + ((1 - R_tilde ** T) / (1 - R_tilde)) * g
+
+    # compute g bar
+    g_bar = g + (R_tilde - 1) * BTm1
+
+    # solve the quadratic equation
+    Ru = np.roots((-γ1, γ1 + γ2 - g_bar, -γ2)).max()
+
+    # compute p0
+    λ = γ2 / γ1
+    p0_new = (1 / γ1) * m0 * ((1 - λ ** T) / (1 - λ) + λ ** T / (Ru - λ))
+
+    return p0_new
+```
+
+```{code-cell} ipython3
+def compute_fixed_point(m0, p0_guess, model, θ=0.5, tol=1e-6):
+
+    p0 = p0_guess
+    error = tol + 1
+
+    while error > tol:
+        p0_next = (1 - θ) * S(p0, m0, model) + θ * p0
+
+        error = np.abs(p0_next - p0)
+        p0 = p0_next
+
+    return p0
+```
+
+```{code-cell} ipython3
+m0_arr = np.arange(10, 100, 10)
+```
+
+```{code-cell} ipython3
+plt.plot(m0_arr, [compute_fixed_point(m0, 1, msm) for m0 in m0_arr])
+
+plt.ylabel('$p_0$')
+plt.xlabel('$m_0$')
+
+plt.show()
+```
+
+```{code-cell} ipython3
+def simulate(m0, model, length=15, p0_guess=1):
+
+    # unpack parameters
+    γ1, γ2, g = model.γ1, model.γ2, model.g
+    R_tilde = model.R_tilde
+    m0_check, Bm1_check = model.m0_check, model.Bm1_check
+    T = model.T
+
+    # (pt, mt, bt, Rt)
+    paths = np.empty((4, length))
+
+    # open market operation
+    p0 = compute_fixed_point(m0, 1, model)
+    Bm1 = 1 / (p0 * R_tilde) * (m0_check - m0) + Bm1_check
+    BTm1 = R_tilde ** T * Bm1 + ((1 - R_tilde ** T) / (1 - R_tilde)) * g
+    g_bar = g + (R_tilde - 1) * BTm1
+    Ru = np.roots((-γ1, γ1 + γ2 - g_bar, -γ2)).max()
+
+    λ = γ2 / γ1
+
+    # t = 0
+    paths[0, 0] = p0
+    paths[1, 0] = m0
+
+    # 1 <= t <= T
+    for t in range(1, T, 1):
+        paths[0, t] = (1 / γ1) * m0 * \
+                      ((1 - λ ** (T - t)) / (1 - λ)
+                       + (λ ** (T - t) / (Ru - λ)))
+        paths[1, t] = m0
+    paths[1, T] = m0
+
+    # t > T
+    for t in range(T, length):
+        paths[0, t] = paths[0, t-1] / Ru
+        paths[1, t] = paths[1, t-1] + paths[0, t] * g_bar
+
+    # Rt = pt / pt+1
+    paths[3, :T] = paths[0, :T] / paths[0, 1:T+1]
+    paths[3, T:] = Ru
+
+    # bt = γ1 - γ2 / Rt
+    paths[2, :] = γ1 - γ2 / paths[3, :]
+
+    return paths
+```
+
+```{code-cell} ipython3
+def plot_path(m0_arr, model, length=15):
+
+    fig, axs = plt.subplots(2, 2, figsize=(8, 5))
+
+    for m0 in m0_arr:
+        paths = simulate(m0, msm, length=length)
+
+        axs[0, 0].plot(paths[0])
+        axs[0, 0].set_title('$p_t$')
+
+        axs[0, 1].plot(paths[1])
+        axs[0, 1].set_title('$m_t$')
+
+        axs[1, 0].plot(paths[2])
+        axs[1, 0].set_title('$b_t$')
+
+        axs[1, 1].plot(paths[3])
+        axs[1, 1].set_title('$R_t$')
+
+    axs[0, 1].hlines(model.m0_check, 0, length,
+                     color='r', linestyle='--')
+    axs[0, 1].text(length*0.8, model.m0_check*0.9, '$\check{m}_0$')
+    plt.show()
+```
+
+```{code-cell} ipython3
+plot_path([80, 100], msm)
+```
 
 
 
