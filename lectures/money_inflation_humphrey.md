@@ -563,7 +563,7 @@ Represent  equilibrium conditions {eq}`eq:demandmoney`, {eq}`eq:budgcontraint`, 
 $$
 \begin{bmatrix} 1 & \gamma_2 \cr
                  1 & 0 \end{bmatrix} \begin{bmatrix} m_{t+1} \cr p_{t+1} \end{bmatrix} =
-                 \begin{bmatrix} 0 & 1 \cr
+                 \begin{bmatrix} 0 & \gamma_1 \cr
                  1 & g \end{bmatrix} \begin{bmatrix} m_{t} \cr p_{t} \end{bmatrix} 
 $$ (eq:sytem101)
 
@@ -577,7 +577,7 @@ where
 
 \begin{align} H_1 & = \begin{bmatrix} 1 & \gamma_2 \cr
                  1 & 0 \end{bmatrix} \cr
-                H_2 & = \begin{bmatrix} 0 & 1 \cr
+                H_2 & = \begin{bmatrix} 0 & \gamma_1 \cr
                  1 & g \end{bmatrix}  
 \end{align}
 
