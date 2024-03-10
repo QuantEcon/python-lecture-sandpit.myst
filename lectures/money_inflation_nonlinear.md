@@ -216,17 +216,50 @@ Just put it right here please.
 
 ## Steady State Laffer Curve
 
+```{code-cell} ipython3
+---
+mystnb:
+  figure:
+    caption: Seigniorage as function of steady state inflation. The dashed brown lines indicate $\pi_l$ and $\pi_u$.
+    name: infl_tax
+    width: 500px
+---
 
- GRAPH GOES HERE
+def compute_seign(x, α):
+    return np.exp(-α * x) - np.exp(-(1 + α) * x) 
 
+def plot_laffer(model, πs):
+    α, g = model.α, model.g
+    
+    # Generate π values
+    x_values = np.linspace(0, 5, 1000)
+
+    # Compute corresponding seigniorage values for the function
+    y_values = compute_seign(x_values, α)
+
+    # Plot the function
+    plt.plot(x_values, y_values, 
+            label=f'$exp((-{α})x) - exp(- (1- {α}) x)$')
+    for π, label in zip(πs, ['$\pi_l$', '$\pi_u$']):
+        plt.text(π, plt.gca().get_ylim()[0]*2, 
+                 label, horizontalalignment='center',
+                 color='brown', size=10)
+        plt.axvline(π, color='brown', linestyle='--')
+    plt.axhline(g, color='red', linewidth=0.5, 
+                linestyle='--', label='g')
+    plt.xlabel('$\pi$')
+    plt.ylabel('seigniorage')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# Steady state Laffer curve
+plot_laffer(model, (π_l, π_u))
+```
 
 ## Associated Initial Price Levels
 
- Now that we have our hands on the two possible steady states, we can compute two initial log price levels $p_0$, which as initial conditions, imply that $\pi_t = \bar \pi $ for all $t \geq 0$. 
-
-
-
-
+ Now that we have our hands on the two possible steady states, we can compute two initial log price levels $p_0$, which as initial conditions, imply that $\pi_t = \bar \pi $ for all $t \geq 0$.
 
 ```{code-cell} ipython3
 def solve_p0(p0, m0, α, g, π):
@@ -248,9 +281,6 @@ p0_u = solve_p0_bar(model,
                     π_bar=π_u)
 print(f'Associated initial  p_0s  are: {p0_l, p0_u}')
 ```
-
-+++ {"user_expressions": []}
-
 
 +++ {"user_expressions": []}
 
@@ -300,9 +330,9 @@ print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
 
 We are now equipped  to compute  time series starting from different $p_0$ settings, like those in the this XXXX **money_inflation** lecture.
 
-
-
 ```{code-cell} ipython3
+:tags: [hide-cell]
+
 def draw_iterations(p0s, model, line_params, p0_bars, num_steps):
 
     fig, axes = plt.subplots(4, 1, figsize=(8, 10), sharex=True)
