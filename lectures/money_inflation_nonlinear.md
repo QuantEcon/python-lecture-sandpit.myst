@@ -13,22 +13,24 @@ kernelspec:
 
 +++ {"user_expressions": []}
 
-# Laffer curve
+# Inflation Rate Laffer Curves  
 
-This notebook graphs the steady state Laffer curve for the nonlinear version of the 
-Cagan plus Laffer curve model.
+## Overview
 
-Let's start by importing libraries necessory for this lecture
+This lecture studies stationary and dynamic **Laffer curves** in the inflation tax rate in a non-linear version of the model studied in this XXXX lecture.
 
-```{code-cell} ipython3
-from collections import namedtuple
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
-from scipy.optimize import fsolve 
-```
+This lecture uses the log-linear version of the demand function for money that Cagan {cite}`Cagan`
+used in his classic paper in place of the linear demand function used in this XXXX lecture. 
 
-+++ {"user_expressions": []}
+That change requires that we modify parts of our analysis.
+
+In particular, our dynamic system is no longer linear in state variables. 
+
+Nevertheless, the economic logic underlying an  analysis based on what we called ''method 2''  remains unchanged.  
+
+
+
+## The Model
 
 Let  
 
@@ -38,24 +40,24 @@ Let
 The demand function for money is 
 
 $$
-m_{t+1} - p_t = -\alpha (p_{t+1} - p_t) \tag{1}
-$$
+m_{t+1} - p_t = -\alpha (p_{t+1} - p_t) 
+$$ (eq:mdemand)
 
 where $\alpha \geq 0$.  
 
 The law of motion of the money supply is
 
 $$ 
-\exp(m_{t+1}) - \exp(m_t) = g \exp(p_t) \tag{2}
-$$
+\exp(m_{t+1}) - \exp(m_t) = g \exp(p_t) 
+$$ (eq:msupply)
 
 where $g$ is the part of government expenditures financed by printing money.
 
-**Remark:** Please notice that while equation (1) is linear in logs of the money supply and price level, equation (2) is linear in levels. This will require adapting the equilibrium computation methods that we deployed in lecture **money_inflation**.
+**Remark:** Please notice that while equation {eq}`eq:mdemand` is linear in logs of the money supply and price level, equation {eq}`eq:msupply` is linear in levels. This will require adapting the equilibrium computation methods that we deployed in lecture XXXX  **money_inflation**.
 
 ## Computing An Equilibrium Sequence 
 
-We'll deploy a method similar to **Method 2** used in the "money_inflation" lecture.  
+We'll deploy a method similar to **Method 2** used in the "money_inflation" XXXXVlecture.  
 
 We'll take the time $t$ state vector to be $m_t, p_t$.
 
@@ -67,18 +69,18 @@ $$
 \lambda \equiv \frac{\alpha}{1+ \alpha}
 $$
 
-Let's rewrite equations (2) and (1) as
+Let's rewrite equations {eq}`eq:msupply` and {eq}`eq:mdemand`, respectively,  as
 
 
 $$ 
-\exp(m_{t+1}) - \exp(m_t) = g \exp(p_t) \tag{10}
-$$
+\exp(m_{t+1}) - \exp(m_t) = g \exp(p_t) 
+$$ (eq:msupply2)
 
 and 
 
 $$
-p_t = (1-\lambda) m_{t+1} + \lambda p_{t+1} \tag{11}
-$$
+p_t = (1-\lambda) m_{t+1} + \lambda p_{t+1} 
+$$ (eq:mdemand2)
 
 We'll summarize our algorithm with the following pseudo-code.
 
@@ -86,9 +88,9 @@ We'll summarize our algorithm with the following pseudo-code.
 
   * start for $m_0, p0$ at time $t =0$
 
-  * solve (10) for $m_{t+1}$
+  * solve {eq}`eq:msupply2` for $m_{t+1}$
   
-  * solve (11) for $p_{t+1} = \lambda^{-1} p_t + (1 - \lambda^{-1}) m_{t+1}$
+  * solve {eq}`eq:mdemand2` for $p_{t+1} = \lambda^{-1} p_t + (1 - \lambda^{-1}) m_{t+1}$
 
   * compute $\pi_t = p_{t+1} - p_t$ and $\mu_t = m_{t+1} - m_t $
   
@@ -97,21 +99,22 @@ We'll summarize our algorithm with the following pseudo-code.
   
 It will turn out that 
 
- * limiting values $\overline \pi$ and $\overline \mu$ will be equal
+ * if they exist, limiting values $\overline \pi$ and $\overline \mu$ will be equal
  
- * if a limiting value exists, there are two possible limiting values, one high, one low
+ * if  limiting values exists, there are two possible limiting values, one high, one low
  
  * for almost all initial log price levels $p_0$, the limiting $\overline \pi = \overline \mu$ is 
  the higher value
  
- * there is a unique initial log price level $p_0$ that implies that $\pi_t = \mu_t = \bar \mu$ for all 
- $t \geq 0$
+ * for each of the two possible limiting values $\bar \pi$ ,there is a unique initial log price level $p_0$ that implies that $\pi_t = \mu_t = \bar \mu$ for all  $t \geq 0$
  
     * this unique initial log price level solves $\log(\exp(m_0) + g \exp(p_0)) - p_0 = - \alpha \bar \pi $
     
     * the preceding equation for $p_0$ comes from $m_1 - p_0 = -  \alpha \bar \pi$
 
 +++ {"user_expressions": []}
+
+## Limiting Values of Inflation Rate
 
 We can compute the two prospective limiting values for $\bar \pi$ by studying the steady-state Laffer curve.
 
@@ -126,25 +129,39 @@ where $x > 0 $ is a common rate of growth of logarithms of the money supply and 
 A few lines of algebra yields the following equation that $x$ satisfies
 
 $$
-\exp(-\alpha x) - \exp(-(1 + \alpha) x) = g \tag{3}
-$$
+\exp(-\alpha x) - \exp(-(1 + \alpha) x) = g 
+$$ (eq:steadypi)
 
 where we require that
 
 $$
-g \leq \max_{x: x \geq 0} \exp(-\alpha x) - \exp(-(1 + \alpha) x) ,  \tag{4}
-$$
+g \leq \max_{x: x \geq 0} \exp(-\alpha x) - \exp(-(1 + \alpha) x) ,  
+$$ (eq:revmax)
 
 so that it is feasible to finance $g$ by printing money.
 
-The left side of (3) is steady state revenue raised by printing money.
+The left side of {eq}`eq:steadypi` is steady state revenue raised by printing money.
 
-The right side of (3) is the amount of goods  that the government raises by printing money. 
+The right side of {eq}`eq:steadypi` is the quantity  of time $t$ goods  that the government raises by printing money. 
 
-Later we'll plot  the left and right sides of (3).
+Soon  we'll plot  the left and right sides of equation {eq}`eq:steadypi`.
 
 But first we'll write code that computes a steady-state
 $\bar \pi$.
+
+
+
+Let's start by importing some  libraries
+
+```{code-cell} ipython3
+from collections import namedtuple
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+from scipy.optimize import fsolve 
+```
+
++++ {"user_expressions": []}
 
 Let's create a `namedtuple` to store the parameters of the model
 
@@ -187,15 +204,29 @@ We find two steady state $\bar \pi$ values
 
 +++ {"user_expressions": []}
 
-## Request for Humphrey
+## New Request for Humphrey
 
-Is it possible for you please improve the code in the previous cell for computing a steady state $\bar \pi$ (chatgpt and I wrote the code)?
+Thanks for the great job in all of this!
 
-In particular, i'd like to compute **both** steady states.  I experimented a little with the preceding cell and found that if you initialize near one of the fixed points, the algorithm goes there.  
+May I ask you please to put the great graph that you drew in the notebook -- and just please add another vertical line at the second fixed point $\bar \pi$.  
 
-Please note that in the above cell, I initialized things so that the algorithm computed the lower $\bar \pi$. 
+That will be a killer graph and very informative.
 
-I'd  like you please to adapt and improve the code in the following cell to compute initial price levels $p_0$ that would be associated with the two possible $\bar \pi$ stationary inflation rates.
+Just put it right here please.
+
+## Steady State Laffer Curve
+
+
+ GRAPH GOES HERE
+
+
+## Associated Initial Price Levels
+
+ Now that we have our hands on the two possible steady states, we can compute two initial log price levels $p_0$, which as initial conditions, imply that $\pi_t = \bar \pi $ for all $t \geq 0$. 
+
+
+
+
 
 ```{code-cell} ipython3
 def solve_p0(p0, m0, α, g, π):
@@ -215,20 +246,20 @@ p0_l = solve_p0_bar(model,
 p0_u = solve_p0_bar(model, 
                     x0=np.log(220), 
                     π_bar=π_u)
-print(f'The two initial price levels p_0s are: {π_l, π_u}')
+print(f'Associated initial  p_0s  are: {p0_l, p0_u}')
 ```
 
 +++ {"user_expressions": []}
 
-## Explanation
-
-Now we proceed with Humphrey's high quality code
 
 +++ {"user_expressions": []}
 
-## Request for Humphrey
+### Verification 
 
-I'd like to subdivide this code to allow a user to compute and plot equilibrium paths for $\pi_t$ and $\mu_t$ starting from given values of $p_0$ -- this will help us prepare the way for  plot graphs like those in the **money_inflation** lecture.
+To start, let's write some code to verify that if the initial log price level $p_0$ takes one
+of the two values we just calculated, the inflation rate $\pi_t$ will be constant for all $t \geq 0$.
+
+The following code verifies this.
 
 ```{code-cell} ipython3
 # Implement pseudo-code above
@@ -265,10 +296,11 @@ print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
 
 +++ {"user_expressions": []}
 
-## Another request for Humphrey
+## Slippery Side of Laffer Curve Dynamics
 
-Now we are all set up to compute some graphs of time series starting from different $p_0$ settings, like those in the
-**money_inflation** lecture.
+We are now equipped  to compute  time series starting from different $p_0$ settings, like those in the this XXXX **money_inflation** lecture.
+
+
 
 ```{code-cell} ipython3
 def draw_iterations(p0s, model, line_params, p0_bars, num_steps):
