@@ -221,7 +221,7 @@ Just put it right here please.
 mystnb:
   figure:
     caption: Seigniorage as function of steady state inflation. The dashed brown lines indicate $\pi_l$ and $\pi_u$.
-    name: infl_tax
+    name: laffer_curve_nonlinear
     width: 500px
 ---
 
