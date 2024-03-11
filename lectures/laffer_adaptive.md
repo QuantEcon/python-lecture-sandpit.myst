@@ -13,20 +13,33 @@ kernelspec:
 
 +++ {"user_expressions": []}
 
-# Inflation Rate Laffer Curves  
+# Inflation Rate Laffer Curves  with Adaptive Expectations 
 
 ## Overview
 
 This lecture studies stationary and dynamic **Laffer curves** in the inflation tax rate in a non-linear version of the model studied in this XXXX lecture.
 
-This lecture uses the log-linear version of the demand function for money that Cagan {cite}`Cagan`
-used in his classic paper in place of the linear demand function used in this XXXX lecture. 
+As in lecture XXXXX, this lecture uses the log-linear version of the demand function for money that Cagan {cite}`Cagan` used in his classic paper in place of the linear demand function used in this XXXX lecture.
 
-That change requires that we modify parts of our analysis.
+But now, instead of assuming  ''rational expectations'' in the form of ''perfect foresight'',
+we'll adopt the ''adaptive expectations'' assumption used by Cagan {cite}`Cagan`,
 
-In particular, our dynamic system is no longer linear in state variables. 
+This means that instead of assuming that expected inflation $\pi_t^*$ is described by
 
-Nevertheless, the economic logic underlying an  analysis based on what we called ''method 2''  remains unchanged.  
+$$
+\pi_t^* = p_{t+1} - p_t
+$$ 
+
+as we assumed in lecture XXXX, we'll now assume that
+
+$$
+\pi_t^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*
+$$ 
+
+where $\delta \in (0,1)$
+
+
+
 
 
 
@@ -36,14 +49,8 @@ Let
 
   * $m_t$ be the log of the money supply at the beginning of time $t$
   * $p_t$ be the log of the price level at time $t$
+  * $\pi_t^*$ be the public's expectation of the rate of inflation between $t$ and $t+1$ 
   
-The demand function for money is 
-
-$$
-m_{t+1} - p_t = -\alpha (p_{t+1} - p_t) 
-$$ (eq:mdemand)
-
-where $\alpha \geq 0$.  
 
 The law of motion of the money supply is
 
@@ -51,48 +58,68 @@ $$
 \exp(m_{t+1}) - \exp(m_t) = g \exp(p_t) 
 $$ (eq:msupply)
 
+
 where $g$ is the part of government expenditures financed by printing money.
 
-**Remark:** Please notice that while equation {eq}`eq:mdemand` is linear in logs of the money supply and price level, equation {eq}`eq:msupply` is linear in levels. This will require adapting the equilibrium computation methods that we deployed in lecture XXXX  **money_inflation**.
+The demand function for money is 
+
+$$
+m_{t+1} - p_t = -\alpha \pi_t^* 
+$$ (eq:mdemand)
+
+where $\alpha \geq 0$.  
+
+
+
+Expectations of inflation are governed by 
+
+$$
+\pi_t^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*
+$$ (eq:adaptex)
+
+where $\delta \in (0,1)$
+
+**Remark:** Please notice that while equation {eq}`eq:mdemand` is linear in logs of the money supply and price level, equation {eq}`eq:msupply` is linear in levels. This requires adapting the equilibrium computation methods that we deployed in lecture XXXX  **money_inflation**.
 
 ## Computing An Equilibrium Sequence 
 
-We'll deploy a method similar to **Method 2** used in the "money_inflation" XXXXVlecture.  
+Let's do some preliminary work first.
 
-We'll take the time $t$ state vector to be $m_t, p_t$.
+Subsituting equation {eq}`eq:adaptex` into equation   {eq}`eq:mdemand`  gives
 
-  * we'll treat $m_t$ as a ''natural state variable'' and $p_t$ as a ''jump'' variable.
+$$
+m_{t+1} - p_t = \alpha [ (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*]
+$$
+
+Solving this equation for $p_t$ 
+
+$$
+p_t = [1 + \alpha(1-\delta)]^{-1} [ m_{t+1} + \alpha (1-\delta) p_{t-1} - \alpha \delta \pi_{t-1}^*]
+$$ (eq:pequation)
+
+
+
+We'll deploy a method similar to **Method 2** used in the "money_inflation" XXXX lecture.  
+
+We'll take the time $t$ **state vector** to be $[m_t, p_t, \pi_{t-1}^*]$.
+
+  * we'll treat **all** of these as  ''natural state variables'' 
+  * unlike lecture XXXX, there is no "jump variable" in the state vectore
   
-Let
-
-$$
-\lambda \equiv \frac{\alpha}{1+ \alpha}
-$$
-
-Let's rewrite equations {eq}`eq:msupply` and {eq}`eq:mdemand`, respectively,  as
-
-
-$$ 
-\exp(m_{t+1}) - \exp(m_t) = g \exp(p_t) 
-$$ (eq:msupply2)
-
-and 
-
-$$
-p_t = (1-\lambda) m_{t+1} + \lambda p_{t+1} 
-$$ (eq:mdemand2)
+Our algorithm will iteratively compute next period's state as a function of this period's state
+starting from an initial condition $[m_0, p_0, \pi_{-1}^*]$ for the state vector at time $0$.
 
 We'll summarize our algorithm with the following pseudo-code.
 
 **Pseudo-code**
 
-  * start for $m_0, p0$ at time $t =0$
+  * start for $m_0, p_0, \pi_0^*$ at time $t =0$
 
-  * solve {eq}`eq:msupply2` for $m_{t+1}$
+  * solve {eq}`eq:msupply` for $m_{t+1}$
   
-  * solve {eq}`eq:mdemand2` for $p_{t+1} = \lambda^{-1} p_t + (1 - \lambda^{-1}) m_{t+1}$
+  * solve {eq}`eq:pequation` for $p_t$
 
-  * compute $\pi_t = p_{t+1} - p_t$ and $\mu_t = m_{t+1} - m_t $
+  * solve {eq}`eq:adaptex` for $\pi_t^*$
   
   * iterate on $t$ to convergence of $\pi_t \rightarrow \overline \pi$ and $\mu_t \rightarrow \overline \mu$
   
@@ -103,8 +130,7 @@ It will turn out that
  
  * if  limiting values exists, there are two possible limiting values, one high, one low
  
- * for almost all initial log price levels $p_0$, the limiting $\overline \pi = \overline \mu$ is 
- the higher value
+ * unlike the outcome in lecture XXXX, for almost all initial log price levels $p_0, \pi_{-1}^*$, the limiting $\overline \pi = \overline \mu$ is  the **lower** steady state  value
  
  * for each of the two possible limiting values $\bar \pi$ ,there is a unique initial log price level $p_0$ that implies that $\pi_t = \mu_t = \bar \mu$ for all  $t \geq 0$
  
@@ -116,7 +142,7 @@ It will turn out that
 
 ## Limiting Values of Inflation Rate
 
-We can compute the two prospective limiting values for $\bar \pi$ by studying the steady-state Laffer curve.
+As in our earlier lecture XXXX, we can compute the two prospective limiting values for $\bar \pi$ by studying the steady-state Laffer curve.
 
 Thus, in a  **steady state** 
 
@@ -280,10 +306,19 @@ print(f'Associated initial  p_0s  are: {p0_l, p0_u}')
 
 ### Verification 
 
+
+
 To start, let's write some code to verify that if the initial log price level $p_0$ takes one
 of the two values we just calculated, the inflation rate $\pi_t$ will be constant for all $t \geq 0$.
 
 The following code verifies this.
+
+HUMPRHREY 
+HEW REQUEST FOR HUMPHREY -- WHAT I'D LIKE YOU TO DO NOW IS JUST TO IMPLEMENT THE NEW PSEUDO CODE DESCRIBED ABOVE. IT WILL INVOLVE SIMPLY REWRITING THE CODE THAT YOU USED TO COMPUTE EQUILIBRIA OF THE MODEL UNDER ADAPTIVE EXPECTATIONS. 
+THE FOLLOWING IS THE CODE BLOCK THAT I'D LIKE YOU TO ALTER.
+
+THE REMAINING CODE BLOCS SHOULD REQUIRE VERY MINOR CHANGES ONLY -- I.E., THE CODE THAT GENERATES THAT BEAUTIFUL GRAPHS. BUT NOW THE OUTCOME OF THE GRAPHS WILL LOOK DIFFERENT. -- THE STEADY STATE THAT IS STABLE WILL BE FLIPPED!
+
 
 ```{code-cell} ipython3
 # Implement pseudo-code above
@@ -322,7 +357,11 @@ print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
 
 ## Slippery Side of Laffer Curve Dynamics
 
-We are now equipped  to compute  time series starting from different $p_0$ settings, like those in the this XXXX **money_inflation** lecture.
+
+
+We are now equipped  to compute  time series starting from different $p_0, \pi_{-1}^*$ settings, analogous to those in the this XXXX **money_inflation** lecture. 
+
+HUMPHREY -- PLEASE NOTE HOW I EDITED THE PREVIOUS SENTENCE TO RECOGNIZE THE NEW STATE VECTOR WE NOW HAVE.  YOU'LL HAVE TO ADAPT THE CODE FOR COMPUTING EQUILIBRIA.
 
 ```{code-cell} ipython3
 :tags: [hide-cell]

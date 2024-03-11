@@ -14,6 +14,7 @@ sections:
 # - file: money_inflation
 - file: money_inflation_humphrey
 - file: money_inflation_nonlinear
+- file: laffer_adaptive 
 - file: unpleasant 
 - file: french_rev 
 # - file: PT_static
