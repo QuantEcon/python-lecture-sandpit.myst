@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-+++ {"user_expressions": []}
++++ {"jp-MarkdownHeadingCollapsed": true, "user_expressions": []}
 
 # Inflation Rate Laffer Curves  with Adaptive Expectations 
 
@@ -113,6 +113,8 @@ We'll summarize our algorithm with the following pseudo-code.
 
 **Pseudo-code**
 
+**Humphrey: Dear Tom, please kindly let me know if the time index below needs updating:**
+
   * start for $m_0, p_0, \pi_0^*$ at time $t =0$
 
   * solve {eq}`eq:msupply` for $m_{t+1}$
@@ -184,6 +186,9 @@ from collections import namedtuple
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
+from matplotlib.cm import get_cmap
+from matplotlib.colors import to_rgba
+import matplotlib
 from scipy.optimize import fsolve 
 ```
 
@@ -192,15 +197,15 @@ from scipy.optimize import fsolve
 Let's create a `namedtuple` to store the parameters of the model
 
 ```{code-cell} ipython3
-CaganLaffer = namedtuple('CaganLaffer', 
+LafferAdaptive = namedtuple('LafferAdaptive', 
                         ["m0",  # log of the money supply at t=0
                          "α",   # sensitivity of money demand
-                         "λ",
-                         "g" ])
+                         "g",   # government expenditure
+                         "δ"])
 
-# Create a CaganLaffer model
-def create_model(α=0.5, m0=np.log(100), g=0.35):
-    return CaganLaffer(α=α, m0=m0, λ=α/(1+α), g=g)
+# Create a Cagan Laffer model
+def create_model(α=0.5, m0=np.log(100), g=0.35, δ=0.7):
+    return LafferAdaptive(α=α, m0=m0, g=g, δ=δ)
 
 model = create_model()
 ```
@@ -230,8 +235,6 @@ We find two steady state $\bar \pi$ values
 
 +++ {"user_expressions": []}
 
-
-
 ## Steady State Laffer Curve
 
 The following figure plots the steady state Laffer curve together with the two stationary inflation rates.
@@ -240,11 +243,11 @@ The following figure plots the steady state Laffer curve together with the two s
 ---
 mystnb:
   figure:
-    caption: Seigniorage as function of steady state inflation. The dashed brown lines indicate $\pi_l$ and $\pi_u$.
+    caption: Seigniorage as function of steady state inflation. The dashed brown lines
+      indicate $\pi_l$ and $\pi_u$.
     name: laffer_curve_nonlinear
     width: 500px
 ---
-
 def compute_seign(x, α):
     return np.exp(-α * x) - np.exp(-(1 + α) * x) 
 
@@ -277,6 +280,8 @@ def plot_laffer(model, πs):
 plot_laffer(model, (π_l, π_u))
 ```
 
++++ {"user_expressions": []}
+
 ## Associated Initial Price Levels
 
  Now that we have our hands on the two possible steady states, we can compute two initial log price levels $p_0$, which as initial conditions, imply that $\pi_t = \bar \pi $ for all $t \geq 0$.
@@ -299,7 +304,7 @@ p0_l = solve_p0_bar(model,
 p0_u = solve_p0_bar(model, 
                     x0=np.log(220), 
                     π_bar=π_u)
-print(f'Associated initial  p_0s  are: {p0_l, p0_u}')
+print(f'Associated initial p_0s are: {p0_l, p0_u}')
 ```
 
 +++ {"user_expressions": []}
@@ -319,29 +324,28 @@ THE FOLLOWING IS THE CODE BLOCK THAT I'D LIKE YOU TO ALTER.
 
 THE REMAINING CODE BLOCS SHOULD REQUIRE VERY MINOR CHANGES ONLY -- I.E., THE CODE THAT GENERATES THAT BEAUTIFUL GRAPHS. BUT NOW THE OUTCOME OF THE GRAPHS WILL LOOK DIFFERENT. -- THE STEADY STATE THAT IS STABLE WILL BE FLIPPED!
 
-
 ```{code-cell} ipython3
-# Implement pseudo-code above
-def simulate_seq(p0, model, num_steps):
-    λ, g = model.λ, model.g
-    π_seq, μ_seq, m_seq, p_seq = [], [], [model.m0], [p0]
+def solve_laffer_adapt(p0, π0, model, num_steps):
+    m0, α, δ, g = model.m0, model.α, model.δ, model.g
+
+    π_seq, μ_seq, m_seq, p_seq = [π0], [], [m0], [p0]
 
     for t in range(num_steps):
-        
         m_seq.append(np.log(np.exp(m_seq[t]) + g * np.exp(p_seq[t])))
-        p_seq.append(1/λ * p_seq[t] + (1 - 1/λ) * m_seq[t+1])
-
+        p_seq.append(1/(1 + α*(1-δ)) * (m_seq[t+1] + α*(1-δ)*p_seq[t] - α*δ*π_seq[t]))
+        π_seq.append((1-δ)*(p_seq[t+1] - p_seq[t]) + δ*π_seq[t])
         μ_seq.append(m_seq[t+1]-m_seq[t])
-        π_seq.append(p_seq[t+1]-p_seq[t])
 
     return π_seq, μ_seq, m_seq, p_seq
 ```
 
 ```{code-cell} ipython3
-π_seq, μ_seq, m_seq, p_seq = simulate_seq(p0_l, model, 150)
+π_seq, μ_seq, m_seq, p_seq = solve_laffer_adapt(p0_l, np.log(200), model, 200)
 
 # Check π and μ at steady state
-print('π_bar == μ_bar:', π_seq[-1] == μ_seq[-1])
+print('π_bar == μ_bar:', np.isclose(π_seq[-1], μ_seq[-1]))
+
+print(π_seq[-1], μ_seq[-1])
 
 # Check steady state m_{t+1} - m_t and p_{t+1} - p_t 
 print('m_{t+1} - m_t:', m_seq[-1] - m_seq[-2])
@@ -366,57 +370,52 @@ HUMPHREY -- PLEASE NOTE HOW I EDITED THE PREVIOUS SENTENCE TO RECOGNIZE THE NEW 
 ```{code-cell} ipython3
 :tags: [hide-cell]
 
-def draw_iterations(p0s, model, line_params, p0_bars, num_steps):
+p0_color_map = matplotlib.colormaps['viridis']
+m0_color_map = matplotlib.colormaps['magma']
 
+def draw_iterations(p0s, m0s, model, line_params, p0_bars, num_steps):
     fig, axes = plt.subplots(4, 1, figsize=(8, 10), sharex=True)
     
-    # Pre-compute time steps
-    time_steps = np.arange(num_steps) 
-    
-    # Plot the first two y-axes in log scale
     for ax in axes[:2]:
         ax.set_yscale('log')
-
-    # Iterate over p_0s and calculate a series of y_t
-    for p0 in p0s:
-        π_seq, μ_seq, m_seq, p_seq = simulate_seq(p0, model, num_steps)
-
-        # Plot m_t
-        axes[0].plot(time_steps, m_seq[1:], **line_params)
-
-        # Plot p_t
-        axes[1].plot(time_steps, p_seq[1:], **line_params)
-        
-        # Plot π_t
-        axes[2].plot(time_steps, π_seq, **line_params)
-        
-        # Plot μ_t
-        axes[3].plot(time_steps, μ_seq, **line_params)
     
-    # Draw labels
+    p0_colors = [p0_color_map(i) for i in np.linspace(0, 1, len(p0s))]
+    m0_colors = [m0_color_map(i) for i in np.linspace(0, 1, len(m0s))]
+    
+    for i, p0 in enumerate(p0s):
+        for j, m0 in enumerate(m0s):
+            π_seq, μ_seq, m_seq, p_seq = solve_laffer_adapt(p0, m0, model, num_steps)
+            
+            # Corrected color blending
+            avg_rgb = [(p + m) / 2 for p, m in zip(p0_colors[i][:3], m0_colors[j][:3])]
+            line_color = (*avg_rgb, 0.5)
+
+            updated_line_params = dict(line_params, color=line_color)
+            
+            axes[0].plot(np.arange(num_steps), m_seq[1:], **updated_line_params)
+            axes[1].plot(np.arange(num_steps), p_seq[1:], **updated_line_params)
+            axes[2].plot(np.arange(num_steps), π_seq[1:], **updated_line_params)
+            axes[3].plot(np.arange(num_steps), μ_seq, **updated_line_params)
+    
     axes[0].set_ylabel('$m_t$')
     axes[1].set_ylabel('$p_t$')
     axes[2].set_ylabel('$\pi_t$')
     axes[3].set_ylabel('$\mu_t$')
     axes[3].set_xlabel('timestep')
-    
-    for p_0, label in [(p0_bars[0], '$p_0=p_l$'), (p0_bars[1], '$p_0=p_u$')]:
-        y = simulate_seq(p_0, model, 1)[0]
-        for ax in axes[2:]:
-            ax.axhline(y=y[0], color='grey', linestyle='--', lw=1.5, alpha=0.6)
-            ax.text(num_steps * 1.02, y[0], label, verticalalignment='center', 
-                         color='grey', size=10)
-    
-    # Enforce integar axis label
     axes[3].xaxis.set_major_locator(MaxNLocator(integer=True))
 
     plt.tight_layout()
     plt.show()
 ```
 
++++ {"user_expressions": []}
+
+Let's simulate the result generated by varying initial $p_0s$
+
 ```{code-cell} ipython3
 # Generate a sequence from p0_l to p0_u
-p0s = np.arange(p0_l, p0_u, 0.1) 
+p0s = np.arange(p0_l, p0_u, 0.2) 
+π0s = np.arange(π_l, π_u, 0.1)
 
 line_params = {'lw': 1.5, 
               'marker': 'o',
@@ -424,5 +423,13 @@ line_params = {'lw': 1.5,
 
 p0_bars = (p0_l, p0_u)
               
-draw_iterations(p0s, model, line_params, p0_bars, num_steps=20)
+draw_iterations(p0s, [np.log(200)], model, line_params, p0_bars, num_steps=20)
+```
+
++++ {"user_expressions": []}
+
+Let's now simulate the result generated by varying initial $\pi_0s$
+
+```{code-cell} ipython3
+draw_iterations([p0_u], π0s, model, line_params, p0_bars, num_steps=20)
 ```
