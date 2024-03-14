@@ -22,7 +22,9 @@ This lecture studies stationary and dynamic **Laffer curves** in the inflation t
 As in lecture XXXXX, this lecture uses the log-linear version of the demand function for money that Cagan {cite}`Cagan` used in his classic paper in place of the linear demand function used in this XXXX lecture.
 
 But now, instead of assuming  ''rational expectations'' in the form of ''perfect foresight'',
-we'll adopt the ''adaptive expectations'' assumption used by Cagan {cite}`Cagan`,
+we'll adopt the ''adaptive expectations'' assumption used by Cagan {cite}`Cagan`.
+
+
 
 This means that instead of assuming that expected inflation $\pi_t^*$ is described by
 
@@ -30,13 +32,8 @@ $$
 \pi_t^* = p_{t+1} - p_t
 $$ 
 
-as we assumed in lecture XXXX, we'll now assume that
+as we assumed in lecture XXXX, we'll now assume that $\pi_t^*$ is determined by the adaptive expectations scheme described in equation {eq}`eq:adaptex`  reported below. 
 
-$$
-\pi_t^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*
-$$ 
-
-where $\delta \in (0,1)$
 
 
 
@@ -73,8 +70,10 @@ where $\alpha \geq 0$.
 
 Expectations of inflation are governed by 
 
+HUMPHREY: I CHANGED THE FOLLOWING EQUATION (MARCH 14)
+
 $$
-\pi_t^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*
+\pi_{t+1}^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t}^*
 $$ (eq:adaptex)
 
 where $\delta \in (0,1)$
@@ -85,45 +84,42 @@ where $\delta \in (0,1)$
 
 Let's do some preliminary work first.
 
-Subsituting equation {eq}`eq:adaptex` into equation   {eq}`eq:mdemand`  gives
+To begin, equate the two expressions for $m_{t+1}$ from equations {eq}`eq:mdemand` {eq}`eq:msupply` to get
 
 $$
-m_{t+1} - p_t = \alpha [ (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*]
-$$
-
-Solving this equation for $p_t$ 
-
-$$
-p_t = [1 + \alpha(1-\delta)]^{-1} [ m_{t+1} + \alpha (1-\delta) p_{t-1} - \alpha \delta \pi_{t-1}^*]
-$$ (eq:pequation)
+\log[ \exp(m_t) + g \exp(p_t)]- p_t = - \alpha \pi_t^*
+$$ (eq:ptemp)
 
 
 
 We'll deploy a method similar to **Method 2** used in the "money_inflation" XXXX lecture.  
 
-We'll take the time $t$ **state vector** to be $[m_t, p_t, \pi_{t-1}^*]$.
+For times $t \geq 0$, we'll take the time $t$ **state vector** to be $[m_t, \pi_{t}^*]$.
 
   * we'll treat **all** of these as  ''natural state variables'' 
   * unlike lecture XXXX, there is no "jump variable" in the state vectore
   
 Our algorithm will iteratively compute next period's state as a function of this period's state
-starting from an initial condition $[m_0, p_0, \pi_{-1}^*]$ for the state vector at time $0$.
+starting from an initial condition $[m_0, \pi_{0}^*]$ for the state vector at time $0$.
 
 We'll summarize our algorithm with the following pseudo-code.
 
 **Pseudo-code**
 
-**Humphrey: Dear Tom, please kindly let me know if the time index below needs updating:**
+**Humphrey: YES I have rewritten the algorihm in response to your error-detection. MARCH 14
 
-  * start for $m_0, p_0, \pi_0^*$ at time $t =0$
+  * start from a triple of initial conditions $m_0, \pi_{0}*$ at time $t =0$. Then for each $t \geq 0$ 
 
-  * solve {eq}`eq:msupply` for $m_{t+1}$
+  * solve {eq}`eq:ptemp` for $p_t$
   
-  * solve {eq}`eq:pequation` for $p_t$
+  * solve {eq}`eq:mdemand` for $m_{t+1}$
 
-  * solve {eq}`eq:adaptex` for $\pi_t^*$
+  * solve {eq}`eq:adaptex` for $\pi_{t+1}^*$
   
   * iterate on $t$ to convergence of $\pi_t \rightarrow \overline \pi$ and $\mu_t \rightarrow \overline \mu$
+
+
+HUMPHREY: THIS CONCLUDES THE ALTERED (I HOPE IMPROVED!) PSEUDO CODE. PLEASE REPLACE THE EARLIER CODE WITH CODE THAT IMPLEMENTS OUR NEW ALGORITHM.
   
   
 It will turn out that 
@@ -132,7 +128,7 @@ It will turn out that
  
  * if  limiting values exists, there are two possible limiting values, one high, one low
  
- * unlike the outcome in lecture XXXX, for almost all initial log price levels $p_0, \pi_{-1}^*$, the limiting $\overline \pi = \overline \mu$ is  the **lower** steady state  value
+ * unlike the outcome in lecture XXXX, for almost all initial log price levels and expected inflation rates $p_0, \pi_{t}^*$, the limiting $\overline \pi = \overline \mu$ is  the **lower** steady state  value
  
  * for each of the two possible limiting values $\bar \pi$ ,there is a unique initial log price level $p_0$ that implies that $\pi_t = \mu_t = \bar \mu$ for all  $t \geq 0$
  
