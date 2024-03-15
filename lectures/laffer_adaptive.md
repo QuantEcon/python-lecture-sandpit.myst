@@ -58,6 +58,12 @@ $$ (eq:msupply)
 
 where $g$ is the part of government expenditures financed by printing money.
 
+Notice that equation {eq}`eq:msupply` implies that
+
+$$
+m_{t+1} = \log[ \exp(m_t) + g \exp(p_t)]
+$$ (eq:msupply2)
+
 The demand function for money is 
 
 $$
@@ -70,56 +76,40 @@ where $\alpha \geq 0$.
 
 Expectations of inflation are governed by 
 
-HUMPHREY: I CHANGED THE FOLLOWING EQUATION (MARCH 14)
+HUMPHREY: I CHANGED THE FOLLOWING EQUATION (MARCH 15)
 
 $$
-\pi_{t+1}^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t}^*
+\pi_{t}^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*
 $$ (eq:adaptex)
 
 where $\delta \in (0,1)$
 
-**Remark:** Please notice that while equation {eq}`eq:mdemand` is linear in logs of the money supply and price level, equation {eq}`eq:msupply` is linear in levels. This requires adapting the equilibrium computation methods that we deployed in lecture XXXX  **money_inflation**.
 
 ## Computing An Equilibrium Sequence 
 
-Let's do some preliminary work first.
-
-To begin, equate the two expressions for $m_{t+1}$ from equations {eq}`eq:mdemand` {eq}`eq:msupply` to get
+Equation the expressions for $m_{t+1}$ promided  by {eq}`eq:mdemand` and {eq}`eq:msupply2` and use equation {eq}`eq:adaptex` to eliminate $\pi_t^*$ to obtain
+the following equation for $p_t$:
 
 $$
-\log[ \exp(m_t) + g \exp(p_t)]- p_t = - \alpha \pi_t^*
-$$ (eq:ptemp)
+\log[ \exp(m_t) + g \exp(p_t)] - p_t = -\alpha [(1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*]
+$$ (eq:pequation)
 
-
-
-We'll deploy a method similar to **Method 2** used in the "money_inflation" XXXX lecture.  
-
-For times $t \geq 0$, we'll take the time $t$ **state vector** to be $[m_t, \pi_{t}^*]$.
-
-  * we'll treat **all** of these as  ''natural state variables'' 
-  * unlike lecture XXXX, there is no "jump variable" in the state vectore
-  
-Our algorithm will iteratively compute next period's state as a function of this period's state
-starting from an initial condition $[m_0, \pi_{0}^*]$ for the state vector at time $0$.
-
-We'll summarize our algorithm with the following pseudo-code.
 
 **Pseudo-code**
 
-**Humphrey: YES I have rewritten the algorihm in response to your error-detection. MARCH 14
+Here is pseudo code for our algorithm.
 
-  * start from a triple of initial conditions $m_0, \pi_{0}*$ at time $t =0$. Then for each $t \geq 0$ 
+Starting at time $0$ with initial conditions $(m_0, \pi_{-1}^*, p_{-1})$, for each $t \geq 0$
+deploy the following steps in order:
 
-  * solve {eq}`eq:ptemp` for $p_t$
-  
-  * solve {eq}`eq:mdemand` for $m_{t+1}$
+* solve {eq}`eq:pequation` for $p_t$
+* solve equation {eq}`eq:adaptex` for $\pi_t^*$ 
+* solve equation {eq}`eq:msupply2` for $m_{t+1}$
 
-  * solve {eq}`eq:adaptex` for $\pi_{t+1}^*$
-  
-  * iterate on $t$ to convergence of $\pi_t \rightarrow \overline \pi$ and $\mu_t \rightarrow \overline \mu$
+This completes the algorithm.
 
 
-HUMPHREY: THIS CONCLUDES THE ALTERED (I HOPE IMPROVED!) PSEUDO CODE. PLEASE REPLACE THE EARLIER CODE WITH CODE THAT IMPLEMENTS OUR NEW ALGORITHM.
+## Claims or Conjectures
   
   
 It will turn out that 
@@ -314,17 +304,7 @@ of the two values we just calculated, the inflation rate $\pi_t$ will be constan
 
 The following code verifies this.
 
-HUMPRHREY 
-HEW REQUEST FOR HUMPHREY -- WHAT I'D LIKE YOU TO DO NOW IS JUST TO IMPLEMENT THE NEW PSEUDO CODE DESCRIBED ABOVE. IT WILL INVOLVE SIMPLY REWRITING THE CODE THAT YOU USED TO COMPUTE EQUILIBRIA OF THE MODEL UNDER ADAPTIVE EXPECTATIONS. 
-THE FOLLOWING IS THE CODE BLOCK THAT I'D LIKE YOU TO ALTER.
-
-THE REMAINING CODE BLOCS SHOULD REQUIRE VERY MINOR CHANGES ONLY -- I.E., THE CODE THAT GENERATES THAT BEAUTIFUL GRAPHS. BUT NOW THE OUTCOME OF THE GRAPHS WILL LOOK DIFFERENT. -- THE STEADY STATE THAT IS STABLE WILL BE FLIPPED!
-
-$\log[ \exp(m_t) + g \exp(p_t)]- p_t = - \alpha \pi_t^*$
-
-$m_{t+1} - p_t = -\alpha \pi_t^* $
-
-$\pi_{t+1}^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t}^*$
+HUMPRHEY - HOPEFULLY THINGS WILL WORK BETTER WITH THE ALTERED MARCH 15 TWEAKS DESCRIBED ABOVE
 
 ```{code-cell} ipython3
 def solve_laffer_adapt(p0, π0, model, num_steps):
@@ -373,9 +353,9 @@ print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
 
 
 
-We are now equipped  to compute  time series starting from different $p_0, \pi_{-1}^*$ settings, analogous to those in the this XXXX **money_inflation** lecture. 
+We are now equipped  to compute  time series starting from different $p_{-1}, \pi_{-1}^*$ settings, analogous to those in the this XXXX **money_inflation** lecture. 
 
-HUMPHREY -- PLEASE NOTE HOW I EDITED THE PREVIOUS SENTENCE TO RECOGNIZE THE NEW STATE VECTOR WE NOW HAVE.  YOU'LL HAVE TO ADAPT THE CODE FOR COMPUTING EQUILIBRIA.
+HUMPHREY -- PLEASE NOTE HOW I EDITED THE PREVIOUS SENTENCE TO RECOGNIZE THE NEW STATE VECTOR WE NOW HAVE.  
 
 ```{code-cell} ipython3
 :tags: [hide-cell]
