@@ -392,14 +392,6 @@ def draw_iterations(p0s, m0s, model, line_params, p_bars, num_steps):
     for ax in axes[:2]:
         ax.set_yscale('log')
     
-    
-    p0_colors = [p0_color_map(i) for i in np.linspace(0, 1, len(p0s))]
-    m0_colors = [m0_color_map(i) for i in np.linspace(0, 1, len(m0s))]
-    
-        
-    p0_colors = [p0_color_map(i) for i in np.linspace(0, 1, len(p0s))]
-    m0_colors = [m0_color_map(i) for i in np.linspace(0, 1, len(m0s))]
-    
     for i, p0 in enumerate(p0s):
         for j, m0 in enumerate(m0s):
             π_seq, μ_seq, m_seq, p_seq = solve_laffer_adapt(p0, m0, model, num_steps)
