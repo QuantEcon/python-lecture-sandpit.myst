@@ -4,14 +4,14 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.4
+    jupytext_version: 1.16.1
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
 
-+++ {"user_expressions": [], "tags": []}
++++ {"user_expressions": []}
 
 # Inflation Rate Laffer Curves  with Adaptive Expectations 
 
@@ -33,12 +33,6 @@ $$
 $$ 
 
 as we assumed in lecture XXXX, we'll now assume that $\pi_t^*$ is determined by the adaptive expectations scheme described in equation {eq}`eq:adaptex`  reported below. 
-
-
-
-
-
-
 
 ## The Model
 
@@ -287,26 +281,15 @@ $$
 p_{-1} = m_0 + \alpha \pi^*
 $$
 
-
 ```{code-cell} ipython3
-def solve_p0(p0, m0, α, g, π):
-    return np.log(np.exp(m0) + g * np.exp(p0)) + α * π - p0
+def solve_p_init(model, π_star):
+    m0, α = model.m0, model.α
+    return m0 + α*π_star
 
-def solve_p0_bar(model, x0, π_bar):
-    p0_bar = fsolve(solve_p0, x0=x0, xtol=1e-20, args=(model.m0, 
-                                                       model.α, 
-                                                       model.g, 
-                                                       π_bar))[0]
-    return p0_bar
 
 # Compute two initial price levels associated with π_l and π_u
-p0_l = solve_p0_bar(model, 
-                    x0=np.log(220), 
-                    π_bar=π_l)
-p0_u = solve_p0_bar(model, 
-                    x0=np.log(220), 
-                    π_bar=π_u)
-print(f'Associated initial p_0s are: {p0_l, p0_u}')
+p_l, p_u = map(lambda π: solve_p_init(model, π), (π_l, π_u))
+print('Associated initial p_{-1}s', f'are: {p_l, p_u}')
 ```
 
 +++ {"user_expressions": []}
@@ -327,41 +310,58 @@ PROPOSED STATIONARY $\pi^*$s.
 
 The following code verifies this.
 
-
 ```{code-cell} ipython3
-def solve_laffer_adapt(p0, π0, model, num_steps):
+def solve_laffer_adapt(p_init, π_init, model, num_steps):
     m0, α, δ, g = model.m0, model.α, model.δ, model.g
-    π_seq, μ_seq, m_seq, p_seq = [π0], [], [m0], [p0]
+    
+    m_seq = np.nan * np.ones(num_steps+1) 
+    π_seq = np.nan * np.ones(num_steps) 
+    p_seq = np.nan * np.ones(num_steps)
+    μ_seq = np.nan * np.ones(num_steps) 
+    
+    m_seq[1] = m0
+    π_seq[0] = π_init
+    p_seq[0] = p_init
         
-    for t in range(num_steps):
-        
+    for t in range(1, num_steps):
         # Solve p_t
         def p_t(pt):
             return np.log(np.exp(m_seq[t]) + g * np.exp(pt)) \
-                          - pt + α * ((1-δ)*(pt - p_seq[t]) + δ * π_seq[t])
+                          - pt + α * ((1-δ)*(pt - p_seq[t-1]) + δ*π_seq[t-1])
         
-        p_seq.append(root(fun=p_t, x0=p_seq[t], 
-                          options={'xtol': 1e-06, 'maxfev': 500}).x[0])
+        p_seq[t] = root(fun=p_t, x0=p_seq[t-1]).x[0]
         
         # Solve π_t
-        π_seq.append((1 - δ) * (p_seq[t+1] - p_seq[t]) + δ * π_seq[t])
+        π_seq[t] = (1-δ) * (p_seq[t]-p_seq[t-1]) + δ*π_seq[t-1]
         
         # Solve m_t
-        m_seq.append(np.log(np.exp(m_seq[t]) + g * np.exp(p_seq[t])))
+        m_seq[t+1] = np.log(np.exp(m_seq[t]) + g*np.exp(p_seq[t]))
         
         # Solve μ_t
-        μ_seq.append(m_seq[t] - m_seq[t-1])
+        μ_seq[t] = m_seq[t+1] - m_seq[t]
     
     return π_seq, μ_seq, m_seq, p_seq
 ```
 
+Compute limiting values starting from $p_{-1}$ associated with $\pi_l$
+
 ```{code-cell} ipython3
-π_seq, μ_seq, m_seq, p_seq = solve_laffer_adapt(p0_l, π_u, model, 500)
+π_seq, μ_seq, m_seq, p_seq = solve_laffer_adapt(p_l, π_l, model, 50)
 
-# Check π and μ at steady state
-print('π_bar == μ_bar:', np.isclose(π_seq[-1], μ_seq[-1]))
+# Check steady state m_{t+1} - m_t and p_{t+1} - p_t 
+print('m_{t+1} - m_t:', m_seq[-1] - m_seq[-2])
+print('p_{t+1} - p_t:', p_seq[-1] - p_seq[-2])
 
-print(π_seq[-1], μ_seq[-1])
+# Check if exp(-αx) - exp(-(1 + α)x) = g
+eq_g = lambda x: np.exp(-model.α * x) - np.exp(-(1 + model.α) * x)
+
+print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
+```
+
+Compute limiting values starting from $p_{-1}$ associated with $\pi_u$
+
+```{code-cell} ipython3
+π_seq, μ_seq, m_seq, p_seq = solve_laffer_adapt(p_u, π_u, model, 50)
 
 # Check steady state m_{t+1} - m_t and p_{t+1} - p_t 
 print('m_{t+1} - m_t:', m_seq[-1] - m_seq[-2])
@@ -386,37 +386,45 @@ HUMPHREY -- HOPEFULLY THE IMPROVED FORMULA FOR $p_{-1}$ ABOVE WILL HELP US
 ```{code-cell} ipython3
 :tags: [hide-cell]
 
-p0_color_map = matplotlib.colormaps['Oranges']
-m0_color_map = matplotlib.colormaps['Blues']
-
-def draw_iterations(p0s, m0s, model, line_params, p0_bars, num_steps):
+def draw_iterations(p0s, m0s, model, line_params, p_bars, num_steps):
     fig, axes = plt.subplots(4, 1, figsize=(8, 10), sharex=True)
-    
+
     for ax in axes[:2]:
         ax.set_yscale('log')
     
+    
+    p0_colors = [p0_color_map(i) for i in np.linspace(0, 1, len(p0s))]
+    m0_colors = [m0_color_map(i) for i in np.linspace(0, 1, len(m0s))]
+    
+        
     p0_colors = [p0_color_map(i) for i in np.linspace(0, 1, len(p0s))]
     m0_colors = [m0_color_map(i) for i in np.linspace(0, 1, len(m0s))]
     
     for i, p0 in enumerate(p0s):
         for j, m0 in enumerate(m0s):
             π_seq, μ_seq, m_seq, p_seq = solve_laffer_adapt(p0, m0, model, num_steps)
-            avg_rgb = [(p + m) / 2 for p, m in zip(p0_colors[i][:3], m0_colors[j][:3])]
-            line_color = (*avg_rgb, 0.7)
-
-            updated_line_params = dict(line_params, color=line_color)
             
-            axes[0].plot(np.arange(num_steps+1), m_seq, **updated_line_params)
-            axes[1].plot(np.arange(num_steps+1), p_seq, **updated_line_params)
-            axes[2].plot(np.arange(num_steps+1), π_seq, **updated_line_params)
-            axes[3].plot(np.arange(num_steps), μ_seq, **updated_line_params)
+            axes[0].plot(np.arange(num_steps), m_seq[1:], **line_params)
+            axes[1].plot(np.arange(-1, num_steps-1), p_seq, **line_params)
+            axes[2].plot(np.arange(-1, num_steps-1), π_seq, **line_params)
+            axes[3].plot(np.arange(num_steps), μ_seq, **line_params)
             
-    for p_0, label in [(p0_bars[0], '$p_0=p_l$'), (p0_bars[1], '$p_0=p_u$')]:
-        y = solve_laffer_adapt(p_0, m0s[0], model, 20)[0]
+    π_l_bar = solve_laffer_adapt(p_bars[0], m0s[0], model, 100)[0][-1]
+    π_u_bar = solve_laffer_adapt(p_bars[1], m0s[0], model, 100)[0][-1]
+    
+    if np.isclose(π_l_bar, π_u_bar, atol=1e-2):
         for ax in axes[2:]:
-            ax.axhline(y=y[-1], color='grey', linestyle='--', lw=1.5, alpha=0.6)
-            ax.text(num_steps * 1.07, y[-1], label, verticalalignment='center', 
-                         color='grey', size=10)
+            ax.axhline(y=π_l_bar, color='grey', linestyle='--', lw=1.5, alpha=0.6)
+            ax.text(num_steps * 1.07, π_u_bar,'$p_{-1}=p_l, p_{-1}=p_u$', verticalalignment='center', 
+                                 color='grey', size=10)
+        
+    else:
+        for ax in axes[2:]:
+            ax.axhline(y=π_l_bar, color='grey', linestyle='--', lw=1.5, alpha=0.6)
+            ax.text(num_steps * 1.07, π_l_bar, '$p_{-1}=p_l$', verticalalignment='center', 
+                             color='grey', size=10)
+            ax.text(num_steps * 1.07, π_u_bar,'$p_{-1}=p_u$', verticalalignment='center', 
+                                 color='grey', size=10)
     
     axes[0].set_ylabel('$m_t$')
     axes[1].set_ylabel('$p_t$')
@@ -431,28 +439,20 @@ def draw_iterations(p0s, m0s, model, line_params, p0_bars, num_steps):
 
 +++ {"user_expressions": []}
 
-Let's simulate the result generated by varying initial $p_0s$
+Let's simulate the result generated by varying initial $p_{-1}s$
 
 ```{code-cell} ipython3
-:tags: []
-
-# Generate a sequence from p0_l to p0_u
-p0s = np.linspace(p0_l, p0_u, 10) 
-π0s = np.linspace(π_u, π_l, 10)
+ps = np.linspace(p_l, p_u, 10) 
+πs = np.linspace(π_u, π_l, 10)
 
 line_params = {'lw': 1.5, 
               'marker': 'o',
               'markersize': 3}
               
-p0_bars = (p0_l, p0_u)
-              
-draw_iterations(p0s, [π_u, π_l], model, line_params, p0_bars, num_steps=20)
+p_bars = (p_l, p_u)
+draw_iterations(ps, [π_u], model, line_params, p_bars, num_steps=60)
 ```
 
-+++ {"user_expressions": []}
-
-Let's now simulate the result generated by varying initial $\pi_0s$
-
 ```{code-cell} ipython3
-draw_iterations([p0_l, p0_u], π0s, model, line_params, p0_bars, num_steps=20)
+draw_iterations(ps, [π_l], model, line_params, p_bars, num_steps=60)
 ```
