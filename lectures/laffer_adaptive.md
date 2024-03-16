@@ -190,7 +190,7 @@ LafferAdaptive = namedtuple('LafferAdaptive',
                          "δ"])
 
 # Create a Cagan Laffer model
-def create_model(α=0.5, m0=np.log(100), g=0.35, δ=0.5):
+def create_model(α=0.5, m0=np.log(100), g=0.35, δ=0.9):
     return LafferAdaptive(α=α, m0=m0, g=g, δ=δ)
 
 model = create_model()
@@ -270,7 +270,23 @@ plot_laffer(model, (π_l, π_u))
 
 ## Associated Initial Price Levels
 
- Now that we have our hands on the two possible steady states, we can compute two initial log price levels $p_0$, which as initial conditions, imply that $\pi_t = \bar \pi $ for all $t \geq 0$.
+
+HUMPHREY: A TWEAK STARTS HERE MARCH 16
+
+ Now that we have our hands on the two possible steady states, we can compute two initial log price levels $p_{-1}$, which as initial conditions, imply that $\pi_t = \bar \pi $ for all $t \geq 0$.
+
+
+HUMPHREY: I WANT TO TO ALTER THE FORMULAS FOR THE INITIAL PRICE LEVELs $p_{-1}$ corresponding to
+EACH OF OUR CANDIDATE STATIONARY INFLATION RATES $\pi^*$. 
+
+* THE PROPOSED STATIONARY INFLATION RATES SHOULD REMAIN THE SAME AS ABOVE (AND THE SAME AS THOSE FOR THE "RATIONAL EXPECTATIONS" VERSION OF THE MODEL IN OUR EARLIER LECTURE)
+
+HERE IS THE NEW FORMULA FOR THE CANDIDATE INITIAL PRICE LEVEL(S):
+
+$$
+p_{-1} = m_0 + \alpha \pi^*
+$$
+
 
 ```{code-cell} ipython3
 def solve_p0(p0, m0, α, g, π):
@@ -299,12 +315,18 @@ print(f'Associated initial p_0s are: {p0_l, p0_u}')
 
 
 
-To start, let's write some code to verify that if the initial log price level $p_0$ takes one
+To start, let's write some code to verify that if the initial log price level $p_{-1}$ takes one
 of the two values we just calculated, the inflation rate $\pi_t$ will be constant for all $t \geq 0$.
+
+
+
+HUMPHREY: MAYBE THE FOLLOWING CODE WILL HAVE TO BE TWEAKED TO ACCEPT TTHE NEW FORMULA FOR $p_{-1}$
+
+ALSO, PLEASE START THE SIMULATIONS FROM OUR NEW PROPOSED $p_{-1}$ VALUES FOR EACH OF THE TWO
+PROPOSED STATIONARY $\pi^*$s.
 
 The following code verifies this.
 
-HUMPRHEY - HOPEFULLY THINGS WILL WORK BETTER WITH THE ALTERED MARCH 15 TWEAKS DESCRIBED ABOVE
 
 ```{code-cell} ipython3
 def solve_laffer_adapt(p0, π0, model, num_steps):
@@ -359,7 +381,7 @@ print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
 
 We are now equipped  to compute  time series starting from different $p_{-1}, \pi_{-1}^*$ settings, analogous to those in the this XXXX **money_inflation** lecture. 
 
-HUMPHREY -- PLEASE NOTE HOW I EDITED THE PREVIOUS SENTENCE TO RECOGNIZE THE NEW STATE VECTOR WE NOW HAVE.
+HUMPHREY -- HOPEFULLY THE IMPROVED FORMULA FOR $p_{-1}$ ABOVE WILL HELP US
 
 ```{code-cell} ipython3
 :tags: [hide-cell]
