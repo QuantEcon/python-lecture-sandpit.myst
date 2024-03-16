@@ -70,8 +70,6 @@ where $\alpha \geq 0$.
 
 Expectations of inflation are governed by 
 
-HUMPHREY: I CHANGED THE FOLLOWING EQUATION (MARCH 15)
-
 $$
 \pi_{t}^* = (1-\delta) (p_t - p_{t-1}) + \delta \pi_{t-1}^*
 $$ (eq:adaptex)
@@ -265,17 +263,9 @@ plot_laffer(model, (π_l, π_u))
 ## Associated Initial Price Levels
 
 
-HUMPHREY: A TWEAK STARTS HERE MARCH 16
-
  Now that we have our hands on the two possible steady states, we can compute two initial log price levels $p_{-1}$, which as initial conditions, imply that $\pi_t = \bar \pi $ for all $t \geq 0$.
 
-
-HUMPHREY: I WANT TO TO ALTER THE FORMULAS FOR THE INITIAL PRICE LEVELs $p_{-1}$ corresponding to
-EACH OF OUR CANDIDATE STATIONARY INFLATION RATES $\pi^*$. 
-
-* THE PROPOSED STATIONARY INFLATION RATES SHOULD REMAIN THE SAME AS ABOVE (AND THE SAME AS THOSE FOR THE "RATIONAL EXPECTATIONS" VERSION OF THE MODEL IN OUR EARLIER LECTURE)
-
-HERE IS THE NEW FORMULA FOR THE CANDIDATE INITIAL PRICE LEVEL(S):
+In particular, to initiate a fixed point of the dynamic Laffer curve dynamics we set 
 
 $$
 p_{-1} = m_0 + \alpha \pi^*
@@ -298,15 +288,9 @@ print('Associated initial p_{-1}s', f'are: {p_l, p_u}')
 
 
 
-To start, let's write some code to verify that if the initial log price level $p_{-1}$ takes one
-of the two values we just calculated, the inflation rate $\pi_t$ will be constant for all $t \geq 0$.
+To start, let's write some code to verify that if we initial  $\pi_{-1}^*,p_{-1}$ appropriately, the inflation rate $\pi_t$ will be constant for all $t \geq 0$ (at either $\pi_u$ or $\pi_l$ depending on the initial condition)
 
 
-
-HUMPHREY: MAYBE THE FOLLOWING CODE WILL HAVE TO BE TWEAKED TO ACCEPT TTHE NEW FORMULA FOR $p_{-1}$
-
-ALSO, PLEASE START THE SIMULATIONS FROM OUR NEW PROPOSED $p_{-1}$ VALUES FOR EACH OF THE TWO
-PROPOSED STATIONARY $\pi^*$s.
 
 The following code verifies this.
 
@@ -381,7 +365,18 @@ print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
 
 We are now equipped  to compute  time series starting from different $p_{-1}, \pi_{-1}^*$ settings, analogous to those in the this XXXX **money_inflation** lecture. 
 
-HUMPHREY -- HOPEFULLY THE IMPROVED FORMULA FOR $p_{-1}$ ABOVE WILL HELP US
+HUMPHREY -- MARCH 16 MODIFICATION OF CHOICE OF "PERTURBED" INITIAL CONDITIONS $p_{-1}, \pi_{-1}^*$
+
+PLEASE RESTRICT THE PERTURBATIONS AS FOLLOWS.
+
+Now we'll study how outcomes unfold when we start $p_{-1}, \pi_{-1}^*$ away from a stationary point of the dynamic Laffer curve, i.e., away from either $\pi_u$ or $ \pi_l$.
+
+To construct a perturbation pair $\check p_{-1}, \check \pi_{-1}^*$we'll implement the following pseudo code:
+
+* set $\check \pi_{-1}^* $ not equal to one of the stationary points $\pi_u$ or $ \pi_l$.
+* set $\check p_{-1} = m_0 + \alpha \check \pi_{-1}^*$
+
+Do this "cautiously" around each of the fixed points $\pi_u$ or $ \pi_l$.
 
 ```{code-cell} ipython3
 :tags: [hide-cell]
