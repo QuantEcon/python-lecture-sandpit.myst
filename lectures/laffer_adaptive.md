@@ -34,6 +34,18 @@ $$
 
 as we assumed in lecture XXXX, we'll now assume that $\pi_t^*$ is determined by the adaptive expectations scheme described in equation {eq}`eq:adaptex`  reported below. 
 
+This will have consequences described by Bruno and Fischer {cite}`bruno1990seigniorage`.
+Their purpose was to reverse  what they thought were counter intuitive
+predictions of their model under rational expectations (i.e., perfect foresight in this context)
+by dropping rational expectations and instead assuming that people form  expectations about future inflation rates according to the "adaptive expectations"  scheme {eq}`eq:adaptex` described below.
+
+```{note}
+A Marcet and Sargent {cite}`sargent1989least`  had studied another way of selecting stationary equilibrium that involved replacing rational expectations with a model of  learning via least squares regression.  
+Marcet and Nicolini {cite}`marcet2003recurrent` and Sargent, Williams, and Zha {cite}`sargent2009conquest` extended that work and applied it to study recurrent high-inflation episodes in Latin America.
+``` 
+
+
+
 ## The Model
 
 Let  
@@ -101,10 +113,12 @@ deploy the following steps in order:
 This completes the algorithm.
 
 
-## Claims or Conjectures
+## Salient Outcomes
+
+While replacing "rational" with "adaptive" expectations preserves the set of stationary outcomes,
+it **reverses** which stationary outcome is approached from an iniital situation that is not a stationary point. 
   
-  
-It will turn out that 
+  In particular, as we shall see below, it will turn out that 
 
  * if they exist, limiting values $\overline \pi$ and $\overline \mu$ will be equal
  
@@ -369,9 +383,6 @@ print('eq_g == g:', np.isclose(eq_g(m_seq[-1] - m_seq[-2]), model.g))
 
 We are now equipped  to compute  time series starting from different $p_{-1}, \pi_{-1}^*$ settings, analogous to those in the this XXXX **money_inflation** lecture. 
 
-HUMPHREY -- MARCH 16 MODIFICATION OF CHOICE OF "PERTURBED" INITIAL CONDITIONS $p_{-1}, \pi_{-1}^*$
-
-PLEASE RESTRICT THE PERTURBATIONS AS FOLLOWS.
 
 Now we'll study how outcomes unfold when we start $p_{-1}, \pi_{-1}^*$ away from a stationary point of the dynamic Laffer curve, i.e., away from either $\pi_u$ or $ \pi_l$.
 
