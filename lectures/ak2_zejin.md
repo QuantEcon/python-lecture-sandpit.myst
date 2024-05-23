@@ -1192,6 +1192,60 @@ I recommend that we add a few simple experiments in which we do the following.
 
 * the last bullet point is vague and we'll have to tighten it up
 
+### Experiment 4: Unfunded Social Security System
+
+Below we consider an experiment of launching the unfunded social security system.
+
+The economy was in the same initial steady as we considered in the previous experiments.
+
+Instead of issuing debt and cutting the income tax rate, the government now sets the lump sum taxes $\delta_{y,t}=-\delta_{o,t}=0.1 \hat{C}_{y}$ for all $t \geq 0$.
+
+To solve for transitional paths of such an experiment, we simply set the corresponding $\delta_{y,t}$, $\delta_{o,t}$, and $D_t$ sequences, and simulate the transition of the economy using the routine defined above.
+
+Let's compare this experiment to the {ref}`exp-tax-cut`.
+
+```{code-cell} ipython3
+δy_seq = np.ones(T+2) * Cy_hat * 0.1
+δo_seq = np.ones(T+2) * -Cy_hat * 0.1
+
+D_pol[:] = D_hat
+
+quant_seq5, price_seq5, policy_seq5 = ak2.simulate(T, init_ss,
+                                                   δy_seq, δo_seq,
+                                                   D_pol=D_pol, G_pol=G_pol)
+```
+
+```{code-cell} ipython3
+fig, axs = plt.subplots(3, 3, figsize=(14, 10))
+
+# quantities
+for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
+    ax = axs[i//3, i%3]
+    ax.plot(range(T+1), quant_seq3[:T+1, i], label=name+', tax cut')
+    ax.plot(range(T+1), quant_seq5[:T+1, i], label=name+', transfer')
+    ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+
+# prices
+for i, name in enumerate(['W', 'r']):
+    ax = axs[(i+4)//3, (i+4)%3]
+    ax.plot(range(T+1), price_seq3[:T+1, i], label=name+', tax cut')
+    ax.plot(range(T+1), price_seq5[:T+1, i], label=name+', transfer')
+    ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+
+# policies
+for i, name in enumerate(['τ', 'D', 'G']):
+    ax = axs[(i+6)//3, (i+6)%3]
+    ax.plot(range(T+1), policy_seq3[:T+1, i], label=name+', tax cut')
+    ax.plot(range(T+1), policy_seq5[:T+1, i], label=name+', transfer')
+    ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
+    ax.legend()
+    ax.set_xlabel('t')
+```
+
 
 ## Working when old as well as when young
 
