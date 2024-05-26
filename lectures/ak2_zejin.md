@@ -13,7 +13,11 @@ kernelspec:
 
 # Transitions in an Overlapping Generations Model
 
+In addition to what’s in Anaconda, this lecture will need the following libraries:
 
+```{code-cell} ipython3
+!pip install --upgrade quantecon
+```
 
 ## Introduction
 
@@ -42,11 +46,6 @@ We take the liberty of extending Auerbach and Kotlikoff's chapter 2 model by add
   * these take the form of a sequence of  age-specific lump sum taxes and transfers
 
 We  study how  these  additional instruments for redistributing resources across generations affect capital accumulation and government debt 
-
-
-
-
-
 
 ## Setting
 
@@ -402,14 +401,7 @@ $$
 
 
 
-## Code
-
-
-In addition to what’s in Anaconda, this lecture will need the following libraries:
-
-```{code-cell} ipython3
-!pip install --upgrade quantecon
-```
+### Implementation
 
 ```{code-cell} ipython3
 import numpy as np
@@ -932,7 +924,7 @@ class AK2():
     This class simulates length T transitional path of a economy
     in response to a fiscal policy change given its initial steady
     state. The transitional path is found by employing a fixed point
-    algorithm that and uses equilibrium conditions.
+    algorithm to satisfy the equilibrium conditions.
 
     """
 
@@ -998,7 +990,9 @@ class AK2():
                     axs[i].plot(range(T+1), price_seq[:T+1, i])
                     axs[i].set_title(name)
                     axs[i].set_xlabel('t')
-                axs[2].plot(range(T+1), policy_seq[:T+1, 0])
+                axs[2].plot(range(T+1), policy_seq[:T+1, 0],
+                            label=f'{i_iter}th iteration')
+                axs[2].legend(bbox_to_anchor=(1.05, 1), loc='upper left')
                 axs[2].set_title('τ')
                 axs[2].set_xlabel('t')
 
@@ -1176,7 +1170,7 @@ for i, name in enumerate(['τ', 'D', 'G']):
 ```
 
 
-## NOTES TO ZEJIN FEB 26
+### NOTES TO ZEJIN FEB 26
 
 Hi Zejin.
 
@@ -1194,15 +1188,22 @@ I recommend that we add a few simple experiments in which we do the following.
 
 ### Experiment 4: Unfunded Social Security System
 
-Below we consider an experiment of launching the unfunded social security system.
+Another interesting experiment that becomes doable with the more general laboratory is when the lump-sum taxes are of the same size for both the old and the young, but of the opposite signs.
 
-The economy was in the same initial steady as we considered in the previous experiments.
+Recall that a negative lump-sum tax is a subsidy.
 
-Instead of issuing debt and cutting the income tax rate, the government now sets the lump sum taxes $\delta_{y,t}=-\delta_{o,t}=0.1 \hat{C}_{y}$ for all $t \geq 0$.
+In particular, we will tax the young, and subsidize the old.
 
-To solve for transitional paths of such an experiment, we simply set the corresponding $\delta_{y,t}$, $\delta_{o,t}$, and $D_t$ sequences, and simulate the transition of the economy using the routine defined above.
+In other words, the government transfers a certain amount of income from the younger cohort to the older cohort.
 
-Let's compare this experiment to the {ref}`exp-tax-cut`.
+We will assume that the economy was in the same initial steady state as we considered in the previous experiments.
+
+The government sets the lump sum taxes $\delta_{y,t}=-\delta_{o,t}=10\% \hat{C}_{y}$ starting from $t=0$, and keep the
+debt level and tax rates at the steady state levels $\hat{D}$ and $\hat{\tau}$.
+
+We will use the laboratory built above to simulate the transition of the economy driven by this launch of unfunded social security system.
+
+Let's compare the results to the {ref}`exp-tax-cut`.
 
 ```{code-cell} ipython3
 δy_seq = np.ones(T+2) * Cy_hat * 0.1
@@ -1244,249 +1245,4 @@ for i, name in enumerate(['τ', 'D', 'G']):
     ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
     ax.legend()
     ax.set_xlabel('t')
-```
-
-
-## Working when old as well as when young
-
-Now let's assume that each person supplies $1/2$ labor unit when both young and old.
-
-The aggregate labor supply doesn't change.
-
-The lifetime budget constraint becomes
-
-$$
-C_{yt}+\frac{C_{ot+1}}{1+r_{t+1}\left(1-\tau_{t+1}\right)}=\frac{1}{2}W_{t}\left(1-\tau_{t}\right)+\frac{1}{2}\frac{W_{t+1}\left(1-\tau_{t+1}\right)}{1+r_{t+1}\left(1-\tau_{t+1}\right)}
-$$
-
-```{code-cell} ipython3
-@njit
-def Cy_val2(Cy, W, W_next, r_next, τ, τ_next, β):
-
-    # Co given by the budget constraint
-    Co = (W / 2 * (1 - τ) - Cy) * (1 + r_next * (1 - τ_next)) + (W_next / 2) * (1 - τ_next)
-
-    return U(Cy, Co, β)
-```
-
-```{code-cell} ipython3
-W, W_next, r_next, τ, τ_next = W_hat, W_hat, r_hat, τ_hat, τ_hat
-
-# lifetime budget
-C_ub = (W / 2) * (1 - τ) + (W_next / 2) * (1 - τ_next) / (1 + r_next * (1 - τ_next))
-
-Cy_opt, U_opt, _ = brent_max(Cy_val2,      # maximand
-                             1e-3,         # lower bound
-                             C_ub-1e-3,    # upper bound
-                             args=(W, W_next, r_next, τ, τ_next, β))
-
-Cy_opt
-```
-
-
-
-Does the optimal consumption for the young now depend on the future wage $W_{t+1}$?
-
-```{code-cell} ipython3
-W, W_next, r_next, τ, τ_next = W_hat, W_hat, r_hat, τ_hat, τ_hat
-
-W_next = W_hat / 2
-
-# what's the new lifetime income?
-C_ub = (W / 2) * (1 - τ) + (W_next / 2) * (1 - τ_next) / (1 + r_next * (1 - τ_next))
-
-Cy_opt, U_opt, _ = brent_max(Cy_val2,   # maximand
-                             1e-3,      # lower bound
-                             C_ub-1e-3,    # upper bound
-                             args=(W, W_next, r_next, τ, τ_next, β))
-
-Cy_opt
-```
-
-
-
-Does it depend on the future interest rate $r_{t+1}$?
-
-```{code-cell} ipython3
-W, W_next, r_next, τ, τ_next = W_hat, W_hat, r_hat, τ_hat, τ_hat
-
-r_next = r_hat / 2
-
-# what's the new lifetime income?
-C_ub = (W / 2) * (1 - τ) + (W_next / 2) * (1 - τ_next) / (1 + r_next * (1 - τ_next))
-
-Cy_opt, U_opt, _ = brent_max(Cy_val2,   # maximand
-                             1e-3,      # lower bound
-                             C_ub-1e-3,    # upper bound
-                             args=(W, W_next, r_next, τ, τ_next, β))
-
-Cy_opt
-```
-
-
-
-Does it depend on the future tax rate $\tau_{t+1}$?
-
-```{code-cell} ipython3
-W, W_next, r_next, τ, τ_next = W_hat, W_hat, r_hat, τ_hat, τ_hat
-
-τ_next = τ_hat / 2
-
-# what's the new lifetime income?
-C_ub = (W / 2) * (1 - τ) + (W_next / 2) * (1 - τ_next) / (1 + r_next * (1 - τ_next))
-
-Cy_opt, U_opt, _ = brent_max(Cy_val2,   # maximand
-                             1e-3,      # lower bound
-                             C_ub-1e-3,    # upper bound
-                             args=(W, W_next, r_next, τ, τ_next, β))
-
-Cy_opt
-```
-
-```{code-cell} ipython3
-T = 20
-tax_cut = 1 / 3
-
-K_hat, Y_hat, Cy_hat, Co_hat = init_ss[:4]
-W_hat, r_hat = init_ss[4:6]
-τ_hat, Ag_hat, G_hat = init_ss[6:9]
-
-# initial guesses of prices
-W_seq = np.ones(T+2) * W_hat
-r_seq = np.ones(T+2) * r_hat
-
-# initial guesses of policies
-τ_seq = np.ones(T+2) * τ_hat
-
-Ag_seq = np.zeros(T+1)
-G_seq = np.ones(T+1) * G_hat
-
-# containers
-K_seq = np.empty(T+2)
-Y_seq = np.empty(T+2)
-C_seq = np.empty((T+1, 2))
-
-# t=0, starting from steady state
-K_seq[0], Y_seq[0] = K_hat, Y_hat
-W_seq[0], r_seq[0] = W_hat, r_hat
-
-# tax cut
-τ_seq[0] = τ_hat * (1 - tax_cut)
-Ag1 = Ag_hat * (1 + r_seq[0] * (1 - τ_seq[0])) + τ_seq[0] * Y_hat - G_hat
-Ag_seq[1:] = Ag1
-
-# immediate effect on consumption
-# only know about Co,0 but not Cy,0
-C_seq[0, 1] = (W_hat / 2) + K_seq[0] * (1 + r_hat * (1 - τ_hat))
-
-# prepare to plot iterations until convergence
-fig, axs = plt.subplots(1, 3, figsize=(14, 4))
-
-# containers for checking convergence (Don't use np.copy)
-W_seq_old = np.empty_like(W_seq)
-r_seq_old = np.empty_like(r_seq)
-τ_seq_old = np.empty_like(τ_seq)
-
-max_iter = 500
-i_iter = 0
-tol = 1e-5 # tolerance for convergence
-
-# start iteration
-while True:
-
-    # plot current prices at ith iteration
-    for i, seq in enumerate([W_seq, r_seq, τ_seq]):
-            axs[i].plot(range(T+2), seq)
-
-    # store old prices from last iteration
-    W_seq_old[:] = W_seq
-    r_seq_old[:] = r_seq
-    τ_seq_old[:] = τ_seq
-
-    # start update quantities and prices
-    for t in range(T+1):
-
-        # note that r_seq[t+1] and τ_seq[t+1] are guesses!
-        W, W_next, r_next, τ, τ_next = W_seq[t], W_seq[t+1], r_seq[t+1], τ_seq[t], τ_seq[t+1]
-        
-        C_ub = (W / 2) * (1 - τ) + (W_next / 2) * (1 - τ_next) / (1 + r_next * (1 - τ_next))
-
-        out = brent_max(Cy_val2,   # maximand
-                        1e-3,      # lower bound
-                        C_ub-1e-3,    # upper bound
-                        args=(W, W_next, r_next, τ, τ_next, β))
-        Cy = out[0]
-
-        # private saving, Ap[t+1]
-        Ap_next = W * (1 - τ) - Cy
-
-        # asset next period
-        K_next = Ap_next + Ag1
-        W_next, r_next, Y_next = K_to_W(K_next, α), K_to_r(K_next, α), K_to_Y(K_next, α)
-
-        K_seq[t+1] = K_next
-        W_seq[t+1] = W_next
-        r_seq[t+1] = r_next
-        τ_seq[t+1] = (G_hat - r_next * Ag1) / (Y_next - r_next * Ag1)
-
-        # record consumption
-        C_seq[t, 0] = Cy
-        if t < T:
-            C_seq[t+1, 1] = (W / 2 * (1 - τ) - Cy) * (1 + r_next * (1 - τ_next)) + W_next / 2
-
-    # one iteration finishes
-    i_iter += 1
-
-    # check convergence
-    if (np.max(np.abs(W_seq_old - W_seq)) < tol) & \
-       (np.max(np.abs(r_seq_old - r_seq)) < tol) & \
-       (np.max(np.abs(τ_seq_old - τ_seq)) < tol):
-        print(f"Converge using {i_iter} iterations")
-        break
-
-    if i_iter > max_iter:
-        print(f"Fail to converge using {i_iter} iterations")
-        break
-
-axs[0].set_title('W')
-axs[1].set_title('r')
-axs[2].set_title('τ')
-
-plt.show();
-```
-
-```{code-cell} ipython3
-plt.plot(K_seq)
-plt.title('K')
-```
-
-
-
-## Interpolation
-
-
-
-Here is a demonstration of how to use `interp`.
-
-This jitted function is very useful for solving optimal consumption and saving problems using Bellman equations.
-
-```{code-cell} ipython3
-!pip install interpolation
-```
-
-```{code-cell} ipython3
-from interpolation import interp
-```
-
-```{code-cell} ipython3
-# x_arr, V_arr, x => return V(x)
-interp(np.array([0., 1.]), np.array([0.2, 0.8]), 0.2)
-```
-
-```{code-cell} ipython3
-interp(np.array([0., 1.]), np.array([0.2, 0.8]), np.array([0.2, 0.3, 0.4]))
-```
-
-```{code-cell} ipython3
-
 ```
