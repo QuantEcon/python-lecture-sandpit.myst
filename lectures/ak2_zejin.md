@@ -675,7 +675,7 @@ class ClosedFormTrans:
             ax.set_xlabel('t')
 ```
 
-We can create an instance `closed` given model parameters $\{\alpha, \beta\}$ and use it for various fiscal policy experiments.
+We can create an instance `closed` for model parameters $\{\alpha, \beta\}$ and use it for various fiscal policy experiments.
 
 
 ```{code-cell} ipython3
@@ -805,7 +805,7 @@ closed.simulate(T, init_ss, τ_pol=τ_seq, G_pol=G_seq);
 closed.plot()
 ```
 
-As the government accumulates asset and uses it in production, it lowers rental rate on capital and crowds out private investment.
+As the government accumulates the asset and uses it in production, the  rental rate on capital falls and  private investment falls.
 
 As a result,  the ratio  $-\frac{D_t}{K_t}$ of the  government asset to  physical capital used in production will increase over time
 
@@ -817,11 +817,11 @@ plt.title('-D/K');
 
 We want to know how this policy experiment affects individuals.
 
-In the long run, the future cohorts will have higher consumptions for both their two life periods, as they will have higher labor income during their working life stage.
+In the long run,  future cohorts will enjoy higher consumption throughout their lives because  for  they will earn  higher labor income when they work.
 
-However, in the short run, the old suffers because the increase in their labor income does not compensate for their loss in capital income.
+However, in the short run, old people  suffer because increases in their labor income are not big enough to offset  their losses of capital income.
 
-The distinct long run and short run effects are the essential incentive for us to study transitional paths instead of steady states comparion.
+Such distinct long run and short run effects motivate us  to study transition paths.
 
 ```{note}
 Although the consumptions in the new steady state are strictly higher, it is at a cost of fewer public services and goods.
@@ -830,11 +830,11 @@ Although the consumptions in the new steady state are strictly higher, it is at 
 
 ### Experiment 3: Temporary expenditure cut
 
-Let's now investigate another  scenario in which  the government also cuts its spending by  half and accumulates the asset.
+Let's now investigate a   scenario in which  the government also cuts its spending by  half and accumulates the asset.
 
-But this time the expenditure cut only lasts for one period at $t=0$.
+But now let  the government cut its  expenditures only  at $t=0$.
 
-From $t \geq 1$, the government expeditures  return to  $\hat{G}$  and  $\tau_t$ adjusts to maintain   asset level $-D_t = -D_1$.
+From $t \geq 1$, the government expeditures  return to  $\hat{G}$  and  $\tau_t$ adjusts to maintain the   asset level $-D_t = -D_1$.
 
 ```{code-cell} ipython3
 # sequence of government purchase
@@ -852,9 +852,9 @@ closed.plot()
 
 The economy quickly converges to a new steady state with higher physical capital stock, lower interest rate, higher wage rate, and higher consumptions for both the young and the old.
 
-Even though the expenditure $G_t$ returns to its high initial level from $t \geq 1$, the government can balance the budget with a lower tax rate due to its additional revenue $-r_t D_t$ from the asset accumulated by the temporary cut in the spendings.
+Even though government expenditures $G_t$ returns to its high initial level from $t \geq 1$, the government can balance the budget at a lower tax rate because  it gaathers  additional revenue $-r_t D_t$ from the asset accumulated during  the temporary cut in the spendings.
 
-Similar as in {ref}`exp-expen-cut`, the old in the early periods suffers from this policy shock.
+As in {ref}`exp-expen-cut`, old perople  early in the transition  periods suffer from this policy shock.
 
 
 ## A computational strategy
@@ -898,9 +898,9 @@ In addition, we assume that the lump sum taxes $\{\delta_{yt}, \delta_{ot}\}_{t=
 
 We can solve for sequences of other equilibrium sequences following the steps below
 
-1. guesses prices $\{W_t, r_t\}_{t=0}^{T}$ and tax rates $\{\tau_t\}_{t=0}^{T}$
+1. guess prices $\{W_t, r_t\}_{t=0}^{T}$ and tax rates $\{\tau_t\}_{t=0}^{T}$
 2. solve for optimal consumption and saving plans $\{C_{yt}, C_{ot}\}_{t=0}^{T}$, treating the guesses of future prices and taxes as true
-3. solve for transitional dynamics of the capital stock $\{K_t\}_{t=0}^{T}$
+3. solve for transition of the capital stock $\{K_t\}_{t=0}^{T}$
 4. update the guesses for prices and tax rates with the values implied by the equilibrium conditions
 5. iterate until convergence
 
@@ -931,7 +931,7 @@ def Cy_val(Cy, W, r_next, τ, τ_next, δy, δo_next, β):
 
 An optimal consumption plan $C_y^*$ can be found by maximizing `Cy_val`.
 
-Here is an example that finds the optimal consumption $C_y^*=\hat{C}_y$ in the steady state  with $\delta_{yt}=\delta_{ot}=0$ like one that we studied earlier
+Here is an example that computes optimal consumption $C_y^*=\hat{C}_y$ in the steady state  with $\delta_{yt}=\delta_{ot}=0,$ like one that we studied earlier
 
 ```{code-cell} ipython3
 W, r_next, τ, τ_next = W_hat, r_hat, τ_hat, τ_hat
@@ -947,7 +947,7 @@ Cy_opt, U_opt
 
 Let's define a Python class `AK2` that  computes the transition paths  with the fixed-point algorithm.
 
-It can handle  fiscal policy experiments that  include nonzero lump sum taxes
+It can handle   nonzero lump sum taxes
 
 ```{code-cell} ipython3
 class AK2():
@@ -1151,9 +1151,9 @@ quant_seq3, price_seq3, policy_seq3 = ak2.simulate(T, init_ss,
 ak2.plot()
 ```
 
-Next, we can activate  lump sum taxes. 
+Next, we  activate  lump sum taxes. 
 
-For example, let's alter  our  {ref}`exp-tax-cut`  fiscal policy experiment by assuming that  the government also increase  lump sum taxes for both  young and old  people $\delta_{yt}=\delta_{ot}=0.005, t\geq0$. 
+Let's alter  our  {ref}`exp-tax-cut`  fiscal policy experiment by assuming that  the government also increases  lump sum taxes for both  young and old  people $\delta_{yt}=\delta_{ot}=0.005, t\geq0$. 
 
 ```{code-cell} ipython3
 δy_seq = np.ones(T+2) * 0.005
@@ -1205,22 +1205,21 @@ Comparing to {ref}`exp-tax-cut`, the government raises lump-sum taxes to finance
 
 ### Experiment 4: Unfunded Social Security System
 
-Another interesting experiment  is when the lump-sum taxes are of the same size for both the old and the young, but of the opposite signs.
+In this experiment,  lump-sum taxes are of equal magnitudes for old and the young, but of opposite signs.
 
-Recall that a negative lump-sum tax is a subsidy.
+A negative lump-sum tax is a subsidy.
 
-In particular, we will tax the young, and subsidize the old.
+Thus, in this experiment we tax the young and subsidize the old.
 
-Thus, the government transfers  some income from the younger cohort to the older cohort.
+We start  the economy at the same initial steady state that we assumed in several earlier  experiments.
 
-We will assume that the economy was in the same initial steady state that we assumed in several earlier  experiments.
+The government sets the lump sum taxes $\delta_{y,t}=-\delta_{o,t}=10\% \hat{C}_{y}$ starting from $t=0$.
 
-The government sets the lump sum taxes $\delta_{y,t}=-\delta_{o,t}=10\% \hat{C}_{y}$ starting from $t=0$, and keeps 
-debt levels and expenditures at their steady state levels $\hat{D}$ and $\hat{G}$.
+It keeps debt levels and expenditures at their steady state levels $\hat{D}$ and $\hat{G}$.
 
-This experiment amounts to launching an unfunded social security system.
+In effect, this experiment amounts to launching an unfunded social security system.
 
-We will use our code to compute the transition ignited by  launch this system.
+We can  use our code to compute the transition ignited by  launch this system.
 
 Let's compare the results to the {ref}`exp-tax-cut`.
 
@@ -1266,10 +1265,12 @@ for i, name in enumerate(['τ', 'D', 'G']):
     ax.set_xlabel('t')
 ```
 
-When the social security system is launched, the initial old particularly benefits from it becasue they receive the transfer without paying it when they were young.
+An initial old person   benefits  especially when  the social security system is launched because he  receives a transfer but pays nothing for it.
 
-In the long run, the consumptions for both the young and the old decrease with the social security system, because it decreases the incentive to save and leads to lower physical capital in production.
+But in the long run, consumptions rates of both  young and  old people decrease  because the the social security system decreases incentives to save.
 
-The government also needs to raise the tax rate to pay for the expenditure when the total output is lower.
+That  lower the stock of  physical capital and consequently lowers output. 
 
-The higher capital income tax further distorts the saving behavior of the young.
+The government must  then  raise tax rate in order to pay for its expenditures.
+
+The higher rate on  capital income  further distorts incentives to save.
