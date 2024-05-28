@@ -824,7 +824,7 @@ However, in the short run, the old suffers because the increase in their labor i
 The distinct long run and short run effects are the essential incentive for us to study transitional paths instead of steady states comparion.
 
 ```{note}
-Although the consumptions in the new steady state are strictly higher, it is at a cost of lower public services and goods.
+Although the consumptions in the new steady state are strictly higher, it is at a cost of fewer public services and goods.
 ``` 
 
 
