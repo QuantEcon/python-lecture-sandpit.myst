@@ -204,7 +204,7 @@ The rental rate on capital $r_t$ equals the interest rate on government one-peri
 Units of the rental rates are:
 
 * for $W_t$, output at time $t$ per unit of labor at time $t$  
-* for $r_t$,  output at time $t$  per unit of capita at time $t$ 
+* for $r_t$,  output at time $t$  per unit of capital at time $t$ 
 
 
 We take output at time $t$ as *numeraire*, so the price of output at time $t$ is one.
@@ -321,9 +321,9 @@ $$ (eq:optsavingsplan)
 
 **Definition:** An equilibrium is an allocation,  a government policy, and a price system with the properties that
 * given the price system and the government policy, the allocation solves
-    * represenative firms' problems for $t \geq 0$
+    * representative firms' problems for $t \geq 0$
     * individual persons' problems for $t \geq 0$
-* given the price system and the allocation, the government budget constraint is satisfies for all $t \geq 0$.
+* given the price system and the allocation, the government budget constraint is satisfied for all $t \geq 0$.
 
 
 ## Next steps
@@ -406,7 +406,7 @@ $$
 ```{code-cell} ipython3
 import numpy as np
 import matplotlib.pyplot as plt
-from numba import njit, prange
+from numba import njit
 from quantecon.optimize import brent_max
 ```
 
@@ -418,11 +418,11 @@ For parameters $\alpha = 0.3$ and $\beta = 0.5$, let's compute  $\hat{K}$:
 α = 0.3
 β = 0.5
 
-# steady state ̂τ
+# steady states of τ and D
 τ_hat = 0.15
 D_hat = 0.
 
-# solve for steady state
+# solve for steady state of K
 K_hat = ((1 - τ_hat) * (1 - α) * (1 - β)) ** (1 / (1 - α))
 K_hat
 ```
@@ -449,11 +449,11 @@ def K_to_W(K, α):
 @njit
 def K_to_C(K, D, τ, r, α, β):
 
-    # consumption for old
+    # optimal consumption for the old when δ=0
     A = K + D
     Co = A * (1 + r * (1 - τ))
 
-    # consumption for young
+    # optimal consumption for the young when δ=0
     W = K_to_W(K, α)
     Cy = β * W * (1 - τ)
 
@@ -474,7 +474,7 @@ G_hat = τ_hat * Y_hat
 G_hat
 ```
 
-We use the optimal consumption plans to find  steady state consumption for  young and  old are given by the 
+We use the optimal consumption plans to find  steady state consumptions for  young and  old
 
 ```{code-cell} ipython3
 Cy_hat, Co_hat = K_to_C(K_hat, D_hat, τ_hat, r_hat, α, β)
@@ -506,7 +506,7 @@ To make sense of our calculation, we'll treat  $t=0$ as  time when a huge unanti
   *  new government policy sequences are eventually time-invariant in the sense that after some date $T >0$,  each sequence is constant over time.  
   *  sudden revelation of a new government policy in the form of sequences starting at time $t=0$
 
-We assume that everyone,  including old people at time $t=0$, know  the new government policy sequence and choose accordingly. 
+We assume that everyone,  including old people at time $t=0$, knows  the new government policy sequence and chooses accordingly. 
 
 
 
@@ -817,7 +817,7 @@ plt.title('-D/K');
 
 We want to know how this policy experiment affects individuals.
 
-In the long run,  future cohorts will enjoy higher consumption throughout their lives because  for  they will earn  higher labor income when they work.
+In the long run,  future cohorts will enjoy higher consumption throughout their lives because they will earn  higher labor income when they work.
 
 However, in the short run, old people  suffer because increases in their labor income are not big enough to offset  their losses of capital income.
 
@@ -852,7 +852,7 @@ closed.plot()
 
 The economy quickly converges to a new steady state with higher physical capital stock, lower interest rate, higher wage rate, and higher consumptions for both the young and the old.
 
-Even though government expenditures $G_t$ returns to its high initial level from $t \geq 1$, the government can balance the budget at a lower tax rate because  it gaathers  additional revenue $-r_t D_t$ from the asset accumulated during  the temporary cut in the spendings.
+Even though government expenditure $G_t$ returns to its high initial level from $t \geq 1$, the government can balance the budget at a lower tax rate because  it gathers  additional revenue $-r_t D_t$ from the asset accumulated during  the temporary cut in the spendings.
 
 As in {ref}`exp-expen-cut`, old perople  early in the transition  periods suffer from this policy shock.
 
@@ -870,7 +870,7 @@ generations.
 
 Including  lump sum taxes disrupts closed form solution because of how they make  optimal consumption and saving plans   depend on future prices and tax rates. 
 
-Therefore, we compute  equilibriunm  transitional paths by finding a fixed point of a  mapping from sequences to sequences.
+Therefore, we compute  equilibrium  transitional paths by finding a fixed point of a  mapping from sequences to sequences.
 
   * that fixed point pins down an equilibrium
 
@@ -1219,7 +1219,7 @@ It keeps debt levels and expenditures at their steady state levels $\hat{D}$ and
 
 In effect, this experiment amounts to launching an unfunded social security system.
 
-We can  use our code to compute the transition ignited by  launch this system.
+We can  use our code to compute the transition ignited by  launching this system.
 
 Let's compare the results to the {ref}`exp-tax-cut`.
 
@@ -1267,9 +1267,9 @@ for i, name in enumerate(['τ', 'D', 'G']):
 
 An initial old person   benefits  especially when  the social security system is launched because he  receives a transfer but pays nothing for it.
 
-But in the long run, consumptions rates of both  young and  old people decrease  because the the social security system decreases incentives to save.
+But in the long run, consumption rates of both  young and  old people decrease  because the the social security system decreases incentives to save.
 
-That  lower the stock of  physical capital and consequently lowers output. 
+That  lowers the stock of  physical capital and consequently lowers output. 
 
 The government must  then  raise tax rate in order to pay for its expenditures.
 
