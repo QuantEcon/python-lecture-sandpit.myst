@@ -177,7 +177,7 @@ $$
 
    * brings $K_t$ and $D_t$ into the period,
    * rents capital to a representative  firm for $r_{t} K_t$,
-   * pays taxes $\tau_t (K_t+ D_t)$ on its rental and interest earnings,
+   * pays taxes $\tau_t r_t (K_t+ D_t)$ on its rental and interest earnings,
    * pays a lump sum tax $\delta_{ot}$ to the government,
    * sells $K_t$ to a young person.  
 
@@ -781,11 +781,14 @@ for i, name in enumerate(['τ', 'D', 'G']):
     ax.set_xlabel('t')
 ```
 
+The economy with lower tax cut rate at $t=0$ has the same transitional pattern, but is less distorted, and it converges to a new steady state with higher physical capital stock.
+
+(exp-expen-cut)=
 ### Experiment 2: Government asset accumulation
 
 Assume that the economy is initially in the same steady state.
 
-Now the government announces  a tax cut at $t=0$ and promises to cut its spending on services and goods by  half $\forall t \leq 0$.
+Now the government promises to cut its spending on services and goods by  half $\forall t \geq 0$.
 
 The government targets  the same tax rate $\tau_t=\hat{\tau}$ and to accumulate assets $-D_t$ over time.
 
@@ -802,13 +805,28 @@ closed.simulate(T, init_ss, τ_pol=τ_seq, G_pol=G_seq);
 closed.plot()
 ```
 
-To understand the transition paths, it is  useful to study  the ratio  $-\frac{D_t}{Y_t}$ of the  government asset to  output
+As the government accumulates asset and uses it in production, it lowers rental rate on capital and crowds out private investment.
+
+As a result,  the ratio  $-\frac{D_t}{K_t}$ of the  government asset to  physical capital used in production will increase over time
 
 ```{code-cell} ipython3
 plt.plot(range(T+1), -closed.policy_seq[:-1, 1] / closed.quant_seq[:, 0])
 plt.xlabel('t')
-plt.title('-D/Y');
+plt.title('-D/K');
 ```
+
+We want to know how this policy experiment affects individuals.
+
+In the long run, the future cohorts will have higher consumptions for both their two life periods, as they will have higher labor income during their working life stage.
+
+However, in the short run, the old suffers because the increase in their labor income does not compensate for their loss in capital income.
+
+The distinct long run and short run effects are the essential incentive for us to study transitional paths instead of steady states comparion.
+
+```{note}
+Although the consumptions in the new steady state are strictly higher, it is at a cost of lower public services and goods.
+``` 
+
 
 ### Experiment 3: Temporary expenditure cut
 
@@ -832,6 +850,11 @@ closed.simulate(T, init_ss, D_pol=D_seq, G_pol=G_seq);
 closed.plot()
 ```
 
+The economy quickly converges to a new steady state with higher physical capital stock, lower interest rate, higher wage rate, and higher consumptions for both the young and the old.
+
+Even though the expenditure $G_t$ returns to its high initial level from $t \geq 1$, the government can balance the budget with a lower tax rate due to its additional revenue $-r_t D_t$ from the asset accumulated by the temporary cut in the spendings.
+
+Similar as in {ref}`exp-expen-cut`, the old in the early periods suffers from this policy shock.
 
 
 ## A computational strategy
@@ -1130,11 +1153,11 @@ ak2.plot()
 
 Next, we can activate  lump sum taxes. 
 
-For example, let's alter  our  {ref}`exp-tax-cut`  fiscal policy experiment by assuming that  the government also increase  lump sum taxes for both  young and old  people $\delta_{yt}=\delta_{ot}=0.01, t\geq0$. 
+For example, let's alter  our  {ref}`exp-tax-cut`  fiscal policy experiment by assuming that  the government also increase  lump sum taxes for both  young and old  people $\delta_{yt}=\delta_{ot}=0.005, t\geq0$. 
 
 ```{code-cell} ipython3
-δy_seq = np.ones(T+2) * 0.01
-δo_seq = np.ones(T+2) * 0.01
+δy_seq = np.ones(T+2) * 0.005
+δo_seq = np.ones(T+2) * 0.005
 
 D1 = D_hat * (1 + r_hat * (1 - τ0)) + G_hat - τ0 * Y_hat - δy_seq[0] - δo_seq[0]
 D_pol[1:] = D1
@@ -1153,7 +1176,7 @@ fig, axs = plt.subplots(3, 3, figsize=(14, 10))
 for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
     ax = axs[i//3, i%3]
     ax.plot(range(T+1), quant_seq3[:T+1, i], label=name+', $\delta$s=0')
-    ax.plot(range(T+1), quant_seq4[:T+1, i], label=name+', $\delta$s=0.01')
+    ax.plot(range(T+1), quant_seq4[:T+1, i], label=name+', $\delta$s=0.005')
     ax.hlines(init_ss[i], 0, T+1, color='r', linestyle='--')
     ax.legend()
     ax.set_xlabel('t')
@@ -1162,7 +1185,7 @@ for i, name in enumerate(['K', 'Y', 'Cy', 'Co']):
 for i, name in enumerate(['W', 'r']):
     ax = axs[(i+4)//3, (i+4)%3]
     ax.plot(range(T+1), price_seq3[:T+1, i], label=name+', $\delta$s=0')
-    ax.plot(range(T+1), price_seq4[:T+1, i], label=name+', $\delta$s=0.01')
+    ax.plot(range(T+1), price_seq4[:T+1, i], label=name+', $\delta$s=0.005')
     ax.hlines(init_ss[i+4], 0, T+1, color='r', linestyle='--')
     ax.legend()
     ax.set_xlabel('t')
@@ -1171,12 +1194,13 @@ for i, name in enumerate(['W', 'r']):
 for i, name in enumerate(['τ', 'D', 'G']):
     ax = axs[(i+6)//3, (i+6)%3]
     ax.plot(range(T+1), policy_seq3[:T+1, i], label=name+', $\delta$s=0')
-    ax.plot(range(T+1), policy_seq4[:T+1, i], label=name+', $\delta$s=0.01')
+    ax.plot(range(T+1), policy_seq4[:T+1, i], label=name+', $\delta$s=0.005')
     ax.hlines(init_ss[i+6], 0, T+1, color='r', linestyle='--')
     ax.legend()
     ax.set_xlabel('t')
 ```
 
+Comparing to {ref}`exp-tax-cut`, the government raises lump-sum taxes to finance the increasing debt interest payment, which is less distortionary comparing to raising the capital income tax rate.
 
 
 ### Experiment 4: Unfunded Social Security System
@@ -1192,11 +1216,11 @@ Thus, the government transfers  some income from the younger cohort to the older
 We will assume that the economy was in the same initial steady state that we assumed in several earlier  experiments.
 
 The government sets the lump sum taxes $\delta_{y,t}=-\delta_{o,t}=10\% \hat{C}_{y}$ starting from $t=0$, and keeps 
-debt levels and tax rates at their steady state levels $\hat{D}$ and $\hat{\tau}$.
+debt levels and expenditures at their steady state levels $\hat{D}$ and $\hat{G}$.
 
 This experiment amounts to launching an unfunded social security system.
 
-We will use our code to compute  simulate the transition ignited by  launch this system.
+We will use our code to compute the transition ignited by  launch this system.
 
 Let's compare the results to the {ref}`exp-tax-cut`.
 
@@ -1241,3 +1265,11 @@ for i, name in enumerate(['τ', 'D', 'G']):
     ax.legend()
     ax.set_xlabel('t')
 ```
+
+When the social security system is launched, the initial old particularly benefits from it becasue they receive the transfer without paying it when they were young.
+
+In the long run, the consumptions for both the young and the old decrease with the social security system, because it decreases the incentive to save and leads to lower physical capital in production.
+
+The government also needs to raise the tax rate to pay for the expenditure when the total output is lower.
+
+The higher capital income tax further distorts the saving behavior of the young.
