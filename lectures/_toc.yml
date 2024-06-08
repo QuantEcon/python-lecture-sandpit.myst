@@ -16,7 +16,8 @@ sections:
 - file: money_inflation_nonlinear
 - file: laffer_adaptive 
 - file: unpleasant 
-- file: french_rev 
+- file: french_rev
+- file: greeksquare 
 # - file: PT_static
 # - file: PT_dynamic
 # - file: markov_switching_lss
