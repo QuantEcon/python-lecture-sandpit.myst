@@ -10,13 +10,13 @@ sections:
 # - file: prob_matrix
 - file: PT_intro
 # - file: ak2_tom
-- file: ak2_zejin 
+# - file: ak2_zejin 
 # - file: money_inflation
-- file: money_inflation_humphrey
-- file: money_inflation_nonlinear
-- file: laffer_adaptive 
-- file: unpleasant 
-- file: french_rev
+# - file: money_inflation_humphrey
+# - file: money_inflation_nonlinear
+# - file: laffer_adaptive 
+# - file: unpleasant 
+# - file: french_rev
 - file: greeksquare 
 # - file: PT_static
 # - file: PT_dynamic

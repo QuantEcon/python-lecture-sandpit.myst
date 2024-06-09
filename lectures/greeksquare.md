@@ -4,7 +4,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.16.1
+    jupytext_version: 1.14.4
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -46,10 +46,15 @@ Their method involved
  
 In this lecture, we'll describe this method.
 
-We'll also use invariant subspaces  to describe variations on this method that are faster.
+We'll also use invariant subspaces to describe variations on this method that are faster.
 
-+++ {"user_expressions": []}
+In this lecture, we use the following imports:
 
+```{code-cell} ipython3
+:tags: []
+
+import numpy as np
+```
 
 ## Setup
 
@@ -71,6 +76,8 @@ $$
 y_{t} = 2 y_{t-1} + (1+ \sigma) y_{t-2}, \quad t \geq 0 \tag{1}
 $$ 
 
+**Humphrey: Dear Tom, should this be $y_{t} = 2 y_{t-1} - (1 - \sigma) y_{t-2}, \quad t \geq 0$? Please kindly correct me if I were wrong.**
+
 together with a pair of integers that are  initial conditions for   $y_{-1}, y_{-2}$.
 
 First, we'll deploy some techniques for solving difference equations that are also deployed in this quantecon lecture:
@@ -82,11 +89,32 @@ $$
 c(x) \equiv x^2 - 2 x - (1+\sigma) = 0 \tag{2}
 $$
 
+**Humphrey: Then this would be $c(x) \equiv x^2 - 2 x + (1 - \sigma) = 0$ with roots $1 + \sqrt{\sigma}$ and $1 - \sqrt{\sigma}$? Please find a function that computes roots for the original version and modified version below:**
+
+```{code-cell} ipython3
+def solve_lambdas(coefs):    
+    # Calculate the roots using numpy.roots
+    λs = np.roots(coefs)
+    
+    # Sort the roots for consistency
+    λ_1, λ_2 = sorted(λs, reverse=False)
+    
+    return λ_1, λ_2
+
+sigma = 2
+
+# Current: c(x) \equiv x^2 - 2 x - (1+\sigma) = 0
+print(f"Current: {solve_lambdas([1, -2, -(1 + sigma)])}")
+
+# Suggested: c(x) \equiv x^2 - 2 x + (1 - \sigma) = 0
+print(f"Suggested: {solve_lambdas([1, -2, (1 - sigma)])}")
+```
+
 or the factored form
 
 $$
 c(x)= (x - \lambda_1) (x-\lambda_2) = 0
-$$
+$$(eq:cha_eq)
 
 
 where 
@@ -121,8 +149,6 @@ $$
 
 System (3) of simultaneous linear equations will play a big role in the remainder of this lecture.  
 
-
-
 Since $\lambda_1 = 1 + \sqrt{\sigma} > 1 > \lambda_2 = 1 - \sqrt{\sigma} $
 it follows that for **almost all** initial conditions
 
@@ -147,6 +173,9 @@ so that
 $$
 \sqrt{\sigma} = \lim_{t \rightarrow \infty} \left(\frac{y_{t+1}}{y_t}\right) + 1
 $$
+
+**Humphrey: Would this be $\sqrt{\sigma} = 1 - \lim_{t \rightarrow \infty} \left(\frac{y_{t+1}}{y_t}\right)$ and similarly the equation below be: $\sqrt{\sigma} = 1 - \left(\frac{y_{t+1}}{y_t}\right)$? Please kindly see the validation in the implementation section.**
+
 
 Actually, if $\eta_1 =0$, it follows that
 
@@ -176,8 +205,79 @@ Notice how we used the  second approach above when we set  $\eta_1, \eta_2$  eit
 
 In taking this second approach, we were in effect finding  an **invariant subspace** of ${\bf R}^2$. 
 
-Let's represent the preceding analysis by vectorizing our second order difference equation and then using  eigendecompositions of a state
-transition matrix.
+## Implementation
+
+We now implement the above algorithm to compute the square root of $\sigma$
+
+```{code-cell} ipython3
+:tags: []
+
+def solve_η(λ_1, λ_2, y_neg1, y_neg2):
+    
+    # Solve the system of linear equation (3)
+    A = np.array([
+        [1/λ_1, 1/λ_2],
+        [1/(λ_1**2), 1/(λ_2**2)]
+    ])
+    b = np.array([y_neg1, y_neg2])
+    ηs = np.linalg.solve(A, b)
+    
+    return ηs
+
+def solve_sqrt(σ, y_neg1, y_neg2, t_max=100):
+    
+    # Ensure σ is greater than 1
+    if σ <= 1:
+        raise ValueError("σ must be greater than 1")
+        
+    # Characteristic roots
+    λ_1 = 1 + np.sqrt(σ)
+    λ_2 = 1 - np.sqrt(σ)
+    
+    # Solve for η_1 and η_2
+    η_1, η_2 = solve_η(λ_1, λ_2, y_neg1, y_neg2)
+
+    # Compute the sequence up to t_max
+    t = np.arange(t_max + 1)
+    y = (λ_1 ** t) * η_1 + (λ_2 ** t) * η_2
+    
+    # Compute the ratio y_{t+1} / y_t for large t
+    sqrt_σ_estimate = (y[-1] / y[-2]) - 1
+    
+    return sqrt_σ_estimate
+
+σ = 2
+sqrt_σ = solve_sqrt(σ, y_neg1=2, y_neg2=1)
+dev = abs(sqrt_σ-np.sqrt(σ))
+
+print(f"sqrt({σ}) is approximately {sqrt_σ:.5f} (error: {dev:.5f})")
+```
+
+```{code-cell} ipython3
+:tags: []
+
+λ_1 = 1 + np.sqrt(σ)
+λ_2 = 1 - np.sqrt(σ)
+
+# Compute the sequence up to t_max
+t = 1
+y = lambda t, ηs: (λ_1 ** t) * ηs[0] + (λ_2 ** t) * ηs[1]
+
+ηs = (0, 1)
+sqrt_σ = 1 - y(2, ηs) / y(1, ηs) 
+print(f"For η_1, η_2 = (0, 1), sqrt_σ = {sqrt_σ:.5f}")
+```
+
+```{code-cell} ipython3
+:tags: []
+
+ηs = (1, 0)
+sqrt_σ = y(2, ηs) / y(1, ηs) - 1
+
+print(f"For η_1, η_2 = (1, 0), sqrt_σ = {sqrt_σ:.5f}")
+```
+
+Let's represent the preceding analysis by vectorizing our second order difference equation and then using  eigendecompositions of a state transition matrix.
 
 ## Vectorizing the difference equation
 
@@ -208,10 +308,6 @@ $$
 where columns of $V$ are eigenvectors corresponding to  eigenvalues $\lambda_1$ and $\lambda_2$.
 
 The eigenvalues can be ordered so that  $\lambda_1 > 1 > \lambda_2$.
-
-
-
-+++ {"user_expressions": []}
 
 Write equation (1) as
 
@@ -301,7 +397,48 @@ $$
 x_{2,0} = -(V^{2,2})^{-1} V^{2,1} = V_{2,1} V_{1,1}^{-1} x_{1,0}
 $$
 
-+++ {"user_expressions": []}
+### Implementation
+
+```{code-cell} ipython3
+:tags: []
+
+def iterate_H(y_0, M, num_steps):
+    
+    # Eigendecomposition of the matrix M
+    Λ, V = np.linalg.eig(M)
+    V_inv = np.linalg.inv(V)
+    
+    print(f"eigenvalue:\n{Λ}")
+    print(f"eigenvector:\n{V}")
+    
+    # Initialize the array to store results
+    x = np.zeros((y_0.shape[0], num_steps))
+    
+    # Perform the iterations
+    for t in range(num_steps):
+        x[:, t] = V @ np.diag(Λ**t) @ V_inv @ y_0
+    
+    return x
+
+# Define the state transition matrix M
+M = np.array([[2, -(1 - σ)],
+              [1, 0]])
+
+# Initial condition vector x_0
+x_0 = np.array([1, 0])
+
+# Perform the iteration
+result = iterate_H(x_0, M, num_steps=100)
+```
+
+Compare the eigenvector to the roots we obtained above
+
+```{code-cell} ipython3
+:tags: []
+
+roots = solve_lambdas([1, -2, (1 - sigma)])[::-1]
+print(f"roots: {np.round(roots, 8)}")
+```
 
 ## Requests for Humphrey
 
@@ -314,10 +451,3 @@ Here is what i recommend doing ultimately
 <https://intro.quantecon.org/money_inflation.html>
   
     * print out the eigenvalues and eigenvectors and describe quantitatively how they relate to our earlier having solved system (3) above
-    
-Perhaps we (i.e.,"you") might want first to convert the notebook into a *myst .md file, using the jupyter book technology, and then working in the sandpit.  What do you think?
-
-
-```{code-cell} ipython3
-
-```
