@@ -286,9 +286,11 @@ Represent (1) with the first-order matrix difference equation
 
 $$
 \begin{bmatrix} y_{t+1} \cr y_{t} \end{bmatrix}
-= \begin{bmatrix} 2 & 1+ \sigma \cr 1 & 0 \end{bmatrix} \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
+= \begin{bmatrix} 2 & -( 1+ \sigma) \cr 1 & 0 \end{bmatrix} \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
 $$
+
 or
+
 $$
 x_{t+1} = M x_t 
 $$
@@ -296,7 +298,7 @@ $$
 where 
 
 $$
-M = \begin{bmatrix} 2 & 1+ \sigma \cr 1 & 0 \end{bmatrix},  \quad x_t= \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
+M = \begin{bmatrix} 2 & - (1+ \sigma )  \cr 1 & 0 \end{bmatrix},  \quad x_t= \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
 $$
 
 Construct an eigendecomposition of $M$:
@@ -440,14 +442,16 @@ roots = solve_lambdas([1, -2, (1 - sigma)])[::-1]
 print(f"roots: {np.round(roots, 8)}")
 ```
 
-## Requests for Humphrey
+## Thank you Humphrey!
 
 Here is what i recommend doing ultimately
 
 * write Python code to compute $\sqrt{\sigma}$ using the purely difference equation methods above, including solving the linear system
 (3) that zero out either $\eta_1$ or $\eta_2$.  Use the code to illustrate the "three" ways of computing $\sqrt{\sigma}$. Use $\sqrt{2}$ as lead example.
+DONE!
 
 * then write Python code that does things using the matrix methods. I recommend just copying or adapting the code that you wrote for 
 <https://intro.quantecon.org/money_inflation.html>
   
     * print out the eigenvalues and eigenvectors and describe quantitatively how they relate to our earlier having solved system (3) above
+DONE
