@@ -20,13 +20,13 @@ kernelspec:
 
 This notebook provides a simple example of **invariant subspace** methods for analyzing linear difference equations. 
 
-These methods are applied throughout applied economic dynamics, for example, in this quantecon lecture <https://intro.quantecon.org/money_inflation.html>
+These methods are applied throughout applied economic dynamics, for example, in this QuantEcon lecture <https://intro.quantecon.org/money_inflation.html>
 
-Our approach in this notebook is to illustrate the method with an ancient example, one that  ancient Greek mathematicians used to compute square roots of positive integers.
+Our approach in this notebook is to illustrate the method with an ancient example, one that ancient Greek mathematicians used to compute square roots of positive integers.
 
 An integer is called a **perfect square** if its square root is also an integer.
 
-An orderered sequence of  perfect squares starts with 
+An ordered sequence of  perfect squares starts with 
 
 $$
 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, \ldots 
@@ -48,7 +48,7 @@ In this lecture, we'll describe this method.
 
 We'll also use invariant subspaces to describe variations on this method that are faster.
 
-In this lecture, we use the following imports:
+In this lecture, we use the following import:
 
 ```{code-cell} ipython3
 :tags: []
@@ -73,42 +73,21 @@ Ancient Greeks used a recursive algorithm to compute square roots of integers th
 The algorithm iterates on a  second order  linear  difference equation in the sequence $\{y_t\}_{t=0}^\infty$:
 
 $$
-y_{t} = 2 y_{t-1} + (1+ \sigma) y_{t-2}, \quad t \geq 0 \tag{1}
-$$ 
-
-**Humphrey: Dear Tom, should this be $y_{t} = 2 y_{t-1} - (1 - \sigma) y_{t-2}, \quad t \geq 0$? Please kindly correct me if I were wrong.**
+y_{t} = 2 y_{t-1} - (1 - \sigma) y_{t-2}, \quad t \geq 0
+$$ (eq:second_order)
 
 together with a pair of integers that are  initial conditions for   $y_{-1}, y_{-2}$.
 
-First, we'll deploy some techniques for solving difference equations that are also deployed in this quantecon lecture:
+First, we'll deploy some techniques for solving difference equations that are also deployed in this QuantEcon lecture:
 <https://python.quantecon.org/samuelson.html>
 
-The characteristic equation associated with difference equation (1) is
+The characteristic equation associated with difference equation {eq}`eq:second_order` is
 
 $$
-c(x) \equiv x^2 - 2 x - (1+\sigma) = 0 \tag{2}
+c(x) \equiv x^2 - 2 x + (1 - \sigma) = 0
 $$
 
-**Humphrey: Then this would be $c(x) \equiv x^2 - 2 x + (1 - \sigma) = 0$ with roots $1 + \sqrt{\sigma}$ and $1 - \sqrt{\sigma}$? Please find a function that computes roots for the original version and modified version below:**
-
-```{code-cell} ipython3
-def solve_lambdas(coefs):    
-    # Calculate the roots using numpy.roots
-    λs = np.roots(coefs)
-    
-    # Sort the roots for consistency
-    λ_1, λ_2 = sorted(λs, reverse=False)
-    
-    return λ_1, λ_2
-
-sigma = 2
-
-# Current: c(x) \equiv x^2 - 2 x - (1+\sigma) = 0
-print(f"Current: {solve_lambdas([1, -2, -(1 + sigma)])}")
-
-# Suggested: c(x) \equiv x^2 - 2 x + (1 - \sigma) = 0
-print(f"Suggested: {solve_lambdas([1, -2, (1 - sigma)])}")
-```
++++
 
 or the factored form
 
@@ -144,10 +123,10 @@ $$
 \begin{align}
 \lambda_1^{-1} \eta_1 + \lambda_2^{-1} \eta_2 & =  y_{-1} \cr
 \lambda_1^{-2} \eta_1 + \lambda_2^{-2} \eta_2 & =  y_{-2}
-\end{align} \tag{3}
-$$
+\end{align}
+$$(eq:leq_sq)
 
-System (3) of simultaneous linear equations will play a big role in the remainder of this lecture.  
+System {eq}`eq:leq_sq` of simultaneous linear equations will play a big role in the remainder of this lecture.  
 
 Since $\lambda_1 = 1 + \sqrt{\sigma} > 1 > \lambda_2 = 1 - \sqrt{\sigma} $
 it follows that for **almost all** initial conditions
@@ -171,16 +150,13 @@ $$
 so that 
 
 $$
-\sqrt{\sigma} = \lim_{t \rightarrow \infty} \left(\frac{y_{t+1}}{y_t}\right) + 1
+\sqrt{\sigma} = 1 - \lim_{t \rightarrow \infty} \left(\frac{y_{t+1}}{y_t}\right)
 $$
-
-**Humphrey: Would this be $\sqrt{\sigma} = 1 - \lim_{t \rightarrow \infty} \left(\frac{y_{t+1}}{y_t}\right)$ and similarly the equation below be: $\sqrt{\sigma} = 1 - \left(\frac{y_{t+1}}{y_t}\right)$? Please kindly see the validation in the implementation section.**
-
 
 Actually, if $\eta_1 =0$, it follows that
 
 $$
-\sqrt{\sigma} =\left(\frac{y_{t+1}}{y_t}\right) + 1 \quad \forall t \geq 0,
+\sqrt{\sigma} = 1 - \left(\frac{y_{t+1}}{y_t}\right) \quad \forall t \geq 0,
 $$
 
 so that convergence is immediate and there is no need to take limits.
@@ -195,7 +171,7 @@ $$
 so again, convergence is immediate, and we have no need to compute a limit.
 
 
-System (3) of simultaneous linear equations can be used in various ways.
+System {eq}`eq:leq_sq` of simultaneous linear equations can be used in various ways.
 
  * we can take $y_{-1}, y_{-2}$ as given initial conditions and solve for $\eta_1, \eta_2$
  
@@ -212,27 +188,31 @@ We now implement the above algorithm to compute the square root of $\sigma$
 ```{code-cell} ipython3
 :tags: []
 
-def solve_η(λ_1, λ_2, y_neg1, y_neg2):
+def solve_λs(coefs):    
+    # Calculate the roots using numpy.roots
+    λs = np.roots(coefs)
     
-    # Solve the system of linear equation (3)
+    # Sort the roots for consistency
+    return sorted(λs, reverse=True)
+
+def solve_η(λ_1, λ_2, y_neg1, y_neg2):
+    # Solve the system of linear equation
     A = np.array([
         [1/λ_1, 1/λ_2],
         [1/(λ_1**2), 1/(λ_2**2)]
     ])
-    b = np.array([y_neg1, y_neg2])
+    b = np.array((y_neg1, y_neg2))
     ηs = np.linalg.solve(A, b)
     
     return ηs
 
-def solve_sqrt(σ, y_neg1, y_neg2, t_max=100):
-    
+def solve_sqrt(σ, coefs, y_neg1, y_neg2, t_max=100):
     # Ensure σ is greater than 1
     if σ <= 1:
         raise ValueError("σ must be greater than 1")
         
     # Characteristic roots
-    λ_1 = 1 + np.sqrt(σ)
-    λ_2 = 1 - np.sqrt(σ)
+    λ_1, λ_2 = solve_λs(coefs)
     
     # Solve for η_1 and η_2
     η_1, η_2 = solve_η(λ_1, λ_2, y_neg1, y_neg2)
@@ -246,47 +226,67 @@ def solve_sqrt(σ, y_neg1, y_neg2, t_max=100):
     
     return sqrt_σ_estimate
 
+# Use σ = 2 as an example
 σ = 2
-sqrt_σ = solve_sqrt(σ, y_neg1=2, y_neg2=1)
-dev = abs(sqrt_σ-np.sqrt(σ))
 
+# Encode characteristic equation
+coefs = (1, -2, (1 - σ))
+
+# Solve for the square root of σ
+sqrt_σ = solve_sqrt(σ, coefs, y_neg1=2, y_neg2=1)
+
+# Calculate the deviation
+dev = abs(sqrt_σ-np.sqrt(σ))
 print(f"sqrt({σ}) is approximately {sqrt_σ:.5f} (error: {dev:.5f})")
+```
+
+Now we consider cases where $(\eta_1, \eta_2) = (0, 1)$ and $(\eta_1, \eta_2) = (1, 0)$
+
+```{code-cell} ipython3
+:tags: []
+
+# Compute λ_1, λ_2
+λ_1, λ_2 = solve_λs(coefs)
+print(f'Roots for the characteristic equation are ({λ_1:.5f}, {λ_2:.5f}))')
 ```
 
 ```{code-cell} ipython3
 :tags: []
 
-λ_1 = 1 + np.sqrt(σ)
-λ_2 = 1 - np.sqrt(σ)
-
-# Compute the sequence up to t_max
-t = 1
-y = lambda t, ηs: (λ_1 ** t) * ηs[0] + (λ_2 ** t) * ηs[1]
-
+# Case 1: η_1, η_2 = (0, 1)
 ηs = (0, 1)
-sqrt_σ = 1 - y(2, ηs) / y(1, ηs) 
+
+# Compute y_{t} and y_{t-1} with t >= 0
+y = lambda t, ηs: (λ_1 ** t) * ηs[0] + (λ_2 ** t) * ηs[1]
+sqrt_σ = 1 - y(1, ηs) / y(0, ηs)
+
 print(f"For η_1, η_2 = (0, 1), sqrt_σ = {sqrt_σ:.5f}")
 ```
 
 ```{code-cell} ipython3
 :tags: []
 
+# Case 2: η_1, η_2 = (0, 1)
 ηs = (1, 0)
-sqrt_σ = y(2, ηs) / y(1, ηs) - 1
+sqrt_σ = y(1, ηs) / y(0, ηs) - 1
 
 print(f"For η_1, η_2 = (1, 0), sqrt_σ = {sqrt_σ:.5f}")
 ```
+
+We find the convergence is immediate.
+
++++
 
 Let's represent the preceding analysis by vectorizing our second order difference equation and then using  eigendecompositions of a state transition matrix.
 
 ## Vectorizing the difference equation
 
 
-Represent (1) with the first-order matrix difference equation
+Represent {eq}`eq:second_order` with the first-order matrix difference equation
 
 $$
 \begin{bmatrix} y_{t+1} \cr y_{t} \end{bmatrix}
-= \begin{bmatrix} 2 & -( 1+ \sigma) \cr 1 & 0 \end{bmatrix} \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
+= \begin{bmatrix} 2 & - ( 1 - \sigma) \cr 1 & 0 \end{bmatrix} \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
 $$
 
 or
@@ -298,20 +298,20 @@ $$
 where 
 
 $$
-M = \begin{bmatrix} 2 & - (1+ \sigma )  \cr 1 & 0 \end{bmatrix},  \quad x_t= \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
+M = \begin{bmatrix} 2 & - (1 - \sigma )  \cr 1 & 0 \end{bmatrix},  \quad x_t= \begin{bmatrix} y_{t} \cr y_{t-1} \end{bmatrix}
 $$
 
 Construct an eigendecomposition of $M$:
 
 $$
 M = V \begin{bmatrix} \lambda_1 & 0 \cr 0 & \lambda_2  \end{bmatrix} V^{-1} 
-$$
+$$ (eq:eigen_sqrt)
 
 where columns of $V$ are eigenvectors corresponding to  eigenvalues $\lambda_1$ and $\lambda_2$.
 
 The eigenvalues can be ordered so that  $\lambda_1 > 1 > \lambda_2$.
 
-Write equation (1) as
+Write equation {eq}`eq:second_order` as
 
 $$
 x_{t+1} = V \Lambda V^{-1} x_t
@@ -381,7 +381,7 @@ x_{1,0}^* = 0
 $$
 
 
-This can be achieve by setting 
+This can be achieved by setting 
 
 $$
 x_{2,0} =  -( V^{1,2})^{-1} V^{1,1} = V_{2,1} V_{1,1}^{-1} x_{1,0}.
@@ -401,12 +401,15 @@ $$
 
 ### Implementation
 
+Now we implement the algorithm above.
+
+First we write a function that iterates $M$
+
 ```{code-cell} ipython3
 :tags: []
 
-def iterate_H(y_0, M, num_steps):
-    
-    # Eigendecomposition of the matrix M
+def iterate_M(x_0, M, num_steps):
+    # Eigendecomposition of M
     Λ, V = np.linalg.eig(M)
     V_inv = np.linalg.inv(V)
     
@@ -414,11 +417,11 @@ def iterate_H(y_0, M, num_steps):
     print(f"eigenvector:\n{V}")
     
     # Initialize the array to store results
-    x = np.zeros((y_0.shape[0], num_steps))
+    x = np.zeros((x_0.shape[0], num_steps))
     
     # Perform the iterations
     for t in range(num_steps):
-        x[:, t] = V @ np.diag(Λ**t) @ V_inv @ y_0
+        x[:, t] = V @ np.diag(Λ**t) @ V_inv @ x_0
     
     return x
 
@@ -430,7 +433,7 @@ M = np.array([[2, -(1 - σ)],
 x_0 = np.array([1, 0])
 
 # Perform the iteration
-result = iterate_H(x_0, M, num_steps=100)
+xs = iterate_M(x_0, M, num_steps=100)
 ```
 
 Compare the eigenvector to the roots we obtained above
@@ -438,20 +441,8 @@ Compare the eigenvector to the roots we obtained above
 ```{code-cell} ipython3
 :tags: []
 
-roots = solve_lambdas([1, -2, (1 - sigma)])[::-1]
+roots = solve_λs((1, -2, (1 - σ)))
 print(f"roots: {np.round(roots, 8)}")
 ```
 
-## Thank you Humphrey!
-
-Here is what i recommend doing ultimately
-
-* write Python code to compute $\sqrt{\sigma}$ using the purely difference equation methods above, including solving the linear system
-(3) that zero out either $\eta_1$ or $\eta_2$.  Use the code to illustrate the "three" ways of computing $\sqrt{\sigma}$. Use $\sqrt{2}$ as lead example.
-DONE!
-
-* then write Python code that does things using the matrix methods. I recommend just copying or adapting the code that you wrote for 
-<https://intro.quantecon.org/money_inflation.html>
-  
-    * print out the eigenvalues and eigenvectors and describe quantitatively how they relate to our earlier having solved system (3) above
-DONE
+Hence we confirmed {eq}`eq:eigen_sqrt`.
