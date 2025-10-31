@@ -18,7 +18,7 @@ dependencies:
     # Sandpit
     - array-to-latex
     - PuLP
-    - cvxpy
+    - cvxpy[ECOS]
     - cvxopt
     - cylp
     - prettytable
