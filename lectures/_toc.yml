@@ -9,6 +9,7 @@ sections:
 # - file: ar1_turningpts
 # - file: prob_matrix
 - file: PT_intro
+- file: PT_new
 # - file: ak2_tom
 # - file: ak2_zejin 
 # - file: money_inflation
@@ -16,8 +17,8 @@ sections:
 # - file: money_inflation_nonlinear
 # - file: laffer_adaptive 
 # - file: unpleasant 
-# - file: french_rev
-- file: greeksquare 
+- file: french_rev
+# - file: greeksquare 
 # - file: PT_static
 # - file: PT_dynamic
 # - file: markov_switching_lss
